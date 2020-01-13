@@ -14,8 +14,14 @@
 
 Route::get('/', function () {
    return view('admin.auth');
-});
+})->name('.auth');
 
 Route::get('/dashboard', function () {
-    return view('layouts.root.admin');
+
+    return view('pages.admin.dashboard');
+
 })->name('.dashboard');
+
+Route::get('/tests', function () {
+    return 'tests';
+})->name('.tests');

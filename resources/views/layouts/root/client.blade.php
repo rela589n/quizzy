@@ -6,13 +6,9 @@
 @endsection
 
 @section('menu')
-    @include('menu.client')
+    @include('blocks.client.menu')
 @endsection
 
 @section('content')
 {{--    {{ $content }}--}}
 @endsection
-
-{{--@section('title')--}}
-{{--    123--}}
-{{--@endsection--}}
