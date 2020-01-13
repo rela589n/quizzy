@@ -12,6 +12,18 @@
 |
 */
 
-Route::get('/client', function () {
-   return 'hello from client';
-});
+Route::get('/', function () {
+    return view('client.auth')->with([
+        'content' => 1123 // view('welcome')
+    ]);
+})->name('auth');
+
+Route::get('/dashboard', function () {
+   return view('layouts.client');
+})->name('dashboard');
+
+Route::get('/404', function () {
+    return 'check logging';
+})->middleware('logging');
+
+
