@@ -13,5 +13,9 @@
 */
 
 Route::get('/', function () {
-   return 'hello from admin routing';
+   return view('admin.auth');
 });
+
+Route::get('/dashboard', function () {
+    return view('layouts.root.admin');
+})->name('.dashboard');
