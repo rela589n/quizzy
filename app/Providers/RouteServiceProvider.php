@@ -95,6 +95,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('admin')
             ->middleware('web')
             ->namespace($this->adminNamespace)
+            ->name('admin')
             ->group(base_path('routes/admin.php'));
     }
 
@@ -109,6 +110,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->clientNamespace)
+            ->name('client')
             ->group(base_path('routes/client.php'));
     }
 }
