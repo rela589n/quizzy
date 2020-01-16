@@ -13,26 +13,22 @@
 */
 
 Route::get('/', function () {
-
     return view('pages.client.auth');
-
 })->name('.auth');
 
 Route::get('/dashboard', function () {
-
     return view('pages.client.dashboard');
-
 })->name('.dashboard');
 
-Route::get('/tests', function () {
-
-    return 'tests';
-
-})->name('.tests');
+Route::prefix('tests')
+    ->name('.tests')
+    ->group(function () {
+        Route::get('/', function () {
+            return view('pages.client.subjects-list');
+        });
+    });
 
 Route::get('/404', function () {
     return 'check logging';
 })->middleware('logging');
 
-// todo implement tests
-// todo implement auth

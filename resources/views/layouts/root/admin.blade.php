@@ -13,6 +13,3 @@
 {{--    {{ $content }}--}}
 @endsection
 
-{{--@section('title')--}}
-{{--    123--}}
-{{--@endsection--}}

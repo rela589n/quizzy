@@ -13,7 +13,7 @@
 */
 
 Route::get('/', function () {
-   return view('pages.admin.auth');
+    return view('pages.admin.auth');
 })->name('.auth');
 
 Route::get('/dashboard', function () {
@@ -22,9 +22,22 @@ Route::get('/dashboard', function () {
 
 })->name('.dashboard');
 
-Route::get('/tests', function () {
-    return 'tests';
-})->name('.tests');
+Route::prefix('tests')
+    ->name('.tests')
+    ->group(function () {
+        Route::get('/', function () {
+            return view('pages.admin.subjects-list');
+        });
+    });
+
+Route::prefix('users')
+    ->name('.users')
+    ->group(function () {
+        Route::get('/', function () {
+            return "users";
+        });
+    });
+
 
 Route::get('/tests/hello', function () {
     return 'tests hello' . Breadcrumbs::render('test');
