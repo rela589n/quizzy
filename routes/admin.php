@@ -25,6 +25,19 @@ Route::get('/dashboard', function () {
 Route::prefix('tests')
     ->name('.tests')
     ->group(function () {
+
+        Route::get('/new', function () {
+            return view('pages.admin.subjects-new');
+        })->name('.new');
+
+        Route::prefix('{name}')
+            ->name('.subject')
+            ->group(function () {
+                Route::get('/', function () {
+                    return Route::getCurrentRoute()->getName();
+                });
+            });
+
         Route::get('/', function () {
             return view('pages.admin.subjects-list');
         });

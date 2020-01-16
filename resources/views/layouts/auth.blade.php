@@ -59,5 +59,6 @@
 @endsection
 
 @push('bottom_scripts')
+    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
     <script src="{{ asset('js/auth.js') }}"></script>
 @endpush
