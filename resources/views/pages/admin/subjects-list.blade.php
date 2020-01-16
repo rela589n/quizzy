@@ -28,5 +28,5 @@
 @endsection
 
 @section('create-new-btn')
-    <a class="btn btn-primary btn-block finish-test-btn mt-4" href="admin_tests_new.html">Створити новий</a>
+    <a class="btn btn-primary btn-block finish-test-btn mt-4" href="{{ route('admin.tests.new') }}">Створити новий</a>
 @endsection

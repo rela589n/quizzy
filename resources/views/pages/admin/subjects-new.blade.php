@@ -6,7 +6,7 @@
             <div class="col-2"></div>
             <div class="col-7">
 
-                <form action="" method="post" class="auth text-dark">
+                <form method="post" class="auth text-dark">
                     <label for="name" class="form-info mb-4 h3">
                         Введіть назву предмета:
                     </label>
@@ -23,7 +23,9 @@
                                    required="required" value="">
                         </div>
                         <div class="col-3">
-                            <button type="button" id="auto-generate-translit" class="btn btn-primary btn-block">Автоматично</button>
+                            <button type="button" id="auto-generate-translit" class="btn btn-primary btn-block"
+                                    disabled="disabled">Автоматично
+                            </button>
                         </div>
                     </div>
 
@@ -37,8 +39,7 @@
                         <option value="3">Третій</option>
                         <option value="4">Четвертий</option>
                     </select>
-                    <a type="submit" class="btn btn-primary btn-block finish-test-btn mt-4"
-                       href="admin_tests.html">Створити</a>
+                    <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-4">Створити</button>
                 </form>
             </div>
         </div>

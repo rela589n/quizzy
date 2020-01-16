@@ -5,11 +5,19 @@ $(document).ready(function () {
         caseType: 'lower',
         replaceSpaces: '-'
     };
+
+    let $generateTranslit = $('#auto-generate-translit');
+
     $('#alias').liTranslit(translitParams);
 
-    $('#name').liTranslit({...translitParams, elAlias: $textContainer});
+    $('#name').change(function () {
+        console.log("changed");
+        if ($(this).val().trim() !== '') {
+            $generateTranslit.removeAttr('disabled');
+        }
+    }).liTranslit({...translitParams, elAlias: $textContainer});
 
-    $('#auto-generate-translit').click(function () {
+    $generateTranslit.click(function () {
         $('#alias').val($textContainer.text());
     });
 });
