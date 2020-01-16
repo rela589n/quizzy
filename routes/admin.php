@@ -13,7 +13,7 @@
 */
 
 Route::get('/', function () {
-   return view('admin.auth');
+   return view('pages.admin.auth');
 })->name('.auth');
 
 Route::get('/dashboard', function () {
@@ -25,3 +25,8 @@ Route::get('/dashboard', function () {
 Route::get('/tests', function () {
     return 'tests';
 })->name('.tests');
+
+Route::get('/tests/hello', function () {
+    return 'tests hello' . Breadcrumbs::render('test');
+})->name('.tests.test');
+
