@@ -26,15 +26,34 @@ Route::prefix('tests')
     ->name('.tests')
     ->group(function () {
 
+        $routePatterns = Route::getPatterns();
+
         Route::get('/new', function () {
             return view('pages.admin.subjects-new');
         })->name('.new');
 
-        Route::prefix('{name}')
+        Route::prefix('/{subject}')
+            ->where(['subject' => $routePatterns['name']])
             ->name('.subject')
-            ->group(function () {
-                Route::get('/', function () {
-                    return Route::getCurrentRoute()->getName();
+            ->group(function () use (&$routePatterns) {
+
+                Route::prefix('/{test}')
+                    ->where(['test' => $routePatterns['name']])
+                    ->name('.test')
+                    ->group(function () use (&$routePatterns) {
+
+                        Route::get('/', function () {
+                            return 'simply test';
+                        });
+                    });
+
+                /*
+                 * Simply the single subject routing
+                 */
+                Route::get('/', function (\Illuminate\Http\Request $request) {
+
+                    return view('pages.admin.subjects-single');
+
                 });
             });
 
