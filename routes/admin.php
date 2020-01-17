@@ -55,7 +55,7 @@ Route::prefix('/tests')
                         })->name('settings');
 
                         Route::get('/', function () {
-                            return 'simply test';
+                            return view('pages.admin.tests-single');
                         });
                     });
 
