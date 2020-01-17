@@ -22,7 +22,7 @@ Route::get('/dashboard', function () {
 
 })->name('.dashboard');
 
-Route::prefix('tests')
+Route::prefix('/tests')
     ->name('.tests')
     ->group(function () {
 
@@ -37,10 +37,22 @@ Route::prefix('tests')
             ->name('.subject')
             ->group(function () use (&$routePatterns) {
 
+                Route::get('/settings', function () {
+                    return view('pages.admin.subjects-single-settings');
+                })->name('.settings');
+
+                Route::get('/new', function () {
+                    return view('pages.admin.tests-new');
+                })->name('.new');
+
                 Route::prefix('/{test}')
                     ->where(['test' => $routePatterns['name']])
                     ->name('.test')
                     ->group(function () use (&$routePatterns) {
+
+                        Route::get('/settings', function () {
+                            return view('pages.admin.tests-single-settings');
+                        })->name('settings');
 
                         Route::get('/', function () {
                             return 'simply test';
@@ -51,9 +63,7 @@ Route::prefix('tests')
                  * Simply the single subject routing
                  */
                 Route::get('/', function (\Illuminate\Http\Request $request) {
-
                     return view('pages.admin.subjects-single');
-
                 });
             });
 
