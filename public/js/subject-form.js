@@ -10,10 +10,12 @@ $(document).ready(function () {
 
     $('#alias').liTranslit(translitParams);
 
-    $('#name').change(function () {
-        console.log("changed");
+    $('#name').on('input', function () {
         if ($(this).val().trim() !== '') {
             $generateTranslit.removeAttr('disabled');
+        }
+        else {
+            $generateTranslit.attr('disabled', 'disabled');
         }
     }).liTranslit({...translitParams, elAlias: $textContainer});
 
