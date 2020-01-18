@@ -76,7 +76,7 @@ Route::prefix('users')
     ->name('.users')
     ->group(function () {
         Route::get('/', function () {
-            return "users";
+            return view('pages.admin.users-list');
         });
     });
 

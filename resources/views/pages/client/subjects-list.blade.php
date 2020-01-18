@@ -1,4 +1,4 @@
-@extends('layouts.subjects-list', ['baseLayout' => 'layouts.root.client' ])
+@extends('layouts.categories-list', ['baseLayout' => 'layouts.root.client' ])
 
 @section('header')
     <h2 class="mb-4">Усі доступні предмети тестування:</h2>
