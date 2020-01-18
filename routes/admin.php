@@ -24,13 +24,13 @@ Route::get('/dashboard', function () {
 
 Route::prefix('/tests')
     ->name('.tests')
+    ->namespace('Tests')
     ->group(function () {
 
         $routePatterns = Route::getPatterns();
 
-        Route::get('/new', function () {
-            return view('pages.admin.subjects-new');
-        })->name('.new');
+        Route::get('/new', 'SubjectsController@showNewSubjectForm')->name('.new');
+        Route::post('/new', 'SubjectsController@newSubject');
 
         Route::prefix('/{subject}')
             ->where(['subject' => $routePatterns['name']])
