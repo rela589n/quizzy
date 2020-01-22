@@ -6,6 +6,22 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SubjectsRequest extends FormRequest
 {
+
+    public function messages()
+    {
+        return [
+            //
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'uri_alias' => 'uri-псевдонім',
+            'course' => 'Курс'
+        ];
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,7 +42,7 @@ class SubjectsRequest extends FormRequest
         return [
             'name' => 'required|min:3|max:128',
             'uri_alias' => 'required|unique:test_subjects|min:3|max:16',
-            'course' => 'required|min:4|max:4'
+            'course' => 'required|numeric|min:1|max:4'
         ];
     }
 }
