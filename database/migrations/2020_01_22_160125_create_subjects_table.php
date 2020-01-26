@@ -4,8 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFailedJobsTable extends Migration
+class CreateSubjectsTable extends Migration
 {
+    private $tableName = 'test_subjects';
+
     /**
      * Run the migrations.
      *
@@ -13,13 +15,11 @@ class CreateFailedJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create('failed_jobs', function (Blueprint $table) {
+        Schema::table($this->tableName, function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->text('connection');
-            $table->text('queue');
-            $table->longText('payload');
-            $table->longText('exception');
-            $table->timestamp('failed_at')->useCurrent();
+            $table->string('name', 128);
+            $table->string('uri_alias', 16)->unique();
+            $table->enum('course', ['1', '2', '3', '4']);
 
             $table->charset = 'utf8';
             $table->collation = 'utf8_unicode_ci';
@@ -33,6 +33,6 @@ class CreateFailedJobsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('failed_jobs');
+        Schema::drop($this->tableName);
     }
 }
