@@ -1,4 +1,4 @@
-@extends('layouts.menu')
+@extends('layouts.blocks.menu')
 
 @section('links')
     <li class="nav-item @ifroute('client.dashboard') active @endifroute">

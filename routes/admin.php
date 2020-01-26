@@ -16,11 +16,13 @@ Route::get('/', function () {
     return view('pages.admin.auth');
 })->name('.auth');
 
+
 Route::get('/dashboard', function () {
 
     return view('pages.admin.dashboard');
 
 })->name('.dashboard');
+
 
 Route::prefix('/tests')
     ->name('.tests')
@@ -67,10 +69,12 @@ Route::prefix('/tests')
                 });
             });
 
-        Route::get('/', function () {
-            return view('pages.admin.subjects-list');
-        });
+        /*
+         *  List of all subjects
+         */
+        Route::get('/', 'SubjectsController@showAll');
     });
+
 
 Route::prefix('users')
     ->name('.users')
