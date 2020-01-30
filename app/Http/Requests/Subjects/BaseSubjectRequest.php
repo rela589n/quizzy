@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Subjects;
 
-use App\TestSubject;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
-abstract class SubjectsRequest extends FormRequest
+abstract class BaseSubjectRequest extends FormRequest
 {
 
     public function attributes()

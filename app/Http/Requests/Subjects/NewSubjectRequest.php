@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Subjects;
 
-use Illuminate\Foundation\Http\FormRequest;
 
-class SubjectNewRequest extends SubjectsRequest
+class NewSubjectRequest extends BaseSubjectRequest
 {
 
     /**

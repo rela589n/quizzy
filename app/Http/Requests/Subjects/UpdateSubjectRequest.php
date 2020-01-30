@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Subjects;
 
 use App\TestSubject;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class SubjectUpdateRequest extends SubjectsRequest
+class UpdateSubjectRequest extends BaseSubjectRequest
 {
     /**
      * Get the validation rules that apply to the request.
