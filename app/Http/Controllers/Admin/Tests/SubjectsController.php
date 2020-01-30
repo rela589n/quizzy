@@ -45,7 +45,7 @@ class SubjectsController extends Controller
         $subject = $request->getCurrentSubject();
         $subject->update($request->validated());
 
-        return redirect()->route('admin.tests.subject',[
+        return redirect()->route('admin.tests.subject', [
             'subject' => $subject['uri_alias']
         ]);
     }

@@ -59,11 +59,11 @@ Route::prefix('/tests')
                             return view('pages.admin.tests-single');
                         });
                     });
-// admin.tests.subject.test
                 /*
-                 * Simply the single subject routing
+                 * Simply list of all subject's tests <br>
+                 * admin.tests.subject.test
                  */
-                Route::get('/', 'SubjectsController@showSingleSubject');
+                Route::get('/', 'TestsController@showAll');
             });
 
         /*
