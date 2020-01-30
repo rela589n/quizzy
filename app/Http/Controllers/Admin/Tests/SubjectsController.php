@@ -42,6 +42,11 @@ class SubjectsController extends Controller
 
     public function updateSubject(UpdateSubjectRequest $request)
     {
-        dd($request);
+        $subject = $request->getCurrentSubject();
+        $subject->update($request->validated());
+
+        return redirect()->route('admin.tests.subject',[
+            'subject' => $subject['uri_alias']
+        ]);
     }
 }
