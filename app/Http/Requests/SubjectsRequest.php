@@ -2,17 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\TestSubject;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
-class SubjectsRequest extends FormRequest
+abstract class SubjectsRequest extends FormRequest
 {
-
-    public function messages()
-    {
-        return [
-            //
-        ];
-    }
 
     public function attributes()
     {
@@ -40,14 +36,22 @@ class SubjectsRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3|max:128',
+            'name' => [
+                'required',
+                'min:3',
+                'max:128'
+            ],
             'uri_alias' => [
                 'required',
                 'min:3',
                 'max:48',
-                'unique:test_subjects'
             ],
-            'course' => 'required|numeric|min:1|max:4'
+            'course' => [
+                'required',
+                'numeric',
+                'min:1',
+                'max:4'
+            ]
         ];
     }
 }

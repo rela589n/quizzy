@@ -39,9 +39,8 @@ Route::prefix('/tests')
             ->name('.subject')
             ->group(function () use (&$routePatterns) {
 
-                Route::get('/settings', function () {
-                    return view('pages.admin.subjects-single-settings');
-                })->name('.settings');
+                Route::get('/settings', 'SubjectsController@showUpdateSubjectForm')->name('.settings');
+                Route::post('/settings', 'SubjectsController@updateSubject');
 
                 Route::get('/new', function () {
                     return view('pages.admin.tests-new');
