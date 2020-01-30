@@ -41,7 +41,12 @@ class SubjectsRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:128',
-            'uri_alias' => 'required|unique:test_subjects|min:3|max:16',
+            'uri_alias' => [
+                'required',
+                'min:3',
+                'max:48',
+                'unique:test_subjects'
+            ],
             'course' => 'required|numeric|min:1|max:4'
         ];
     }

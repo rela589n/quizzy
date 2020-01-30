@@ -23,7 +23,11 @@ class SubjectsController extends Controller
 
     public function newSubject(SubjectsRequest $request)
     {
-        TestSubject::create($request->validated());
-        return redirect()->route('admin.dashboard');
+        $validated = $request->validated();
+        TestSubject::create($validated);
+
+        return redirect()->route('admin.tests.subject', [
+            'subject' => $validated['uri_alias']
+        ]);
     }
 }
