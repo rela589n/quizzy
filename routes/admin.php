@@ -59,13 +59,11 @@ Route::prefix('/tests')
                             return view('pages.admin.tests-single');
                         });
                     });
-
+// admin.tests.subject.test
                 /*
                  * Simply the single subject routing
                  */
-                Route::get('/', function (\Illuminate\Http\Request $request) {
-                    return view('pages.admin.subjects-single');
-                });
+                Route::get('/', 'SubjectsController@showSingleSubject');
             });
 
         /*
