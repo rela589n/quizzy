@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\TestSubject whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\TestSubject whereUriAlias($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Test[] $tests
+ * @property-read int|null $tests_count
  */
 class TestSubject extends Model
 {
@@ -27,6 +29,6 @@ class TestSubject extends Model
 
     public function tests()
     {
-        return $this->hasMany(Test::class, 'id_subject');
+        return $this->hasMany(Test::class);
     }
 }
