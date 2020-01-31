@@ -4,7 +4,7 @@ namespace App\Http\Requests\Subjects;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-abstract class BaseSubjectRequest extends FormRequest
+abstract class SubjectPostRequest extends SubjectRequest
 {
 
     public function attributes()

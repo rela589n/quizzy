@@ -5,10 +5,8 @@ namespace App\Http\Requests\Subjects;
 use App\TestSubject;
 use Illuminate\Validation\Rule;
 
-class UpdateSubjectRequest extends BaseSubjectRequest
+class UpdateSubjectRequest extends SubjectPostRequest
 {
-    protected $currentSubject = null;
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -18,18 +16,10 @@ class UpdateSubjectRequest extends BaseSubjectRequest
     {
         $rules = parent::rules();
 
-        $this->currentSubject = TestSubject::where('uri_alias', '=', $this->route('subject'))->first();
-        $rules['uri_alias'][] = Rule::unique('test_subjects')->ignoreModel($this->currentSubject);
+        $rules['uri_alias'][] = Rule::unique('test_subjects')
+            ->ignoreModel($this->getCurrentSubject());
 
         return $rules;
-    }
-
-    /**
-     * @return \App\TestSubject | null
-     */
-    public function getCurrentSubject()
-    {
-        return $this->currentSubject;
     }
 
 }

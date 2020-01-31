@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Subjects;
 
 
-class NewSubjectRequest extends BaseSubjectRequest
+class CreateSubjectRequest extends SubjectPostRequest
 {
 
     /**
