@@ -15,7 +15,7 @@ abstract class SubjectRequest extends FormRequest
     public function getCurrentSubject()
     {
         if ($this->currentSubject === null) {
-            $this->receiveCurrentSubject();
+            $this->currentSubject = $this->receiveCurrentSubject();
         }
 
         return $this->currentSubject;
