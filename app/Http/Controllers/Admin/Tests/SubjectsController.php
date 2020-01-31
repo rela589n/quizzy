@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Subjects\NewSubjectRequest;
+use App\Http\Requests\Subjects\CreateSubjectRequest;
+use App\Http\Requests\Subjects\SubjectGetRequest;
+use App\Http\Requests\Subjects\SubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
+use App\Test;
 use App\TestSubject;
 use Illuminate\Http\Request;
 
@@ -23,7 +26,7 @@ class SubjectsController extends Controller
         ]);
     }
 
-    public function newSubject(NewSubjectRequest $request)
+    public function newSubject(CreateSubjectRequest $request)
     {
         $validated = $request->validated();
         TestSubject::create($validated);
@@ -33,10 +36,20 @@ class SubjectsController extends Controller
         ]);
     }
 
-    public function showUpdateSubjectForm(Request $request)
+    public function showSingleSubject(SubjectGetRequest $request)
+    {
+        $subject = $request->getCurrentSubject()->load('tests');
+        $subject->tests->loadCount('nativeQuestions as questions_count');
+
+        return view('pages.admin.subjects-single', [
+            'subject' => $subject
+        ]);
+    }
+
+    public function showUpdateSubjectForm(SubjectGetRequest $request)
     {
         return view('pages.admin.subjects-single-settings', [
-            'subject' => TestSubject::where('uri_alias', '=', 'check')->first()
+            'subject' => $request->getCurrentSubject()
         ]);
     }
 

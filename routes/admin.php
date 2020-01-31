@@ -63,7 +63,7 @@ Route::prefix('/tests')
                  * Simply list of all subject's tests <br>
                  * admin.tests.subject.test
                  */
-                Route::get('/', 'TestsController@showAll');
+                Route::get('/', 'SubjectsController@showSingleSubject');
             });
 
         /*
