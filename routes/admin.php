@@ -42,19 +42,16 @@ Route::prefix('/tests')
                 Route::get('/settings', 'SubjectsController@showUpdateSubjectForm')->name('.settings');
                 Route::post('/settings', 'SubjectsController@updateSubject');
 
-                Route::get('/new', function () {
-                    return view('pages.admin.tests-new');
-                })->name('.new');
+                Route::get('/new', 'TestsController@showNewTestForm')->name('.new');
+                Route::post('/new', 'TestsController@newTest');
 
                 Route::prefix('/{test}')
                     ->where(['test' => $routePatterns['name']])
                     ->name('.test')
                     ->group(function () use (&$routePatterns) {
 
-                        Route::get('/settings', function () {
-                            return view('pages.admin.tests-single-settings');
-                        })->name('settings');
-
+                        Route::get('/settings', 'TestsController@showUpdateSubjectForm')->name('settings');
+                        
                         Route::get('/', function () {
                             return view('pages.admin.tests-single');
                         });

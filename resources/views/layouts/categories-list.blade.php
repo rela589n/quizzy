@@ -10,9 +10,7 @@
                 @show
 
                 <ul class="list-group categories text-dark">
-                    @section('subject-links')
-{{--          traverse all subjects and print base layout              --}}
-                    @show
+                    @yield('subject-links')
                 </ul>
 
                 @yield('create-new-btn')
