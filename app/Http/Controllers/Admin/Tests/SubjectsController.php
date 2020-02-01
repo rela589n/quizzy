@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Subjects\CreateSubjectRequest;
-use App\Http\Requests\Subjects\SubjectGetRequest;
-use App\Http\Requests\Subjects\SubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
-use App\Test;
 use App\TestSubject;
-use Illuminate\Http\Request;
 
 class SubjectsController extends Controller
 {
@@ -36,9 +33,9 @@ class SubjectsController extends Controller
         ]);
     }
 
-    public function showSingleSubject(SubjectGetRequest $request)
+    public function showSingleSubject(RequestUrlManager $urlManager)
     {
-        $subject = $request->getCurrentSubject()->load('tests');
+        $subject = $urlManager->getCurrentSubject();
         $subject->tests->loadCount('nativeQuestions as questions_count');
 
         return view('pages.admin.subjects-single', [
@@ -46,16 +43,16 @@ class SubjectsController extends Controller
         ]);
     }
 
-    public function showUpdateSubjectForm(SubjectGetRequest $request)
+    public function showUpdateSubjectForm(RequestUrlManager $urlManager)
     {
         return view('pages.admin.subjects-single-settings', [
-            'subject' => $request->getCurrentSubject()
+            'subject' => $urlManager->getCurrentSubject()
         ]);
     }
 
-    public function updateSubject(UpdateSubjectRequest $request)
+    public function updateSubject(UpdateSubjectRequest $request, RequestUrlManager $urlManager)
     {
-        $subject = $request->getCurrentSubject();
+        $subject = $urlManager->getCurrentSubject();
         $subject->update($request->validated());
 
         return redirect()->route('admin.tests.subject', [

@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Subjects;
 
 
-class CreateSubjectRequest extends SubjectPostRequest
+class CreateSubjectRequest extends SubjectRequest
 {
 
     /**
@@ -13,7 +13,7 @@ class CreateSubjectRequest extends SubjectPostRequest
      */
     public function rules()
     {
-        $rules = parent::rules();
+        $rules = $this->baseRules;
         $rules['uri_alias'][] = 'unique:test_subjects';
         return $rules;
     }

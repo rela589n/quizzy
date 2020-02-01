@@ -176,6 +176,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\BladeDirectivesServiceProvider::class,
+
+        App\Providers\RequestManagerProvider::class
     ],
 
     /*

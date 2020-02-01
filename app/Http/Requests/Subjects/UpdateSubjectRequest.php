@@ -2,22 +2,23 @@
 
 namespace App\Http\Requests\Subjects;
 
-use App\TestSubject;
+use App\Http\Requests\RequestUrlManager;
 use Illuminate\Validation\Rule;
 
-class UpdateSubjectRequest extends SubjectPostRequest
+class UpdateSubjectRequest extends SubjectRequest
 {
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param RequestUrlManager $urlManager
      * @return array
      */
-    public function rules()
+    public function rules(RequestUrlManager $urlManager)
     {
-        $rules = parent::rules();
+        $rules = $this->baseRules;
 
         $rules['uri_alias'][] = Rule::unique('test_subjects')
-            ->ignoreModel($this->getCurrentSubject());
+            ->ignoreModel($urlManager->getCurrentSubject());
 
         return $rules;
     }

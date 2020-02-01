@@ -1,19 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Subjects;
+namespace App\Http\Requests\Tests;
 
-use App\Http\Requests\RequestUrlManager;
+use App\Test;
 use Illuminate\Foundation\Http\FormRequest;
 
-abstract class SubjectRequest extends FormRequest
+abstract class TestRequest extends FormRequest
 {
-
-    public function attributes()
-    {
-        return [
-            'course' => 'Курс'
-        ];
-    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -36,11 +29,11 @@ abstract class SubjectRequest extends FormRequest
             'min:3',
             'max:48',
         ],
-        'course' => [
+        'time' => [
             'required',
             'numeric',
             'min:1',
-            'max:4'
+            'max:65000'
         ]
     ];
 }
