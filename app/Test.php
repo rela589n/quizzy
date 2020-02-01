@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 class Test extends Model
 {
     public $timestamps = false;
-    protected $fillable = []; // todo create architecture
+    protected $fillable = ['name', 'uri_alias', 'time']; // todo create architecture
 
     public function subject()
     {
@@ -49,6 +49,6 @@ class Test extends Model
             'test_composite',
             'id_test',
             'id_include_test'
-        );
+        )->withPivot(['questions_quantity']);
     }
 }
