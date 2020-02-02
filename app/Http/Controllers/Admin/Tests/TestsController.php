@@ -40,7 +40,6 @@ class TestsController extends Controller
 
         $includeTests = array_map(
             function ($value) {
-                dump($value);
                 return [
                     'questions_quantity' => $value['count']
                 ];
