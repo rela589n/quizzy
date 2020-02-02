@@ -51,13 +51,13 @@ Route::prefix('/tests')
                     ->group(function () use (&$routePatterns) {
 
                         Route::get('/settings', 'TestsController@showUpdateSubjectForm')->name('settings');
-                        
+
                         Route::get('/', function () {
                             return view('pages.admin.tests-single');
                         });
                     });
                 /*
-                 * Simply list of all subject's tests <br>
+                 * Show single subject with his tests list
                  * admin.tests.subject.test
                  */
                 Route::get('/', 'SubjectsController@showSingleSubject');
