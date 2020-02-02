@@ -34,6 +34,15 @@ abstract class TestRequest extends FormRequest
             'numeric',
             'min:1',
             'max:65000'
+        ],
+        'include' => 'nullable|array',
+        'include.*' => 'array',
+        'include.*.count' => [
+            'required_with:include.*.necessary',
+            'exclude_unless:include.*.necessary,on',
+            'nullable',
+            'numeric',
+            'min:1'
         ]
     ];
 }

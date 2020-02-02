@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 class RequestUrlManager
 {
     protected $request;
+    /**
+     * @var \App\TestSubject
+     */
     protected $currentSubject = null;
     protected $currentTest = null;
 
@@ -25,7 +28,7 @@ class RequestUrlManager
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model|object|null
+     * @return TestSubject|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
     public function getCurrentSubject()
     {

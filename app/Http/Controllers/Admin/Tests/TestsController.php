@@ -10,25 +10,55 @@ use Illuminate\Http\Request;
 
 class TestsController extends Controller
 {
-    public function showNewTestForm()
+    public function showNewTestForm(RequestUrlManager $urlManager)
     {
-        return view('pages.admin.tests-new');
+        /**
+         * @var  \App\TestSubject $subject
+         */
+
+        $subject = $urlManager->getCurrentSubject();
+
+        $tests = $subject->tests()->has('nativeQuestions')
+            ->withCount('nativeQuestions as questions_count')->get();
+
+
+        return view('pages.admin.tests-new', ['includeTests' => $tests]);
     }
 
-    public function newTest(CreateTestRequest $request)
+    public function newTest(CreateTestRequest $request, RequestUrlManager $urlManager)
     {
-        $tests = Test::find(1)->tests;
+        /**
+         * @var \App\Test $newTest
+         */
 
-        $tests->load('nativeQuestions');
+        $validated = $request->validated();
 
-        foreach ($tests as $test) {
-           dump($test->pivot->questions_quantity);
-        }
+        // todo move this logic into another class
+        $includeTests = array_filter($validated['include'] ?? [], function ($v) {
+            return !empty($v['count']);
+        });
 
-        dd("Ok");
+        $includeTests = array_map(
+            function ($value) {
+                dump($value);
+                return [
+                    'questions_quantity' => $value['count']
+                ];
+            },
+            $includeTests
+        );
+
+        $currentSubject = $urlManager->getCurrentSubject();
+        $newTest = $currentSubject->tests()->create($request->validated());
+        $newTest->tests()->attach($includeTests);
+
+        return redirect()->route('admin.tests.subject.test', [
+            'subject' => $currentSubject->uri_alias,
+            'test' => $newTest->uri_alias
+        ]);
     }
 
-    public function showUpdateSubjectForm(Request $request, RequestUrlManager $urlManager)
+    public function showUpdateTestForm(Request $request, RequestUrlManager $urlManager)
     {
         $test = $urlManager->getCurrentTest();
 
