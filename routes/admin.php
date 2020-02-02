@@ -50,7 +50,7 @@ Route::prefix('/tests')
                     ->name('.test')
                     ->group(function () use (&$routePatterns) {
 
-                        Route::get('/settings', 'TestsController@showUpdateSubjectForm')->name('settings');
+                        Route::get('/settings', 'TestsController@showUpdateTestForm')->name('settings');
 
                         Route::get('/', function () {
                             return view('pages.admin.tests-single');
