@@ -10,7 +10,8 @@
                 @section('header')
                     <h2 class="mb-4">Тест по предмету @yield('subject-name') - @yield('test-name'):</h2>
                 @show
-                <form action="http://laravel-blog.loc/admin" method="post" class="edit-test-form mt-5">
+                <form method="post" class="edit-test-form mt-5">
+                    @csrf
                     <ul class="list-group text-dark questions">
                         @section('test-questions')
                             {{--          traverse all subjects and print base layout              --}}

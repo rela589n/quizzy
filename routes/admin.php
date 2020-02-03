@@ -52,9 +52,8 @@ Route::prefix('/tests')
 
                         Route::get('/settings', 'TestsController@showUpdateTestForm')->name('settings');
 
-                        Route::get('/', function () {
-                            return view('pages.admin.tests-single');
-                        });
+                        Route::get('/', 'QuestionsController@showCreateUpdateForm');
+                        Route::post('/', 'QuestionsController@createUpdate');
                     });
                 /*
                  * Show single subject with his tests list
