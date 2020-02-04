@@ -26,7 +26,6 @@ $(function () {
 
             //input
             $question.children('.question-text').attr('name', questionName).attr('id', questionName);
-            // console.log('reindex');
             reindexVariants();
         };
 
@@ -82,8 +81,6 @@ $(function () {
         this.changeIndex = function (index) {
             $variant.attr('data-variant', index);
 
-            // console.log(parent.getIndex());
-
             $variant.find('.variant-text')
                 .attr('placeholder', questionsManager.variantTextPlaceholder(index))
                 .attr('name', questionsManager.generateVariantInputName(parent.getIndex(), index));
@@ -106,7 +103,9 @@ $(function () {
         let questions = [];
 
         this.appendNewQuestion = function () {
-            let newRecord = new QuestionRecord(this.createEmptyQuestion(questions.length + 1));
+            let questionIndex = (questions.length === 0) ? 1 : questions.last().getIndex() + 1;
+
+            let newRecord = new QuestionRecord(this.createEmptyQuestion(questionIndex));
             questions.push(newRecord);
 
             this.appendNewVariant(questions.length);
@@ -116,11 +115,15 @@ $(function () {
         };
 
         this.appendNewVariant = function (questionIndex) {
-            questions[questionIndex - 1].pushVariant(
+            let currentQuestion = questions[questionIndex - 1];
+            let variantsSize = currentQuestion.variantsSize();
+            let variantIndex = (variantsSize === 0) ? 1 : currentQuestion.getVariant(variantsSize - 1).getIndex() + 1;
+
+            currentQuestion.pushVariant(
                 new VariantRecord(this.createEmptyVariant(
-                    questions[questionIndex - 1].variantsSize() + 1,
+                    variantIndex,
                     questionIndex
-                ), questions[questionIndex - 1])
+                ), currentQuestion)
             );
         };
 
