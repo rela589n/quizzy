@@ -1,75 +1,148 @@
 $(function () {
+    if (!Array.prototype.last) {
+        Array.prototype.last = function () {
+            return this[this.length - 1];
+        };
+    }
+
+
     let $editTestForm = $('.edit-test-form');
     let $document = $(document);
     let $questionsContainer = $editTestForm.find('ul.list-group.questions');
-    let creator = new QuestionCreator($questionsContainer);
+    let questionsManager = new QuestionsManager($questionsContainer);
 
-    function QuestionRecord(html) {
-        let $question = $(html);
+    function QuestionRecord($html) {
+        let $question = $html;
+        let $wrapper = $question.find('.variants-wrapper');
         let variants = [];
 
         this.changeIndex = function (newIndex) {
             $question.attr('data-question', newIndex);
-            $question.children('.question-header').text(creator.questionTextPlaceholder(newIndex));
+
+            let questionName = questionsManager.generateQuestionName(this.getIndex());
+            //label
+            $question.children('.question-header').text(questionsManager.questionTextPlaceholder(newIndex))
+                .attr('for', questionName);
+
+            //input
+            $question.children('.question-text').attr('name', questionName).attr('id', questionName);
+            // console.log('reindex');
+            reindexVariants();
         };
 
         this.pushVariant = function (variantRecord) {
             variants.push(variantRecord);
+            $wrapper.append(variantRecord.getDomElement());
+        };
+
+        this.variantsSize = function () {
+            return variants.length;
         };
 
         this.getVariant = function (index) {
             return variants[index];
         };
 
-        this.callNextVariantUpdate = function(nextIndex) {
-
-        }
-
-        this.getResultHtml = function () {
-            let $wrapper = $question.find('.variants-wrapper');
-            for (let i = 0; i < variants.length; ++i) {
-                $wrapper.append(variants[i].getResultHtml());
-            }
-
-            return $question;
-        }
-    }
-
-    function VariantRecord(html, questionRecord) {
-        let $variant = $(html);
-        let parent = questionRecord;
-
-
-        this.changeIndex = function ($variant, index) {
-            $variant.attr('data-variant', index);
-            $variant.find('.variant-text').attr('placeholder', creator.variantTextPlaceholder(index));
-            $variant.find('.is-correct').attr('name', creator.generateCheckBoxName(parent.))
-            // $('.is-correct', $variant).attr('name', creator.)
+        this.getIndex = function () {
+            return parseInt($question.attr('data-question'));
         };
 
-        this.getResultHtml = function () {
+        this.getQId = function () {
+            return $question.attr('data-question-id');
+        };
+
+        this.deleteVariant = function (delIndex) {
+            let currentVariant = variants[delIndex - 1];
+
+            currentVariant.getDomElement().detach();
+
+            variants.splice(delIndex - 1, 1);
+            reindexVariants(delIndex - 1);
+        };
+
+        function reindexVariants(startFrom = 0, delta = 0) {
+            for (let i = startFrom; i < variants.length; ++i) {
+                variants[i].changeIndex(i + 1 + delta);
+            }
+        }
+
+        this.getDomElement = function () {
+            return $question;
+        };
+
+        this.detach = function () {
+            $question.detach();
+        };
+    }
+
+    function VariantRecord($html, questionRecord) {
+        let $variant = $html;
+        let parent = questionRecord;
+
+        this.changeIndex = function (index) {
+            $variant.attr('data-variant', index);
+
+            // console.log(parent.getIndex());
+
+            $variant.find('.variant-text')
+                .attr('placeholder', questionsManager.variantTextPlaceholder(index))
+                .attr('name', questionsManager.generateVariantInputName(parent.getIndex(), index));
+
+            $variant.find('.is-correct').attr('name', questionsManager.generateCheckBoxName(parent.getIndex(), index));
+        };
+
+        this.getIndex = function () {
+            return parseInt($variant.attr('data-variant'));
+        };
+
+
+        this.getDomElement = function () {
             return $variant;
         };
     }
 
-    function QuestionCreator($questionsContainer) {
+    function QuestionsManager($questionsContainer) {
         this.$questionsContainer = $questionsContainer;
+        let questions = [];
 
         this.appendNewQuestion = function () {
-            let newQuestionIndex = (+this.$questionsContainer.children('li:last').attr('data-question') + 1) || 1;
-            let $newQuestion = this.createEmptyQuestion(newQuestionIndex);
+            let newRecord = new QuestionRecord(this.createEmptyQuestion(questions.length + 1));
+            questions.push(newRecord);
 
-            let $variant1 = this.createEmptyVariant(1, newQuestionIndex);
-            let $variant2 = this.createEmptyVariant(2, newQuestionIndex);
+            this.appendNewVariant(questions.length);
+            this.appendNewVariant(questions.length);
 
-            this.pushVariantToQuestion($newQuestion, $variant1);
-            this.pushVariantToQuestion($newQuestion, $variant2);
-            this.$questionsContainer.append($newQuestion);
+            this.$questionsContainer.append(newRecord.getDomElement());
         };
 
-        this.pushVariantToQuestion = function ($question, $variant) {
-            $question.find('.variants-wrapper').append($variant);
-            return this;
+        this.appendNewVariant = function (questionIndex) {
+            questions[questionIndex - 1].pushVariant(
+                new VariantRecord(this.createEmptyVariant(
+                    questions[questionIndex - 1].variantsSize() + 1,
+                    questionIndex
+                ), questions[questionIndex - 1])
+            );
+        };
+
+        this.removeQuestion = function (delIndex) {
+            let thisQuestion = questions[delIndex - 1];
+
+            let questionId = thisQuestion.getQId();
+            if (!isNaN(questionId)) {
+                $editTestForm.append($(`<input type="hidden" name="q[deleted][]" value="${questionId}">`));
+            }
+
+            thisQuestion.getDomElement().detach();
+
+            questions.splice(delIndex - 1, 1);
+            for (let i = delIndex - 1; i < questions.length; ++i) {
+                questions[i].changeIndex(i + 1);
+            }
+        };
+
+        this.removeVariant = function (questionIndex, variantIndex) {
+            let thisQuestion = questions[questionIndex - 1];
+            thisQuestion.deleteVariant(variantIndex);
         };
 
         this.createEmptyQuestion = function (questionIndex) {
@@ -102,13 +175,13 @@ $(function () {
                     <div class="col-auto">
                         <label class="form-check d-inline pb-1 mb-0">
                             <input class="form-check-input is-correct" type="checkbox"
-                                   name="${this.generateCheckBoxName(variantIndex, questionIndex)}">
+                                   name="${this.generateCheckBoxName(questionIndex, variantIndex)}">
                         </label>
                     </div>
                     <div class="col-form-label col-xl-11 col-lg-10 col-sm-9 col-8">
                         <label class="form-check-label d-block">
                             <input type="text" class="form-control form-control-sm variant-text"
-                                   name="${this.generateVariantInputName(variantIndex, questionIndex)}"
+                                   name="${this.generateVariantInputName(questionIndex, variantIndex)}"
                                    placeholder="${this.variantTextPlaceholder(variantIndex)}"  required="required">
                         </label>
                     </div>
@@ -118,11 +191,6 @@ $(function () {
                 </div>`);
         };
 
-        this.changeVariantIndex = function ($variant, index) {
-            $variant.attr('data-variant', index);
-            $variant.find('.variant-text').attr('placeholder', 'Варіант № ' + index);
-            // $('.is-correct', $variant).attr('name', creator.)
-        };
 
         this.variantTextPlaceholder = function (variantIndex) {
             return `Варіант № ${variantIndex}`;
@@ -132,11 +200,15 @@ $(function () {
             return 'Питання № ' + questionIndex;
         };
 
-        this.generateCheckBoxName = function (variantIndex, questionIndex) {
+        this.generateQuestionName = function (questionIndex) {
+            return `q[new][${questionIndex}][name]`;
+        };
+
+        this.generateCheckBoxName = function (questionIndex, variantIndex) {
             return `q[new][${questionIndex}][v][${variantIndex}][is_right]`;
         };
 
-        this.generateVariantInputName = function (variantIndex, questionIndex) {
+        this.generateVariantInputName = function (questionIndex, variantIndex) {
             return `q[new][${questionIndex}][v][${variantIndex}][text]`;
         };
 
@@ -151,64 +223,30 @@ $(function () {
 
 
     $('.button-add-question').click(function () {
-        creator.appendNewQuestion();
+        questionsManager.appendNewQuestion();
     });
 
 
     $document.on('click', '.button-add-variant', function () {
-        let $this = $(this);
-        let $question = $this.closest('li.question');
-        let $variantsWrapper = $this.siblings('.variants-wrapper');
+        let $question = $(this).closest('li.question');
 
-        let newVariantIndex = +$variantsWrapper.children('div:last').attr('data-variant') + 1 || 1;
-        let questionIndex = $question.attr('data-question');
-
-        $variantsWrapper.append(creator.createEmptyVariant(newVariantIndex, questionIndex));
+        questionsManager.appendNewVariant($question.attr('data-question'));
     });
 
     $document.on('click', '.button-delete-variant', function () {
-        let $btn = $(this);
 
-        let $thisVariant = $btn.closest('[data-variant]');
-        let nextVariantIndex = $thisVariant.attr('data-variant');
-        let $nextVariants = $thisVariant.nextAll();
+        let $thisVariant = $(this).closest('[data-variant]');
+        let $thisQuestion = $thisVariant.closest('li.question');
 
-        $nextVariants.each(function (_, variant) {
-            changeVariantIndex($(variant), nextVariantIndex++);
-        });
-
-        $thisVariant.detach();
-
-        function changeVariantIndex($variant, index) {
-            $variant.attr('data-variant', index);
-            $variant.find('.variant-text').attr('placeholder', 'Варіант № ' + index);
-            // $('.is-correct', $variant).attr('name', creator.)
-        }
-
+        questionsManager.removeVariant($thisQuestion.attr('data-question'), $thisVariant.attr('data-variant'))
     });
 
     $document.on('click', '.button-delete-question', function () {
-        let $thisBtn = $(this);
 
-        let $thisQuestion = $thisBtn.closest('.question');
-        let nextQuestionIndex = $thisQuestion.attr('data-question');
-        let $nextQuestions = $thisQuestion.nextAll('.question');
+        let $thisQuestion = $(this).closest('.question');
+        let delQuestionId = $thisQuestion.attr('data-question');
 
-        $nextQuestions.each(function (_, variant) {
-            changeQuestionIndex($(variant), nextQuestionIndex++);
-        });
-
-        let questionId = $thisQuestion.attr('data-question-id');
-        if (!isNaN(questionId)) {
-            $editTestForm.append($(`<input type="hidden" name="q[deleted][]" value="${questionId}">`));
-        }
-
-        $thisQuestion.detach();
-
-        function changeQuestionIndex($question, index) {
-            $question.attr('data-question', index);
-            $question.children('.question-header').text('Питання № ' + index);
-        }
+        questionsManager.removeQuestion(delQuestionId);
     });
 
     $document.on('change', $editTestForm.find('input[type=text]'), function (e) {
@@ -216,55 +254,6 @@ $(function () {
         let $question = $currentInput.closest('.question');
         if (!$question.is('[data-new=true]')) {
             $question.attr('data-modified', 'true');
-        }
-    });
-
-    $editTestForm.submit(function (e) {
-        checkNew();
-        checkModified();
-
-        function checkNew() {
-            let $new = $questionsContainer.children('[data-new=true]');
-
-            $new.each(function () {
-                let $this = $(this);
-                let $inputs = $this.find('input');
-
-                let qIndex = creator.generateId();
-                $inputs.filter('.question-text').attr('name', `q[new][${qIndex}][name]`);
-
-                $inputs.filter('.is-correct').each(function (index, el) {
-                    let $el = $(el);
-
-                    if ($el.is(':checked')) {
-                        $el.attr('name', `q[new][${qIndex}][v][correct][${index}]`);
-                    }
-                });
-                $inputs.filter('.variant-text').attr('name', `q[new][${qIndex}][v][text][]`);
-            });
-        }
-
-        function checkModified() {
-            let $modified = $questionsContainer.children('[data-modified=true]');
-
-            $modified.each(function () {
-                let $this = $(this);
-                let $inputs = $this.find('input');
-
-                let questionId = $this.attr('data-question-id');
-                $inputs.filter('.question-text').attr('name', `q[modified][${questionId}][name]`);
-
-                $inputs.filter('.is-correct').each(function (index, el) {
-                    let $el = $(el);
-
-                    if ($el.is(':checked')) {
-                        $el.attr('name', `q[modified][${questionId}][v][correct][${index}]`);
-                    }
-                });
-                $inputs.filter('.variant-text').attr('name', `q[modified][${questionId}][v][text][]`);
-            });
-
-            // e.preventDefault();
         }
     });
 });
