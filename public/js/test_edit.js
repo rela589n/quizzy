@@ -5,16 +5,65 @@ $(function () {
         };
     }
 
-
     let $editTestForm = $('.edit-test-form');
     let $document = $(document);
     let $questionsContainer = $editTestForm.find('ul.list-group.questions');
     let questionsManager = new QuestionsManager($questionsContainer);
 
+    $('.button-add-question').click(function () {
+        questionsManager.appendNewQuestion();
+    });
+
+    $document.on('click', '.button-add-variant', function () {
+        let $question = $(this).closest('li.question');
+
+        questionsManager.appendNewVariant($question.attr('data-question'));
+    });
+
+    $document.on('click', '.button-delete-variant', function () {
+
+        let $thisVariant = $(this).closest('[data-variant]');
+        let $thisQuestion = $thisVariant.closest('li.question');
+
+        questionsManager.removeVariant($thisQuestion.attr('data-question'), $thisVariant.attr('data-variant'))
+    });
+
+    $document.on('click', '.button-delete-question', function () {
+
+        let $thisQuestion = $(this).closest('.question');
+        let delQuestionId = $thisQuestion.attr('data-question');
+
+        questionsManager.removeQuestion(delQuestionId);
+    });
+
+    $document.on('change', $editTestForm.find('input[type=text]'), function (e) {
+        let $currentInput = $(e.target);
+        let $question = $currentInput.closest('li.question');
+        if (!$question.is('[data-new=true]')) {
+            $question.attr('data-modified', 'true');
+        }
+    });
+
+
     function QuestionRecord($html) {
         let $question = $html;
         let $wrapper = $question.find('.variants-wrapper');
-        let variants = [];
+        let variants = parseVariants();
+
+        function parseVariants() {
+            let result = [];
+
+            $question.find('[data-variant]').each(function(index, element) {
+                result.push(new VariantRecord($(element), this));
+            });
+
+            return result;
+        }
+
+        this.getLastVariantIndex = function () {
+            let variantsSize = this.variantsSize();
+            return (variantsSize === 0) ? 0 : variants.last().getIndex();
+        };
 
         this.changeIndex = function (newIndex) {
             $question.attr('data-question', newIndex);
@@ -92,7 +141,6 @@ $(function () {
             return parseInt($variant.attr('data-variant'));
         };
 
-
         this.getDomElement = function () {
             return $variant;
         };
@@ -100,10 +148,23 @@ $(function () {
 
     function QuestionsManager($questionsContainer) {
         this.$questionsContainer = $questionsContainer;
-        let questions = [];
+        let questions = parseQuestions();
+
+        function parseQuestions() {
+            let result = [];
+            $questionsContainer.find('li.question').each(function (index, element) {
+                result.push(new QuestionRecord($(element)));
+            });
+
+            return result;
+        }
+
+        function getLastQuestionIndex() {
+            return (questions.length === 0) ? 0 : questions.last().getIndex();
+        }
 
         this.appendNewQuestion = function () {
-            let questionIndex = (questions.length === 0) ? 1 : questions.last().getIndex() + 1;
+            let questionIndex = getLastQuestionIndex() + 1;
 
             let newRecord = new QuestionRecord(this.createEmptyQuestion(questionIndex));
             questions.push(newRecord);
@@ -116,8 +177,7 @@ $(function () {
 
         this.appendNewVariant = function (questionIndex) {
             let currentQuestion = questions[questionIndex - 1];
-            let variantsSize = currentQuestion.variantsSize();
-            let variantIndex = (variantsSize === 0) ? 1 : currentQuestion.getVariant(variantsSize - 1).getIndex() + 1;
+            let variantIndex = currentQuestion.getLastVariantIndex() + 1;
 
             currentQuestion.pushVariant(
                 new VariantRecord(this.createEmptyVariant(
@@ -128,6 +188,10 @@ $(function () {
         };
 
         this.removeQuestion = function (delIndex) {
+            console.log(`Delete index: ${delIndex}`);
+            console.log(`Questions: `);
+            console.log(questions);
+
             let thisQuestion = questions[delIndex - 1];
 
             let questionId = thisQuestion.getQId();
@@ -223,40 +287,4 @@ $(function () {
             return this.counter++;
         }
     }
-
-
-    $('.button-add-question').click(function () {
-        questionsManager.appendNewQuestion();
-    });
-
-
-    $document.on('click', '.button-add-variant', function () {
-        let $question = $(this).closest('li.question');
-
-        questionsManager.appendNewVariant($question.attr('data-question'));
-    });
-
-    $document.on('click', '.button-delete-variant', function () {
-
-        let $thisVariant = $(this).closest('[data-variant]');
-        let $thisQuestion = $thisVariant.closest('li.question');
-
-        questionsManager.removeVariant($thisQuestion.attr('data-question'), $thisVariant.attr('data-variant'))
-    });
-
-    $document.on('click', '.button-delete-question', function () {
-
-        let $thisQuestion = $(this).closest('.question');
-        let delQuestionId = $thisQuestion.attr('data-question');
-
-        questionsManager.removeQuestion(delQuestionId);
-    });
-
-    $document.on('change', $editTestForm.find('input[type=text]'), function (e) {
-        let $currentInput = $(e.target);
-        let $question = $currentInput.closest('.question');
-        if (!$question.is('[data-new=true]')) {
-            $question.attr('data-modified', 'true');
-        }
-    });
 });
