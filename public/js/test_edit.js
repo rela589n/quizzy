@@ -9,9 +9,21 @@ $(function () {
     let $document = $(document);
     let $questionsContainer = $editTestForm.find('ul.list-group.questions');
     let questionsManager = new QuestionsManager($questionsContainer);
+    let $labelEmptyQuestionsList = $('.empty-questions-list-label');
 
-    $('.button-add-question').click(function () {
+    $document.on('click', '.button-add-question', function () {
         questionsManager.appendNewQuestion();
+        checkQuestionsCountLabel();
+// todo checkQuestionsCountLabel
+    });
+
+    $document.on('click', '.button-delete-question', function () {
+
+        let $thisQuestion = $(this).closest('.question');
+        let delQuestionId = $thisQuestion.attr('data-question');
+
+        questionsManager.removeQuestion(delQuestionId);
+        checkQuestionsCountLabel();
     });
 
     $document.on('click', '.button-add-variant', function () {
@@ -28,14 +40,6 @@ $(function () {
         questionsManager.removeVariant($thisQuestion.attr('data-question'), $thisVariant.attr('data-variant'))
     });
 
-    $document.on('click', '.button-delete-question', function () {
-
-        let $thisQuestion = $(this).closest('.question');
-        let delQuestionId = $thisQuestion.attr('data-question');
-
-        questionsManager.removeQuestion(delQuestionId);
-    });
-
     $document.on('change', $editTestForm.find('input[type=text]'), function (e) {
         let $currentInput = $(e.target);
         let $question = $currentInput.closest('li.question');
@@ -43,6 +47,15 @@ $(function () {
             $question.attr('data-modified', 'true');
         }
     });
+
+    function checkQuestionsCountLabel() {
+        if (questionsManager.getQuestionsCount() !== 0) {
+            $labelEmptyQuestionsList.slideUp();
+        }
+        else {
+            $labelEmptyQuestionsList.slideDown();
+        }
+    }
 
     function QuestionRecord($html) {
         let context = this;
@@ -79,9 +92,11 @@ $(function () {
             reindexVariants();
         };
 
-        this.pushVariant = function (variantRecord) {
+        this.pushVariant = function (variantRecord, animationTime = 300) {
             variants.push(variantRecord);
-            $wrapper.append(variantRecord.getDomElement());
+            let domElement = variantRecord.getDomElement();
+            $wrapper.append(domElement);
+            domElement.hide().slideDown(animationTime);
         };
 
         this.getIndex = function () {
@@ -95,7 +110,9 @@ $(function () {
         this.deleteVariant = function (delIndex) {
             let currentVariant = variants[delIndex - 1];
 
-            currentVariant.getDomElement().detach();
+            currentVariant.getDomElement().slideUp(300, function () {
+                $(this).detach();
+            });
 
             variants.splice(delIndex - 1, 1);
             reindexVariants(delIndex - 1);
@@ -153,27 +170,36 @@ $(function () {
             return (questions.length === 0) ? 0 : questions.last().getIndex();
         }
 
-        this.appendNewQuestion = function () {
+        this.getQuestionsCount = function () {
+            return questions.length;
+        };
+
+        this.appendNewQuestion = function (animationTime = 200) {
             let questionIndex = getLastQuestionIndex() + 1;
 
             let newRecord = new QuestionRecord(context.createEmptyQuestion(questionIndex));
             questions.push(newRecord);
 
-            this.appendNewVariant(questions.length);
-            this.appendNewVariant(questions.length);
+            this.appendNewVariant(questions.length, 0);
+            this.appendNewVariant(questions.length, 0);
 
-            this.$questionsContainer.append(newRecord.getDomElement());
+            let domElement = newRecord.getDomElement();
+            this.$questionsContainer.append(domElement);
+            domElement.hide().slideDown(animationTime);
         };
 
-        this.appendNewVariant = function (questionIndex) {
+        this.appendNewVariant = function (questionIndex, animationTime = 300) {
             let currentQuestion = questions[questionIndex - 1];
             let variantIndex = currentQuestion.getLastVariantIndex() + 1;
 
             currentQuestion.pushVariant(
-                new VariantRecord(context.createEmptyVariant(
-                    variantIndex,
-                    questionIndex
-                ), currentQuestion)
+                new VariantRecord(
+                    context.createEmptyVariant(
+                        variantIndex,
+                        questionIndex
+                    ),
+                    currentQuestion),
+                animationTime
             );
         };
 
@@ -189,7 +215,9 @@ $(function () {
                 $editTestForm.append($(`<input type="hidden" name="q[deleted][]" value="${questionId}">`));
             }
 
-            thisQuestion.getDomElement().detach();
+            thisQuestion.getDomElement().slideUp(200, function () {
+                $(this).detach();
+            });
 
             questions.splice(delIndex - 1, 1);
             for (let i = delIndex - 1; i < questions.length; ++i) {
