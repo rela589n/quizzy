@@ -11,84 +11,83 @@
 @section('test-questions')
     {{--  traverse given array and print all entities  --}}
 
-    @forelse(old('q', []) as $questions)
 
-        @foreach($questions['deleted'] as $deleted)
-            @php
+    @foreach(old("q.deleted", []) as $deleted)
+        @php
             dump($deleted);
-            @endphp
-        @endforeach
-    @empty
-
-    @endforelse
+        @endphp
+    @endforeach
 
 
+{{--  todo exclude deleted  --}}
     @forelse($test->nativeQuestions as $question)
-        <li class="list-group-item mb-4 question"
-            data-question="{{ $loop->iteration }}"
-            data-question-id="{{ $question->id }}"
-            data-new="false"
-            data-modified="false">
+        @include('blocks.admin.question-single', [
+            'questionIndex' => $loop->iteration,
+            'type' => 'modified',
+            'modified' => boolval(old("q.modified.{$question->id}", false)),
+            'new' => false
+        ])
 
-            <label for="q[modified][{{ $question->id }}][name]"
-                   class="text-center mb-3 h4 d-block question-header">
-                Питання № {{ $loop->iteration }}
-            </label>
-
-            <button type="button" class="btn btn-danger position-absolute button-delete-question" tabindex="-1">
-                <i class="fas fa-trash"></i>
-            </button>
-
-            <input type="text"
-                   id="q[modified][{{ $question->id }}][name]"
-                   name="q[modified][{{ $question->id }}][name]"
-                   class="form-control question-text" placeholder="Запитання"
-                   value="{{ $question->question }}" required="required">
-
-            <div class="variants-wrapper">
-                @foreach($question->answerOptions as $option)
-                    @include('blocks.admin.answer-option-line')
-
-{{--                    <div class="form-row align-items-center" data-variant="{{ $loop->iteration }}">--}}
-{{--                        <div class="col-auto">--}}
-{{--                            <label class="form-check-label d-block">--}}
-{{--                                <input class="form-check-input is-correct"--}}
-{{--                                       type="checkbox"--}}
-{{--                                       name="q[modified][{{ $question->id }}][v][{{ $option->id }}][is_right]"--}}
-{{--                                       @if($option->is_right) checked="checked" @endif--}}
-{{--                                >--}}
-{{--                            </label>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-form-label col-xl-11 col-lg-10 col-sm-9 col-8">--}}
-{{--                            <label class="form-check-label d-block">--}}
-{{--                                <input type="text" class="form-control form-control-sm variant-text"--}}
-{{--                                       name="q[modified][{{ $question->id }}][v][{{ $option->id }}][text]"--}}
-{{--                                       placeholder="Варіант № {{ $loop->iteration }}" value="{{ $option->text }}"--}}
-{{--                                       required="required">--}}
-{{--                            </label>--}}
-{{--                        </div>--}}
-{{----}}
-{{--                        <div class="col-auto">--}}
-{{--                            <button type="button" class="btn btn-outline-danger btn-sm button-delete-variant"--}}
-{{--                                    tabindex="-1"><i class="fas fa-trash"></i></button>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-                @endforeach
-            </div>
-
-            <button type="button" class="btn btn-outline-primary btn-sm button-add-variant mt-2"><i
-                    class="fas fa-plus"></i></button>
-        </li>
+        {{--        <li class="list-group-item mb-4 question"--}}
+        {{--            data-question="{{ $loop->iteration }}"--}}
+        {{--            data-question-id="{{ $question->id }}"--}}
+        {{--            data-new="false"--}}
+        {{--            data-modified="false">--}}
+        {{----}}
+        {{--            <label for="q[modified][{{ $question->id }}][name]"--}}
+        {{--                   class="text-center mb-3 h4 d-block question-header">--}}
+        {{--                Питання № {{ $loop->iteration }}--}}
+        {{--            </label>--}}
+        {{----}}
+        {{--            <button type="button" class="btn btn-danger position-absolute button-delete-question" tabindex="-1">--}}
+        {{--                <i class="fas fa-trash"></i>--}}
+        {{--            </button>--}}
+        {{----}}
+        {{--            <input type="text"--}}
+        {{--                   id="q[modified][{{ $question->id }}][name]"--}}
+        {{--                   name="q[modified][{{ $question->id }}][name]"--}}
+        {{--                   class="form-control question-text" placeholder="Запитання"--}}
+        {{--                   value="{{ $question->question }}" required="required">--}}
+        {{----}}
+        {{--            <div class="variants-wrapper">--}}
+        {{--                @foreach($question->answerOptions as $option)--}}
+        {{--                    @include('blocks.admin.answer-option-line')--}}
+        {{--                @endforeach--}}
+        {{--            </div>--}}
+        {{----}}
+        {{--            <button type="button" class="btn btn-outline-primary btn-sm button-add-variant mt-2"><i--}}
+        {{--                    class="fas fa-plus"></i></button>--}}
+        {{--        </li>--}}
     @empty
         <h3 class="list-group-item">В цього теста питань поки що немає. Ви можете створити їх натиснувши кнопку нижче:</h3>
     @endforelse
-
-
 
     @php
         dump($errors);
         dump(old());
     @endphp
+
+    @foreach(old("q.new", []) as $id => $new)
+        @php
+            $question = new \stdClass();
+            $question->id = $id;
+            $question->answerOptions = [];
+
+            foreach ($new['v'] as $vId => $variant) {
+                $question->answerOptions[$vId] = new \stdClass();
+                $question->answerOptions[$vId]->id = $vId;
+                $question->answerOptions[$vId]->is_right = $variant['is_right'] ?? false;
+            }
+        @endphp
+
+        @include('blocks.admin.question-single', [
+            'questionIndex' => count($test->nativeQuestions) + $loop->iteration,
+            'type' => 'new',
+            'modified' => false,
+            'new' => boolval(old("q.new.{$id}", false))
+        ])
+    @endforeach
+
     {{----}}
     {{--    <li class="list-group-item mb-4 question" data-question="1" data-question-id="28" data-new="false" data-modified="false">--}}
     {{--        <label for="modified[28][name]" class="text-center mb-3 h4 d-block question-header">Питання № 1</label>--}}
