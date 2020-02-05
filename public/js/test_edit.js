@@ -14,15 +14,20 @@ $(function () {
     $document.on('click', '.button-add-question', function () {
         questionsManager.appendNewQuestion();
         checkQuestionsCountLabel();
-// todo checkQuestionsCountLabel
     });
 
     $document.on('click', '.button-delete-question', function () {
 
         let $thisQuestion = $(this).closest('.question');
-        let delQuestionId = $thisQuestion.attr('data-question');
+        let delQuestionIndex = $thisQuestion.attr('data-question');
 
-        questionsManager.removeQuestion(delQuestionId);
+        questionsManager.removeQuestion(delQuestionIndex, function (questionRecord) {
+            let delQuestionId = questionRecord.getQId();
+            if (!isNaN(delQuestionId)) {
+                $editTestForm.append($(`<input type="hidden" name="q[deleted][]" value="${delQuestionId}">`));
+            }
+        });
+
         checkQuestionsCountLabel();
     });
 
@@ -67,7 +72,6 @@ $(function () {
             let result = [];
 
             $question.find('[data-variant]').each(function (index, element) {
-                // console.log(this);
                 result.push(new VariantRecord($(element), context));
             });
 
@@ -203,17 +207,8 @@ $(function () {
             );
         };
 
-        this.removeQuestion = function (delIndex) {
-            console.log(`Delete index: ${delIndex}`);
-            console.log(`Questions: `);
-            console.log(questions);
-
+        this.removeQuestion = function (delIndex, callback) {
             let thisQuestion = questions[delIndex - 1];
-
-            let questionId = thisQuestion.getQId();
-            if (!isNaN(questionId)) {
-                $editTestForm.append($(`<input type="hidden" name="q[deleted][]" value="${questionId}">`));
-            }
 
             thisQuestion.getDomElement().slideUp(200, function () {
                 $(this).detach();
@@ -223,6 +218,8 @@ $(function () {
             for (let i = delIndex - 1; i < questions.length; ++i) {
                 questions[i].changeIndex(i + 1);
             }
+
+            callback(thisQuestion);
         };
 
         this.removeVariant = function (questionIndex, variantIndex) {
