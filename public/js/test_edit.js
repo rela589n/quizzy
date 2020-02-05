@@ -46,6 +46,7 @@ $(function () {
 
 
     function QuestionRecord($html) {
+        let context = this;
         let $question = $html;
         let $wrapper = $question.find('.variants-wrapper');
         let variants = parseVariants();
@@ -53,8 +54,9 @@ $(function () {
         function parseVariants() {
             let result = [];
 
-            $question.find('[data-variant]').each(function(index, element) {
-                result.push(new VariantRecord($(element), this));
+            $question.find('[data-variant]').each(function (index, element) {
+                // console.log(this);
+                result.push(new VariantRecord($(element), context));
             });
 
             return result;
@@ -68,7 +70,7 @@ $(function () {
         this.changeIndex = function (newIndex) {
             $question.attr('data-question', newIndex);
 
-            let questionName = questionsManager.generateQuestionName(this.getIndex());
+            let questionName = questionsManager.generateQuestionName(context.getIndex());
             //label
             $question.children('.question-header').text(questionsManager.questionTextPlaceholder(newIndex))
                 .attr('for', questionName);
@@ -147,6 +149,7 @@ $(function () {
     }
 
     function QuestionsManager($questionsContainer) {
+        let context = this;
         this.$questionsContainer = $questionsContainer;
         let questions = parseQuestions();
 
@@ -166,7 +169,7 @@ $(function () {
         this.appendNewQuestion = function () {
             let questionIndex = getLastQuestionIndex() + 1;
 
-            let newRecord = new QuestionRecord(this.createEmptyQuestion(questionIndex));
+            let newRecord = new QuestionRecord(context.createEmptyQuestion(questionIndex));
             questions.push(newRecord);
 
             this.appendNewVariant(questions.length);
@@ -180,7 +183,7 @@ $(function () {
             let variantIndex = currentQuestion.getLastVariantIndex() + 1;
 
             currentQuestion.pushVariant(
-                new VariantRecord(this.createEmptyVariant(
+                new VariantRecord(context.createEmptyVariant(
                     variantIndex,
                     questionIndex
                 ), currentQuestion)
@@ -216,7 +219,7 @@ $(function () {
             return $(`<li class="list-group-item mb-4 question" data-question="${questionIndex}" data-new="true">
                     <label for="q[new][${questionIndex}][name]"
                            class="text-center mb-3 h4 d-block question-header">
-                           ${this.questionTextPlaceholder(questionIndex)}
+                           ${context.questionTextPlaceholder(questionIndex)}
                     </label>
 
                     <button type="button" class="btn btn-danger position-absolute button-delete-question" tabindex="-1"><i class="fas fa-trash"></i></button>
@@ -242,14 +245,14 @@ $(function () {
                     <div class="col-auto">
                         <label class="form-check d-inline pb-1 mb-0">
                             <input class="form-check-input is-correct" type="checkbox"
-                                   name="${this.generateCheckBoxName(questionIndex, variantIndex)}">
+                                   name="${context.generateCheckBoxName(questionIndex, variantIndex)}">
                         </label>
                     </div>
                     <div class="col-form-label col-xl-11 col-lg-10 col-sm-9 col-8">
                         <label class="form-check-label d-block">
                             <input type="text" class="form-control form-control-sm variant-text"
-                                   name="${this.generateVariantInputName(questionIndex, variantIndex)}"
-                                   placeholder="${this.variantTextPlaceholder(variantIndex)}"  required="required">
+                                   name="${context.generateVariantInputName(questionIndex, variantIndex)}"
+                                   placeholder="${context.variantTextPlaceholder(variantIndex)}"  required="required">
                         </label>
                     </div>
                     <div class="col-auto">
@@ -280,11 +283,11 @@ $(function () {
         };
 
         this.generateId = function () {
-            if (typeof this.counter === "undefined") {
-                this.counter = 0;
+            if (typeof context.counter === "undefined") {
+                context.counter = 0;
             }
 
-            return this.counter++;
+            return context.counter++;
         }
     }
 });
