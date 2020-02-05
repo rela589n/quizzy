@@ -23,7 +23,6 @@ Route::get('/dashboard', function () {
 
 })->name('.dashboard');
 
-
 Route::prefix('/tests')
     ->name('.tests')
     ->namespace('Tests')
@@ -50,7 +49,7 @@ Route::prefix('/tests')
                     ->name('.test')
                     ->group(function () use (&$routePatterns) {
 
-                        Route::get('/settings', 'TestsController@showUpdateTestForm')->name('settings');
+                        Route::get('/settings', 'TestsController@showUpdateTestForm')->name('.settings');
 
                         Route::get('/', 'QuestionsController@showCreateUpdateForm');
                         Route::post('/', 'QuestionsController@createUpdate');
