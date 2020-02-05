@@ -44,7 +44,6 @@ $(function () {
         }
     });
 
-
     function QuestionRecord($html) {
         let context = this;
         let $question = $html;
@@ -63,7 +62,7 @@ $(function () {
         }
 
         this.getLastVariantIndex = function () {
-            let variantsSize = this.variantsSize();
+            let variantsSize = variants.length;
             return (variantsSize === 0) ? 0 : variants.last().getIndex();
         };
 
@@ -83,14 +82,6 @@ $(function () {
         this.pushVariant = function (variantRecord) {
             variants.push(variantRecord);
             $wrapper.append(variantRecord.getDomElement());
-        };
-
-        this.variantsSize = function () {
-            return variants.length;
-        };
-
-        this.getVariant = function (index) {
-            return variants[index];
         };
 
         this.getIndex = function () {
@@ -118,10 +109,6 @@ $(function () {
 
         this.getDomElement = function () {
             return $question;
-        };
-
-        this.detach = function () {
-            $question.detach();
         };
     }
 
@@ -260,7 +247,6 @@ $(function () {
                     </div>
                 </div>`);
         };
-
 
         this.variantTextPlaceholder = function (variantIndex) {
             return `Варіант № ${variantIndex}`;
