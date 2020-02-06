@@ -19,14 +19,4 @@ class RequestManagerProvider extends ServiceProvider
             return new RequestUrlManager(resolve(Request::class));
         });
     }
-
-    /**
-     * Bootstrap services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
 }
