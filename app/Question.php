@@ -18,12 +18,20 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Question whereQuestion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Question whereTestId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\AnswerOption[] $answerOptions
+ * @property-read int|null $answer_options_count
  */
 class Question extends Model
 {
+    public $guarded = ['id'];
 
     public function test()
     {
         return $this->belongsTo(Test::class);
+    }
+
+    public function answerOptions()
+    {
+        return $this->hasMany(AnswerOption::class);
     }
 }
