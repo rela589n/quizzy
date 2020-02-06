@@ -4,15 +4,15 @@
 namespace App\Http\Requests;
 
 
-use App\Test;
-use App\TestSubject;
+use App\Models\Test;
+use App\Models\TestSubject;
 use Illuminate\Http\Request;
 
 class RequestUrlManager
 {
     protected $request;
     /**
-     * @var \App\TestSubject
+     * @var \App\Models\TestSubject
      */
     protected $currentSubject = null;
     protected $currentTest = null;

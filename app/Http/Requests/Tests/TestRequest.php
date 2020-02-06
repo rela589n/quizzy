@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Tests;
 
-use App\Test;
+use App\Models\Test;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class TestRequest extends FormRequest

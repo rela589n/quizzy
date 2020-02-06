@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Subjects\CreateSubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
-use App\TestSubject;
+use App\Models\TestSubject;
 
 class SubjectsController extends Controller
 {

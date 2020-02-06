@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Tests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Tests\CreateTestRequest;
-use App\Test;
+use App\Models\Test;
 use Illuminate\Http\Request;
 
 class TestsController extends Controller
@@ -13,7 +13,7 @@ class TestsController extends Controller
     public function showNewTestForm(RequestUrlManager $urlManager)
     {
         /**
-         * @var  \App\TestSubject $subject
+         * @var  \App\Models\TestSubject $subject
          */
 
         $subject = $urlManager->getCurrentSubject();
@@ -28,7 +28,7 @@ class TestsController extends Controller
     public function newTest(CreateTestRequest $request, RequestUrlManager $urlManager)
     {
         /**
-         * @var \App\Test $newTest
+         * @var \App\Models\Test $newTest
          */
 
         $validated = $request->validated();
@@ -59,6 +59,7 @@ class TestsController extends Controller
 
     public function showUpdateTestForm(Request $request, RequestUrlManager $urlManager)
     {
+        //todo add field include self
         $test = $urlManager->getCurrentTest();
 
         return view('pages.admin.tests-single-settings', [
