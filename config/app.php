@@ -179,6 +179,7 @@ return [
 
         App\Providers\RequestManagerProvider::class,
         App\Providers\HelpersServiceProvider::class,
+        App\Providers\ValidationGeneratorProvider::class,
     ],
 
     /*
