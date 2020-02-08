@@ -10,6 +10,7 @@ class ValidationGenerator
 {
     public const ARRAY_ELEMENT_WILDCARD = '*';
     public const ARRAY_ELEMENTS_DELIMITER = '.';
+    public const ATTRIBUTES_DELIMITER = '|';
 
     /**
      * @var Request
@@ -50,9 +51,21 @@ class ValidationGenerator
      * @param string $param
      * @return void
      */
-    protected function mountParts(string $param) : void
+    protected function mountParts(string $param): void
     {
         $this->parts = explode(self::ARRAY_ELEMENT_WILDCARD, $param);
+    }
+
+    protected function handleBuildSingle(string $key, array &$result, &$singleRules): void
+    {
+        $keys = explode(self::ATTRIBUTES_DELIMITER, $key);
+        foreach ($keys as $attribute) {
+            $this->mountParts($attribute);
+
+            foreach ($this->buildRecursive($this->parts[0], 1) as $built) {
+                $result[$built] = $singleRules;
+            }
+        }
     }
 
     /**
@@ -63,12 +76,7 @@ class ValidationGenerator
     protected function build(string $key, $value): array
     {
         $result = [];
-        $this->mountParts($key);
-
-        foreach ($this->buildRecursive($this->parts[0], 1) as $built) {
-            $result[$built] = $value;
-        }
-
+        $this->handleBuildSingle($key, $result, $value);
         return $result;
     }
 
@@ -84,18 +92,18 @@ class ValidationGenerator
 
     /**
      * Builds Laravel-feedable array, where keys are attributes <br>
-     * and values are validation rules
+     * and values are validation rules or their human-readable names
      * @param array $rules
      * @return array
      */
-    public function buildManyRules(array $rules): array
+    public function buildMany(array $rules): array
     {
         $result = [];
-        foreach ($rules as $attribute => $rule) {
-            $this->mountParts($attribute);
+        foreach ($rules as $attributes => $rule) {
+            $attributes = explode(self::ATTRIBUTES_DELIMITER, $attributes);
 
-            foreach ($this->buildRecursive($this->parts[0],1) as $built) {
-                $result[$built] = $rule;
+            foreach ($attributes as $attribute) {
+                $this->handleBuildSingle($attribute, $result, $rule);
             }
         }
 
@@ -117,7 +125,7 @@ class ValidationGenerator
      * @param string $name
      * @return array
      */
-    public function buildAttributes(string $attribute, string $name): array
+    public function buildAttribute(string $attribute, string $name): array
     {
         return $this->build($attribute, $name);
     }

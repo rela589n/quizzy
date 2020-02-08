@@ -2,10 +2,25 @@
 
 namespace App\Http\Requests\Questions;
 
+use App\Lib\ValidationGenerator;
+use App\Rules\AtLeastOneSelected;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FillAnswersRequest extends FormRequest
 {
+    /**
+     * @var ValidationGenerator
+     */
+    protected $validationGenerator;
+
+    /**
+     * @param ValidationGenerator $validationGenerator
+     */
+    public function setValidationGenerator($validationGenerator): void
+    {
+        $this->validationGenerator = $validationGenerator;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -17,50 +32,41 @@ class FillAnswersRequest extends FormRequest
     }
 
     /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return $this->validationGenerator->buildMany([
+            'q.new.*.v.*.text' => '',
+            'q.new.*.name' => '"Питання"',
+            'q.new.*.v' => '"Варіанти відповідей"'
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
     public function rules()
     {
-//        dd($this->all());
-
-        $nameRules = [
-            'required',
-            'min:3',
-            'max:255',
-        ];
-
-        $variantTextRules = [
-            'required',
-            'min:1',
-            'max:128',
-        ];
-
-        $atLeastOneRight = [
-//            'required_without:q.new.*.v.*.is_right',
-//            'array',
-//            'min:1'
-        ];
-
-        return [
-            'q' => [
+        return $this->validationGenerator->buildMany([
+            'q|q.new|q.modified' => 'array',
+            'q.new.*.name|q.modified.*.name' => 'required|min:3|max:255',
+            'q.new.*.v|q.modified.*.v' => [
+                'required',
+                'array',
+                'min:2',
+                new AtLeastOneSelected('is_right')
+            ],
+            'q.new.*.v.*|q.modified.*.v.*' => [
+                'required',
                 'array',
             ],
-            'q.new.*.name' => $nameRules,
-            'q.modified.*.name' => $nameRules,
-
-            'q.new.*.v.*.text' => $variantTextRules,
-            'q.modified.*.v.*.text' => $variantTextRules,
-
-            'q.new' => [
-                'array',
-            ],
-            'q.modified' => [
-                'array',
-            ],
-            'q.new.*.v.*.is_right' => $atLeastOneRight,
-//            'q.modified.*.v.*.is_right' => $atLeastOneRight,
-        ];
+            'q.new.*.v.*.text|q.modified.*.v.*.text' => 'required|min:2|max:128',
+            'q.deleted' => 'array|min:1'
+        ]);
     }
 }
