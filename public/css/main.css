@@ -101,3 +101,8 @@ label.form-info.h3 {
 #show_hide_password a:hover {
     text-decoration: none;
 }
+
+.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
