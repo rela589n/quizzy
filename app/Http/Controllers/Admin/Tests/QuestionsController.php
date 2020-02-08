@@ -43,11 +43,11 @@ class QuestionsController extends Controller
             return (object)[
                 'id' => $id,
                 'question' => $newQuestion['name'],
-                'answerOptions' => collect($newQuestion['v'])->map(function ($variant, $variantId) {
+                'answerOptions' => collect($newQuestion['v'] ?? [])->map(function ($variant, $variantId) {
                     return (object)[
                         'id' => $variantId,
                         'is_right' => $variant['is_right'] ?? false,
-                        'text' => $variant['text'],
+                        'text' => $variant['text'] ?? '',
                     ];
                 })->all(),
                 'type' => 'new'
@@ -64,12 +64,5 @@ class QuestionsController extends Controller
     public function createUpdate(FillAnswersRequest $request)
     {
         return "Create and (or) update.";
-//        $asdf = new \stdClass();
-//        $asdf->nasdf = 'adf';
-//
-//        dump($asdf);
-//
-//        dump($request->getContent());
-//        dd($request->all());
     }
 }
