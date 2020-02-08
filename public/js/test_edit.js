@@ -56,8 +56,7 @@ $(function () {
     function checkQuestionsCountLabel() {
         if (questionsManager.getQuestionsCount() !== 0) {
             $labelEmptyQuestionsList.slideUp();
-        }
-        else {
+        } else {
             $labelEmptyQuestionsList.slideDown();
         }
     }
@@ -67,6 +66,11 @@ $(function () {
         let $question = $html;
         let $wrapper = $question.find('.variants-wrapper');
         let variants = parseVariants();
+        let type = parseType();
+
+        function parseType() {
+            return $question.is('[data-new=true]') ? 'new' : 'modified';
+        }
 
         function parseVariants() {
             let result = [];
@@ -78,6 +82,18 @@ $(function () {
             return result;
         }
 
+        this.getNameId = function () {
+            return type === 'new' ? context.getIndex() : context.getQId();
+        };
+
+        this.getQId = function () {
+            return $question.attr('data-question-id');
+        };
+
+        this.getQType = function() {
+            return type;
+        };
+
         this.getLastVariantIndex = function () {
             let variantsSize = variants.length;
             return (variantsSize === 0) ? 0 : variants.last().getIndex();
@@ -86,13 +102,12 @@ $(function () {
         this.changeIndex = function (newIndex) {
             $question.attr('data-question', newIndex);
 
-            let questionName = questionsManager.generateQuestionName(context.getIndex());
             //label
             $question.children('.question-header').text(questionsManager.questionTextPlaceholder(newIndex))
-                .attr('for', questionName);
+                .attr('for', newIndex);
 
             //input
-            $question.children('.question-text').attr('name', questionName).attr('id', questionName);
+            $question.children('.question-text').attr('id', newIndex);
             reindexVariants();
         };
 
@@ -105,10 +120,6 @@ $(function () {
 
         this.getIndex = function () {
             return parseInt($question.attr('data-question'));
-        };
-
-        this.getQId = function () {
-            return $question.attr('data-question-id');
         };
 
         this.deleteVariant = function (delIndex) {
@@ -141,10 +152,9 @@ $(function () {
             $variant.attr('data-variant', index);
 
             $variant.find('.variant-text')
-                .attr('placeholder', questionsManager.variantTextPlaceholder(index))
-                .attr('name', questionsManager.generateVariantInputName(parent.getIndex(), index));
+                .attr('placeholder', questionsManager.variantTextPlaceholder(index));
 
-            $variant.find('.is-correct').attr('name', questionsManager.generateCheckBoxName(parent.getIndex(), index));
+            $variant.find('.is-correct');
         };
 
         this.getIndex = function () {
@@ -200,7 +210,8 @@ $(function () {
                 new VariantRecord(
                     context.createEmptyVariant(
                         variantIndex,
-                        questionIndex
+                        currentQuestion.getQId() || currentQuestion.getIndex(),
+                        currentQuestion.getQType()
                     ),
                     currentQuestion),
                 animationTime
@@ -227,18 +238,18 @@ $(function () {
             thisQuestion.deleteVariant(variantIndex);
         };
 
-        this.createEmptyQuestion = function (questionIndex) {
-            return $(`<li class="list-group-item mb-4 question" data-question="${questionIndex}" data-new="true">
-                    <label for="q[new][${questionIndex}][name]"
+        this.createEmptyQuestion = function (questionId) {
+            return $(`<li class="list-group-item mb-4 question" data-question="${questionId}" data-new="true">
+                    <label for="${context.generateQuestionName(questionId)}"
                            class="text-center mb-3 h4 d-block question-header">
-                           ${context.questionTextPlaceholder(questionIndex)}
+                           ${context.questionTextPlaceholder(questionId)}
                     </label>
 
                     <button type="button" class="btn btn-danger position-absolute button-delete-question" tabindex="-1"><i class="fas fa-trash"></i></button>
 
                     <input type="text"
-                           id="q[new][${questionIndex}][name]"
-                           name="q[new][${questionIndex}][name]"
+                           id="${context.generateQuestionName(questionId)}"
+                           name="${context.generateQuestionName(questionId)}"
                            class="form-control question-text"
                            placeholder="Запитання"
                            required="required">
@@ -251,20 +262,20 @@ $(function () {
                 </li>`);
         };
 
-        this.createEmptyVariant = function (variantIndex, questionIndex) {
+        this.createEmptyVariant = function (variantIndex, questionId, type = 'new') {
 
             return $(`<div class="form-row align-items-center" data-variant="${variantIndex}">
                     <div class="col-auto">
                         <label class="form-check d-inline pb-1 mb-0">
                             <input class="form-check-input is-correct" type="checkbox"
-                                   name="${context.generateCheckBoxName(questionIndex, variantIndex)}">
+                                   name="${context.generateCheckBoxName(questionId, variantIndex, type)}">
                         </label>
                     </div>
                     <div class="col-form-label col-xl-11 col-lg-10 col-sm-9 col-8">
                         <label class="form-check-label d-block">
                             <input type="text" class="form-control form-control-sm variant-text"
-                                   name="${context.generateVariantInputName(questionIndex, variantIndex)}"
-                                   placeholder="${context.variantTextPlaceholder(variantIndex)}"  required="required">
+                                   name="${context.generateVariantInputName(questionId, variantIndex, type)}"
+                                   placeholder="${context.variantTextPlaceholder(variantIndex, type)}"  required="required">
                         </label>
                     </div>
                     <div class="col-auto">
@@ -281,24 +292,16 @@ $(function () {
             return 'Питання № ' + questionIndex;
         };
 
-        this.generateQuestionName = function (questionIndex) {
-            return `q[new][${questionIndex}][name]`;
+        this.generateQuestionName = function (questionIndex, type = 'new') {
+            return `q[${type}][${questionIndex}][name]`;
         };
 
-        this.generateCheckBoxName = function (questionIndex, variantIndex) {
-            return `q[new][${questionIndex}][v][${variantIndex}][is_right]`;
+        this.generateCheckBoxName = function (questionIndex, variantIndex, type = 'new') {
+            return `q[${type}][${questionIndex}][v][${variantIndex}][is_right]`;
         };
 
-        this.generateVariantInputName = function (questionIndex, variantIndex) {
-            return `q[new][${questionIndex}][v][${variantIndex}][text]`;
+        this.generateVariantInputName = function (questionIndex, variantIndex, type = 'new') {
+            return `q[${type}][${questionIndex}][v][${variantIndex}][text]`;
         };
-
-        this.generateId = function () {
-            if (typeof context.counter === "undefined") {
-                context.counter = 0;
-            }
-
-            return context.counter++;
-        }
     }
 });
