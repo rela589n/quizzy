@@ -130,6 +130,8 @@ return [
     */
 
     'custom' => [
+        'at_least_one_checked' => 'At least one answer must be selected.',
+
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
