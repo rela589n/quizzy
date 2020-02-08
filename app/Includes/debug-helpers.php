@@ -36,3 +36,12 @@ if (!function_exists('print_arr')) {
         return null;
     }
 }
+
+if (!function_exists('log_r')) {
+    function log_r($var, $mark = '') {
+        \Log::info(
+            $mark .
+            print_r($var, true)
+        );
+    }
+}
