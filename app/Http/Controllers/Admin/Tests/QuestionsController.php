@@ -63,7 +63,8 @@ class QuestionsController extends Controller
         return view('pages.admin.tests-single', [
             'subject' => $urlManager->getCurrentSubject(),
             'test' => $currentTest,
-            'filteredQuestions' => $fullQuestions->all()
+            'filteredQuestions' => $fullQuestions->all(),
+            'message' => \Session::get('message'),
         ]);
     }
 
@@ -73,55 +74,60 @@ class QuestionsController extends Controller
          * @var Test $currentTest
          */
         $currentTest = $urlManager->getCurrentTest();
-//        $currentTest->loadMissing('nativeQuestions');
-//        $currentTest->nativeQuestions->load('answerOptions');
+        $currentTest->loadMissing('nativeQuestions');
 
         $validated = $request->validated();
 
-        /**
-         * @var Question[] $new
-         */
-        $new = [];
-        foreach ($validated['q']['new'] ?? [] as $id => $question) {
-
-            $new[$id] = new Question(['question' => $question['name']]);
-            $currentTest->nativeQuestions()->save($new[$id]);
-
-            /**
-             * @var AnswerOption[] $options
-             */
-            $options = [];
-            foreach ($question['v'] as $vId => $variant) {
-                $options[$vId] = new AnswerOption([
-                    'text' => $variant['text'],
-                    'is_right' => boolval($variant['is_right'] ?? false)
-                ]);
-
-                $new[$id]->answerOptions()->save($options[$vId]);
-//                $options[$vId]->question()->associate($new[$id]);
-            }
-
-//            $new[$id]->answerOptions()->saveMany($options);
-        }
-
-
+        $this->performCreate($currentTest, $validated['q']['new'] ?? []);
         $this->performModify($currentTest, $validated['q']['modified'] ?? []);
         $this->performDelete($validated['q']['deleted'] ?? []);
 
-        log_r($validated);
-        return "Create and (or) update.";
+        return redirect()->back()->with('message', 'Збережено');
+    }
+
+    // todo remove duplicate
+    private function performCreate(Test $currentTest, array $questions)
+    {
+        foreach ($questions as $id => $question) {
+            /**
+             * @var Question $new
+             */
+            $new = $currentTest->nativeQuestions()->save(new Question(['question' => $question['name']]));
+
+            foreach ($question['v'] as $vId => $variant) {
+                $new->answerOptions()->save(new AnswerOption([
+                    'text' => $variant['text'],
+                    'is_right' => boolval($variant['is_right'] ?? false)
+                ]));
+            }
+        }
+    }
+
+    // todo remove duplicate
+    private function performModify(Test $currentTest, array $questions)
+    {
+        foreach ($questions as $id => $question) {
+            /**
+             * @var Question $toModify
+             */
+            $toModify = $currentTest->nativeQuestions->find($id); //update(['toModify' => $modified['name']]);
+            $toModify->question = $question['name'];
+            $toModify->save();
+
+            $toModify->answerOptions()->delete();
+
+            foreach ($question['v'] as $vId => $variant) {
+                $toModify->answerOptions()->save(new AnswerOption([
+                    'text' => $variant['text'],
+                    'is_right' => boolval($variant['is_right'] ?? false)
+                ]));
+            }
+        }
     }
 
     private function performDelete(array $ids)
     {
         if (count($ids) > 0)
             Question::destroy($ids);
-    }
-
-    private function performModify(Test $current, array $modified)
-    {
-        foreach ($modified as $id => $question) {
-
-        }
     }
 }
