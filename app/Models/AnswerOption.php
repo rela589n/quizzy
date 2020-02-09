@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AnswerOption extends Model
 {
+    public $timestamps = false;
     public $guarded = ['id'];
 
     public function question()
