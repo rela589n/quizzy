@@ -39,9 +39,9 @@ class FillAnswersRequest extends FormRequest
     public function attributes()
     {
         return $this->validationGenerator->buildMany([
-            'q.new.*.v.*.text' => '',
-            'q.new.*.name' => '"Питання"',
-            'q.new.*.v' => '"Варіанти відповідей"'
+            'q.new.*.v.*.text|q.modified.*.v.*.text' => '',
+            'q.new.*.name|q.modified.*.name' => '"Питання"',
+            'q.new.*.v|q.modified.*.v' => '"Варіанти відповідей"'
         ]);
     }
 
