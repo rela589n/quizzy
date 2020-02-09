@@ -37,3 +37,12 @@
 @section('save-button')
     <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Зберегти</button>
 @endsection
+
+@isset($message)
+    @push('bottom_scripts')
+        <script>
+            window.backEndMessage = {!! json_encode($message) !!};
+        </script>
+        <script src="{{ asset('js/show-popup.js') }}"></script>
+    @endpush
+@endisset
