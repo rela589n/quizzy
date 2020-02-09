@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Tests;
 
+use App\Lib\transformers\QuestionsTransformer;
 use App\Models\AnswerOption;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Questions\FillAnswersRequest;
@@ -12,7 +13,7 @@ use Illuminate\Http\Request;
 
 class QuestionsController extends Controller
 {
-    public function showCreateUpdateForm(Request $request, RequestUrlManager $urlManager)
+    public function showCreateUpdateForm(Request $request, RequestUrlManager $urlManager, QuestionsTransformer $transformer)
     {
         /**
          * @var Test $currentTest
@@ -21,62 +22,48 @@ class QuestionsController extends Controller
         $currentTest->loadMissing('nativeQuestions');
         $currentTest->nativeQuestions->load('answerOptions');
 
-        // todo move into another class
-
         $exclude = array_flip(old("q.deleted", []));
 
-        $fullQuestions = collect($request->old('q.modified'))->map(function ($modified, $id) use (&$exclude) {
-            $exclude["$id"] = 1;
-            return (object)[
-                'id' => $id,
-                'question' => $modified['name'] ?? '',
-                'answerOptions' => collect($modified['v'] ?? [])->map(function ($variant, $variantId) {
-                    return (object)[
-                        'id' => $variantId,
-                        'is_right' => $variant['is_right'] ?? false,
-                        'text' => $variant['text'] ?? '',
-                    ];
-                })->all(),
-                'type' => 'modified'
-            ];
-        })->toBase()->merge($currentTest->nativeQuestions->reject(function ($item) use ($exclude) {
-            /*
-             * Although we included modified from request, there may not be all entities
-             * (We don't need send request to update entries that has not been updated)
-             */
-            return isset($exclude["$item->id"]);
-        })->map(function ($item) {
-            return (object)[
-                'id' => $item->id,
-                'question' => old("q.modified.{$item->id}.name", $item->question),
-                'answerOptions' => $item->answerOptions->map(function ($option) use ($item) {
-                    return (object)[
-                        'id' => $option->id,
-                        'is_right' => old("q.modified.{$item->id}.v.{$option->id}.is_right", $option->is_right),
-                        'text' => old("q.modified.{$item->id}.v.{$option->id}.text", $option->text),
-                    ];
-                })->all(),
-                'type' => 'modified'
-            ];
-        }))->toBase()->merge(collect($request->old('q.new', []))->map(function ($newQuestion, $id) {
-            return (object)[
-                'id' => $id,
-                'question' => $newQuestion['name'] ?? '',
-                'answerOptions' => collect($newQuestion['v'] ?? [])->map(function ($variant, $variantId) {
-                    return (object)[
-                        'id' => $variantId,
-                        'is_right' => $variant['is_right'] ?? false,
-                        'text' => $variant['text'] ?? '',
-                    ];
-                })->all(),
-                'type' => 'new'
-            ];
-        }));
+        $fullQuestions = collect($request->old('q.modified'))
+            ->map(function ($modified, $id) use (&$exclude, $transformer) {
+                $exclude["$id"] = 1;
+
+                return $transformer->requestToDto($modified, [
+                    'id' => $id,
+                    'type' => 'modified'
+                ]);
+            });
+
+        /*
+         * Although we included modified from request, there may not be all entities
+         * (We don't need send request to update entries that has not been updated)
+         */
+        $fullQuestions = $fullQuestions->concat(
+            $currentTest->nativeQuestions->reject(
+                function ($item) use ($exclude) {
+                    return isset($exclude["$item->id"]);
+                })
+                ->map(function ($item) use ($transformer) {
+                    return $transformer->modelToDto($item, [
+                        'type' => 'modified'
+                    ]);
+                })
+        );
+
+        $fullQuestions = $fullQuestions->concat(
+            collect($request->old('q.new', []))
+                ->map(function ($newQuestion, $id) use ($transformer) {
+                    return $transformer->requestToDto($newQuestion, [
+                        'id' => $id,
+                        'type' => 'new'
+                    ]);
+                })
+        );
 
         return view('pages.admin.tests-single', [
             'subject' => $urlManager->getCurrentSubject(),
             'test' => $currentTest,
-            'filteredQuestions' => $fullQuestions
+            'filteredQuestions' => $fullQuestions->all()
         ]);
     }
 

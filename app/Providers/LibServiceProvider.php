@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
+use App\Lib\transformers\QuestionsTransformer;
 use App\Lib\ValidationGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
-class ValidationGeneratorProvider extends ServiceProvider
+class LibServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -18,5 +19,7 @@ class ValidationGeneratorProvider extends ServiceProvider
         $this->app->singleton(ValidationGenerator::class, function ($app) {
             return new ValidationGenerator(resolve(Request::class));
         });
+
+        $this->app->singleton(QuestionsTransformer::class);
     }
 }
