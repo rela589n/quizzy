@@ -11,10 +11,15 @@ use Illuminate\Http\Request;
 class RequestUrlManager
 {
     protected $request;
+
     /**
-     * @var \App\Models\TestSubject
+     * @var TestSubject
      */
     protected $currentSubject = null;
+
+    /**
+     * @var Test
+     */
     protected $currentTest = null;
 
     /**
@@ -25,7 +30,6 @@ class RequestUrlManager
     {
         $this->request = $request;
     }
-
 
     /**
      * @return TestSubject|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
@@ -43,9 +47,8 @@ class RequestUrlManager
         return $this->currentSubject;
     }
 
-
     /**
-     * @return \Illuminate\Database\Eloquent\Model|object|null
+     * @return Test|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
     public function getCurrentTest()
     {

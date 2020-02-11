@@ -50,6 +50,7 @@ Route::prefix('/tests')
                     ->group(function () use (&$routePatterns) {
 
                         Route::get('/settings', 'TestsController@showUpdateTestForm')->name('.settings');
+                        Route::post('/settings', 'TestsController@updateTest');
 
                         Route::get('/', 'QuestionsController@showCreateUpdateForm');
                         Route::post('/', 'QuestionsController@createUpdate');

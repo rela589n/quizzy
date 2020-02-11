@@ -52,37 +52,41 @@
         <label for="include" class="form-info mb-2 h3">
             Включити питання з наступних тестів:
         </label>
+        @forelse($includeTests as $includeTest)
+            @php
+                // todo check for null for ->pivot
+                $pivot = (isset($test)) ? ($test->tests->find($includeTest->id)->pivot ?? null) : null;
+            @endphp
 
-        @forelse($includeTests as $test)
             <div class="form-row align-items-center flex-nowrap justify-content-start">
                 <div class="col-auto">
                     <div class="form-check ">
                         <div class="d-inline-block"></div>
-                        <input id="include[{{ $test->id }}][necessary]"
-                               name="include[{{ $test->id }}][necessary]"
+                        <input id="include[{{ $includeTest->id }}][necessary]"
+                               name="include[{{ $includeTest->id }}][necessary]"
                                type="checkbox"
                                class="form-check-input mt-2 is-correct required-target"
-                               data-required="include[{{ $test->id }}][count]"
-                               @if(old("include.{$test->id}.necessary", false)) checked="checked" @endif>
+                               data-required="include[{{ $includeTest->id }}][count]"
+                               @if(old("include.{$includeTest->id}.necessary", $pivot  ?? false)) checked="checked" @endif>
                     </div>
                 </div>
                 <div class="col-form-label">
-                    <label for="include[{{ $test->id }}][necessary]" class="form-check-label variant-text">
-                        {{ $test->name }}
+                    <label for="include[{{ $includeTest->id }}][necessary]" class="form-check-label variant-text">
+                        {{ $includeTest->name }}
                     </label>
                 </div>
 
-                <div class="@error("include.{$test->id}.count") col-auto @else col-2  @enderror">
-                    <input id="include[{{ $test->id }}][count]"
-                           name="include[{{ $test->id }}][count]"
+                <div class="@error("include.{$includeTest->id}.count") col-auto @else col-2  @enderror">
+                    <input id="include[{{ $includeTest->id }}][count]"
+                           name="include[{{ $includeTest->id }}][count]"
                            type="number"
-                           class="form-control form-control-sm @error("include.{$test->id}.count") is-invalid @enderror"
-                           placeholder="{{ $test->questions_count }}"
-                           min="1" max="{{ $test->questions_count }}"
-                           value="{{ old("include.{$test->id}.count", '') }}"
-                           @if(old("include.{$test->id}.necessary", false)) required="required" @endif {{-- if checkbox checked then it is required--}}
+                           class="form-control form-control-sm @error("include.{$includeTest->id}.count") is-invalid @enderror"
+                           placeholder="{{ $includeTest->questions_count }}"
+                           min="1" max="999"
+                           value="{{ old("include.{$includeTest->id}.count", $pivot->questions_quantity ??  '') }}"
+                           @if(old("include.{$includeTest->id}.necessary", $pivot ?? false)) required="required" @endif {{-- if checkbox checked then it is required--}}
                     >
-                    @error("include.{$test->id}.count")
+                    @error("include.{$includeTest->id}.count")
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
