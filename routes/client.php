@@ -7,7 +7,7 @@
 |
 | Here is where you can register client routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group.
+| contains the "web" middleware group group and prefixed with '/client'.
 | Now create something great!
 |
 */
@@ -20,12 +20,28 @@ Route::get('/dashboard', function () {
     return view('pages.client.dashboard');
 })->name('.dashboard');
 
-Route::prefix('tests')
+Route::prefix('/tests')
     ->name('.tests')
+    ->namespace('Tests')
     ->group(function () {
-        Route::get('/', function () {
-            return view('pages.client.subjects-list');
-        });
+
+        $routePatterns = Route::getPatterns();
+
+        Route::prefix('/{subject}')
+            ->where(['subject' => $routePatterns['name']])
+            ->name('.subject')
+            ->group(function () use (&$routePatterns) {
+
+                Route::get('/', function () {
+                    return 'Mock';
+                });
+
+            });
+
+        /*
+         *  List of all subjects
+         */
+        Route::get('/', 'SubjectsController@showAll');
     });
 
 Route::get('/404', function () {
