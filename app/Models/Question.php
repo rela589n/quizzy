@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\AnswerOption;
-use App\Models\Test;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $test_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AnswerOption[] $answerOptions
  * @property-read int|null $answer_options_count
- * @property-read \App\Models\Test $test
+ * @property-read Test $test
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question query()
@@ -22,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question whereQuestion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question whereTestId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question random($limit)
  */
 class Question extends Model
 {
@@ -36,5 +35,17 @@ class Question extends Model
     public function answerOptions()
     {
         return $this->hasMany(AnswerOption::class);
+    }
+
+    /**
+     * Scope a query to include random <b>$limit</b> questions.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRandom($query, $limit)
+    {
+        return $query->inRandomOrder()->limit($limit);
     }
 }

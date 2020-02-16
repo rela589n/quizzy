@@ -8,7 +8,7 @@
                 @yield('settings-link')
 
                 @section('header')
-                    <h2 class="mb-4">Існуючі тести з предмету @yield('subject-name'):</h2>
+                    <h2 class="mb-4">@section('header-text') Існуючі тести з предмету @yield('subject-name'): @show</h2>
                 @show
 
                 <ul class="list-group categories text-dark">

@@ -32,9 +32,22 @@ Route::prefix('/tests')
             ->name('.subject')
             ->group(function () use (&$routePatterns) {
 
-                Route::get('/', function () {
-                    return 'Mock';
-                });
+                Route::prefix('/{test}')
+                    ->where(['test' => $routePatterns['name']])
+                    ->name('.test')
+                    ->group(function () use (&$routePatterns) {
+
+                        Route::get('/', function() {
+                            return "Mock";
+                        });
+                    });
+
+
+                /*
+                 * Single subject page with his tests list
+                 * client.tests.subject.test
+                 */
+                Route::get('/', 'SubjectsController@showSingleSubject');
 
             });
 

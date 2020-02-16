@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2020-02-08 11:40:36.
+    * Generated on 2020-02-16 18:46:44.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -14,6 +14,7 @@ namespace PHPSTORM_META {
         '' => '@',
         'App\Http\Requests\RequestUrlManager' => \App\Http\Requests\RequestUrlManager::class,
         'App\Lib\ValidationGenerator' => \App\Lib\ValidationGenerator::class,
+        'App\Lib\transformers\QuestionsTransformer' => \App\Lib\transformers\QuestionsTransformer::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsManager' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::class,
@@ -172,6 +173,7 @@ namespace PHPSTORM_META {
         '' => '@',
         'App\Http\Requests\RequestUrlManager' => \App\Http\Requests\RequestUrlManager::class,
         'App\Lib\ValidationGenerator' => \App\Lib\ValidationGenerator::class,
+        'App\Lib\transformers\QuestionsTransformer' => \App\Lib\transformers\QuestionsTransformer::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsManager' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::class,
@@ -330,6 +332,7 @@ namespace PHPSTORM_META {
         '' => '@',
         'App\Http\Requests\RequestUrlManager' => \App\Http\Requests\RequestUrlManager::class,
         'App\Lib\ValidationGenerator' => \App\Lib\ValidationGenerator::class,
+        'App\Lib\transformers\QuestionsTransformer' => \App\Lib\transformers\QuestionsTransformer::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsManager' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::class,
@@ -488,6 +491,7 @@ namespace PHPSTORM_META {
         '' => '@',
         'App\Http\Requests\RequestUrlManager' => \App\Http\Requests\RequestUrlManager::class,
         'App\Lib\ValidationGenerator' => \App\Lib\ValidationGenerator::class,
+        'App\Lib\transformers\QuestionsTransformer' => \App\Lib\transformers\QuestionsTransformer::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsManager' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::class,
@@ -646,6 +650,7 @@ namespace PHPSTORM_META {
         '' => '@',
         'App\Http\Requests\RequestUrlManager' => \App\Http\Requests\RequestUrlManager::class,
         'App\Lib\ValidationGenerator' => \App\Lib\ValidationGenerator::class,
+        'App\Lib\transformers\QuestionsTransformer' => \App\Lib\transformers\QuestionsTransformer::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsManager' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::class,
@@ -804,6 +809,7 @@ namespace PHPSTORM_META {
         '' => '@',
         'App\Http\Requests\RequestUrlManager' => \App\Http\Requests\RequestUrlManager::class,
         'App\Lib\ValidationGenerator' => \App\Lib\ValidationGenerator::class,
+        'App\Lib\transformers\QuestionsTransformer' => \App\Lib\transformers\QuestionsTransformer::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsManager' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::class,
@@ -962,6 +968,7 @@ namespace PHPSTORM_META {
         '' => '@',
         'App\Http\Requests\RequestUrlManager' => \App\Http\Requests\RequestUrlManager::class,
         'App\Lib\ValidationGenerator' => \App\Lib\ValidationGenerator::class,
+        'App\Lib\transformers\QuestionsTransformer' => \App\Lib\transformers\QuestionsTransformer::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsManager' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::class,
@@ -1120,6 +1127,7 @@ namespace PHPSTORM_META {
         '' => '@',
         'App\Http\Requests\RequestUrlManager' => \App\Http\Requests\RequestUrlManager::class,
         'App\Lib\ValidationGenerator' => \App\Lib\ValidationGenerator::class,
+        'App\Lib\transformers\QuestionsTransformer' => \App\Lib\transformers\QuestionsTransformer::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
         'DaveJamesMiller\Breadcrumbs\BreadcrumbsManager' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::class,

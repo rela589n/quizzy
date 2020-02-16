@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Question;
-use App\Models\TestSubject;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $time
  * @property int $test_subject_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Question[] $nativeQuestions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestComposite[] $testComposites
  * @property-read int|null $native_questions_count
  * @property-read \App\Models\TestSubject $subject
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
@@ -28,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUriAlias($value)
  * @mixin \Eloquent
+ * @property-read int|null $test_composites_count
  */
 class Test extends Model
 {
@@ -44,13 +44,32 @@ class Test extends Model
         return $this->hasMany(Question::class);
     }
 
-    public function tests() // todo may be changed to Has Many Through relation
+    public function tests()
     {
         return $this->belongsToMany(
             self::class,
             'test_composite',
             'id_test',
             'id_include_test'
-        )->withPivot(['questions_quantity']);
+        )->using(TestComposite::class)
+            ->withPivot(['questions_quantity']);
+    }
+
+    public function testComposites()
+    {
+        return $this->hasMany(TestComposite::class, 'id_test');
+    }
+
+    public function allQuestions()
+    {
+        // todo move it into repository
+        return $this->testComposites->pluck('questions')->flatten();
+
+//        return $this->hasManyDeep(
+//            Question::class,
+//            ['test_composite', self::class],
+//            ['id_test'],
+//            [null, 'id_include_test']
+//        );
     }
 }
