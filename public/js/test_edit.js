@@ -7,8 +7,10 @@ $(function () {
 
     let $editTestForm = $('.edit-test-form');
     let $document = $(document);
+    let $lastOptionId = $('#last-answer-option-id');
+
     let $questionsContainer = $editTestForm.find('ul.list-group.questions');
-    let questionsManager = new QuestionsManager($questionsContainer);
+    let questionsManager = new QuestionsManager($questionsContainer, $lastOptionId.val());
     let $labelEmptyQuestionsList = $('.empty-questions-list-label');
 
     $document.on('click', '.button-add-question', function () {
@@ -21,12 +23,7 @@ $(function () {
         let $thisQuestion = $(this).closest('.question');
         let delQuestionIndex = $thisQuestion.attr('data-question');
 
-        questionsManager.removeQuestion(delQuestionIndex, function (questionRecord) {
-            let delQuestionId = questionRecord.getQId();
-            if (!isNaN(delQuestionId)) {
-                $editTestForm.append($(`<input type="hidden" name="q[deleted][]" value="${delQuestionId}">`));
-            }
-        });
+        questionsManager.removeQuestion(delQuestionIndex);
 
         checkQuestionsCountLabel();
     });
@@ -34,7 +31,7 @@ $(function () {
     $document.on('click', '.button-add-variant', function () {
         let $question = $(this).closest('li.question');
 
-        questionsManager.appendNewVariant($question.attr('data-question'));
+        questionsManager.appendNewVariant($question.attr('data-question'))
     });
 
     $document.on('click', '.button-delete-variant', function () {
@@ -43,6 +40,7 @@ $(function () {
         let $thisQuestion = $thisVariant.closest('li.question');
 
         questionsManager.removeVariant($thisQuestion.attr('data-question'), $thisVariant.attr('data-variant'))
+        console.log('deleted!');
     });
 
     $document.on('change', $editTestForm.find('input[type=text]'), function (e) {
@@ -50,6 +48,25 @@ $(function () {
         let $question = $currentInput.closest('li.question');
         if (!$question.is('[data-new=true]')) {
             $question.attr('data-modified', 'true');
+        }
+    });
+
+    questionsManager.events.on('variantAppended', function(variant) {
+        $lastOptionId.val(variant.getVId());
+    });
+
+    questionsManager.events.on('questionRemoved', function(questionRecord) {
+        let delQuestionId = questionRecord.getQId();
+        if (!isNaN(delQuestionId)) {
+            $editTestForm.append($(`<input type="hidden" name="q[deleted][]" value="${delQuestionId}">`));
+        }
+    });
+
+    questionsManager.events.on('variantRemoved', function(variant) {
+        let delVariantId = variant.getVId();
+
+        if (!isNaN(delVariantId)) { // todo exclude manually inserted
+            $editTestForm.append($(`<input type="hidden" name="v[deleted][]" value="${delVariantId}">`));
         }
     });
 
@@ -131,6 +148,8 @@ $(function () {
 
             variants.splice(delIndex - 1, 1);
             reindexVariants(delIndex - 1);
+
+            return currentVariant;
         };
 
         function reindexVariants(startFrom = 0, delta = 0) {
@@ -147,6 +166,15 @@ $(function () {
     function VariantRecord($html, questionRecord) {
         let $variant = $html;
         let parent = questionRecord;
+        let type = parseType();
+
+        function parseType() {
+            return $variant.is('[data-new=true]') ? 'new' : 'modified';
+        }
+
+        this.getVType = function() {
+            return type;
+        };
 
         this.changeIndex = function (index) {
             $variant.attr('data-variant', index);
@@ -161,15 +189,40 @@ $(function () {
             return parseInt($variant.attr('data-variant'));
         };
 
+        this.getVId = function () {
+            return $variant.attr('data-variant-id');
+        };
+
         this.getDomElement = function () {
             return $variant;
         };
     }
 
-    function QuestionsManager($questionsContainer) {
+    function QuestionsManager($questionsContainer, lastVariantId) {
         let context = this;
+        let $context = $(context);
         this.$questionsContainer = $questionsContainer;
         let questions = parseQuestions();
+
+        this.events = new function() {
+            let _triggers = {};
+
+            this.on = function(event,callback) {
+                if(!_triggers[event])
+                    _triggers[event] = [];
+                _triggers[event].push( callback );
+            };
+
+            this.trigger = function(event,params) {
+                if( _triggers[event] ) {
+                    for(let i = 0; i < _triggers[event].length; ++i) {
+                        _triggers[event][i].apply(this, params);
+                    }
+                }
+            };
+        };
+
+        context.lastVariantId = parseInt(lastVariantId);
 
         function parseQuestions() {
             let result = [];
@@ -200,25 +253,33 @@ $(function () {
             let domElement = newRecord.getDomElement();
             this.$questionsContainer.append(domElement);
             domElement.hide().slideDown(animationTime);
+
+            $context.trigger('questionAppended', [newRecord]);
         };
 
         this.appendNewVariant = function (questionIndex, animationTime = 300) {
             let currentQuestion = questions[questionIndex - 1];
             let variantIndex = currentQuestion.getLastVariantIndex() + 1;
+            let newVariantId = context.generateVariantId();
+
+            let variantRecord = new VariantRecord(
+                context.createEmptyVariant(
+                    variantIndex,
+                    newVariantId,
+                    currentQuestion.getQId() || currentQuestion.getIndex(),
+                    currentQuestion.getQType()
+                ),
+                currentQuestion);
 
             currentQuestion.pushVariant(
-                new VariantRecord(
-                    context.createEmptyVariant(
-                        variantIndex,
-                        currentQuestion.getQId() || currentQuestion.getIndex(),
-                        currentQuestion.getQType()
-                    ),
-                    currentQuestion),
+                variantRecord,
                 animationTime
             );
+
+            context.events.trigger('variantAppended', [variantRecord]);
         };
 
-        this.removeQuestion = function (delIndex, callback) {
+        this.removeQuestion = function (delIndex) {
             let thisQuestion = questions[delIndex - 1];
 
             thisQuestion.getDomElement().slideUp(200, function () {
@@ -230,12 +291,14 @@ $(function () {
                 questions[i].changeIndex(i + 1);
             }
 
-            callback(thisQuestion);
+            context.events.trigger('questionRemoved', [thisQuestion]);
         };
 
         this.removeVariant = function (questionIndex, variantIndex) {
             let thisQuestion = questions[questionIndex - 1];
-            thisQuestion.deleteVariant(variantIndex);
+            let deleted = thisQuestion.deleteVariant(variantIndex);
+
+            context.events.trigger('variantRemoved', [deleted]);
         };
 
         this.createEmptyQuestion = function (questionId) {
@@ -262,19 +325,19 @@ $(function () {
                 </li>`);
         };
 
-        this.createEmptyVariant = function (variantIndex, questionId, type = 'new') {
+        this.createEmptyVariant = function (variantIndex, variantId, questionId, type = 'new') {
 
-            return $(`<div class="form-row align-items-center" data-variant="${variantIndex}">
+            return $(`<div class="form-row align-items-center" data-variant="${variantIndex}" data-variant-id="${variantId}">
                     <div class="col-auto">
                         <label class="form-check d-inline pb-1 mb-0">
                             <input class="form-check-input is-correct" type="checkbox"
-                                   name="${context.generateCheckBoxName(questionId, variantIndex, type)}">
+                                   name="${context.generateCheckBoxName(questionId, variantId, type)}">
                         </label>
                     </div>
                     <div class="col-form-label col-xl-11 col-lg-10 col-sm-9 col-8">
                         <label class="form-check-label d-block">
                             <input type="text" class="form-control form-control-sm variant-text"
-                                   name="${context.generateVariantInputName(questionId, variantIndex, type)}"
+                                   name="${context.generateVariantInputName(questionId, variantId, type)}"
                                    placeholder="${context.variantTextPlaceholder(variantIndex, type)}"  required="required">
                         </label>
                     </div>
@@ -282,6 +345,10 @@ $(function () {
                         <button type="button" class="btn btn-outline-danger btn-sm button-delete-variant" tabindex="-1"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>`);
+        };
+
+        this.generateVariantId = function() {
+            return ++context.lastVariantId;
         };
 
         this.variantTextPlaceholder = function (variantIndex) {
