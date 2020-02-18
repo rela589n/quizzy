@@ -28,15 +28,32 @@
         <h3 class="list-group-item empty-questions-list-label">В цього теста питань поки що немає. Ви можете створити їх
             натиснувши кнопку нижче:</h3>
     @endforelse
+@endsection
 
-    @foreach(old("q.deleted", []) as $deleted)
+@section('additions')
+    @parent
+    <input
+        type="hidden"
+        name="last-answer-option-id"
+        id="last-answer-option-id"
+        value="{{ $lastAnswerOptionId }}">
+
+    @foreach(old('q.deleted', []) as $deleted)
         <input type="hidden" name="q[deleted][]" value="{{ $deleted }}">
+    @endforeach
+
+    @foreach(old('v.deleted', []) as $deleted)
+        <input type="hidden" name="v[deleted][]" value="{{ $deleted }}">
     @endforeach
 @endsection
 
 @section('save-button')
     <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Зберегти</button>
 @endsection
+
+@push('bottom_scripts')
+    <script src="{{ asset('js/test_edit.js') }}"></script>
+@endpush
 
 @isset($message)
     @push('bottom_scripts')

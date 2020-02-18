@@ -13,15 +13,15 @@
                 <form method="post" class="edit-test-form mt-5">
                     @csrf
                     <ul class="list-group text-dark questions">
-                        @section('test-questions')
-                            {{--          traverse all subjects and print base layout              --}}
-                        @show
+                        @yield('test-questions')
                     </ul>
 
-                    <div class="button-wrap text-center">
-                        <button type="button" class="btn btn-primary btn-lg button-add-question"><i
-                                class="fas fa-plus"></i></button>
-                    </div>
+                    @section('additions')
+                        <div class="button-wrap text-center">
+                            <button type="button" class="btn btn-primary btn-lg button-add-question"><i
+                                    class="fas fa-plus"></i></button>
+                        </div>
+                    @show
 
                     @yield('save-button')
                 </form>
@@ -32,5 +32,4 @@
 
 @prepend('bottom_scripts')
     <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('js/test_edit.js') }}"></script>
 @endprepend
