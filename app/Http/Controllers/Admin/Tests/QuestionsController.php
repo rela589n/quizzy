@@ -60,11 +60,14 @@ class QuestionsController extends Controller
                 })
         );
 
+        $lastOptionId = $request->old('last-answer-option-id') ?? (AnswerOption::latest('id')->first()->id ?? 0);
+
         return view('pages.admin.tests-single', [
             'subject' => $urlManager->getCurrentSubject(),
             'test' => $currentTest,
             'filteredQuestions' => $fullQuestions->all(),
             'message' => \Session::get('message'),
+            'lastAnswerOptionId' => $lastOptionId
         ]);
     }
 
@@ -78,9 +81,11 @@ class QuestionsController extends Controller
 
         $validated = $request->validated();
 
+        $this->performQuestionsDelete($validated['q']['deleted'] ?? []);
+        $this->performVariantsDelete($validated['v']['deleted'] ?? []);
+
         $this->performCreate($currentTest, $validated['q']['new'] ?? []);
         $this->performModify($currentTest, $validated['q']['modified'] ?? []);
-        $this->performDelete($validated['q']['deleted'] ?? []);
 
         return redirect()->back()->with('message', 'Збережено');
     }
@@ -97,7 +102,7 @@ class QuestionsController extends Controller
             foreach ($question['v'] as $vId => $variant) {
                 $new->answerOptions()->save(new AnswerOption([
                     'text' => $variant['text'],
-                    'is_right' => boolval($variant['is_right'] ?? false)
+                    'is_right' => (int)(isset($variant['is_right']) ?? false)
                 ]));
             }
         }
@@ -106,6 +111,8 @@ class QuestionsController extends Controller
     // todo remove duplicate
     private function performModify(Test $currentTest, array $questions)
     {
+        $currentTest->loadMissing('nativeQuestions.answerOptions');
+
         foreach ($questions as $id => $question) {
             /**
              * @var Question $toModify
@@ -114,20 +121,33 @@ class QuestionsController extends Controller
             $toModify->question = $question['name'];
             $toModify->save();
 
-            $toModify->answerOptions()->delete();
-
             foreach ($question['v'] as $vId => $variant) {
-                $toModify->answerOptions()->save(new AnswerOption([
-                    'text' => $variant['text'],
-                    'is_right' => boolval($variant['is_right'] ?? false)
-                ]));
+                $option = $toModify->answerOptions->where('id', $vId)->first();
+
+                if ($option === null) {
+                    $option = new AnswerOption();
+                    $option->question()->associate($toModify);
+                }
+
+                $option->text = $variant['text'];
+                $option->is_right = (int)(isset($variant['is_right']) ?? false);
+
+                $option->save();
             }
         }
     }
 
-    private function performDelete(array $ids)
+    private function performQuestionsDelete(array $ids)
     {
-        if (count($ids) > 0)
-            Question::destroy($ids);
+        if (count($ids) > 0) {
+            Question::whereIn('id', $ids)->delete();
+        }
+    }
+
+    private function performVariantsDelete(array $ids)
+    {
+        if (count($ids) > 0) {
+            AnswerOption::whereIn('id', $ids)->delete();
+        }
     }
 }
