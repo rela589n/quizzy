@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Question;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\AnswerOption
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AnswerOption extends Model
 {
+    use SoftDeletes;
     public $timestamps = false;
     public $guarded = ['id'];
 

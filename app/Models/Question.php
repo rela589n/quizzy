@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Question
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Question extends Model
 {
+    use SoftDeletes;
     public $timestamps = false;
     public $guarded = ['id'];
 

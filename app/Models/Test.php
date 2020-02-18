@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Test
@@ -31,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Test extends Model
 {
+    use SoftDeletes;
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time']; // todo create architecture
 
