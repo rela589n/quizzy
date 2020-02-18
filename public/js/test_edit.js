@@ -310,7 +310,11 @@ $(function () {
         };
 
         this.createEmptyQuestion = function (questionId) {
-            return $(`<li class="list-group-item mb-4 question" data-question="${questionId}" data-new="true">
+            return $(`<li class="list-group-item mb-4 question"
+                            data-question="${questionId}"
+                            data-question-id="${questionId}"
+                            data-new="true">
+
                     <label for="${context.generateQuestionName(questionId)}"
                            class="text-center mb-3 h4 d-block question-header">
                            ${context.questionTextPlaceholder(questionId)}

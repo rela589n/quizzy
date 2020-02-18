@@ -1,4 +1,4 @@
-<div class="form-row align-items-center" data-variant="{{ $optionIndex }}">
+<div class="form-row align-items-center" data-variant="{{ $optionIndex }}" data-variant-id="{{ $option->id }}">
     <div class="col-auto">
         <label class="form-check d-inline pb-1 mb-0">
             <input class="form-check-input is-correct"

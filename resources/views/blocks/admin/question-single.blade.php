@@ -1,5 +1,6 @@
 <li class="list-group-item mb-4 question"
     data-question="{{ $questionIndex }}"
+    data-question-id="{{ $question->id }}"
     @if(!$new) data-question-id="{{ $question->id }}" @endif
     data-new="{{ $new ? 'true' : 'false' }}"
     data-modified="{{ $modified ? 'true' : 'false' }}">
