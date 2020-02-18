@@ -51,21 +51,23 @@ $(function () {
         }
     });
 
-    questionsManager.events.on('variantAppended', function(variant) {
+    questionsManager.events.on('variantAppended', function (variant) {
         $lastOptionId.val(variant.getVId());
     });
 
-    questionsManager.events.on('questionRemoved', function(questionRecord) {
+    questionsManager.events.on('questionRemoved', function (questionRecord) {
         let delQuestionId = questionRecord.getQId();
-        if (!isNaN(delQuestionId)) {
+
+        if (!isNaN(delQuestionId) && questionRecord.getQType() !== 'new') {
             $editTestForm.append($(`<input type="hidden" name="q[deleted][]" value="${delQuestionId}">`));
         }
     });
 
-    questionsManager.events.on('variantRemoved', function(variant) {
+    questionsManager.events.on('variantRemoved', function (variant) {
         let delVariantId = variant.getVId();
+        console.log(variant.getVType());
 
-        if (!isNaN(delVariantId)) { // todo exclude manually inserted
+        if (!isNaN(delVariantId) && variant.getVType() !== 'new') {
             $editTestForm.append($(`<input type="hidden" name="v[deleted][]" value="${delVariantId}">`));
         }
     });
@@ -107,7 +109,7 @@ $(function () {
             return $question.attr('data-question-id');
         };
 
-        this.getQType = function() {
+        this.getQType = function () {
             return type;
         };
 
@@ -172,7 +174,7 @@ $(function () {
             return $variant.is('[data-new=true]') ? 'new' : 'modified';
         }
 
-        this.getVType = function() {
+        this.getVType = function () {
             return type;
         };
 
@@ -204,18 +206,18 @@ $(function () {
         this.$questionsContainer = $questionsContainer;
         let questions = parseQuestions();
 
-        this.events = new function() {
+        this.events = new function () {
             let _triggers = {};
 
-            this.on = function(event,callback) {
-                if(!_triggers[event])
+            this.on = function (event, callback) {
+                if (!_triggers[event])
                     _triggers[event] = [];
-                _triggers[event].push( callback );
+                _triggers[event].push(callback);
             };
 
-            this.trigger = function(event,params) {
-                if( _triggers[event] ) {
-                    for(let i = 0; i < _triggers[event].length; ++i) {
+            this.trigger = function (event, params) {
+                if (_triggers[event]) {
+                    for (let i = 0; i < _triggers[event].length; ++i) {
                         _triggers[event][i].apply(this, params);
                     }
                 }
@@ -286,6 +288,12 @@ $(function () {
                 $(this).detach();
             });
 
+            // to trigger variantRemoved event
+            let index;
+            while ((index = thisQuestion.getLastVariantIndex())) {
+                context.removeVariant(delIndex, index);
+            }
+
             questions.splice(delIndex - 1, 1);
             for (let i = delIndex - 1; i < questions.length; ++i) {
                 questions[i].changeIndex(i + 1);
@@ -327,7 +335,7 @@ $(function () {
 
         this.createEmptyVariant = function (variantIndex, variantId, questionId, type = 'new') {
 
-            return $(`<div class="form-row align-items-center" data-variant="${variantIndex}" data-variant-id="${variantId}">
+            return $(`<div class="form-row align-items-center" data-variant="${variantIndex}" data-variant-id="${variantId}" data-new="true">
                     <div class="col-auto">
                         <label class="form-check d-inline pb-1 mb-0">
                             <input class="form-check-input is-correct" type="checkbox"
@@ -347,7 +355,7 @@ $(function () {
                 </div>`);
         };
 
-        this.generateVariantId = function() {
+        this.generateVariantId = function () {
             return ++context.lastVariantId;
         };
 
