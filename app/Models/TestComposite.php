@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property int $questions_quantity
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Question[] $questions
  * @property-read int|null $questions_count
- * @property-read \App\Models\Test $test
+ * @property-read \App\Models\Test $includeTest
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite query()
@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class TestComposite extends Pivot
 {
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *
@@ -32,18 +34,16 @@ class TestComposite extends Pivot
      */
     public $incrementing = true;
 
-    public function test()
+    public function includeTest()
     {
         return $this->belongsTo(Test::class, 'id_include_test');
     }
 
     public function questions()
     {
-        return $this->hasManyThrough(
-            Question::class,
-            Test::class,
-            'id',
-            'test_id'
+        return $this->hasManyDeepFromRelations(
+            $this->includeTest(),
+            (new Test)->nativeQuestions()
         )->random($this->questions_quantity);
     }
 }

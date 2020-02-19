@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Test extends Model
 {
     use SoftDeletes;
+//    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time']; // todo create architecture
 
@@ -62,8 +64,16 @@ class Test extends Model
         return $this->hasMany(TestComposite::class, 'id_test');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\App\Models\Question[]
+     */
     public function allQuestions()
     {
+//        return $this->hasManyDeepFromRelations(
+//            $this->testComposites(),
+//            (new TestComposite)->questions()
+//        ); // :-/ does not work in the right way
+
         // todo move it into repository
         return $this->testComposites->pluck('questions')->flatten();
 
