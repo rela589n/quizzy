@@ -37,9 +37,8 @@ Route::prefix('/tests')
                     ->name('.test')
                     ->group(function () use (&$routePatterns) {
 
-                        Route::get('/', function() {
-                            return "Mock";
-                        });
+                        Route::get('/', 'TestsController@showSingleTestForm');
+                        Route::post('/', 'TestsController@finishTest');
                     });
 
 

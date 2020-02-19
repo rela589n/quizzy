@@ -1,10 +1,10 @@
 @extends($baseLayout)
 
 @section('content')
-    <div class="container mt-5 categories">
+    <div class="@section('categories-class') container mt-5 categories @show">
         <div class="row">
-            <div class="col-1"></div>
-            <div class="col-10">
+            <div class="col-{{ (12 - ($contentColumns ?? 10)) >> 1 }}"></div>
+            <div class="col-{{ $contentColumns ?? 10 }}">
                 @yield('settings-link')
 
                 @section('header')
