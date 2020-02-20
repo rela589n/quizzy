@@ -106,3 +106,20 @@ label.form-info.h3 {
     display: block;
 }
 
+#test-countdown {
+    background:
+        rgba(0, 0, 0, .79);
+    color:
+        #fff;
+    bottom: 5.5%;
+    display: none;
+    position: fixed;
+    right: 50px;
+    z-index: 19;
+    font-size: 26px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    -webkit-transition: background-color .1s linear;
+    transition: background-color .1s linear;
+    text-align: center;
+}

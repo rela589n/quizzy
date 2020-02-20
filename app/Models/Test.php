@@ -65,7 +65,7 @@ class Test extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection|\App\Models\Question[]
+     * @return \Illuminate\Support\Collection|\App\Models\Question[]
      */
     public function allQuestions()
     {

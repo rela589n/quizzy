@@ -32,3 +32,16 @@
         <h3 class="list-group-item">Немає доступних для проходження питань.</h3>
     @endforelse
 @endsection
+
+@section('content')
+    @parent
+    <div id="test-countdown">10:00</div>
+@endsection
+
+@push('bottom_scripts')
+    <script src="{{ asset('js/stopwatch.js') }}"></script>
+    <script type="text/javascript">
+        window.passTestCountDownMinutes = +"{!! json_encode($test->time) !!}";
+    </script>
+    <script src="{{ asset('js/test-countdown.js') }}"></script>
+@endpush

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client\Tests;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestUrlManager;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 
 class TestsController extends Controller
