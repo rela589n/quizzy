@@ -2,25 +2,14 @@
 
 namespace App\Http\Controllers\Admin\Tests;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\IndexController;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Tests\CreateTestRequest;
 use App\Http\Requests\Tests\UpdateTestRequest;
 use Illuminate\Http\Request;
 
-class TestsController extends Controller
+class TestsController extends IndexController
 {
-    private $urlManager;
-
-    /**
-     * TestsController constructor.
-     * @param RequestUrlManager $urlManager
-     */
-    public function __construct(RequestUrlManager $urlManager)
-    {
-        $this->urlManager = $urlManager;
-    }
-
 
     public function showNewTestForm()
     {

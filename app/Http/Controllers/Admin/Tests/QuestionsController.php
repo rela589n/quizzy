@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers\Admin\Tests;
 
+use App\Http\Controllers\Admin\IndexController;
 use App\Lib\transformers\QuestionsTransformer;
 use App\Models\AnswerOption;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Questions\FillAnswersRequest;
-use App\Http\Requests\RequestUrlManager;
 use App\Models\Question;
 use App\Models\Test;
 use Illuminate\Http\Request;
 
-class QuestionsController extends Controller
+class QuestionsController extends IndexController
 {
-    public function showCreateUpdateForm(Request $request, RequestUrlManager $urlManager, QuestionsTransformer $transformer)
+    public function showCreateUpdateForm(Request $request, QuestionsTransformer $transformer)
     {
         /**
          * @var Test $currentTest
          */
-        $currentTest = $urlManager->getCurrentTest();
+        $currentTest = $this->urlManager->getCurrentTest();
         $currentTest->loadMissing('nativeQuestions');
         $currentTest->nativeQuestions->load('answerOptions');
 
@@ -37,6 +36,7 @@ class QuestionsController extends Controller
         /*
          * Although we included modified from request, there may not be all entities
          * (We don't need send request to update entries that has not been updated)
+         * That is done on the front-end by js
          */
         $fullQuestions = $fullQuestions->concat(
             $currentTest->nativeQuestions->reject(
@@ -63,7 +63,7 @@ class QuestionsController extends Controller
         $lastOptionId = $request->old('last-answer-option-id') ?? (AnswerOption::latest('id')->first()->id ?? 0);
 
         return view('pages.admin.tests-single', [
-            'subject' => $urlManager->getCurrentSubject(),
+            'subject' => $this->urlManager->getCurrentSubject(),
             'test' => $currentTest,
             'filteredQuestions' => $fullQuestions->all(),
             'message' => \Session::get('message'),
@@ -71,12 +71,12 @@ class QuestionsController extends Controller
         ]);
     }
 
-    public function createUpdate(FillAnswersRequest $request, RequestUrlManager $urlManager)
+    public function createUpdate(FillAnswersRequest $request)
     {
         /**
          * @var Test $currentTest
          */
-        $currentTest = $urlManager->getCurrentTest();
+        $currentTest = $this->urlManager->getCurrentTest();
         $currentTest->loadMissing('nativeQuestions');
 
         $validated = $request->validated();
