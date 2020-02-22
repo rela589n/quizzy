@@ -29,7 +29,9 @@
             'questionIndex' => $loop->iteration,
         ])
     @empty
-        <h3 class="list-group-item">Немає доступних для проходження питань.</h3>
+        @component('layouts.blocks.empty-list-message')
+            Немає доступних для проходження питань.
+        @endcomponent
     @endforelse
 @endsection
 

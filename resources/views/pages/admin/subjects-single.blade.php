@@ -13,7 +13,9 @@
     @forelse($subject->tests as $test)
         @include('blocks.admin.test-line')
     @empty
-        <h3 class="list-group-item">Тестів поки що немає. Можете створити новий натиснувши кнопку нижче:</h3>
+        @component('layouts.blocks.empty-list-message')
+            Тестів поки що немає. Можете створити новий натиснувши кнопку нижче:
+        @endcomponent
     @endforelse
 @endsection
 

@@ -5,9 +5,13 @@
 @endsection
 
 @section('subject-links')
-    @foreach($subjects as $subject)
+    @forelse($subjects as $subject)
         @include('blocks.admin.subject-line', ['subject' => $subject])
-    @endforeach
+    @empty
+        @component('layouts.blocks.empty-list-message')
+            Немає жодного доступного предмета
+        @endcomponent
+    @endforelse
 @endsection
 
 @section('create-new-btn')

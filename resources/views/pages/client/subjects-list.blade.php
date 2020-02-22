@@ -5,7 +5,11 @@
 @endsection
 
 @section('subject-links')
-    @foreach($subjects as $subject)
+    @forelse($subjects as $subject)
         @include('blocks.client.subject-line', ['subject' => $subject])
-    @endforeach
+    @empty
+        @component('layouts.blocks.empty-list-message')
+            Немає жодного доступного предмета тестування
+        @endcomponent
+    @endforelse
 @endsection
