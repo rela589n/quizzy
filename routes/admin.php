@@ -12,15 +12,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('pages.admin.auth');
-})->name('.auth');
+//Route::get('/', function () {
+//    return view('pages.admin.auth');
+//})->name('.auth');
 
+Route::get('/', 'LoginController@showLoginForm')->name('.login');
+Route::post('/', 'LoginController@login');
 
 Route::get('/dashboard', function () {
-
     return view('pages.admin.dashboard');
-
 })->name('.dashboard');
 
 Route::prefix('/tests')

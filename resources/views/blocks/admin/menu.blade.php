@@ -14,7 +14,7 @@
         <a class="nav-link" href="{{ route('admin.users') }}" target="_self">Користувачі</a>
     </li>
 
-    <li class="nav-item @ifroute('admin.auth') active @endifroute">
-        <a class="nav-link" href="{{ route('admin.auth') }}" target="_self">Вихід</a>
+    <li class="nav-item @ifroute('admin.login') active @endifroute">
+        <a class="nav-link" href="{{ route('admin.login') }}" target="_self">Вихід</a>
     </li>
 @endsection
