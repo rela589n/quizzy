@@ -65,7 +65,7 @@ class Test extends Model
     }
 
     /**
-     * @return \Illuminate\Support\Collection|\App\Models\Question[]
+     * @return \Illuminate\Database\Eloquent\Collection|\App\Models\Question[]
      */
     public function allQuestions()
     {
@@ -75,7 +75,7 @@ class Test extends Model
 //        ); // :-/ does not work in the right way
 
         // todo move it into repository
-        return $this->testComposites->pluck('questions')->flatten();
+        return \Illuminate\Database\Eloquent\Collection::make($this->testComposites->pluck('questions')->flatten());
 
 //        return $this->hasManyDeep(
 //            Question::class,
