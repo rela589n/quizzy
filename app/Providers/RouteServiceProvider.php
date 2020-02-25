@@ -19,12 +19,32 @@ class RouteServiceProvider extends ServiceProvider
     protected $clientNamespace = 'App\Http\Controllers\Client';
 
     /**
-     * The path to the "home" route for your application.
+     * The path to the "home" route for your application depending on guard.
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/';
 
+    public static function getHomeUrl($guardName)
+    {
+        // todo create AdminRouteHandler and ClientRouteHandler and use polymorphism
+        switch ($guardName) {
+            case 'admin':
+                return route('admin.dashboard');
+            default:
+                return route('client.dashboard');
+        }
+    }
+
+    public static function getLoginUrl($guardName)
+    {
+        switch ($guardName) {
+            case 'admin':
+                return route('admin.login');
+            default:
+                return route('client.login');
+        }
+    }
     /**
      * Define your route model bindings, pattern filters, etc.
      *

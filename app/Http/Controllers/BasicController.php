@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestUrlManager;
-use Illuminate\Http\Request;
 
-abstract class IndexController extends Controller
+abstract class BasicController extends Controller
 {
     protected $urlManager;
 
     /**
-     * IndexController constructor.
+     *
+     * Basic controller for Admin and Client routes (except login forms).
      * @param RequestUrlManager $urlManager
      */
     public function __construct(RequestUrlManager $urlManager)
     {
         $this->urlManager = $urlManager;
-//        $this->middleware('auth');
     }
 }

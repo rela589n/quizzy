@@ -12,9 +12,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('pages.client.auth');
-})->name('.auth');
+Route::get('/', 'LoginController@showLoginForm')->name('.login');
+Route::post('/', 'LoginController@login');
+
+Route::post('/logout', 'LoginController@logout')->name('.logout');
 
 Route::get('/dashboard', function () {
     return view('pages.client.dashboard');
@@ -40,7 +41,6 @@ Route::prefix('/tests')
                         Route::get('/', 'TestsController@showSingleTestForm');
                         Route::post('/', 'TestsController@finishTest');
                     });
-
 
                 /*
                  * Single subject page with his tests list

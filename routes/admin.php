@@ -12,16 +12,11 @@
 |
 */
 
-//Route::get('/', function () {
-//    return view('pages.admin.auth');
-//})->name('.auth');
-
 Route::get('/', 'LoginController@showLoginForm')->name('.login');
 Route::post('/', 'LoginController@login');
+Route::post('/logout', 'LoginController@logout')->name('.logout');
 
-Route::get('/dashboard', function () {
-    return view('pages.admin.dashboard');
-})->name('.dashboard');
+Route::get('/dashboard', 'DashboardController@showHelloPage')->name('.dashboard');
 
 Route::prefix('/tests')
     ->name('.tests')

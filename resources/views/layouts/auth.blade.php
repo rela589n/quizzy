@@ -1,7 +1,7 @@
 @extends('layouts.root.base')
 
 @section('title')
-    Авторизація
+    Адмін-панель - Аутентифікація
 @endsection
 
 @section('body-class')
@@ -14,35 +14,50 @@
         <div class="row h-100">
             <div class="col-4"></div>
             <div class="col-4 mtb-auto">
-                <form action="" method="post" class="@section('form-class') auth @show ">
+                <form method="post" class="@section('form-class') auth @show ">
+                    @csrf
                     @section('auth-form-header')
-                        <h2>Авторизація</h2>
+                        <h2>Аутентифікація</h2>
                     @show
 
                     @section('login-label')
                         <label for="name" class="form-info">
-                            Логін:
+                            Логін (email):
                         </label>
                     @show
 
                     @section('login-input')
-                        <input id="name" type="text" class="form-control" placeholder="Логін" required="required">
+                        <input id="name" name="email" type="text"
+                               class="form-control @error('email') is-invalid @enderror"
+                               placeholder="Логін"
+                               required="required"
+                               value="{{ old('email') }}">
+
+                        @error('email')
+                        <span class="invalid-feedback" role="alert"><label for="email">{{ $message }}</label></span>
+                        @enderror
                     @show
 
                     @section('password-label')
-                        <label for="pass" class="form-info error">
+                        <label for="password" class="form-info @error('password') error @enderror">
                             Пароль:
                         </label>
                     @show
 
                     @section('password-input')
-                        <input id="pass" type="password" class="form-control alert-danger" placeholder="Пароль"
-                               required="required">
+                        <input id="password" name="password" type="password"
+                               class="form-control @error('password') is-invalid @enderror"
+                               placeholder="Пароль"
+                               required="required"
+                               value="{{ old('password') }}">
+
+                        @error('password')
+                        <span class="invalid-feedback" role="alert"><label for="password">{{ $message }}</label></span>
+                        @enderror
                     @show
-                    <label for="pass" class="error">Довжина пароля повинна бути від 8 до 64 символів</label>
 
                     @section('remember-checkbox')
-                        <input id="remember" type="checkbox" name="remember">
+                        <input id="remember" name="remember" type="checkbox" @if(old('remember')) checked="checked" @endif>
                     @show
 
                     @section('remember-label')
@@ -53,6 +68,14 @@
                         <button type="submit" class="btn btn-primary btn-block">Вхід</button>
                     @show
                 </form>
+
+{{--                @if ($errors->any())--}}
+{{--                    <ul>--}}
+{{--                        @foreach ($errors->all() as $error)--}}
+{{--                            <li>{{ $error }}</li>--}}
+{{--                        @endforeach--}}
+{{--                    </ul>--}}
+{{--                @endif--}}
             </div>
         </div>
     </div>

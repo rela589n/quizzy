@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Tests;
 
-use App\Http\Controllers\Admin\IndexController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Subjects\CreateSubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
 use App\Models\TestSubject;
 
-class SubjectsController extends IndexController
+class SubjectsController extends AdminController
 {
     public function showNewSubjectForm()
     {

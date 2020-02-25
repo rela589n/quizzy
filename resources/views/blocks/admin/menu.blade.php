@@ -14,7 +14,10 @@
         <a class="nav-link" href="{{ route('admin.users') }}" target="_self">Користувачі</a>
     </li>
 
-    <li class="nav-item @ifroute('admin.login') active @endifroute">
-        <a class="nav-link" href="{{ route('admin.login') }}" target="_self">Вихід</a>
+    <li class="nav-item @ifroute('admin.logout') active @endifroute">
+        <a class="nav-link" href="{{ route('admin.logout') }}" target="_self" onclick="event.preventDefault(); document.getElementById('admin-logout-post-form').submit();">Вихід</a>
+        <form id="admin-logout-post-form" action="{{ route('admin.logout') }}" method="post" style="display: none;">
+            @csrf
+        </form>
     </li>
 @endsection

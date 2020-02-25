@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Tests;
 
-use App\Http\Controllers\Admin\IndexController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Tests\CreateTestRequest;
 use App\Http\Requests\Tests\UpdateTestRequest;
 use Illuminate\Http\Request;
 
-class TestsController extends IndexController
+class TestsController extends AdminController
 {
 
     public function showNewTestForm()

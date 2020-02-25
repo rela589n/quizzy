@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Client\Tests;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\RequestUrlManager;
+use App\Http\Controllers\Client\ClientController;
 use App\Models\TestSubject;
 use Illuminate\Http\Request;
 
-class SubjectsController extends Controller
+class SubjectsController extends ClientController
 {
     public function showAll(Request $request)
     {
@@ -16,11 +15,11 @@ class SubjectsController extends Controller
         ]);
     }
 
-    public function showSingleSubject(RequestUrlManager $urlManager)
+    public function showSingleSubject()
     {
-        $subject = $urlManager->getCurrentSubject();
+        $subject = $this->urlManager->getCurrentSubject();
 
-        // to remove duplicated queries
+        // necessary to remove duplicated queries
         $subject->tests->loadMissing('testComposites');
         $subject->tests->each(function($result) {
             $result->questions_count = $result->allQuestions()->count();
@@ -33,5 +32,4 @@ class SubjectsController extends Controller
             'subject' => $subject
         ]);
     }
-
 }

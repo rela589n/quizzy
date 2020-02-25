@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Tests;
 
-use App\Http\Controllers\Admin\IndexController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Lib\transformers\QuestionsTransformer;
 use App\Models\AnswerOption;
 use App\Http\Requests\Questions\FillAnswersRequest;
@@ -10,7 +10,7 @@ use App\Models\Question;
 use App\Models\Test;
 use Illuminate\Http\Request;
 
-class QuestionsController extends IndexController
+class QuestionsController extends AdminController
 {
     public function showCreateUpdateForm(Request $request, QuestionsTransformer $transformer)
     {
