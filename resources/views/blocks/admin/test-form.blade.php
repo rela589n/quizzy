@@ -94,7 +94,9 @@
                 </div>
             </div>
         @empty
-            <h3 class="list-group-item">Поки що немає тестів, з яких можна було б включити питання</h3>
+            @component('layouts.blocks.empty-list-message')
+                Поки що немає тестів, з яких можна було б включити питання
+            @endcomponent
         @endforelse
     @endif
 
