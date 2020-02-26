@@ -29,6 +29,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUriAlias($value)
  * @mixin \Eloquent
  * @property-read int|null $test_composites_count
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Test onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Test withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Test withoutTrashed()
  */
 class Test extends Model
 {

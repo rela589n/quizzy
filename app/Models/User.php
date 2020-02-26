@@ -25,6 +25,20 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $name
+ * @property string $surname
+ * @property string $patronymic
+ * @property string $email
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property int $confirmed
+ * @property string|null $remember_token
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereConfirmed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePatronymic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSurname($value)
  */
 class User extends Authenticatable
 {

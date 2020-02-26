@@ -22,6 +22,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AnswerOption whereQuestionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AnswerOption whereText($value)
  * @mixin \Eloquent
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\AnswerOption onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\AnswerOption whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\AnswerOption withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\AnswerOption withoutTrashed()
  */
 class AnswerOption extends Model
 {
