@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'Анатолій',
             'surname' => 'Кармелюк',
             'patronymic' => 'Давидович',
-            'email' => 'admin',
+            'email' => 'student',
             'password' => Hash::make('password')
         ]);
     }

@@ -14,7 +14,7 @@ class AppendConfirmedFlagOnUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('confirmed')->after('password');
+            $table->boolean('confirmed')->default(false)->after('password');
         });
     }
 
