@@ -23,6 +23,13 @@ class CreateAnswersTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->unsignedBigInteger('asked_question_id');
+            $table->foreign('asked_question_id')
+                ->references('id')
+                ->on('asked_questions')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->tinyInteger('is_chosen')->default(0);
         });
     }
