@@ -5,6 +5,7 @@ namespace App\Lib;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class ValidationGenerator
 {
@@ -63,7 +64,11 @@ class ValidationGenerator
             $this->mountParts($attribute);
 
             foreach ($this->buildRecursive($this->parts[0], 1) as $built) {
-                $result[$built] = $singleRules;
+                $result[$built][] = is_string($singleRules) ?
+                    explode(self::ATTRIBUTES_DELIMITER, $singleRules) :
+                    $singleRules;
+                
+                $result[$built] = Arr::flatten($result[$built], 1);
             }
         }
     }
