@@ -10,6 +10,7 @@ abstract class ClientController extends BasicController
     public function __construct(RequestUrlManager $urlManager)
     {
         parent::__construct($urlManager);
-        $this->middleware('auth');
+        $this->middleware('auth:client');
+        $this->middleware('password.change:client');
     }
 }

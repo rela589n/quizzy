@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'logging' => \App\Http\Middleware\LogRequest::class,
+        'password.change' => \App\Http\Middleware\RedirectIfPasswordNotChanged::class
     ];
 
     /**

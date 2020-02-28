@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AppendConfirmedFlagOnUsersTable extends Migration
+class AppendPasswordChangedFlagOnUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AppendConfirmedFlagOnUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('confirmed')->default(false)->after('password');
+            $table->boolean('password_changed')->default(false)->after('password');
         });
     }
 
@@ -26,7 +26,7 @@ class AppendConfirmedFlagOnUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['confirmed']);
+            $table->dropColumn(['password_changed']);
         });
     }
 }

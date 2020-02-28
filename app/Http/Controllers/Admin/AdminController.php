@@ -11,5 +11,6 @@ abstract class AdminController extends BasicController
     {
         parent::__construct($urlManager);
         $this->middleware('auth:admin');
+        $this->middleware('password.change:admin');
     }
 }

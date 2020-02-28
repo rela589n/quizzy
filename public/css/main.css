@@ -123,3 +123,7 @@ label.form-info.h3 {
     transition: background-color .1s linear;
     text-align: center;
 }
+
+body.auth.text-light form.auth input {
+    color: #333;
+}

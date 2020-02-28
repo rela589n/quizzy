@@ -39,6 +39,8 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePatronymic($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSurname($value)
+ * @property int $password_changed
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePasswordChanged($value)
  */
 class User extends Authenticatable
 {

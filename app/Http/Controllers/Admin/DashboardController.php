@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 class DashboardController extends AdminController
 {
-    public function showHelloPage()
+    public function showDashboardPage()
     {
         return view('pages.admin.dashboard');
     }

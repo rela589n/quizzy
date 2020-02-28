@@ -25,7 +25,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/';
 
-    public static function getHomeUrl($guardName)
+    public static function getHomeUrl(?string $guardName)
     {
         // todo create AdminRouteHandler and ClientRouteHandler and use polymorphism
         switch ($guardName) {
@@ -36,8 +36,9 @@ class RouteServiceProvider extends ServiceProvider
         }
     }
 
-    public static function getLoginUrl($guardName)
+    public static function getLoginUrl(?string $guardName)
     {
+        // todo get rid of this switch statements
         switch ($guardName) {
             case 'admin':
                 return route('admin.login');
@@ -45,6 +46,17 @@ class RouteServiceProvider extends ServiceProvider
                 return route('client.login');
         }
     }
+
+    public static function getChangePasswordUrl(?string $guardName)
+    {
+        switch ($guardName) {
+            case 'admin':
+                return route('admin.change-password');
+            default:
+                return route('client.change-password');
+        }
+    }
+
     /**
      * Define your route model bindings, pattern filters, etc.
      *

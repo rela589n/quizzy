@@ -12,11 +12,17 @@
 |
 */
 
-Route::get('/', 'LoginController@showLoginForm')->name('.login');
-Route::post('/', 'LoginController@login');
-Route::post('/logout', 'LoginController@logout')->name('.logout');
+Route::namespace('Auth')->group(function () {
+    Route::get('/', 'LoginController@showLoginForm')->name('.login');
+    Route::post('/', 'LoginController@login');
 
-Route::get('/dashboard', 'DashboardController@showHelloPage')->name('.dashboard');
+    Route::post('/logout', 'LoginController@logout')->name('.logout');
+
+    Route::get('/change-password', 'ChangePasswordController@showInitialPasswordChangeForm')->name('.change-password');
+    Route::post('/change-password', 'ChangePasswordController@initialChangePassword');
+});
+
+Route::get('/dashboard', 'DashboardController@showDashboardPage')->name('.dashboard');
 
 Route::prefix('/tests')
     ->name('.tests')
