@@ -1,33 +1,18 @@
-@extends($baseLayout)
+@extends('layouts.categories-single', [
+    'baseLayout' => $baseLayout,
+    'contentColumns' => 10
+])
 
-@section('content')
-    <div class="@section('categories-class') container mt-5 categories @show">
-        <div class="row">
-            <div class="col-{{ (12 - ($contentColumns ?? 10)) >> 1 }}"></div>
-            <div class="col-{{ $contentColumns ?? 10 }}">
-                @yield('settings-link')
+@section('category-main-content')
+    <form method="post" class="edit-test-form mt-5">
+        @csrf
+        <ul class="list-group text-dark questions">
+            @yield('test-questions')
+        </ul>
 
-                @section('header')
-                    <h2 class="mb-4">Тест по предмету @yield('subject-name') - @yield('test-name'):</h2>
-                @show
-                <form method="post" class="edit-test-form mt-5">
-                    @csrf
-                    <ul class="list-group text-dark questions">
-                        @yield('test-questions')
-                    </ul>
-
-                    @section('additions')
-                        <div class="button-wrap text-center">
-                            <button type="button" class="btn btn-primary btn-lg button-add-question"><i
-                                    class="fas fa-plus"></i></button>
-                        </div>
-                    @show
-
-                    @yield('save-button')
-                </form>
-            </div>
-        </div>
-    </div>
+        @yield('additions')
+        @yield('save-button')
+    </form>
 @endsection
 
 @prepend('bottom_scripts')

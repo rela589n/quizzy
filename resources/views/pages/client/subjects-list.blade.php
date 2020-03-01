@@ -1,10 +1,10 @@
 @extends('layouts.categories-list', ['baseLayout' => 'layouts.root.client' ])
 
-@section('header')
+@section('category-header')
     <h2 class="mb-4">Оберіть предмет тестування:</h2>
 @endsection
 
-@section('subject-links')
+@section('category-links')
     @forelse($subjects as $subject)
         @include('blocks.client.subject-line', ['subject' => $subject])
     @empty

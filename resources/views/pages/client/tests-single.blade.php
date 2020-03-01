@@ -1,6 +1,5 @@
 @extends('layouts.tests-single', ['baseLayout' => 'layouts.root.client', 'contentColumns' => 8])
-@section('subject-name') {{ $subject->name }} @endsection
-@section('test-name') {{ $test->name }} @endsection
+@section('category-header-text') Тест по предмету {{ $subject->name }} - {{ $test->name }} @endsection
 
 @section('additions')
     @if ($errors->any())
@@ -14,7 +13,7 @@
     @endif
 @endsection
 
-@section('categories-class')
+@section('category-class')
     @parent
     test-questions
 @endsection

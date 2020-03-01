@@ -1,8 +1,8 @@
-@extends('layouts.subjects-single', ['baseLayout' => 'layouts.root.client'])
+@extends('layouts.categories-single', ['baseLayout' => 'layouts.root.client'])
 
-@section('header-text') {{ $subject->name }} - оберіть тест:  @endsection
+@section('category-header-text') {{ $subject->name }} - оберіть тест:  @endsection
 
-@section('test-links')
+@section('category-links')
     @forelse($subject->tests as $test)
         @include('blocks.client.test-line')
     @empty
@@ -12,5 +12,5 @@
     @endforelse
 @endsection
 
-@section('settings-link') @endsection
+@section('category-settings-link') @endsection
 @section('create-new-link') @endsection

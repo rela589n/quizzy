@@ -1,6 +1,6 @@
 @extends('layouts.tests-single', ['baseLayout' => 'layouts.root.admin'])
 
-@section('settings-link')
+@section('category-settings-link')
     <a class="btn btn-outline-dark finish-test-btn mt-1 float-right"
        href="{{ route('admin.tests.subject.test.settings', [
             $subject->uri_alias,
@@ -8,8 +8,7 @@
        ])}}">Перейти до налаштувань теста</a>
 @endsection
 
-@section('subject-name') {{ $subject->name }} @endsection
-@section('test-name') {{ $test->name }} @endsection
+@section('category-header-text') Тест по предмету {{ $subject->name }} - {{ $test->name }} @endsection
 
 @section('test-questions')
     @forelse($filteredQuestions as $question)
@@ -31,7 +30,10 @@
 @endsection
 
 @section('additions')
-    @parent
+    <div class="button-wrap text-center">
+        <button type="button" class="btn btn-primary btn-lg button-add-question"><i
+                class="fas fa-plus"></i></button>
+    </div>
     <input
         type="hidden"
         name="last-answer-option-id"
