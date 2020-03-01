@@ -127,3 +127,7 @@ label.form-info.h3 {
 body.auth.text-light form.auth input {
     color: #333;
 }
+
+form.auth.user-form .invalid-feedback {
+    margin-bottom: -.8rem
+}

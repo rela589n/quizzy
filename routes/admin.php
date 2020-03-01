@@ -12,6 +12,8 @@
 |
 */
 
+use function foo\func;
+
 Route::namespace('Auth')->group(function () {
     Route::get('/', 'LoginController@showLoginForm')->name('.login');
     Route::post('/', 'LoginController@login');
@@ -70,12 +72,55 @@ Route::prefix('/tests')
     });
 
 
-Route::prefix('users')
+Route::prefix('/students')
+    ->name('.students')
+    ->namespace('Students')
+    ->group(function () {
+
+        $routePatterns = Route::getPatterns();
+
+        Route::get('/new', 'GroupsController@showNewGroupForm')->name('.new');
+        Route::post('/new', 'GroupsController@newGroup');
+
+        Route::prefix('/{group}')
+            ->where(['group' => $routePatterns['name']])
+            ->name('.group')
+            ->group(function () use (&$routePatterns) {
+
+                Route::get('/settings', 'GroupsController@showUpdateGroupForm')->name('.settings');
+                Route::post('/settings', 'GroupsController@updateGroup');
+
+                Route::get('/new', 'StudentsController@showNewStudentForm')->name('.new');
+                Route::post('/new', 'StudentsController@newStudent');
+
+                Route::prefix('/{studentId}')
+                    ->where(['studentId' => $routePatterns['id']])
+                    ->name('.student')
+                    ->group(function () use (&$routePatterns) {
+
+                        Route::get('/', 'StudentsController@showUpdateStudentForm');
+                        Route::post('/', 'StudentsController@updateStudent');
+
+                    });
+
+                Route::get('/', 'GroupsController@showSingleGroup');
+            });
+
+        Route::get('/', 'GroupsController@showAll');
+    });
+
+Route::prefix('/users')
     ->name('.users')
     ->group(function () {
-        Route::get('/', function () {
-            return view('pages.admin.users-list');
-        });
+        Route::get('/teachers', function () {
+
+        })->name('.teachers');
+
+        Route::get('/students', function () {
+
+        })->name('.students');
+
+        Route::get('/', 'UsersController@showUsersTypeList');
     });
 
 

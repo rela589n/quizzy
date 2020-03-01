@@ -41,6 +41,9 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSurname($value)
  * @property int $password_changed
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePasswordChanged($value)
+ * @property int $student_group_id
+ * @property-read \App\Models\StudentGroup $studentGroup
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereStudentGroupId($value)
  */
 class User extends Authenticatable
 {
@@ -52,7 +55,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'patronymic', 'email', 'password',
+        'name', 'surname', 'patronymic', 'email', 'password', 'student_group_id'
     ];
 
     /**
@@ -72,4 +75,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function studentGroup()
+    {
+        return $this->belongsTo(StudentGroup::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->surname} {$this->name} {$this->patronymic}";
+    }
 }

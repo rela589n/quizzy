@@ -4,8 +4,11 @@
 namespace App\Http\Requests;
 
 
+use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
+use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 
 class RequestUrlManager
@@ -21,6 +24,11 @@ class RequestUrlManager
      * @var Test
      */
     protected $currentTest = null;
+
+    /**
+     * @var StudentGroup
+     */
+    protected $currentGroup = null;
 
     /**
      * RequestUrlManager constructor.
@@ -61,5 +69,18 @@ class RequestUrlManager
         }
 
         return $this->currentTest;
+    }
+
+    public function getCurrentGroup()
+    {
+        if ($this->currentGroup === null) {
+            $this->currentGroup = StudentGroup::where(
+                'uri_alias',
+                '=',
+                $this->request->route('group')
+            )->firstOrFail();
+        }
+
+        return $this->currentGroup;
     }
 }

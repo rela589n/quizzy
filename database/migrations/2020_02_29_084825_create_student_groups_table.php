@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestSubjectsTable extends Migration
+class CreateStudentGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateTestSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_subjects', function (Blueprint $table) {
+        Schema::create('student_groups', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 128);
-            $table->string('uri_alias', 48)->unique();
-            $table->enum('course', ['1', '2', '3', '4']);
+            $table->string('name', 32);
+            $table->string('uri_alias', 32)->unique();
+            $table->integer('year')->index();
+
+            $table->softDeletes();
         });
     }
 
@@ -28,6 +30,6 @@ class CreateTestSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_subjects');
+        Schema::dropIfExists('student_groups');
     }
 }

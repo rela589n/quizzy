@@ -16,7 +16,7 @@ class CreateTestsTable extends Migration
         Schema::create('tests', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 128);
-            $table->string('uri_alias', 64);
+            $table->string('uri_alias', 64)->unique();
             $table->unsignedSmallInteger('time');
 
             $table->unsignedBigInteger('test_subject_id');
