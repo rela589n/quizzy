@@ -27,6 +27,8 @@ class TestComposite extends Pivot
 {
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
+    public $timestamps = false;
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *
