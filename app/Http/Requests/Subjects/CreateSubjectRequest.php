@@ -13,7 +13,7 @@ class CreateSubjectRequest extends SubjectRequest
      */
     public function rules()
     {
-        $rules = $this->baseRules;
+        $rules = parent::rules();
         $rules['uri_alias'][] = 'unique:test_subjects';
         return $rules;
     }

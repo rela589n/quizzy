@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Subjects\CreateSubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
+use App\Http\Requests\UrlManageable;
+use App\Http\Requests\UrlManageableRequests;
 use App\Models\TestSubject;
 
-class SubjectsController extends AdminController
+class SubjectsController extends AdminController implements UrlManageable
 {
+    use UrlManageableRequests;
+
     public function showNewSubjectForm()
     {
         return view('pages.admin.subjects-new');
@@ -32,9 +35,9 @@ class SubjectsController extends AdminController
         ]);
     }
 
-    public function showSingleSubject(RequestUrlManager $urlManager)
+    public function showSingleSubject()
     {
-        $subject = $urlManager->getCurrentSubject();
+        $subject = $this->urlManager->getCurrentSubject();
         $subject->tests->loadCount('nativeQuestions as questions_count');
         // because in view we use $test->subject->uri_alias, which cause duplicated queries
         $subject->tests->loadMissing('subject');
@@ -44,16 +47,16 @@ class SubjectsController extends AdminController
         ]);
     }
 
-    public function showUpdateSubjectForm(RequestUrlManager $urlManager)
+    public function showUpdateSubjectForm()
     {
         return view('pages.admin.subjects-single-settings', [
-            'subject' => $urlManager->getCurrentSubject()
+            'subject' => $this->urlManager->getCurrentSubject()
         ]);
     }
 
-    public function updateSubject(UpdateSubjectRequest $request, RequestUrlManager $urlManager)
+    public function updateSubject(UpdateSubjectRequest $request)
     {
-        $subject = $urlManager->getCurrentSubject();
+        $subject = $this->urlManager->getCurrentSubject();
         $subject->update($request->validated());
 
         return redirect()->route('admin.tests.subject', [
