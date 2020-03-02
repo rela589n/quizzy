@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\RequestUrlManager;
-use App\Http\Requests\Tests\CreateTestRequest;
-use App\Http\Requests\Tests\UpdateTestRequest;
+use App\Http\Requests\Tests\CreateManageTestRequest;
+use App\Http\Requests\Tests\UpdateManageTestRequest;
 use Illuminate\Http\Request;
 
 class TestsController extends AdminController
@@ -26,7 +26,7 @@ class TestsController extends AdminController
         return view('pages.admin.tests-new', ['includeTests' => $tests]);
     }
 
-    public function newTest(CreateTestRequest $request)
+    public function newTest(CreateManageTestRequest $request)
     {
         /**
          * @var \App\Models\Test $newTest
@@ -78,7 +78,7 @@ class TestsController extends AdminController
         ]);
     }
 
-    public function updateTest(UpdateTestRequest $request)
+    public function updateTest(UpdateManageTestRequest $request)
     {
         $validated = $request->validated();
 

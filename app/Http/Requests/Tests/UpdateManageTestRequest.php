@@ -6,7 +6,7 @@ namespace App\Http\Requests\Tests;
 use App\Http\Requests\RequestUrlManager;
 use Illuminate\Validation\Rule;
 
-class UpdateTestRequest extends TestRequest
+class UpdateManageTestRequest extends ManageTestRequest
 {
     /**
      * Get the validation rules that apply to the request.

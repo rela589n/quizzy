@@ -5,7 +5,7 @@ namespace App\Http\Requests\Tests;
 use App\Models\Test;
 use Illuminate\Foundation\Http\FormRequest;
 
-abstract class TestRequest extends FormRequest
+abstract class ManageTestRequest extends FormRequest
 {
     /**
      * Get custom attributes for validator errors.

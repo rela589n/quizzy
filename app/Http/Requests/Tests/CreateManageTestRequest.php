@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Tests;
 
 
-class CreateTestRequest extends TestRequest
+class CreateManageTestRequest extends ManageTestRequest
 {
     /**
      * Get the validation rules that apply to the request.
