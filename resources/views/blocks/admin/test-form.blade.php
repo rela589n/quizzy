@@ -72,7 +72,7 @@
                 </div>
                 <div class="col-form-label">
                     <label for="include[{{ $includeTest->id }}][necessary]" class="form-check-label variant-text">
-                        {{ $includeTest->name }}
+                        {{ $includeTest->name }} {{ ($includeTest->id == ($test->id ?? '-7')) ? '(Поточний тест)' : '' }}
                     </label>
                 </div>
 

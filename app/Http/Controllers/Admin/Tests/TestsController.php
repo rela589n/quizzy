@@ -43,7 +43,7 @@ class TestsController extends AdminController
             return !empty($v['count']) && isset($v['necessary']);
         });
 
-        $includeTests[$newTest->id] = [
+        $includeTests[$newTest->id] = [ // todo remove duplicate
             'count' => 999
         ];
 
@@ -91,6 +91,12 @@ class TestsController extends AdminController
         $includeTests = array_filter($validated['include'] ?? [], function ($v) {
             return !empty($v['count']) && isset($v['necessary']);
         });
+
+        if (!isset($validated['include'][$currentTest->id])) {
+            $includeTests[$currentTest->id] = [ // todo remove duplicate
+                'count' => 999
+            ];
+        }
 
         $includeTests = array_map(
             function ($value) {

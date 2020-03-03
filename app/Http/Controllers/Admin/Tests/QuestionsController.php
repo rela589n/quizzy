@@ -36,7 +36,7 @@ class QuestionsController extends AdminController
         /*
          * Although we included modified from request, there may not be all entities
          * (We don't need send request to update entries that has not been updated)
-         * That is done on the front-end by js
+         * That is done on the front-end by js // todo
          */
         $fullQuestions = $fullQuestions->concat(
             $currentTest->nativeQuestions->reject(
