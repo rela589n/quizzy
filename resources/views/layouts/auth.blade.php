@@ -1,9 +1,5 @@
 @extends('layouts.root.base')
 
-@section('title')
-    Адмін-панель - Аутентифікація
-@endsection
-
 @section('body-class')
     @parent
     auth
