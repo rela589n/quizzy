@@ -9,7 +9,7 @@
         <a class="nav-link" href="{{ route('client.tests') }}" target="_self">Тестування</a>
     </li>
     <li class="nav-item @ifroute('client.logout') active @endifroute">
-        <a class="nav-link" href="{{ route('client.logout') }}" target="_self" onclick="event.preventDefault(); document.getElementById('client-logout-post-form').submit();">Вихід</a>
+        <a class="nav-link logout-link" href="{{ route('client.logout') }}" target="_self" onclick="event.preventDefault(); document.getElementById('client-logout-post-form').submit();">Вихід</a>
         <form id="client-logout-post-form" action="{{ route('client.logout') }}" method="post" style="display: none;">
             @csrf
         </form>

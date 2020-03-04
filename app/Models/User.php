@@ -44,6 +44,7 @@ use Illuminate\Notifications\Notifiable;
  * @property int $student_group_id
  * @property-read \App\Models\StudentGroup $studentGroup
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereStudentGroupId($value)
+ * @property-read mixed $full_name
  */
 class User extends Authenticatable
 {

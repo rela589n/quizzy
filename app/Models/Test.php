@@ -36,6 +36,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Test withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Test withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
+ * @property-read int|null $test_results_count
  */
 class Test extends Model
 {
@@ -90,5 +92,9 @@ class Test extends Model
 //            ['id_test'],
 //            [null, 'id_include_test']
 //        );
+    }
+
+    public function testResults() {
+        return $this->hasMany(TestResult::class);
     }
 }

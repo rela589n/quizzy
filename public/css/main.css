@@ -82,11 +82,15 @@ label.form-info.h3 {
     font-size: 1.2rem;
 }
 
-.test-result .alert {
+.test-result .test-result-alert {
     font-size: 1.5rem;
     line-height: 2.5rem;
     background: #ffffff;
     padding: 1.25rem 3rem;
+}
+
+.test-result .test-result-alert p {
+    margin: 0;
 }
 
 .edit-test-questions .button-wrap {
