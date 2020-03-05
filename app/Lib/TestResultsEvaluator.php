@@ -87,17 +87,17 @@ class TestResultsEvaluator
      *  ]
      * @return float
      */
-    public function evaluateTestInPercents(array $evaluatedWholeTest): float
+    public function evaluateTestScore(array $evaluatedWholeTest): float
     {
         return array_sum($evaluatedWholeTest);
     }
 
     /**
-     * @param float $evaluatedTestInPercents
+     * @param float $evaluatedTestScore
      * @return int
      */
-    public function putMark(float $evaluatedTestInPercents): int
+    public function putMark(float $evaluatedTestScore): int
     {
-        return (int)round($evaluatedTestInPercents * 5);
+        return (int)round($evaluatedTestScore * 5);
     }
 }

@@ -54,13 +54,13 @@ class TestsController extends ClientController
 
         $evaluatedQuestions = $evaluator->evaluateEachQuestion();
         $wholeTest = $evaluator->evaluateWholeTest($evaluatedQuestions);
-        $percents = $evaluator->evaluateTestInPercents($wholeTest);
-        $mark = $evaluator->putMark($percents);
+        $score = $evaluator->evaluateTestScore($wholeTest);
+        $mark = $evaluator->putMark($score);
 
         return view('pages.client.pass-test-single-result', [
             'subject' => $currentTest->subject,
             'test' => $currentTest,
-            'resultPercents' => round($percents * 100, 2),
+            'resultPercents' => round($score * 100, 2),
             'resultMark' => sprintf(
                 '%d %s',
                 $mark,
