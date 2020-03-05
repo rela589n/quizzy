@@ -60,7 +60,7 @@ class TestsController extends ClientController
         return view('pages.client.pass-test-single-result', [
             'subject' => $currentTest->subject,
             'test' => $currentTest,
-            'resultPercents' => round($percents, 2),
+            'resultPercents' => round($percents * 100, 2),
             'resultMark' => sprintf(
                 '%d %s',
                 $mark,
