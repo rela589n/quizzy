@@ -108,18 +108,11 @@ Route::prefix('/students')
         Route::get('/', 'GroupsController@showAll');
     });
 
-Route::prefix('/users')
-    ->name('.users')
+Route::prefix('/teachers')
+    ->name('.teachers')
+    ->namespace('Teachers')
     ->group(function () {
-        Route::get('/teachers', function () {
-
-        })->name('.teachers');
-
-        Route::get('/students', function () {
-
-        })->name('.students');
-
-        Route::get('/', 'UsersController@showUsersTypeList');
+        Route::get('/', 'TeachersController@showAll');
     });
 
 Route::get('/check/word', function () {
@@ -139,7 +132,6 @@ Route::get('/check/word', function () {
 
     $templateProcessor->saveAs('hello, word world!!!.docx');
     dd($templateProcessor);
-
 });
 
 Route::get('/tests/hello', function () {

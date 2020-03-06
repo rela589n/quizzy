@@ -10,8 +10,8 @@
         <a class="nav-link" href="{{ route('admin.tests') }}" target="_self">Тести</a>
     </li>
 
-    <li class="nav-item @ifroute('admin.users') active @endifroute">
-        <a class="nav-link" href="{{ route('admin.users') }}" target="_self">Користувачі</a>
+    <li class="nav-item @ifroute('admin.teachers') active @endifroute">
+        <a class="nav-link" href="{{ route('admin.teachers') }}" target="_self">Викладачі</a>
     </li>
 
     <li class="nav-item @ifroute('admin.students') active @endifroute">
