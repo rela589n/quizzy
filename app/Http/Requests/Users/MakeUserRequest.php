@@ -28,7 +28,7 @@ abstract class MakeUserRequest extends FormRequest
     {
         return $generator->buildMany([
             'name|surname|patronymic' => 'required|min:2|max:255',
-            $this->username() => 'required|string|min:6|max:255',
+            $this->username() => 'required|string|min:5|max:255',
             'password' => 'string'
         ]);
     }
