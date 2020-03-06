@@ -12,7 +12,6 @@
 |
 */
 
-use function foo\func;
 
 Route::namespace('Auth')->group(function () {
     Route::get('/', 'LoginController@showLoginForm')->name('.login');
@@ -123,6 +122,25 @@ Route::prefix('/users')
         Route::get('/', 'UsersController@showUsersTypeList');
     });
 
+Route::get('/check/word', function () {
+    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(base_path('Template.docx'));
+    $templateProcessor->setValues([
+        'studentFullName' => 'John Doe',
+        'iteration' => 1,
+        'studentMark' => 5,
+        'excellent' => 10,
+        'satisfactorily' => 10,
+        'unsatisfactorily' => 10,
+        'avarageMark' => 4,
+        'groupName' => 'pi-172',
+        'course' => '3',
+        'good' => 1000,
+    ]);
+
+    $templateProcessor->saveAs('hello, word world!!!.docx');
+    dd($templateProcessor);
+
+});
 
 Route::get('/tests/hello', function () {
     return 'tests hello' . Breadcrumbs::render('test');
