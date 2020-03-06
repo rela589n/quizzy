@@ -1,4 +1,8 @@
-@extends('layouts.blocks.user-form')
+@extends('layouts.blocks.user-form', [
+    'userPasswordPlaceholder' => 'Введіть щоб змінити'
+])
+
+@section('password-placeholder'){{ 'Введіть щоб змінити' }}@endsection
 
 @section('user-form-additions')
 @section('user-form-group')

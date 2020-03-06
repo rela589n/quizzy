@@ -68,7 +68,7 @@
         <div class="input-group mb-1 col-10" id="show_hide_password">
             <input id="password" name="password" type="password"
                    class="form-control @error('password') is-invalid @enderror"
-                   placeholder="1234" value="{{ old('password') }}">
+                   placeholder="{{ $userPasswordPlaceholder ?? '1234'}}" value="{{ old('password') }}">
 
             <div class="input-group-append">
                 <a href="javascript: void(0);" class="input-group-text"><i class="fa fa-eye" aria-hidden="true"></i></a>
