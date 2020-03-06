@@ -112,6 +112,21 @@ Route::prefix('/teachers')
     ->name('.teachers')
     ->namespace('Teachers')
     ->group(function () {
+        $routePatterns = Route::getPatterns();
+
+        Route::get('/new', 'TeachersController@showNewForm')->name('.new');
+        Route::post('/new', 'TeachersController@createTeacher');
+
+        Route::prefix('/{teacherId}')
+            ->where(['teacherId' => $routePatterns['id']])
+            ->name('.teacher')
+            ->group(function () {
+
+                Route::get('/', 'TeachersController@showUpdateForm');
+                Route::post('/', 'TeachersController@updateTeacher');
+
+            });
+
         Route::get('/', 'TeachersController@showAll');
     });
 
