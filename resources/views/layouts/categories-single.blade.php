@@ -1,24 +1,24 @@
-@extends($baseLayout)
+@extends('layouts.main-skeleton', [
+    'baseLayout' => $baseLayout
+])
 
-@section('content')
-    <div class="@section('category-class') container mt-5 categories @show">
-        <div class="row">
-            <div class="col-{{ (12 - ($contentColumns ?? 8)) >> 1 }}"></div>
-            <div class="col-{{ $contentColumns ?? 8 }}">
-                @yield('category-settings-link')
+@section('main-container-class')
+    @parent
+    categories
+@endsection
 
-                @section('category-header')
-                    <h2 class="mb-4">@yield('category-header-text')</h2>
-                @show
+@section('main-container-content')
+    @yield('category-settings-link')
 
-                @section('category-main-content')
-                    <ul class="list-group categories text-dark">
-                        @yield('category-links')
-                    </ul>
-                @show
+    @section('category-header')
+        <h2 class="mb-4">@yield('category-header-text')</h2>
+    @show
 
-                @yield('create-new-link')
-            </div>
-        </div>
-    </div>
+    @section('category-main-content')
+        <ul class="list-group categories text-dark">
+            @yield('category-links')
+        </ul>
+    @show
+
+    @yield('category-new-btn')
 @endsection

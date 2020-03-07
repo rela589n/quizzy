@@ -11,6 +11,3 @@
         @endcomponent
     @endforelse
 @endsection
-
-@section('category-settings-link') @endsection
-@section('create-new-link') @endsection

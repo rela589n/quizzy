@@ -7,13 +7,14 @@
     Результати тестування {{ $subject->name }} - {{ $test->name }}:
 @endsection
 
-@section('category-class')
-    container mt-5 test-result
+@section('main-container-class')
+    @parent
+    test-result
 @endsection
 
 @section('category-main-content')
     <div class="alert alert-info test-result-alert" role="alert">
-        <p>Суммарно ви пройшли тест на <span class="h1">{{ $resultPercents }}%</span>.</p>
+        <p>Сумарно ви пройшли тест на <span class="h1">{{ $resultPercents }}%</span>.</p>
         <p>Ваша оцінка: {{ $resultMark }}</p>
     </div>
     <div class="btn-block" style="display: flex;justify-content: space-between;">

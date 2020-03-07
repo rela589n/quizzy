@@ -1,7 +1,7 @@
-@extends('layouts.categories-list', ['baseLayout' => 'layouts.root.client' ])
+@extends('layouts.categories-single', ['baseLayout' => 'layouts.root.client' ])
 
-@section('category-header')
-    <h2 class="mb-4">Оберіть предмет тестування:</h2>
+@section('category-header-text')
+    Оберіть предмет тестування:
 @endsection
 
 @section('category-links')

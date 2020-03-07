@@ -19,7 +19,7 @@
     @endforelse
 @endsection
 
-@section('create-new-link')
+@section('category-new-btn')
     <a class="btn btn-primary finish-test-btn mt-4 btn-block"
        href="{{ route('admin.tests.subject.new', ['subject' => $subject->uri_alias]) }}">Новий</a>
 @endsection

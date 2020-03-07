@@ -1,7 +1,6 @@
 @extends('layouts.blocks.user-form')
 
 @section('user-form-additions')
-@section('user-form-group')
     @if (!empty($studentGroups))
         <div class="form-group form-row align-items-start">
             <label for="student_group_id" class="form-info h3 m-0 col-2">
@@ -27,5 +26,4 @@
                 @enderror</div>
         </div>
     @endif
-@show
 @endsection

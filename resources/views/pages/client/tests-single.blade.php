@@ -13,7 +13,7 @@
     @endif
 @endsection
 
-@section('category-class')
+@section('main-container-class')
     @parent
     test-questions
 @endsection

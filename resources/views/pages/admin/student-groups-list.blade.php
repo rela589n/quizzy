@@ -1,7 +1,7 @@
-@extends('layouts.categories-list', ['baseLayout' => 'layouts.root.admin' ])
+@extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin' ])
 
-@section('category-header')
-    <h2 class="mb-4">Список груп студентів:</h2>
+@section('category-header-text')
+    Список груп студентів:
 @endsection
 
 @section('category-links')
@@ -14,7 +14,7 @@
     @endforelse
 @endsection
 
-@section('create-new-btn')
+@section('category-new-btn')
     @include('blocks.admin.create-new-link', [
         'link' => route('admin.students.new'),
         'text' => 'Створити групу'

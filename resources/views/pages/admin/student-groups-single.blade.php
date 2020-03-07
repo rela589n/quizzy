@@ -12,8 +12,8 @@
 @section('category-links')
     @forelse($group->students as $student)
         @include('blocks.admin.student-line', [
-    'studentRouteName' => 'admin.students.group.student'
-])
+            'studentRouteName' => 'admin.students.group.student'
+        ])
     @empty
         @component('layouts.blocks.empty-list-message')
             Група поки що пуста. Можете додати в неї студентів натиснувши кнопку нижче:
@@ -21,7 +21,7 @@
     @endforelse
 @endsection
 
-@section('create-new-link')
+@section('category-new-btn')
     <a class="btn btn-primary finish-test-btn mt-4 btn-block"
        href="{{ route('admin.students.group.new',  ['group' => $group->uri_alias]) }}">Створити студента</a>
 @endsection

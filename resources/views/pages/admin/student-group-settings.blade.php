@@ -1,16 +1,12 @@
-@extends('layouts.root.admin')
+@extends('layouts.main-skeleton', [
+    'contentColumns' => 7,
+    'baseLayout' => 'layouts.root.admin'
+])
 
-@section('content')
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-7">
-                @include('blocks.admin.student-group-form', [
-                  'submitButtonText' => 'Зберегти'
-                ])
-            </div>
-        </div>
-    </div>
+@section('main-container-content')
+    @include('blocks.admin.student-group-form', [
+      'submitButtonText' => 'Зберегти'
+    ])
 @endsection
 
 @push('bottom_scripts')

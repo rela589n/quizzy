@@ -1,13 +1,7 @@
-@extends('layouts.root.admin')
+@extends('layouts.main-skeleton', [
+    'baseLayout' => 'layouts.root.admin'
+])
 
-@section('content')
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
-                @section('user-form-group') @endsection
-                @include('blocks.admin.teacher-form')
-            </div>
-        </div>
-    </div>
+@section('main-container-content')
+    @include('blocks.admin.teacher-form')
 @endsection

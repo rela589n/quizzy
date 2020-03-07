@@ -9,7 +9,3 @@
     @include('blocks.admin.menu')
 @endsection
 
-@section('content')
-{{--    {{ $content }}--}}
-@endsection
-
