@@ -3,18 +3,14 @@
 namespace App\Http\Controllers\Admin\Students;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\UrlManageable;
-use App\Http\Requests\UrlManageableRequests;
 use App\Http\Requests\Users\Students\CreateStudentRequest;
 use App\Http\Requests\Users\Students\UpdateStudentRequest;
 use App\Models\StudentGroup;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class StudentsController extends AdminController implements UrlManageable
+class StudentsController extends AdminController
 {
-    use UrlManageableRequests;
-
     public function showNewStudentForm()
     {
         return view('pages.admin.student-new');

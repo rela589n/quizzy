@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\BasicController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestUrlManager;
 
-abstract class AdminController extends BasicController
+abstract class AdminController extends Controller
 {
     public function __construct(RequestUrlManager $urlManager)
     {
-        parent::__construct($urlManager);
+        $this->urlManager = $urlManager;
         $this->middleware('auth:admin');
         $this->middleware('password.change:admin');
     }

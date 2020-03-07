@@ -5,14 +5,10 @@ namespace App\Http\Controllers\Admin\Students;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Groups\CreateGroupRequest;
 use App\Http\Requests\Groups\UpdateGroupRequest;
-use App\Http\Requests\UrlManageable;
-use App\Http\Requests\UrlManageableRequests;
 use App\Models\StudentGroup;
 
-class GroupsController extends AdminController implements UrlManageable
+class GroupsController extends AdminController
 {
-    use UrlManageableRequests;
-
     public function showAll()
     {
         return view('pages.admin.student-groups-list', [

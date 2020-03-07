@@ -5,14 +5,10 @@ namespace App\Http\Controllers\Admin\Tests;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Subjects\CreateSubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
-use App\Http\Requests\UrlManageable;
-use App\Http\Requests\UrlManageableRequests;
 use App\Models\TestSubject;
 
-class SubjectsController extends AdminController implements UrlManageable
+class SubjectsController extends AdminController
 {
-    use UrlManageableRequests;
-
     public function showNewSubjectForm()
     {
         return view('pages.admin.subjects-new');

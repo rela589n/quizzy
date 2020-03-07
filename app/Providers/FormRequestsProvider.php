@@ -2,9 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Controllers\Admin\Students\GroupsController;
-use App\Http\Controllers\Admin\Students\StudentsController;
-use App\Http\Controllers\Admin\Tests\SubjectsController;
 use App\Http\Requests\Auth\AdminChangePasswordRequest;
 use App\Http\Requests\Auth\StudentChangePasswordRequest;
 use App\Http\Requests\Groups\CreateGroupRequest;
@@ -24,9 +21,6 @@ class FormRequestsProvider extends ServiceProvider
         CreateGroupRequest::class,
         UpdateGroupRequest::class,
         UpdateSubjectRequest::class,
-        GroupsController::class,
-        SubjectsController::class,
-        StudentsController::class,
     ];
 
     /**
