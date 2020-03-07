@@ -43,7 +43,7 @@
         $currentYear = date('Y');
         $groupEnter = old('year', $group['year'] ?? $currentYear);
     @endphp
-    <select class="browser-default custom-select @error('year') is-invalid @enderror" required="required" id="year"
+    <select class="browser-default custom-select mb-2 @error('year') is-invalid @enderror" required="required" id="year"
             name="year">
         @for ($i = min($groupEnter, $currentYear - 4); $i <= $currentYear; ++$i)
             <option value="{{ $i }}" @if($i === $groupEnter) selected="selected" @endif>{{ $i }}</option>
@@ -56,6 +56,9 @@
     </div>
     @enderror
 
-    <button type="submit"
-            class="btn btn-primary btn-block finish-test-btn mt-4">{{ $submitButtonText ?? 'Створити' }}</button>
+    @section('user-form-submit')
+        @component('blocks.admin.submit-button', ['columns' => $submitSize ?? 12])
+            {{ $submitButtonText ?? 'Створити' }}
+        @endcomponent
+    @show
 </form>

@@ -63,4 +63,12 @@ class SubjectsController extends AdminController implements UrlManageable
             'subject' => $subject['uri_alias']
         ]);
     }
+
+    public function deleteSubject()
+    {
+        $subject = $this->urlManager->getCurrentSubject();
+        $subject->delete();
+
+        return redirect()->route('admin.tests');
+    }
 }

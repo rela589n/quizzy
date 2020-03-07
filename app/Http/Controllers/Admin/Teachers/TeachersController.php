@@ -29,9 +29,7 @@ class TeachersController extends AdminController
 
         $newTeacher = Administrator::create($validated);
 
-        return redirect()->route('admin.teachers.teacher', [
-            'teacherId' => $newTeacher
-        ]);
+        return redirect()->route('admin.teachers');
     }
 
     public function showUpdateForm($teacherId)
@@ -51,6 +49,18 @@ class TeachersController extends AdminController
         }
 
         $teacher->update($validated);
+        return redirect()->route('admin.teachers');
+    }
+
+    public function deleteTeacher($teacherId)
+    {
+        $teacher = Administrator::findOrFail($teacherId);
+        if ($teacher->id === \Auth::guard('admin')->user()->id) {
+            return redirect()->back();
+        }
+
+        $teacher->delete();
+
         return redirect()->route('admin.teachers');
     }
 }

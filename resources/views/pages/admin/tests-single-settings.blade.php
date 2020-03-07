@@ -3,7 +3,8 @@
 ])
 
 @section('main-container-content')
-    @include('blocks.admin.test-form', ['submitButtonText' => 'Зберегти'])
+    @include('blocks.admin.test-form', ['submitSize' => 9])
+    @include('blocks.admin.delete-entity-form')
 @endsection
 
 @push('bottom_scripts')

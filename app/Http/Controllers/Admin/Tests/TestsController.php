@@ -114,4 +114,15 @@ class TestsController extends AdminController
             'test' => $currentTest['uri_alias']
         ]);
     }
+
+    public function deleteTest()
+    {
+        $currentSubject = $this->urlManager->getCurrentSubject();
+        $currentTest = $this->urlManager->getCurrentTest();
+        $currentTest->delete();
+
+        return redirect()->route('admin.tests.subject', [
+            'subject' => $currentSubject['uri_alias']
+        ]);
+    }
 }

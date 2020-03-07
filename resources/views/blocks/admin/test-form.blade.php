@@ -100,6 +100,7 @@
         @endforelse
     @endif
 
-    <button type="submit"
-            class="btn btn-primary btn-block finish-test-btn mb-4 mt-4">{{ $submitButtonText ?? 'Зберегти' }}</button>
+    @component('blocks.admin.submit-button', ['columns' => $submitSize ?? 12])
+        {{ $submitButtonText ?? 'Зберегти' }}
+    @endcomponent
 </form>

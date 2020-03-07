@@ -42,6 +42,7 @@ Route::prefix('/tests')
 
                 Route::get('/settings', 'SubjectsController@showUpdateSubjectForm')->name('.settings');
                 Route::post('/settings', 'SubjectsController@updateSubject');
+                Route::delete('/settings', 'SubjectsController@deleteSubject');
 
                 Route::get('/new', 'TestsController@showNewTestForm')->name('.new');
                 Route::post('/new', 'TestsController@newTest');
@@ -53,6 +54,7 @@ Route::prefix('/tests')
 
                         Route::get('/settings', 'TestsController@showUpdateTestForm')->name('.settings');
                         Route::post('/settings', 'TestsController@updateTest');
+                        Route::delete('/settings', 'TestsController@deleteTest');
 
                         Route::get('/', 'QuestionsController@showCreateUpdateForm');
                         Route::post('/', 'QuestionsController@createUpdate');
@@ -88,6 +90,7 @@ Route::prefix('/students')
 
                 Route::get('/settings', 'GroupsController@showUpdateGroupForm')->name('.settings');
                 Route::post('/settings', 'GroupsController@updateGroup');
+                Route::delete('/settings', 'GroupsController@deleteGroup');
 
                 Route::get('/new', 'StudentsController@showNewStudentForm')->name('.new');
                 Route::post('/new', 'StudentsController@newStudent');
@@ -99,6 +102,7 @@ Route::prefix('/students')
 
                         Route::get('/', 'StudentsController@showUpdateStudentForm');
                         Route::post('/', 'StudentsController@updateStudent');
+                        Route::delete('/', 'StudentsController@deleteStudent');
 
                     });
 
@@ -124,6 +128,7 @@ Route::prefix('/teachers')
 
                 Route::get('/', 'TeachersController@showUpdateForm');
                 Route::post('/', 'TeachersController@updateTeacher');
+                Route::delete('/', 'TeachersController@deleteTeacher');
 
             });
 

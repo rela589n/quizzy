@@ -56,4 +56,14 @@ class StudentsController extends AdminController implements UrlManageable
             'group' => $user->studentGroup->uri_alias
         ]);
     }
+
+    public function deleteStudent($groupAlias, $userId)
+    {
+        $user = User::findOrFail($userId);
+        $user->delete();
+
+        return redirect()->route('admin.students.group', [
+            'group' => $groupAlias
+        ]);
+    }
 }

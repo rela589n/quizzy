@@ -61,4 +61,12 @@ class GroupsController extends AdminController implements UrlManageable
             'group' => $group->uri_alias
         ]);
     }
+
+    public function deleteGroup()
+    {
+        $group = $this->urlManager->getCurrentGroup();
+        $group->delete();
+
+        return redirect()->route('admin.students');
+    }
 }

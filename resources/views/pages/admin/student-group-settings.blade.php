@@ -5,8 +5,10 @@
 
 @section('main-container-content')
     @include('blocks.admin.student-group-form', [
-      'submitButtonText' => 'Зберегти'
+      'submitButtonText' => 'Зберегти',
+      'submitSize' => 9
     ])
+    @include('blocks.admin.delete-entity-form')
 @endsection
 
 @push('bottom_scripts')

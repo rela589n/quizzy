@@ -82,7 +82,9 @@
     @yield('user-form-additions')
 
     @section('user-form-submit')
-        <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-4">{{ $submitButtonText ?? 'Створити' }}</button>
+        @component('blocks.admin.submit-button', ['columns' => $submitSize ?? 12])
+            {{ $submitButtonText ?? 'Створити' }}
+        @endcomponent
     @show
 </form>
 
