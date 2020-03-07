@@ -6,7 +6,11 @@
 
 @section('category-links')
     @forelse($groups as $group)
-        @include('blocks.admin.student-group-line', ['group' => $group])
+        @include('blocks.entity-line', [
+            'header' => $group->name,
+            'link' => route('admin.students.group', ['group' => $group['uri_alias'] ]),
+            'badge' => $group->students_count,
+        ])
     @empty
         @component('layouts.blocks.empty-list-message')
             Немає жодної групи

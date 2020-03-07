@@ -11,8 +11,9 @@
 
 @section('category-links')
     @forelse($group->students as $student)
-        @include('blocks.admin.student-line', [
-            'studentRouteName' => 'admin.students.group.student'
+        @include('blocks.entity-line', [
+            'header' => $student->full_name,
+            'link' => route('admin.students.group.student', ['group' => $student->studentGroup->uri_alias, 'studentId' => $student->id]),
         ])
     @empty
         @component('layouts.blocks.empty-list-message')

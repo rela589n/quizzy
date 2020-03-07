@@ -6,7 +6,10 @@
 
 @section('category-links')
     @forelse($teachers as $teacher)
-        @include('blocks.admin.teacher-line', ['teacherRouteName' => 'admin.teachers.teacher', 'teacher' => $teacher])
+        @include('blocks.entity-line', [
+            'header' => $teacher->full_name,
+            'link' => route('admin.teachers.teacher', ['teacherId' => $teacher->id]),
+        ])
     @empty
         @component('layouts.blocks.empty-list-message')
             Додайте викладача натиснувши кнопку нижче:

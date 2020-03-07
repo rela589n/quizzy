@@ -11,7 +11,11 @@
 
 @section('category-links')
     @forelse($subject->tests as $test)
-        @include('blocks.admin.test-line')
+        @include('blocks.entity-line', [
+            'header' => $test->name,
+            'link' => route('admin.tests.subject.test', ['subject' => $test->subject->uri_alias, 'test' => $test->uri_alias]),
+            'badge' => $test->questions_count,
+        ])
     @empty
         @component('layouts.blocks.empty-list-message')
             Тестів поки що немає. Можете створити новий натиснувши кнопку нижче:
