@@ -1,10 +1,10 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin'])
 
 @section('category-settings-link')
-    <a class="btn btn-outline-dark finish-test-btn mt-1 float-right"
-       href="{{ route('admin.students.group.settings', ['group' => $group->uri_alias]) }}">
-        Перейти до налаштувань групи
-    </a>
+    @include('blocks.admin.settings-link', [
+        'link' => route('admin.students.group.settings', ['group' => $group->uri_alias]),
+        'text' => 'Перейти до налаштувань групи'
+    ])
 @endsection
 
 @section('category-header-text') Студенти групи {{ $group->name }} @endsection
@@ -22,6 +22,8 @@
 @endsection
 
 @section('category-new-btn')
-    <a class="btn btn-primary finish-test-btn mt-4 btn-block"
-       href="{{ route('admin.students.group.new',  ['group' => $group->uri_alias]) }}">Створити студента</a>
+    @include('blocks.admin.create-new-link', [
+        'link' => route('admin.students.group.new',  ['group' => $group->uri_alias]),
+        'text' => 'Створити студента'
+    ])
 @endsection

@@ -1,10 +1,10 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin'])
 
 @section('category-settings-link')
-    <a class="btn btn-outline-dark finish-test-btn mt-1 float-right"
-       href="{{ route('admin.tests.subject.settings', ['subject' => $subject->uri_alias]) }}">
-        Перейти до налаштувань предмета
-    </a>
+    @include('blocks.admin.settings-link', [
+        'link' => route('admin.tests.subject.settings', ['subject' => $subject->uri_alias]),
+        'text' => 'Перейти до налаштувань предмета'
+    ])
 @endsection
 
 @section('category-header-text') Існуючі тести з предмету {{ $subject->name }} @endsection
@@ -20,6 +20,8 @@
 @endsection
 
 @section('category-new-btn')
-    <a class="btn btn-primary finish-test-btn mt-4 btn-block"
-       href="{{ route('admin.tests.subject.new', ['subject' => $subject->uri_alias]) }}">Новий</a>
+    @include('blocks.admin.create-new-link', [
+        'link' => route('admin.tests.subject.new', ['subject' => $subject->uri_alias]),
+        'text' => 'Новий'
+    ])
 @endsection

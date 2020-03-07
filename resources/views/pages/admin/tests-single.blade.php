@@ -1,11 +1,10 @@
 @extends('layouts.tests-single', ['baseLayout' => 'layouts.root.admin'])
 
 @section('category-settings-link')
-    <a class="btn btn-outline-dark finish-test-btn mt-1 float-right"
-       href="{{ route('admin.tests.subject.test.settings', [
-            $subject->uri_alias,
-            $test->uri_alias
-       ])}}">Перейти до налаштувань теста</a>
+    @include('blocks.admin.settings-link', [
+        'link' => route('admin.tests.subject.test.settings', [ $subject->uri_alias, $test->uri_alias ]),
+        'text' => 'Перейти до налаштувань теста'
+    ])
 @endsection
 
 @section('category-header-text') Тест по предмету {{ $subject->name }} - {{ $test->name }} @endsection
