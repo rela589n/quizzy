@@ -130,7 +130,7 @@ return [
     */
 
     'custom' => [
-        'at_least_one_checked' => 'Хоча б один варіант відповіді повинен бути обраний як вірний.',
+        'at_least_one_checked' => 'Хоча б один варіант відповіді повинен бути обраний як правильний.',
 
         'attribute-name' => [
             'rule-name' => 'custom-message',
