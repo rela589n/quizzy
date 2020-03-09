@@ -29,10 +29,6 @@
 @endsection
 
 @section('additions')
-    <div class="button-wrap text-center">
-        <button type="button" class="btn btn-primary btn-lg button-add-question"><i
-                class="fas fa-plus"></i></button>
-    </div>
     <input
         type="hidden"
         name="last-answer-option-id"
@@ -49,7 +45,15 @@
 @endsection
 
 @section('save-button')
-    <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Зберегти</button>
+    <div class="button-wrap text-center form-row mb-4">
+        <div class="col-3">
+            <button type="button" class="btn btn-primary btn-lg button-add-question"><i
+                    class="fas fa-plus"></i></button>
+        </div>
+        <div class="col-6">
+            <button type="submit" class="btn btn-primary btn-lg btn-block finish-test-btn">Зберегти</button>
+        </div>
+    </div>
 @endsection
 
 @push('bottom_scripts')
