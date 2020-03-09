@@ -67,7 +67,7 @@ class ValidationGenerator
                 $result[$built][] = is_string($singleRules) ?
                     explode(self::ATTRIBUTES_DELIMITER, $singleRules) :
                     $singleRules;
-                
+
                 $result[$built] = Arr::flatten($result[$built], 1);
             }
         }
@@ -81,8 +81,20 @@ class ValidationGenerator
     protected function build(string $key, $value): array
     {
         $result = [];
+
         $this->handleBuildSingle($key, $result, $value);
+        $this->flattenBuild($result);
+
         return $result;
+    }
+
+    protected function flattenBuild(array &$built) : void
+    {
+        foreach ($built as $key => $value) {
+            if (is_array($value) && count($value) == 1) {
+                $built[$key] = $value[0];
+            }
+        }
     }
 
     /**
@@ -112,26 +124,17 @@ class ValidationGenerator
             }
         }
 
+        $this->flattenBuild($result);
         return $result;
     }
 
     /**
      * @param string $attribute
-     * @param array|string $messages
+     * @param string $value
      * @return array
      */
-    public function buildMessages(string $attribute, $messages): array
+    public function buildAttribute(string $attribute, string $value): array
     {
-        return $this->build($attribute, $messages);
-    }
-
-    /**
-     * @param string $attribute
-     * @param string $name
-     * @return array
-     */
-    public function buildAttribute(string $attribute, string $name): array
-    {
-        return $this->build($attribute, $name);
+        return $this->build($attribute, $value);
     }
 }
