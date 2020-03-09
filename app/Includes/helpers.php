@@ -17,3 +17,16 @@ if (!function_exists('declineCyrillicWord')) {
         return $wordRoot . $postfixes[$suffix_key];
     }
 }
+
+if(!function_exists('str_contains')) {
+
+    /**
+     * Determine if <b>$needle</b> is substring of <b>$haystack</b>
+     * @param string $haystack
+     * @param string $needle
+     * @return bool
+     */
+    function str_contains($haystack, $needle) {
+        return strpos($haystack, $needle) !== false;
+    }
+}

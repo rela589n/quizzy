@@ -7,8 +7,6 @@ namespace App\Http\Requests;
 use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
-use App\Models\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 
 class RequestUrlManager
@@ -39,48 +37,50 @@ class RequestUrlManager
         $this->request = $request;
     }
 
+    protected function resolveEntity(&$property, \Illuminate\Database\Eloquent\Builder $builder, bool $withTrashed = false)
+    {
+        if ($property === null) {
+            if ($withTrashed) {
+                $builder->withTrashed();
+            }
+
+            $property = $builder->firstOrFail();
+        }
+
+        return $property;
+    }
+
     /**
      * @return TestSubject|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
     public function getCurrentSubject()
     {
-        if ($this->currentSubject === null) {
-            $this->currentSubject = TestSubject::where(
-                'uri_alias',
-                '=',
-                $this->request->route('subject')
-            )->firstOrFail();
-        }
-
-        return $this->currentSubject;
+        return $this->resolveEntity($this->currentSubject, TestSubject::where(
+            'uri_alias',
+            '=',
+            $this->request->route('subject')
+        ));
     }
 
     /**
+     * @param bool $withTrashed
      * @return Test|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
-    public function getCurrentTest()
+    public function getCurrentTest(bool $withTrashed = false)
     {
-        if ($this->currentTest === null) {
-            $this->currentTest = Test::where(
-                'uri_alias',
-                '=',
-                $this->request->route('test')
-            )->firstOrFail();
-        }
-
-        return $this->currentTest;
+        return $this->resolveEntity($this->currentTest, Test::where(
+            'uri_alias',
+            '=',
+            $this->request->route('test')
+        ), $withTrashed);
     }
 
     public function getCurrentGroup()
     {
-        if ($this->currentGroup === null) {
-            $this->currentGroup = StudentGroup::where(
-                'uri_alias',
-                '=',
-                $this->request->route('group')
-            )->firstOrFail();
-        }
-
-        return $this->currentGroup;
+        return $this->resolveEntity($this->currentGroup, StudentGroup::where(
+            'uri_alias',
+            '=',
+            $this->request->route('group')
+        ));
     }
 }

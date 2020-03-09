@@ -1,6 +1,4 @@
-@extends('layouts.main-skeleton', [
-    'baseLayout' => $baseLayout
-])
+@extends('layouts.main-skeleton')
 
 @section('main-container-class')
     @parent

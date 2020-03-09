@@ -4,6 +4,7 @@
 namespace App\Lib;
 
 
+use App\Exceptions\NullPointerException;
 use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -22,19 +23,31 @@ class TestResultsEvaluator
      * TestResultsEvaluator constructor.
      * @param TestResult $testResult
      */
-    public function __construct(TestResult $testResult)
+    public function __construct(TestResult $testResult = null)
     {
         $this->testResult = $testResult;
     }
 
     /**
-     *
+     * @param TestResult $testResult
+     */
+    public function setTestResult(TestResult $testResult): void
+    {
+        $this->testResult = $testResult;
+    }
+
+    /**
      * @return array [<br>
      *   questionId => [answeredRight, asked]<br>
      * ]
+     * @throws NullPointerException
      */
     public function evaluateEachQuestion()
     {
+        if ($this->testResult === null) {
+            throw new NullPointerException("Property testResult must be set before calling ". __FUNCTION__ . '. Try setTestResult().');
+        }
+
         $result = [];
 
         $this->testResult->askedQuestions->loadMissing(['question' => function (Relation $query) {
@@ -98,6 +111,6 @@ class TestResultsEvaluator
      */
     public function putMark(float $evaluatedTestScore): int
     {
-        return (int)round($evaluatedTestScore * 5);
+        return max(1, (int)round($evaluatedTestScore * 5 - 0.1));
     }
 }

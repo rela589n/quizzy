@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Lib\Traits\LoadTrashed;
 use App\Models\Test;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestSubject extends Model
 {
+    use LoadTrashed;
+
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'course'];
 

@@ -135,3 +135,11 @@ body.auth.text-light form.auth input {
 form.auth.user-form .invalid-feedback {
     margin-bottom: -.8rem
 }
+
+.table-input-narrow {
+    max-width: 100px;
+}
+
+.table-input-middle {
+    max-width: 150px;
+}

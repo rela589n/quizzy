@@ -135,6 +135,32 @@ Route::prefix('/teachers')
         Route::get('/', 'TeachersController@showAll');
     });
 
+Route::prefix('/results')
+    ->name('.results')
+    ->namespace('Results')
+    ->group(function () {
+
+        $routePatterns = Route::getPatterns();
+
+        Route::prefix('/{subject}')
+            ->where(['subject' => $routePatterns['name']])
+            ->name('.subject')
+            ->group(function () use (&$routePatterns) {
+
+                Route::prefix('/{test}')
+                    ->where(['test' => $routePatterns['name']])
+                    ->name('.test')
+                    ->group(function () {
+
+                        Route::get('/', 'TestResultsController@showTestResults');
+                    });
+
+                Route::get('/', 'TestResultsController@showSelectTestPage');
+            });
+
+        Route::get('/', 'TestResultsController@showSelectSubjectPage');
+    });
+
 Route::get('/check/word', function () {
     $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(base_path('Template.docx'));
     $templateProcessor->setValues([
