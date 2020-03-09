@@ -44,9 +44,10 @@ abstract class ResultFilter
     public function apply(EloquentCollection $results)
     {
         $this->loadRelations($results);
+        $filters = $this->filters();
 
-        return $results->filter(function ($testResult) {
-            return $this->applyFilters($this->filters(), $testResult);
+        return $results->filter(function ($testResult) use(&$filters) {
+            return $this->applyFilters($filters, $testResult);
         });
     }
 

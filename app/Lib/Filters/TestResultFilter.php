@@ -33,64 +33,76 @@ class TestResultFilter extends ResultFilter
 
     protected function filters()
     {
-        return $this->filterFilters($this->request->query());
+        return $this->filterFilters(
+            $this->request->only('result', 'mark')
+        );
     }
 
     protected function queryFilters()
     {
-        return [
-
-        ];
+        return $this->filterFilters(
+            $this->request->only(['resultId', 'groupId', 'name', 'surname', 'patronymic'])
+        );
     }
 
     /**
-     * @param TestResult $testResult
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @param $value
-     * @return bool
      */
-    public function resultId($testResult, $value)
+    public function resultId($query, $value)
     {
-        return $testResult->id == $value;
+        $query->where('id', $value);
     }
 
     /**
-     * @param TestResult $testResult
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @param $groupId
-     * @return bool
      */
-    public function groupId($testResult, $groupId)
+    public function groupId($query, $groupId)
     {
-        return $testResult->user->studentGroup->id == $groupId;
+        $query->whereHas('user.studentGroup', function ($builder) use ($groupId) {
+            $builder->where('id', $groupId);
+        });
     }
 
     /**
-     * @param TestResult $testResult
-     * @param $userName
-     * @return bool
+     * @param string $relation
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $field
+     * @param $fieldValue
      */
-    public function name($testResult, $userName)
+    protected function textFieldFilter(string $relation, $query, string $field, $fieldValue)
     {
-        return str_contains($testResult->user->name, $userName);
+        $query->whereHas($relation, function ($builder) use ($field, $fieldValue) {
+            $builder->where($field, 'like', "%$fieldValue%");
+        });
     }
 
     /**
-     * @param TestResult $testResult
-     * @param $userSurname
-     * @return bool
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param $name
      */
-    public function surname($testResult, $userSurname)
+    public function name($query, $name)
     {
-        return str_contains($testResult->user->surname, $userSurname);
+        $this->textFieldFilter('user', $query, 'name', $name);
     }
 
     /**
-     * @param TestResult $testResult
-     * @param $userPatronymic
-     * @return bool
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param $surname
      */
-    public function patronymic($testResult, $userPatronymic)
+    public function surname($query, $surname)
     {
-        return str_contains($testResult->user->patronymic, $userPatronymic);
+        $this->textFieldFilter('user', $query, 'surname', $surname);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param $patronymic
+     */
+    public function patronymic($query, $patronymic)
+    {
+        $this->textFieldFilter('user', $query, 'patronymic', $patronymic);
     }
 
     /**
