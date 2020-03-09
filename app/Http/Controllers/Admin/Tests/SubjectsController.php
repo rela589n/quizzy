@@ -35,8 +35,6 @@ class SubjectsController extends AdminController
     {
         $subject = $this->urlManager->getCurrentSubject();
         $subject->tests->loadCount('nativeQuestions as questions_count');
-        // because in view we use $test->subject->uri_alias, which cause duplicated queries
-        $subject->tests->loadMissing('subject');
 
         return view('pages.admin.subjects-single', [
             'subject' => $subject
