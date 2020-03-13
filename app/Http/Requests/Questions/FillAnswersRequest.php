@@ -38,7 +38,7 @@ class FillAnswersRequest extends FormRequest
      */
     public function attributes()
     {
-        return $this->validationGenerator->buildMany([
+        return $this->validationGenerator->buildManyAttributes([
             'q.new.*.v.*.text|q.modified.*.v.*.text' => '',
             'q.new.*.name|q.modified.*.name' => '"Питання"',
             'q.new.*.v|q.modified.*.v' => '"Варіанти відповідей"'
@@ -52,7 +52,7 @@ class FillAnswersRequest extends FormRequest
      */
     public function rules()
     {
-        return $this->validationGenerator->buildMany([
+        return $this->validationGenerator->buildManyRules([
             'q|q.new|q.modified' => 'array',
             'q.new.*.name|q.modified.*.name' => 'required|min:3|max:255',
             'q.new.*.v|q.modified.*.v' => [

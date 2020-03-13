@@ -26,7 +26,7 @@ abstract class MakeUserRequest extends FormRequest
      */
     public function rules(ValidationGenerator $generator)
     {
-        return $generator->buildMany([
+        return $generator->buildManyRules([
             'name|surname|patronymic' => 'required|min:2|max:255',
             $this->username() => 'required|string|min:5|max:255',
             'password' => 'string'

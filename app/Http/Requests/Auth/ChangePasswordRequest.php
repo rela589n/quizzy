@@ -45,7 +45,7 @@ abstract class ChangePasswordRequest extends FormRequest
      */
     public function rules(ValidationGenerator $generator)
     {
-        return $generator->buildMany([
+        return $generator->buildManyRules([
             'password|new_password|new_password_confirmation' => 'required|string|min:6',
             'password' => new MatchOldPassword($this->authUser),
             'new_password' => [

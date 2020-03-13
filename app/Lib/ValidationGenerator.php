@@ -83,7 +83,6 @@ class ValidationGenerator
         $result = [];
 
         $this->handleBuildSingle($key, $result, $value);
-        $this->flattenBuild($result);
 
         return $result;
     }
@@ -102,7 +101,7 @@ class ValidationGenerator
      * @param array|string $rules
      * @return array
      */
-    public function buildRules(string $attribute, $rules): array
+    public function buildRule(string $attribute, $rules): array
     {
         return $this->build($attribute, $rules);
     }
@@ -113,7 +112,7 @@ class ValidationGenerator
      * @param array $rules
      * @return array
      */
-    public function buildMany(array $rules): array
+    public function buildManyRules(array $rules): array
     {
         $result = [];
         foreach ($rules as $attributes => $rule) {
@@ -124,7 +123,6 @@ class ValidationGenerator
             }
         }
 
-        $this->flattenBuild($result);
         return $result;
     }
 
@@ -135,6 +133,23 @@ class ValidationGenerator
      */
     public function buildAttribute(string $attribute, string $value): array
     {
-        return $this->build($attribute, $value);
+        $result = $this->build($attribute, $value);
+        $this->flattenBuild($result);
+
+        return $result;
+    }
+
+    /**
+     * Builds Laravel-feedable array, where keys are attributes <br>
+     * and values are human-readable names of attributes
+     * @param array $attributes
+     * @return array
+     */
+    public function buildManyAttributes(array $attributes)
+    {
+        $result = $this->buildManyRules($attributes);
+        $this->flattenBuild($result);
+
+        return $result;
     }
 }
