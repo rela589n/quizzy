@@ -34,7 +34,6 @@ class GroupsController extends AdminController
     public function showSingleGroup()
     {
         $group = $this->urlManager->getCurrentGroup();
-        $group->students->loadMissing('studentGroup');
 
         return view('pages.admin.student-groups-single', [
             'group' => $group,
