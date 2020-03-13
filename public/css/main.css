@@ -136,6 +136,10 @@ form.auth.user-form .invalid-feedback {
     margin-bottom: -.8rem
 }
 
+.table-input-extra-narrow {
+    max-width: 80px;
+}
+
 .table-input-narrow {
     max-width: 100px;
 }

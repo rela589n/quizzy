@@ -53,9 +53,9 @@ class TestsController extends ClientController
         $evaluator = new TestResultsEvaluator($testResult);
 
         $evaluatedQuestions = $evaluator->evaluateEachQuestion();
-        $wholeTest = $evaluator->evaluateWholeTest($evaluatedQuestions);
-        $score = $evaluator->evaluateTestScore($wholeTest);
-        $mark = $evaluator->putMark($score);
+        $wholeTest = $evaluator->getQuestionsScore($evaluatedQuestions);
+        $score = $evaluator->getTestScore($wholeTest);
+        $mark = $evaluator->getMark($score);
 
         return view('pages.client.pass-test-single-result', [
             'subject' => $currentTest->subject,

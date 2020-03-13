@@ -5,6 +5,8 @@ namespace App\Lib;
 
 
 use App\Exceptions\NullPointerException;
+use App\Lib\TestResults\MarkEvaluatorInterface;
+use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -20,12 +22,28 @@ class TestResultsEvaluator
     protected $testResult;
 
     /**
-     * TestResultsEvaluator constructor.
-     * @param TestResult $testResult
+     * @var ScoreEvaluatorInterface
      */
-    public function __construct(TestResult $testResult = null)
+    protected $scoreEvaluator;
+
+    /**
+     * @var MarkEvaluatorInterface
+     */
+    protected $markEvaluator;
+
+    protected $evaluatedQuestions;
+    protected $questionsScore;
+    protected $testScore;
+
+    /**
+     * TestResultsEvaluator constructor.
+     * @param ScoreEvaluatorInterface $scoreEvaluator
+     * @param MarkEvaluatorInterface $markEvaluator
+     */
+    public function __construct(ScoreEvaluatorInterface $scoreEvaluator, MarkEvaluatorInterface $markEvaluator)
     {
-        $this->testResult = $testResult;
+        $this->scoreEvaluator = $scoreEvaluator;
+        $this->markEvaluator = $markEvaluator;
     }
 
     /**
@@ -34,6 +52,17 @@ class TestResultsEvaluator
     public function setTestResult(TestResult $testResult): void
     {
         $this->testResult = $testResult;
+    }
+
+    protected function loadDependencies()
+    {
+        $this->testResult->askedQuestions->loadMissing(['question' => function (Relation $query) {
+            $query->withTrashed();
+        }]);
+
+        $this->testResult->askedQuestions->loadMissing(['answers.answerOption' => function (Relation $query) {
+            $query->withTrashed();
+        }]);
     }
 
     /**
@@ -45,19 +74,16 @@ class TestResultsEvaluator
     public function evaluateEachQuestion()
     {
         if ($this->testResult === null) {
-            throw new NullPointerException("Property testResult must be set before calling ". __FUNCTION__ . '. Try setTestResult().');
+            throw new NullPointerException("Property testResult must be set before calling " . __FUNCTION__ . '. Try setTestResult().');
         }
 
+        if (!is_null($this->evaluatedQuestions)) {
+            return $this->evaluatedQuestions;
+        }
+
+        $this->loadDependencies();
+
         $result = [];
-
-        $this->testResult->askedQuestions->loadMissing(['question' => function (Relation $query) {
-            $query->withTrashed();
-        }]);
-
-        $this->testResult->askedQuestions->loadMissing(['answers.answerOption' => function (Relation $query) {
-            $query->withTrashed();
-        }]);
-
         foreach ($this->testResult->askedQuestions as $askedQuestion) {
             $questionId = $askedQuestion->question->id;
 
@@ -74,43 +100,44 @@ class TestResultsEvaluator
             }
         }
 
+        $this->evaluatedQuestions = &$result;
         return $result;
     }
 
     /**
-     * Consider question right if all options are right
-     * @param array $evaluatedQuestions [<br>
-     *   questionId => [answeredRight, asked]<br>
-     *  ]
      * @return array [<br>
      *   questionId => score<br>
      *  ]
+     * @throws NullPointerException
      */
-    public function evaluateWholeTest(array $evaluatedQuestions) // todo in future may use strategy pattern
+    public function getQuestionsScore()
     {
-        $perQuestion = 1. / count($evaluatedQuestions);
-        return array_map(function ($pair) use ($perQuestion) {
-            return ($pair[0] == $pair[1]) * $perQuestion;
-        }, $evaluatedQuestions);
+        if ($this->questionsScore === null) {
+            $this->questionsScore = $this->scoreEvaluator->evaluateTest($this->evaluateEachQuestion());
+        }
+
+        return $this->questionsScore;
     }
 
     /**
-     * @param array $evaluatedWholeTest [<br>
-     *   questionId => score<br>
-     *  ]
      * @return float
+     * @throws NullPointerException
      */
-    public function evaluateTestScore(array $evaluatedWholeTest): float
+    public function getTestScore(): float
     {
-        return array_sum($evaluatedWholeTest);
+        if ($this->testScore === null) {
+            $this->testScore = array_sum($this->getQuestionsScore());
+        }
+
+        return $this->testScore;
     }
 
     /**
-     * @param float $evaluatedTestScore
      * @return int
+     * @throws NullPointerException
      */
-    public function putMark(float $evaluatedTestScore): int
+    public function getMark(): int
     {
-        return max(1, (int)round($evaluatedTestScore * 5 - 0.1));
+        return $this->markEvaluator->putMark($this->getTestScore());
     }
 }

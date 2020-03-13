@@ -150,7 +150,15 @@ Route::prefix('/results')
                 Route::prefix('/{test}')
                     ->where(['test' => $routePatterns['name']])
                     ->name('.test')
-                    ->group(function () {
+                    ->group(function () use (&$routePatterns) {
+
+                        Route::prefix('/statements')
+                            ->name('.statements')
+                            ->group(function () use (&$routePatterns) {
+
+                                Route::get('/{testResultId}', 'StatementsController@studentStatement')
+                                    ->where('testResultId', $routePatterns['id']);
+                            });
 
                         Route::get('/', 'TestResultsController@showTestResults');
                     });
@@ -161,26 +169,7 @@ Route::prefix('/results')
         Route::get('/', 'TestResultsController@showSelectSubjectPage');
     });
 
-Route::get('/check/word', function () {
-    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(base_path('Template.docx'));
-    $templateProcessor->setValues([
-        'studentFullName' => 'John Doe',
-        'iteration' => 1,
-        'studentMark' => 5,
-        'excellent' => 10,
-        'satisfactorily' => 10,
-        'unsatisfactorily' => 10,
-        'avarageMark' => 4,
-        'groupName' => 'pi-172',
-        'course' => '3',
-        'good' => 1000,
-    ]);
-
-    $templateProcessor->saveAs('hello, word world!!!.docx');
-    dd($templateProcessor);
-});
-
-Route::get('/tests/hello', function () {
+Route::get('/breadcrumbs/tests/hello', function () {
     return 'tests hello' . Breadcrumbs::render('test');
 })->name('.tests.test');
 

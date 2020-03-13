@@ -8,11 +8,17 @@ if (!function_exists('declineCyrillicWord')) {
      * @param $postfixes - array of possible word endings
      * @return string
      */
-    function declineCyrillicWord(int $numberOf, $wordRoot, $postfixes) : string
+    function declineCyrillicWord($numberOf, $wordRoot, $postfixes) : string
     {
         $keys = array(2, 0, 1, 1, 1, 2);
-        $mod = $numberOf % 100;
-        $suffix_key = $mod > 4 && $mod < 20 ? 2 : $keys[min($mod%10, 5)];
+
+        if (floor($numberOf) != $numberOf) {
+            $suffix_key = 1;
+        }
+        else {
+            $mod = $numberOf % 100;
+            $suffix_key = $mod > 4 && $mod < 20 ? 2 : $keys[min($mod%10, 5)];
+        }
 
         return $wordRoot . $postfixes[$suffix_key];
     }

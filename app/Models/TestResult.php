@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Lib\Filters\TestResultFilter;
 use App\Lib\TestResultsEvaluator;
+use App\Lib\Words\WordsManager;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -40,12 +41,40 @@ class TestResult extends Model
      * @var TestResultsEvaluator
      */
     protected $resultsEvaluator;
-    protected $resultScore = null;
+
+    /**
+     * @var WordsManager
+     */
+    protected $wordsManager;
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->resultsEvaluator = new TestResultsEvaluator($this);
+    }
+
+    /**
+     * @param TestResultsEvaluator $resultsEvaluator
+     */
+    public function setResultsEvaluator(TestResultsEvaluator $resultsEvaluator): void
+    {
+        $this->resultsEvaluator = $resultsEvaluator;
+        $this->resultsEvaluator->setTestResult($this);
+    }
+
+    /**
+     * @return TestResultsEvaluator
+     */
+    public function getResultEvaluator()
+    {
+        return $this->resultsEvaluator;
+    }
+
+    /**
+     * @param WordsManager $wordsManager
+     */
+    public function setWordsManager(WordsManager $wordsManager): void
+    {
+        $this->wordsManager = $wordsManager;
     }
 
     public function test()
@@ -69,14 +98,7 @@ class TestResult extends Model
      */
     public function getScoreAttribute()
     {
-        if ($this->resultScore === null) {
-            $evaluatedQuestions = $this->resultsEvaluator->evaluateEachQuestion();
-            $eachQuestionScore = $this->resultsEvaluator->evaluateWholeTest($evaluatedQuestions);
-
-            $this->resultScore = $this->resultsEvaluator->evaluateTestScore($eachQuestionScore);
-        }
-
-        return $this->resultScore;
+        return $this->resultsEvaluator->getTestScore();
     }
 
     public function getScoreReadableAttribute()
@@ -84,16 +106,20 @@ class TestResult extends Model
         return round(100 * $this->score, 2);
     }
 
+    /**
+     * @return int
+     * @throws \App\Exceptions\NullPointerException
+     */
     public function getMarkAttribute()
     {
-        return $this->resultsEvaluator->putMark($this->score);
+        return $this->resultsEvaluator->getMark();
     }
 
     public function getMarkReadableAttribute()
     {
         // todo create class wrapper under this function
         $mark = $this->mark;
-        return $mark . declineCyrillicWord($mark, ' бал', ['', 'а', 'ів']);
+        return $mark . $this->wordsManager->decline($mark, ' бал');
     }
 
     public function getDateReadableAttribute()

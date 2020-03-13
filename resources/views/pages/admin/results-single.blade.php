@@ -21,7 +21,15 @@
 
             @forelse($testResults as $testResult)
                 <tr>
-                    <th scope="row">{{ $testResult->id }}</th>
+                    <th scope="row">
+                        <a class="badge badge-primary"
+                           href="{{ route('admin.results.subject.test.statements', [
+                                        'subject' => $subject->uri_alias,
+                                        'test' => $test->uri_alias,
+                                        'testResultId' => $testResult->id
+                                    ]) }}"
+                           title="Натисніть, щоб генерувати відомість">{{ $testResult->id }}</a>
+                    </th>
                     <td>{{ $testResult->user->studentGroup->name }}</td>
                     <td>{{ $testResult->user->surname }}</td>
                     <td>{{ $testResult->user->name }}</td>
@@ -42,7 +50,7 @@
             <tr>
                 <th class="input ui-state-default" rowspan="1" colspan="1">
                     <input name="resultId" value="{{ request('resultId') }}" type="number"
-                           class="form-control form-control-sm table-input-narrow" min="1" placeholder="id">
+                           class="form-control form-control-sm table-input-extra-narrow" min="1" placeholder="id">
                 </th>
                 <th>
                     <select name="groupId" class="form-control form-control-sm">

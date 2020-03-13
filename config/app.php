@@ -183,6 +183,7 @@ return [
         App\Providers\LibServiceProvider::class,
         App\Providers\FormRequestsProvider::class,
         App\Providers\CollectionMacroProvider::class,
+        App\Providers\ModelObserversProvider::class,
     ],
 
     /*
