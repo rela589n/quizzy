@@ -75,6 +75,9 @@ class RequestUrlManager
         ), $withTrashed);
     }
 
+    /**
+     * @return StudentGroup|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     */
     public function getCurrentGroup()
     {
         return $this->resolveEntity($this->currentGroup, StudentGroup::where(

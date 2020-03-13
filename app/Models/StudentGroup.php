@@ -38,6 +38,6 @@ class StudentGroup extends Model
 
     public function students()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(User::class)->orderBy('surname')->orderBy('name');
     }
 }
