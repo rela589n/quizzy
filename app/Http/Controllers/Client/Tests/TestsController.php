@@ -27,7 +27,13 @@ class TestsController extends ClientController
         ]);
     }
 
-    public function finishTest(FinishTestRequest $request)
+    /**
+     * @param FinishTestRequest $request
+     * @param TestResultsEvaluator $evaluator
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \App\Exceptions\NullPointerException
+     */
+    public function finishTest(FinishTestRequest $request, TestResultsEvaluator $evaluator)
     {
         $currentTest = $this->urlManager->getCurrentTest();
 
@@ -50,17 +56,13 @@ class TestsController extends ClientController
             $answers = $answers->concat($createdAnswers);
         }
 
-        $evaluator = new TestResultsEvaluator($testResult);
-
-        $evaluatedQuestions = $evaluator->evaluateEachQuestion();
-        $wholeTest = $evaluator->getQuestionsScore($evaluatedQuestions);
-        $score = $evaluator->getTestScore($wholeTest);
-        $mark = $evaluator->getMark($score);
+        $evaluator->setTestResult($testResult);
+        $mark = $evaluator->getMark();
 
         return view('pages.client.pass-test-single-result', [
             'subject' => $currentTest->subject,
             'test' => $currentTest,
-            'resultPercents' => round($score * 100, 2),
+            'resultPercents' => round($evaluator->getTestScore() * 100, 2),
             'resultMark' => sprintf(
                 '%d %s',
                 $mark,
