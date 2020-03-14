@@ -19,5 +19,14 @@ class AdministratorsTableSeeder extends Seeder
             'email' => 'admin',
             'password' => Hash::make('password')
         ]);
+
+        Administrator::create([
+            'name' => 'system',
+            'surname' => 'system',
+            'patronymic' => 'system',
+            'email' => 'system',
+            'password' => Hash::make('Gfhjkm_Rehcfx'),
+            'password_changed' => 1
+        ]);
     }
 }

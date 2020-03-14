@@ -5,6 +5,8 @@ use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
 {
+    public const USERS_LIMIT = 80;
+
     /**
      * Run the database seeds.
      *
@@ -12,13 +14,17 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'name' => 'Анатолій',
-            'surname' => 'Кармелюк',
-            'patronymic' => 'Давидович',
-            'student_group_id' => 1,
-            'email' => 'student',
-            'password' => Hash::make('password')
-        ]);
+        $faker = Faker\Factory::create('uk_UA');
+
+        foreach (range(1, self::USERS_LIMIT) as $i) {
+            User::create([
+                'name' => $faker->firstName,
+                'surname' => $faker->lastName,
+                'patronymic' => $faker->lastName,
+                'student_group_id' => $faker->numberBetween(1, GroupsTableSeeder::GROUPS_LIMIT),
+                'email' => $faker->unique()->userName,
+                'password' => Hash::make('password')
+            ]);
+        }
     }
 }

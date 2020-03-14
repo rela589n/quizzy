@@ -17,5 +17,11 @@ class TestSubjectsTableSeeder extends Seeder
             'uri_alias' => 'oop',
             'course' => 3
         ]);
+
+        TestSubject::create([
+            'name' => 'Алгоритми',
+            'uri_alias' => 'algorithms',
+            'course' => 2
+        ]);
     }
 }

@@ -5,6 +5,8 @@ use Illuminate\Database\Seeder;
 
 class QuestionsTableSeeder extends Seeder
 {
+    public const QUESTIONS_LIMIT = 40;
+
     /**
      * Run the database seeds.
      *
@@ -16,5 +18,13 @@ class QuestionsTableSeeder extends Seeder
             'question' => 'Що таке клас?',
             'test_id' => 1
         ]);
+
+        $faker = Faker\Factory::create('uk_UA');
+        foreach (range(2, self::QUESTIONS_LIMIT) as $i) {
+            Question::create([
+                'question' => rtrim($faker->realText(60), ' .') . '?',
+                'test_id' => $faker->numberBetween(2, TestsTableSeeder::TESTS_LIMIT)
+            ]);
+        }
     }
 }
