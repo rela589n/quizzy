@@ -42,10 +42,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Test extends Model
 {
     use SoftDeletes;
-//    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     public $timestamps = false;
-    protected $fillable = ['name', 'uri_alias', 'time']; // todo create architecture
+    protected $fillable = ['name', 'uri_alias', 'time'];
 
     public function subject()
     {
@@ -78,20 +77,8 @@ class Test extends Model
      */
     public function allQuestions()
     {
-//        return $this->hasManyDeepFromRelations(
-//            $this->testComposites(),
-//            (new TestComposite)->questions()
-//        ); // :-/ does not work in the right way
-
         // todo move it into repository
         return \Illuminate\Database\Eloquent\Collection::make($this->testComposites->pluck('questions')->flatten());
-
-//        return $this->hasManyDeep(
-//            Question::class,
-//            ['test_composite', self::class],
-//            ['id_test'],
-//            [null, 'id_include_test']
-//        );
     }
 
     public function testResults() {
