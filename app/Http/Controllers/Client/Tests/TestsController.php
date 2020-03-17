@@ -33,7 +33,7 @@ class TestsController extends ClientController
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \App\Exceptions\NullPointerException
      */
-    public function finishTest(FinishTestRequest $request, TestResultsEvaluator $evaluator)
+    public function finishTest(FinishTestRequest $request)
     {
         $currentTest = $this->urlManager->getCurrentTest();
 
@@ -43,31 +43,23 @@ class TestsController extends ClientController
         $testResult->save();
 
         $validated = $request->validated();
+
         /**
          * @var $askedQuestions AskedQuestion[]
          */
         $askedQuestions = $testResult->askedQuestions()->createMany($validated['asked']);
         $testResult->setRelation('askedQuestions', $askedQuestions);
 
-        $answers = Collection::make();
         foreach ($askedQuestions as $askedQuestion) {
             $createdAnswers = $askedQuestion->answers()->createMany($validated['ans'][$askedQuestion->question_id]);
             $askedQuestion->setRelation('answers', $createdAnswers);
-            $answers = $answers->concat($createdAnswers);
         }
-
-        $evaluator->setTestResult($testResult);
-        $mark = $evaluator->getMark();
 
         return view('pages.client.pass-test-single-result', [
             'subject' => $currentTest->subject,
             'test' => $currentTest,
-            'resultPercents' => round($evaluator->getTestScore() * 100, 2),
-            'resultMark' => sprintf(
-                '%d %s',
-                $mark,
-                declineCyrillicWord($mark, 'бал', ['', 'а', 'ів'])
-            )
+            'resultPercents' => $testResult->score_readable,
+            'resultMark' => $testResult->mark_readable
         ]);
     }
 }
