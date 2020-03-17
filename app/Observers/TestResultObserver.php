@@ -8,16 +8,19 @@ use App\Models\TestResult;
 
 class TestResultObserver
 {
+    private function setTestResultDependencies(TestResult $result)
+    {
+        $result->setResultsEvaluator(resolve(TestResultsEvaluator::class));
+        $result->setWordsManager(resolve(WordsManager::class));
+    }
 
-    /**
-     * Handle the test result "retrieved" event.
-     *
-     * @param  \App\Models\TestResult  $testResult
-     * @return void
-     */
     public function retrieved(TestResult $testResult)
     {
-        $testResult->setResultsEvaluator(resolve(TestResultsEvaluator::class));
-        $testResult->setWordsManager(resolve(WordsManager::class));
+        $this->setTestResultDependencies($testResult);
+    }
+
+    public function saved(TestResult $testResult)
+    {
+        $this->setTestResultDependencies($testResult);
     }
 }

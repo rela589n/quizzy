@@ -4,8 +4,23 @@
 namespace App\Lib\Statements\FilePathGenerators;
 
 
-class StudentFilePathGenerator extends FilePathGenerator
+use App\Models\TestResult;
+
+class StudentResultFileNameGenerator extends ResultFileNameGenerator
 {
+    /**
+     * @var TestResult
+     */
+    protected $result;
+
+    /**
+     * @param TestResult $result
+     */
+    public function setResult(TestResult $result): void
+    {
+        $this->result = $result;
+    }
+
     protected function generateFileName(): string
     {
         return sprintf('%s (%s %s) - %s %s %s.docx',

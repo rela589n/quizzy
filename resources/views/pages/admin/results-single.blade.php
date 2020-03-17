@@ -3,8 +3,28 @@
 @section('category-header-text') {{ $subject->name }} - {{ $test->name }} результати: @endsection
 
 @section('category-main-content')
+    <form class="form-inline group-statements-form"
+          action="{{ route('admin.results.subject.test.statements.group', [
+                        'subject' => $subject->uri_alias,
+                        'test' => $test->uri_alias,
+                    ]) }}"
+          method="get">
+        <div class="form-group">
+            <label for="statementGroupId">Відомість за групою: </label>
+
+            <select name="groupId" id="statementGroupId" class="form-control form-control-sm mx-sm-3">
+                @foreach($userGroups as $group)
+                    <option value="{{ $group->id }}"
+                            @if($group->id == request('groupId')) selected @endif>{{ $group->name }}</option>
+                @endforeach
+            </select>
+
+            <button type="submit" class="btn btn-sm btn-primary">Генерувати</button>
+        </div>
+    </form>
+
     <form action="" method="get" class="form-clearable">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-hover test-results-table">
             <thead>
             <tr>
                 <th scope="col">#</th>
@@ -23,7 +43,7 @@
                 <tr>
                     <th scope="row">
                         <a class="badge badge-primary"
-                           href="{{ route('admin.results.subject.test.statements', [
+                           href="{{ route('admin.results.subject.test.statements.student', [
                                         'subject' => $subject->uri_alias,
                                         'test' => $test->uri_alias,
                                         'testResultId' => $testResult->id
@@ -45,9 +65,8 @@
             @endforelse
 
             </tbody>
-
             <tfoot>
-            <tr>
+            <tr class="table-active">
                 <th class="input ui-state-default" rowspan="1" colspan="1">
                     <input name="resultId" value="{{ request('resultId') }}" type="number"
                            class="form-control form-control-sm table-input-extra-narrow" min="1" placeholder="id">
@@ -76,7 +95,8 @@
                            class="form-control form-control-sm table-input-middle" placeholder="По-батькові">
                 </th>
                 <th>
-                    <input name="result" type="number" value="{{ request('result') }}" min="0" max="100" step="0.01"
+                    <input name="result" type="number" value="{{ request('result') }}" min="0" max="100" step="0.1"
+                           placeholder="Результат"
                            class="form-control form-control-sm table-input-narrow">
                 </th>
                 <th>
@@ -91,8 +111,8 @@
             </tr>
             <tr>
                 <td colspan="8">
-                    <div class="d-flex justify-content-between">
-                        <button type="reset" class="btn btn-primary">Скинути фільтри</button>
+                    <div class="d-flex justify-content-between filter-buttons">
+                        <button type="reset" class="btn btn-primary">Очистити фільтри</button>
                         <button type="submit" class="btn btn-primary">Фільтрувати</button>
                     </div>
                 </td>
@@ -100,6 +120,7 @@
             </tfoot>
         </table>
     </form>
+
     {{ $testResults->links() }}
 @endsection
 

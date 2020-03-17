@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Lib\Filters\TestResultFilter;
 use App\Lib\TestResultsEvaluator;
 use App\Lib\Words\WordsManager;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -32,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $score
  * @property-read mixed $score_readable
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult filtered(\App\Lib\Filters\TestResultFilter $filters)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult ofTest($testId)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult recent($count)
  */
 class TestResult extends Model
 {
@@ -117,7 +120,6 @@ class TestResult extends Model
 
     public function getMarkReadableAttribute()
     {
-        // todo create class wrapper under this function
         $mark = $this->mark;
         return $mark . $this->wordsManager->decline($mark, ' бал');
     }
@@ -128,7 +130,31 @@ class TestResult extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int | Test $test
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfTest($query, $test)
+    {
+        $testId = is_numeric($test) ? $test : $test->id;
+
+        return $query->whereHas('test', function (Builder $query) use ($testId) {
+            $query->where('id', $testId);
+        });
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param $count
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRecent($query, $count)
+    {
+        return $query->latest()->limit($count);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @param TestResultFilter $filters
      * @return \Illuminate\Database\Eloquent\Collection
      */

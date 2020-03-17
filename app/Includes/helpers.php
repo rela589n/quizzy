@@ -1,30 +1,7 @@
 <?php
 
 
-if (!function_exists('declineCyrillicWord')) {
-    /**
-     * @param $numberOf - declined number
-     * @param $wordRoot - the first part of the word (can be called the root)
-     * @param $postfixes - array of possible word endings
-     * @return string
-     */
-    function declineCyrillicWord($numberOf, $wordRoot, $postfixes) : string
-    {
-        $keys = array(2, 0, 1, 1, 1, 2);
-
-        if (floor($numberOf) != $numberOf) {
-            $suffix_key = 1;
-        }
-        else {
-            $mod = $numberOf % 100;
-            $suffix_key = $mod > 4 && $mod < 20 ? 2 : $keys[min($mod%10, 5)];
-        }
-
-        return $wordRoot . $postfixes[$suffix_key];
-    }
-}
-
-if(!function_exists('str_contains')) {
+if (!function_exists('str_contains')) {
 
     /**
      * Determine if <b>$needle</b> is substring of <b>$haystack</b>
@@ -32,7 +9,43 @@ if(!function_exists('str_contains')) {
      * @param string $needle
      * @return bool
      */
-    function str_contains($haystack, $needle) {
+    function str_contains($haystack, $needle)
+    {
         return strpos($haystack, $needle) !== false;
+    }
+}
+
+if (!function_exists('singleVar')) {
+    /**
+     * Return variable if it is not null <br>
+     * or calls $initializer
+     * @param mixed $var
+     * @param callable $initializer
+     * @return mixed <b>$var</b>
+     */
+    function singleVar(&$var, $initializer)
+    {
+        if ($var !== null) {
+            return $var;
+        }
+
+        $returned = call_user_func($initializer);
+        if ($var === null) {
+            $var = $returned;
+        }
+
+        return $var;
+    }
+}
+
+if (!function_exists('floatReadable')) {
+    /**
+     * Returns rounded to two digits after comma float value
+     * @param float $float
+     * @return float
+     */
+    function floatReadable(float $float)
+    {
+        return round($float, 2);
     }
 }

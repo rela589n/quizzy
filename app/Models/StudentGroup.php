@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\StudentGroup
@@ -29,15 +31,51 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\StudentGroup withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\StudentGroup withoutTrashed()
  * @mixin \Eloquent
+ * @property-read int $course
  */
 class StudentGroup extends Model
 {
     use SoftDeletes;
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
     public $timestamps = false;
+
     protected $fillable = ['name', 'uri_alias', 'year'];
+
+    protected $studyStartMonth = 9;
+    protected $studyStartDay = 1;
 
     public function students()
     {
         return $this->hasMany(User::class)->orderBy('surname')->orderBy('name');
+    }
+
+    /**
+     * Get the group's course.
+     *
+     * @return int
+     */
+    public function getCourseAttribute()
+    {
+        $started = Carbon::parse(
+            sprintf('%s-%s-%s',
+                $this->year,
+                $this->studyStartMonth,
+                $this->studyStartDay)
+        );
+
+        return Carbon::now()->diffInYears($started) + 1;
+    }
+
+    public function lastResults($test)
+    {
+        $students = $this->students;
+        $builder = clone $students[0]->lastResultOf($test);
+
+        for ($i = 1; $i < $students->count(); ++$i) {
+            $builder->union($students[$i]->lastResultOf($test));
+        }
+
+        return $builder;
     }
 }

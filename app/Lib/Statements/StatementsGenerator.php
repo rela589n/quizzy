@@ -2,7 +2,7 @@
 
 namespace App\Lib\Statements;
 
-use App\Lib\Statements\FilePathGenerators\FilePathGenerator;
+use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\TestResultsEvaluator;
 use App\Lib\Words\WordsManager;
 use App\Models\TestResult;
@@ -11,40 +11,24 @@ use PhpOffice\PhpWord\TemplateProcessor;
 abstract class StatementsGenerator
 {
     /**
-     * @var TestResult
-     */
-    protected $result;
-
-    /**
-     * @var TestResultsEvaluator
-     */
-    protected $resultEvaluator;
-
-    /**
      * @var WordsManager
      */
     protected $wordsManager;
 
     /**
-     * @var FilePathGenerator
+     * @var ResultFileNameGenerator
      */
     protected $filePathGenerator;
 
-
-    public function __construct(WordsManager $wordsManager, FilePathGenerator $filePathGenerator)
+    /**
+     * StatementsGenerator constructor.
+     * @param WordsManager $wordsManager
+     * @param ResultFileNameGenerator $filePathGenerator
+     */
+    public function __construct(WordsManager $wordsManager, ResultFileNameGenerator $filePathGenerator)
     {
         $this->wordsManager = $wordsManager;
         $this->filePathGenerator = $filePathGenerator;
-    }
-
-    /**
-     * @param TestResult $result
-     */
-    public function setResult(TestResult $result): void
-    {
-        $this->result = $result;
-        $this->filePathGenerator->setResult($this->result);
-        $this->resultEvaluator = $this->result->getResultEvaluator();
     }
 
     /**
@@ -65,6 +49,6 @@ abstract class StatementsGenerator
         return $filePath;
     }
 
-    abstract protected function doGenerate(TemplateProcessor $templateProcessor);
+    abstract protected function doGenerate(TemplateProcessor $templateProcessor) : void;
     abstract protected function templateResourcePath() : string;
 }

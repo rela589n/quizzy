@@ -4,6 +4,8 @@
 namespace App\Lib\Statements;
 
 
+use App\Lib\TestResultsEvaluator;
+use App\Models\TestResult;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class StudentStatementsGenerator extends StatementsGenerator
@@ -12,10 +14,30 @@ class StudentStatementsGenerator extends StatementsGenerator
     public const EMPTY_WRONG_CHOICES_LABEL = 'відсутні';
 
     /**
+     * @var TestResult
+     */
+    protected $result;
+
+    /**
+     * @var TestResultsEvaluator
+     */
+    protected $resultEvaluator;
+
+    /**
+     * @param TestResult $result
+     */
+    public function setResult(TestResult $result): void
+    {
+        $this->result = $result;
+        $this->filePathGenerator->setResult($this->result);
+        $this->resultEvaluator = $this->result->getResultEvaluator();
+    }
+
+    /**
      * @param TemplateProcessor $templateProcessor
      * @throws \App\Exceptions\NullPointerException
      */
-    protected function doGenerate(TemplateProcessor $templateProcessor)
+    protected function doGenerate(TemplateProcessor $templateProcessor) : void
     {
         $questionsScore = $this->resultEvaluator->getQuestionsScore();
 

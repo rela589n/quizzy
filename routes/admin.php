@@ -156,8 +156,12 @@ Route::prefix('/results')
                             ->name('.statements')
                             ->group(function () use (&$routePatterns) {
 
-                                Route::get('/{testResultId}', 'StatementsController@studentStatement')
-                                    ->where('testResultId', $routePatterns['id']);
+                                Route::get('/student/{testResultId}', 'StatementsController@studentStatement')
+                                    ->where('testResultId', $routePatterns['id'])
+                                    ->name('.student');
+
+                                Route::get('/group', 'StatementsController@groupStatement')
+                                    ->name('.group');
                             });
 
                         Route::get('/', 'TestResultsController@showTestResults');

@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use App\Lib\Statements\FilePathGenerators\FilePathGenerator;
-use App\Lib\Statements\FilePathGenerators\StudentFilePathGenerator;
+use App\Lib\Statements\FilePathGenerators\GroupResultFileNameGenerator;
+use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
+use App\Lib\Statements\FilePathGenerators\StudentResultFileNameGenerator;
+use App\Lib\Statements\GroupStatementsGenerator;
 use App\Lib\Statements\StatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
 use App\Lib\TestResults\MarkEvaluatorInterface;
@@ -54,7 +56,11 @@ class AppServiceProvider extends ServiceProvider
             ->give(UkrainianWordsRepository::class);
 
         $this->app->when(StudentStatementsGenerator::class)
-            ->needs(FilePathGenerator::class)
-            ->give(StudentFilePathGenerator::class);
+            ->needs(ResultFileNameGenerator::class)
+            ->give(StudentResultFileNameGenerator::class);
+
+        $this->app->when(GroupStatementsGenerator::class)
+            ->needs(ResultFileNameGenerator::class)
+            ->give(GroupResultFileNameGenerator::class);
     }
 }

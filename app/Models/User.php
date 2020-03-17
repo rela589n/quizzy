@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+
 /**
  * App\Models\User
  *
@@ -37,6 +39,8 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSurname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
+ * @property-read int|null $test_results_count
  */
 class User extends BaseUser
 {
@@ -49,5 +53,19 @@ class User extends BaseUser
     public function studentGroup()
     {
         return $this->belongsTo(StudentGroup::class);
+    }
+
+    public function testResults()
+    {
+        return $this->hasMany(TestResult::class);
+    }
+
+    /**
+     * @param int | Test $test
+     * @return Builder
+     */
+    public function lastResultOf($test)
+    {
+        return $this->testResults()->ofTest($test)->recent(1);
     }
 }

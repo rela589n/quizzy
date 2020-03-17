@@ -81,7 +81,8 @@ class Test extends Model
         return \Illuminate\Database\Eloquent\Collection::make($this->testComposites->pluck('questions')->flatten());
     }
 
-    public function testResults() {
+    public function testResults()
+    {
         return $this->hasMany(TestResult::class);
     }
 }
