@@ -6,7 +6,7 @@
 
 @section('body-class')
     @parent
-    bg-light
+    bg-lighter
 @endsection
 
 @section('form-class')

@@ -2,7 +2,7 @@
 
 @section('body-class')
     @parent
-    bg-light text-dark
+    bg-lighter text-dark
 @endsection
 
 @section('menu')

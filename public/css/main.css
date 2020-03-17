@@ -147,3 +147,26 @@ form.auth.user-form .invalid-feedback {
 .table-input-middle {
     max-width: 150px;
 }
+
+.table-bordered {
+    border-radius: .8rem;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px #dee2e6;
+}
+
+.bg-lighter {
+    background-color: #fcfcfc !important;
+}
+
+.group-statements-form [type=submit] {
+    padding: .25rem 1rem;
+    margin-left: .75rem;
+}
+
+.group-statements-form {
+    margin-bottom: 1rem;
+}
+
+.filter-buttons .btn {
+    border-radius: .75rem;
+}

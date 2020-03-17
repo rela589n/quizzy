@@ -3,7 +3,7 @@
 @section('body-class')
     @parent
     auth
-    bg-light
+    bg-lighter
 @endsection
 
 @section('content')
