@@ -4,6 +4,8 @@
 namespace App\Models;
 
 
+use Spatie\Permission\Traits\HasRoles;
+
 /**
  * App\Models\Administrator
  *
@@ -36,8 +38,19 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Administrator whereSurname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Administrator whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
+ * @property-read int|null $permissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
+ * @property-read int|null $roles_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Administrator permission($permissions)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Administrator role($roles, $guard = null)
  */
 class Administrator extends BaseUser
 {
+    use HasRoles;
 
+    public function guardName()
+    {
+        return 'admin';
+    }
 }
