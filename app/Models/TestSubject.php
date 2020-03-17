@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Lib\Traits\LoadTrashed;
-use App\Models\Test;
 use Illuminate\Database\Eloquent\Model;
 
 /**

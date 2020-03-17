@@ -7,7 +7,6 @@ use App\Http\Requests\Tests\FinishTestRequest;
 use App\Lib\TestResultsEvaluator;
 use App\Models\AskedQuestion;
 use App\Models\TestResult;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class TestsController extends ClientController

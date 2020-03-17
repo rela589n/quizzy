@@ -6,10 +6,8 @@ namespace App\Http\Controllers\Admin\Results;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Lib\Statements\GroupStatementsGenerator;
-use App\Lib\Statements\StatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
 use App\Models\StudentGroup;
-use App\Models\Test;
 use App\Models\TestResult;
 use Illuminate\Http\Request;
 
