@@ -23,7 +23,7 @@
         </div>
     </form>
 
-    <form action="" method="get" class="form-clearable">
+    <form method="get" class="form-clearable submit-only-filled">
         <table class="table table-bordered table-hover test-results-table">
             <thead>
             <tr>
@@ -127,4 +127,5 @@
 @push('bottom_scripts')
     <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
     <script src="{{ asset('js/clear-form-fields.js') }}"></script>
+    <script src="{{ asset('js/submit-only-filled.js') }}"></script>
 @endpush
