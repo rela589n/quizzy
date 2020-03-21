@@ -170,3 +170,7 @@ form.auth.user-form .invalid-feedback {
 .filter-buttons .btn {
     border-radius: .75rem;
 }
+
+.selectpicker-button:hover {
+    color: #fcfcfc !important;
+}
