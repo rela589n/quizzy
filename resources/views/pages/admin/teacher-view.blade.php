@@ -3,13 +3,20 @@
 ])
 
 @section('main-container-content')
-    @include('blocks.admin.teacher-form', [
-        'submitButtonText' => 'Зберегти',
-        'userPasswordPlaceholder' => 'Введіть щоб змінити',
-        'submitSize' => 9
-    ])
+    @if($authUser->can('update-administrators'))
 
-    @if($authUser->can('delete-administrators'))
-        @include('blocks.admin.delete-entity-form')
+        @include('blocks.admin.teacher-form', [
+            'submitButtonText' => 'Зберегти',
+            'userPasswordPlaceholder' => 'Введіть щоб змінити',
+            'submitSize' => ($authUser->can('delete-administrators')) ? 9 : 12
+        ])
+
+        @if($authUser->can('delete-administrators'))
+            @include('blocks.admin.delete-entity-form')
+        @endif
+
+    @else
+        @include('blocks.admin.teacher-info')
     @endif
+
 @endsection

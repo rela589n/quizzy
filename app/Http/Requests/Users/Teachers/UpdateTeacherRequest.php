@@ -9,6 +9,11 @@ use Illuminate\Validation\Rule;
 
 class UpdateTeacherRequest extends MakeTeacherRequest
 {
+    public function authorize()
+    {
+        return $this->user('admin')->can('update-administrators');
+    }
+
     public function rules(ValidationGenerator $generator)
     {
         $rules = parent::rules($generator);

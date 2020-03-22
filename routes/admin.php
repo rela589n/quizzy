@@ -126,7 +126,7 @@ Route::prefix('/teachers')
             ->name('.teacher')
             ->group(function () {
 
-                Route::get('/', 'TeachersController@showUpdateForm');
+                Route::get('/', 'TeachersController@showUpdateFormOrInfoPage');
                 Route::post('/', 'TeachersController@updateTeacher');
                 Route::delete('/', 'TeachersController@deleteTeacher');
 

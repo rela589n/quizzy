@@ -53,4 +53,12 @@ class Administrator extends BaseUser
     {
         return 'admin';
     }
+
+    public function getRolesReadableAttribute()
+    {
+        $roles = $this->roles;
+        $roles = $roles->pluck('public_name');
+
+        return implode(', ', $roles->toArray());
+    }
 }

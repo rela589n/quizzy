@@ -17,10 +17,12 @@
     @endforelse
 @endsection
 
-@section('category-new-btn')
-    @include('blocks.admin.create-new-link', [
-        'link' => route('admin.teachers.new'),
-        'text' => 'Створити нового'
-    ])
-@endsection
+@if ($authUser->can('create-administrators'))
+    @section('category-new-btn')
+        @include('blocks.admin.create-new-link', [
+            'link' => route('admin.teachers.new'),
+            'text' => 'Створити нового'
+        ])
+    @endsection
+@endif
 
