@@ -5,7 +5,7 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionsTableSeeder extends Seeder
 {
-    protected $permissions = [
+    protected static $permissions = [
         'admin' => [
             'create-administrators' => [
                 'public_name' => 'Реєстрація адміністраторів'
@@ -20,7 +20,7 @@ class PermissionsTableSeeder extends Seeder
                 'public_name' => 'Видалення адміністраторів'
             ],
 
-            
+
             'create-groups' => [
                 'public_name' => 'Створення груп'
             ],
@@ -89,6 +89,13 @@ class PermissionsTableSeeder extends Seeder
         ]
     ];
 
+    /**
+     * @return array
+     */
+    public static function getPermissions(): array
+    {
+        return static::$permissions;
+    }
 
     /**
      * Run the database seeds.
@@ -97,7 +104,7 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach ($this->permissions as $guardName => $permissions) {
+        foreach (static::$permissions as $guardName => $permissions) {
 
             foreach ($permissions as $name => $permission) {
 

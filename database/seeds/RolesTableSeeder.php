@@ -6,7 +6,7 @@ use Spatie\Permission\Models\Role;
 
 class RolesTableSeeder extends Seeder
 {
-    protected $roles = [
+    protected static $roles = [
         'admin' => [
             'super-admin' => [
                 'public_name' => 'Адміністратор',
@@ -41,13 +41,21 @@ class RolesTableSeeder extends Seeder
     ];
 
     /**
+     * @return array
+     */
+    public static function getRoles(): array
+    {
+        return static::$roles;
+    }
+
+    /**
      * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        foreach ($this->roles as $guardName => $roles) {
+        foreach (static::$roles as $guardName => $roles) {
 
             foreach ($roles as $name => $roleConfig) {
 

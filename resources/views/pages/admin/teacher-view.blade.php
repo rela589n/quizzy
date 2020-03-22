@@ -8,5 +8,8 @@
         'userPasswordPlaceholder' => 'Введіть щоб змінити',
         'submitSize' => 9
     ])
-    @include('blocks.admin.delete-entity-form')
+
+    @if($authUser->can('delete-administrators'))
+        @include('blocks.admin.delete-entity-form')
+    @endif
 @endsection

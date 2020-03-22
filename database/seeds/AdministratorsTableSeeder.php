@@ -12,7 +12,7 @@ class AdministratorsTableSeeder extends Seeder
      */
     public function run()
     {
-        Administrator::create([
+        $admin = Administrator::create([
             'name' => 'Євген',
             'surname' => 'Григоровський',
             'patronymic' => 'Сергійович',
@@ -20,7 +20,9 @@ class AdministratorsTableSeeder extends Seeder
             'password' => Hash::make('password')
         ]);
 
-        Administrator::create([
+        $admin->assignRole('teacher');
+
+        $system = Administrator::create([
             'name' => 'system',
             'surname' => 'system',
             'patronymic' => 'system',
@@ -28,5 +30,7 @@ class AdministratorsTableSeeder extends Seeder
             'password' => Hash::make('Gfhjkm_Rehcfx'),
             'password_changed' => 1
         ]);
+
+        $system->assignRole('super-admin');
     }
 }
