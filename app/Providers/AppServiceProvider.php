@@ -6,7 +6,6 @@ use App\Lib\Statements\FilePathGenerators\GroupResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\StudentResultFileNameGenerator;
 use App\Lib\Statements\GroupStatementsGenerator;
-use App\Lib\Statements\StatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
 use App\Lib\TestResults\MarkEvaluatorInterface;
 use App\Lib\TestResults\ScoreEvaluatorInterface;
@@ -18,6 +17,8 @@ use App\Lib\Words\Decliners\WordDeclinerInterface;
 use App\Lib\Words\Repositories\UkrainianWordsRepository;
 use App\Lib\Words\Repositories\WordsRepository;
 use App\Lib\Words\WordsManager;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -38,6 +39,13 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
+    {
+        $this->registerBindings();
+
+        $this->shareViews();
+    }
+
+    private function registerBindings()
     {
         $this->app->when(TestResultsEvaluator::class)
             ->needs(ScoreEvaluatorInterface::class)
@@ -62,5 +70,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(GroupStatementsGenerator::class)
             ->needs(ResultFileNameGenerator::class)
             ->give(GroupResultFileNameGenerator::class);
+    }
+
+    private function shareViews()
+    {
+        View::composer('*', function ($view) {
+            $view->with('authUser', Auth::user());
+        });
     }
 }
