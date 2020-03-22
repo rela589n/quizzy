@@ -41,6 +41,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
  * @property-read int|null $test_results_count
+ * @property-read mixed $course
  */
 class User extends BaseUser
 {
@@ -58,6 +59,11 @@ class User extends BaseUser
     public function testResults()
     {
         return $this->hasMany(TestResult::class);
+    }
+
+    public function getCourseAttribute()
+    {
+        return $this->studentGroup->course;
     }
 
     /**

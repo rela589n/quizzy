@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereUriAlias($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject availableFor($user)
  */
 class TestSubject extends Model
 {
@@ -33,5 +34,15 @@ class TestSubject extends Model
     public function tests()
     {
         return $this->hasMany(Test::class);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param User $user
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAvailableFor($query, $user)
+    {
+        return $query->where('course', $user->course);
     }
 }
