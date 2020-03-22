@@ -2,10 +2,23 @@
 
 namespace App\Http\Requests\Tests;
 
+
+use App\Http\Requests\RequestUrlManager;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FinishTestRequest extends PassTestRequest
+class FinishTestRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @param RequestUrlManager $urlManager
+     * @return bool
+     */
+    public function authorize(RequestUrlManager $urlManager)
+    {
+        return $this->user('client')->can('pass-test', $urlManager->getCurrentTest());
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

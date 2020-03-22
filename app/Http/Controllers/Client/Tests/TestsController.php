@@ -11,10 +11,17 @@ use Illuminate\Http\Request;
 
 class TestsController extends ClientController
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function showSingleTestForm(Request $request)
     {
         $currentTest = $this->urlManager->getCurrentTest();
-        $currentSubject = $this->urlManager->getCurrentSubject();
+        $currentSubject = $currentTest->subject;
+
+        $this->authorize('pass-test', $currentTest);
 
         $questions = $currentTest->allQuestions();
         $questions->loadMissing('answerOptions');
