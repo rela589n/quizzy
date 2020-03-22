@@ -15,9 +15,7 @@
                             title="Оберіть роль користувача" required="required"
                             id="role_ids" name="role_ids[]">
 
-                        @php
-                            $oldRoleValues = array_flip(old('role_ids', []));
-                        @endphp
+                        @php( $oldRoleValues = array_flip(old('role_ids', [])) )
 
                         @foreach($roles as $role)
                             <option value="{{ $role->id }}"
