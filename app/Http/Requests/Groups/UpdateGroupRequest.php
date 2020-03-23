@@ -13,6 +13,16 @@ class UpdateGroupRequest extends GroupRequest implements UrlManageable
     use UrlManageableRequests;
 
     /**
+     * Determine if the user can update group.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return $this->user('admin')->can('update-groups');
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array

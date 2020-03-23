@@ -18,9 +18,13 @@
     @endforelse
 @endsection
 
+
 @section('category-new-btn')
-    @include('blocks.admin.create-new-link', [
-        'link' => route('admin.students.new'),
-        'text' => 'Створити групу'
-    ])
+    @if ($authUser->can('create-groups'))
+        @include('blocks.admin.create-new-link', [
+            'link' => route('admin.students.new'),
+            'text' => 'Створити групу'
+        ])
+    @endif
 @endsection
+

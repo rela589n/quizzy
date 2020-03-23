@@ -20,9 +20,11 @@
         </li>
     @endif
 
-    <li class="nav-item @ifroute('admin.students') active @endifroute">
-        <a class="nav-link" href="{{ route('admin.students') }}" target="_self">Студенти</a>
-    </li>
+    @if ($authUser->can('view-groups'))
+        <li class="nav-item @ifroute('admin.students') active @endifroute">
+            <a class="nav-link" href="{{ route('admin.students') }}" target="_self">Студенти</a>
+        </li>
+    @endif
 
     <li class="nav-item @ifroute('admin.logout') active @endifroute">
         <a class="nav-link" href="{{ route('admin.logout') }}" target="_self"

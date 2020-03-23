@@ -11,15 +11,7 @@ abstract class GroupRequest  extends FormRequest implements UrlManageable
 {
     use UrlManageableRequests;
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
+    public abstract function authorize();
 
     /**
      * Get the validation rules that apply to the request.
@@ -28,6 +20,7 @@ abstract class GroupRequest  extends FormRequest implements UrlManageable
     public function rules()
     {
         $currentYear = date('Y');
+
         try {
             $currentGroup = $this->urlManager->getCurrentGroup();
             $groupYear = $currentGroup->year;

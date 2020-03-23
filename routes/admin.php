@@ -100,7 +100,7 @@ Route::prefix('/students')
                     ->name('.student')
                     ->group(function () use (&$routePatterns) {
 
-                        Route::get('/', 'StudentsController@showUpdateStudentForm');
+                        Route::get('/', 'StudentsController@showUpdateFormOrInfoPage');
                         Route::post('/', 'StudentsController@updateStudent');
                         Route::delete('/', 'StudentsController@deleteStudent');
 
