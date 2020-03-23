@@ -7,15 +7,26 @@ use App\Http\Requests\Users\Students\CreateStudentRequest;
 use App\Http\Requests\Users\Students\UpdateStudentRequest;
 use App\Models\StudentGroup;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class StudentsController extends AdminController
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function showNewStudentForm()
     {
+        $this->authorize('create-students');
+
         return view('pages.admin.student-new');
     }
 
+    /**
+     * @param CreateStudentRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function newStudent(CreateStudentRequest $request)
     {
         $validated = $request->validated();
@@ -29,14 +40,32 @@ class StudentsController extends AdminController
         ]);
     }
 
-    public function showUpdateStudentForm($groupAlias, $userId)
+    /**
+     * @param $groupAlias
+     * @param $userId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function showUpdateFormOrInfoPage($groupAlias, $userId)
     {
-        return view('pages.admin.student-update', [
+        if (($response = Gate::inspect('update-students'))->denied()) {
+            $response = Gate::inspect('view-students');
+        }
+
+        $response->authorize();
+
+        return view('pages.admin.student-view', [
             'user' => User::findOrFail($userId),
             'studentGroups' => StudentGroup::all()->sortByDesc('year')
         ]);
     }
 
+    /**
+     * @param UpdateStudentRequest $request
+     * @param $groupAlias
+     * @param $userId
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateStudent(UpdateStudentRequest $request, $groupAlias, $userId)
     {
         $user = User::findOrFail($userId);
@@ -53,8 +82,17 @@ class StudentsController extends AdminController
         ]);
     }
 
+    /**
+     * @param $groupAlias
+     * @param $userId
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Exception
+     */
     public function deleteStudent($groupAlias, $userId)
     {
+        $this->authorize('delete-students');
+
         $user = User::findOrFail($userId);
         $user->delete();
 

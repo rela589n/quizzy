@@ -11,10 +11,15 @@ class UpdateStudentRequest extends MakeStudentRequest
 {
     protected $validateGroup = true;
 
+    public function authorize()
+    {
+        return $this->user('admin')->can('update-students');
+    }
+
     public function rules(ValidationGenerator $generator)
     {
         $rules = parent::rules($generator);
-//        dd($rules);
+
         $rules[$this->username()][] = Rule::unique('users')->ignore($this->route('studentId'));
         $rules['password'][] = 'nullable';
 

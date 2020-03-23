@@ -12,11 +12,7 @@ abstract class MakeUserRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
-        // todo handle permissions
-        return true;
-    }
+    public abstract function authorize();
 
     /**
      * Get the validation rules that apply to the request.

@@ -1,10 +1,13 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin'])
 
+
 @section('category-settings-link')
-    @include('blocks.admin.settings-link', [
-        'link' => route('admin.students.group.settings', ['group' => $group->uri_alias]),
-        'text' => 'Перейти до налаштувань групи'
-    ])
+    @if($authUser->can('update-groups'))
+        @include('blocks.admin.settings-link', [
+            'link' => route('admin.students.group.settings', ['group' => $group->uri_alias]),
+            'text' => 'Перейти до налаштувань групи'
+        ])
+    @endif
 @endsection
 
 @section('category-header-text') Студенти групи {{ $group->name }} @endsection
@@ -23,8 +26,10 @@
 @endsection
 
 @section('category-new-btn')
-    @include('blocks.admin.create-new-link', [
-        'link' => route('admin.students.group.new',  ['group' => $group->uri_alias]),
-        'text' => 'Створити студента'
-    ])
+    @if($authUser->can('create-students'))
+        @include('blocks.admin.create-new-link', [
+            'link' => route('admin.students.group.new',  ['group' => $group->uri_alias]),
+            'text' => 'Створити студента'
+        ])
+    @endif
 @endsection
