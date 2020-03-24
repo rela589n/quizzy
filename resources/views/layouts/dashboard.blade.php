@@ -1,5 +1,9 @@
 @extends($baseLayout)
 
+@section('title')
+    Особистий кабінет
+@endsection
+
 @section('content')
     <div class="container dashboard">
         <div class="row">
