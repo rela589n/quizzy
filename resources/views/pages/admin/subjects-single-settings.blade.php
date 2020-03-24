@@ -3,6 +3,10 @@
     'baseLayout' => 'layouts.root.admin'
 ])
 
+@section('title')
+    {{ $subject->name  }} - налаштування
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.subject-form', [
         'submitButtonText' => 'Зберегти',

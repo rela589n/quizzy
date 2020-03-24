@@ -2,6 +2,10 @@
     'baseLayout' => 'layouts.root.admin'
 ])
 
+@section('title')
+    {{ $subject->name  }} - {{ $test->name }} - налаштування
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.test-form', [
       'submitSize' => ($authUser->can('delete-tests')) ? 9 : 12

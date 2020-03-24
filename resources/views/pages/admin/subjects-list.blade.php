@@ -1,5 +1,9 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin' ])
 
+@section('title')
+    Список предметів тестування
+@endsection
+
 @section('category-header-text')
     Усі доступні предмети тестування:
 @endsection

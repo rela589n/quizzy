@@ -1,5 +1,9 @@
 @extends('layouts.tests-single', ['baseLayout' => 'layouts.root.admin'])
 
+@section('title')
+    {{ $subject->name }} - {{ $test->name }}
+@endsection
+
 @section('category-settings-link')
     @if($authUser->can('update-tests'))
         @include('blocks.admin.settings-link', [

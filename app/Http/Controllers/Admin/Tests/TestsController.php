@@ -27,7 +27,10 @@ class TestsController extends AdminController
             ->withCount('nativeQuestions as questions_count')->get();
 
 
-        return view('pages.admin.tests-new', ['includeTests' => $tests]);
+        return view('pages.admin.tests-new', [
+            'subject' => $subject,
+            'includeTests' => $tests
+        ]);
     }
 
     /**
@@ -86,6 +89,7 @@ class TestsController extends AdminController
 
         return view('pages.admin.tests-single-settings', [
             'test' => $test,
+            'subject' => $subject,
             'includeTests' => $subject->tests()->has('nativeQuestions')
                 ->withCount('nativeQuestions as questions_count')
                 ->get()

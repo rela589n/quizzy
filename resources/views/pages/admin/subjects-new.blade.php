@@ -3,6 +3,10 @@
     'baseLayout' => 'layouts.root.admin'
 ])
 
+@section('title')
+    Додати новий предмет
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.subject-form')
 @endsection

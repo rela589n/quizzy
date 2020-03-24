@@ -1,5 +1,9 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin'])
 
+@section('title')
+    {{ $subject->name  }} - тести
+@endsection
+
 @section('category-settings-link')
     @if($authUser->can('update-subjects'))
         @include('blocks.admin.settings-link', [

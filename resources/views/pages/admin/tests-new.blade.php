@@ -2,6 +2,10 @@
     'baseLayout' => 'layouts.root.admin'
 ])
 
+@section('title')
+    {{ $subject->name  }} - додати тест
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.test-form', ['submitButtonText' => 'Створити'])
 @endsection
