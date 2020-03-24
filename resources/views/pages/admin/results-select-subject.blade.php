@@ -1,5 +1,9 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin' ])
 
+@section('title')
+    Результати - вибір предмета
+@endsection
+
 @section('category-header-text')
     Оберіть предмет:
 @endsection

@@ -1,5 +1,8 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin', 'contentColumns' => 12])
 
+@section('title')
+    Результати {{ $subject->name }} - {{ $test->name }}
+@endsection
 @section('category-header-text') {{ $subject->name }} - {{ $test->name }} результати: @endsection
 
 @section('category-main-content')
