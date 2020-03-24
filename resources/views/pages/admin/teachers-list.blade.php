@@ -1,5 +1,9 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin' ])
 
+@section('title')
+    Список адміністраторів
+@endsection
+
 @section('category-header-text')
     Список викладачів:
 @endsection
@@ -17,12 +21,13 @@
     @endforelse
 @endsection
 
-@if ($authUser->can('create-administrators'))
-    @section('category-new-btn')
+
+@section('category-new-btn')
+    @if ($authUser->can('create-administrators'))
         @include('blocks.admin.create-new-link', [
             'link' => route('admin.teachers.new'),
             'text' => 'Створити нового'
         ])
-    @endsection
-@endif
+    @endif
+@endsection
 
