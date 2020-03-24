@@ -11,6 +11,14 @@ class UpdateSubjectRequest extends SubjectRequest implements UrlManageable
     use UrlManageableRequests;
 
     /**
+     * @inheritDoc
+     */
+    public function authorize()
+    {
+        return $this->user('admin')->can('update-subjects');
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array

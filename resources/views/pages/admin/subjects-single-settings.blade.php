@@ -4,8 +4,15 @@
 ])
 
 @section('main-container-content')
-    @include('blocks.admin.subject-form', ['submitButtonText' => 'Зберегти', 'submitSize' => 9])
-    @include('blocks.admin.delete-entity-form')
+    @include('blocks.admin.subject-form', [
+        'submitButtonText' => 'Зберегти',
+        'submitSize' => ($authUser->can('delete-subjects')) ? 9 : 12
+    ])
+
+    @if($authUser->can('delete-subjects'))
+        @include('blocks.admin.delete-entity-form')
+    @endif
+
 @endsection
 
 @push('bottom_scripts')

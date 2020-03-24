@@ -6,21 +6,18 @@ use Illuminate\Foundation\Http\FormRequest;
 
 abstract class SubjectRequest extends FormRequest
 {
-    public function attributes()
-    {
-        return [
-            'course' => 'Курс'
-        ];
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public abstract function authorize();
+
+    public function attributes()
     {
-        return true;
+        return [
+            'course' => 'Курс'
+        ];
     }
 
     /**

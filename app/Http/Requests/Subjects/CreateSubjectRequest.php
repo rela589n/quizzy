@@ -5,6 +5,13 @@ namespace App\Http\Requests\Subjects;
 
 class CreateSubjectRequest extends SubjectRequest
 {
+    /**
+     * @inheritDoc
+     */
+    public function authorize()
+    {
+        return $this->user('admin')->can('create-subjects');
+    }
 
     /**
      * Get the validation rules that apply to the request.

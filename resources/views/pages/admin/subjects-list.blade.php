@@ -19,7 +19,9 @@
 @endsection
 
 @section('category-new-btn')
-    @include('blocks.admin.create-new-link', [
-        'link' => route('admin.tests.new')
-    ])
+    @if($authUser->can('create-subjects'))
+        @include('blocks.admin.create-new-link', [
+            'link' => route('admin.tests.new')
+        ])
+    @endif
 @endsection

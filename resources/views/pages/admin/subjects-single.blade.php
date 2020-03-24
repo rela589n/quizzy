@@ -1,10 +1,12 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin'])
 
 @section('category-settings-link')
-    @include('blocks.admin.settings-link', [
-        'link' => route('admin.tests.subject.settings', ['subject' => $subject->uri_alias]),
-        'text' => 'Перейти до налаштувань предмета'
-    ])
+    @if($authUser->can('update-subjects'))
+        @include('blocks.admin.settings-link', [
+            'link' => route('admin.tests.subject.settings', ['subject' => $subject->uri_alias]),
+            'text' => 'Перейти до налаштувань предмета'
+        ])
+    @endif
 @endsection
 
 @section('category-header-text') Існуючі тести з предмету {{ $subject->name }} @endsection
@@ -24,8 +26,10 @@
 @endsection
 
 @section('category-new-btn')
-    @include('blocks.admin.create-new-link', [
-        'link' => route('admin.tests.subject.new', ['subject' => $subject->uri_alias]),
-        'text' => 'Новий'
-    ])
+    @if($authUser->can('create-tests'))
+        @include('blocks.admin.create-new-link', [
+            'link' => route('admin.tests.subject.new', ['subject' => $subject->uri_alias]),
+            'text' => 'Новий'
+        ])
+    @endif
 @endsection

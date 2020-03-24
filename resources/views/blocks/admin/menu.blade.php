@@ -6,9 +6,11 @@
         <a class="nav-link" href="{{ route('admin.dashboard') }}" target="_self">Особистий кабінет</a>
     </li>
 
-    <li class="nav-item @ifroute('admin.tests') active @endifroute">
-        <a class="nav-link" href="{{ route('admin.tests') }}" target="_self">Тести</a>
-    </li>
+    @if ($authUser->can('view-subjects'))
+        <li class="nav-item @ifroute('admin.tests') active @endifroute">
+            <a class="nav-link" href="{{ route('admin.tests') }}" target="_self">Тести</a>
+        </li>
+    @endif
 
     <li class="nav-item @ifroute('admin.results') active @endifroute">
         <a class="nav-link" href="{{ route('admin.results') }}" target="_self">Результати</a>
