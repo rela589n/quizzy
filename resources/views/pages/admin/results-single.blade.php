@@ -3,25 +3,27 @@
 @section('category-header-text') {{ $subject->name }} - {{ $test->name }} результати: @endsection
 
 @section('category-main-content')
-    <form class="form-inline group-statements-form"
-          action="{{ route('admin.results.subject.test.statements.group', [
+    @if($authUser->can('generate-group-statement'))
+        <form class="form-inline group-statements-form"
+              action="{{ route('admin.results.subject.test.statements.group', [
                         'subject' => $subject->uri_alias,
                         'test' => $test->uri_alias,
                     ]) }}"
-          method="get">
-        <div class="form-group">
-            <label for="statementGroupId">Відомість за групою: </label>
+              method="get">
+            <div class="form-group">
+                <label for="statementGroupId">Відомість за групою: </label>
 
-            <select name="groupId" id="statementGroupId" class="form-control form-control-sm mx-sm-3">
-                @foreach($userGroups as $group)
-                    <option value="{{ $group->id }}"
-                            @if($group->id == request('groupId')) selected @endif>{{ $group->name }}</option>
-                @endforeach
-            </select>
+                <select name="groupId" id="statementGroupId" class="form-control form-control-sm mx-sm-3">
+                    @foreach($userGroups as $group)
+                        <option value="{{ $group->id }}"
+                                @if($group->id == request('groupId')) selected @endif>{{ $group->name }}</option>
+                    @endforeach
+                </select>
 
-            <button type="submit" class="btn btn-sm btn-primary">Генерувати</button>
-        </div>
-    </form>
+                <button type="submit" class="btn btn-sm btn-primary">Генерувати</button>
+            </div>
+        </form>
+    @endif
 
     <form method="get" class="form-clearable submit-only-filled">
         <table class="table table-bordered table-hover test-results-table">
@@ -42,13 +44,17 @@
             @forelse($testResults as $testResult)
                 <tr>
                     <th scope="row">
-                        <a class="badge badge-primary"
-                           href="{{ route('admin.results.subject.test.statements.student', [
+                        @if($authUser->can('generate-student-statement'))
+                            <a class="badge badge-primary"
+                               href="{{ route('admin.results.subject.test.statements.student', [
                                         'subject' => $subject->uri_alias,
                                         'test' => $test->uri_alias,
                                         'testResultId' => $testResult->id
                                     ]) }}"
-                           title="Натисніть, щоб генерувати відомість">{{ $testResult->id }}</a>
+                               title="Натисніть, щоб генерувати відомість">{{ $testResult->id }}</a>
+                        @else
+                            {{ $testResult->id }}
+                        @endif
                     </th>
                     <td>{{ $testResult->user->studentGroup->name }}</td>
                     <td>{{ $testResult->user->surname }}</td>
