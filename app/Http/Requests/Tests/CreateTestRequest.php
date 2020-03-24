@@ -6,6 +6,14 @@ namespace App\Http\Requests\Tests;
 class CreateManageTestRequest extends ManageTestRequest
 {
     /**
+     * @inheritDoc
+     */
+    public function authorize()
+    {
+        return $this->user('admin')->can('create-tests');
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array

@@ -9,6 +9,14 @@ use Illuminate\Validation\Rule;
 class UpdateManageTestRequest extends ManageTestRequest
 {
     /**
+     * @inheritDoc
+     */
+    public function authorize()
+    {
+        return $this->user('admin')->can('update-tests');
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @param RequestUrlManager $urlManager

@@ -8,6 +8,13 @@ use Illuminate\Foundation\Http\FormRequest;
 abstract class ManageTestRequest extends FormRequest
 {
     /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public abstract function authorize();
+
+    /**
      * Get custom attributes for validator errors.
      *
      * @return array
@@ -29,16 +36,6 @@ abstract class ManageTestRequest extends FormRequest
         return [
             'include.*.count.required_with' => 'Якщо ви вибрали цей предмет, то обов\'язково вкажіть кількість питань з нього.'
         ];
-    }
-
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
     }
 
     protected $baseRules = [
