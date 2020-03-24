@@ -1,5 +1,9 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin' ])
 
+@section('title')
+    Групи студентів
+@endsection
+
 @section('category-header-text')
     Список груп студентів:
 @endsection

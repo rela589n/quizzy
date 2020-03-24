@@ -20,7 +20,9 @@ class StudentsController extends AdminController
     {
         $this->authorize('create-students');
 
-        return view('pages.admin.student-new');
+        return view('pages.admin.student-new', [
+            'group' => $this->urlManager->getCurrentGroup()
+        ]);
     }
 
     /**

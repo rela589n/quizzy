@@ -1,5 +1,8 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin'])
 
+@section('title')
+    {{ $group->name }} - список студентів
+@endsection
 
 @section('category-settings-link')
     @if($authUser->can('update-groups'))

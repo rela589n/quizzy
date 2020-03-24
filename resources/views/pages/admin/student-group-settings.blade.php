@@ -3,6 +3,10 @@
     'baseLayout' => 'layouts.root.admin'
 ])
 
+@section('title')
+    {{ $group->name }} - налаштування
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.student-group-form', [
       'submitButtonText' => 'Зберегти',

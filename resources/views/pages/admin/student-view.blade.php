@@ -2,6 +2,10 @@
     'baseLayout' => 'layouts.root.admin'
 ])
 
+@section('title')
+    {{ $user->studentGroup->name }} - {{ $user->full_name }}
+@endsection
+
 @section('main-container-content')
     @if($authUser->can('update-students'))
 

@@ -3,6 +3,10 @@
     'baseLayout' => 'layouts.root.admin'
 ])
 
+@section('title')
+    Створити групу студентів
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.student-group-form')
 @endsection
