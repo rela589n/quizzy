@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Tests;
 
 
-class CreateManageTestRequest extends ManageTestRequest
+class CreateTestRequest extends MakeTestRequest
 {
     /**
      * @inheritDoc

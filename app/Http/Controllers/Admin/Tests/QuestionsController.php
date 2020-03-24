@@ -12,8 +12,16 @@ use Illuminate\Http\Request;
 
 class QuestionsController extends AdminController
 {
-    public function showCreateUpdateForm(Request $request, QuestionsTransformer $transformer)
+    /**
+     * @param Request $request
+     * @param QuestionsTransformer $transformer
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function showCreateOrUpdateForm(Request $request, QuestionsTransformer $transformer)
     {
+        $this->authorize('update-tests');
+
         /**
          * @var Test $currentTest
          */
@@ -71,7 +79,11 @@ class QuestionsController extends AdminController
         ]);
     }
 
-    public function createUpdate(FillAnswersRequest $request)
+    /**
+     * @param FillAnswersRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createOrUpdate(FillAnswersRequest $request)
     {
         /**
          * @var Test $currentTest

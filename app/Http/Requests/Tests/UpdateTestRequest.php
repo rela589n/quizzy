@@ -6,7 +6,7 @@ namespace App\Http\Requests\Tests;
 use App\Http\Requests\RequestUrlManager;
 use Illuminate\Validation\Rule;
 
-class UpdateManageTestRequest extends ManageTestRequest
+class UpdateTestRequest extends MakeTestRequest
 {
     /**
      * @inheritDoc

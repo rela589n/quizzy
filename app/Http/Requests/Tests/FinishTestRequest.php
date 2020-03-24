@@ -9,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class FinishTestRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if the student is authorized to pass current test.
      *
      * @param RequestUrlManager $urlManager
      * @return bool

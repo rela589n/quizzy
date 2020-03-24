@@ -3,16 +3,20 @@
 namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\RequestUrlManager;
-use App\Http\Requests\Tests\CreateManageTestRequest;
-use App\Http\Requests\Tests\UpdateManageTestRequest;
+use App\Http\Requests\Tests\CreateTestRequest;
+use App\Http\Requests\Tests\UpdateTestRequest;
 use Illuminate\Http\Request;
 
 class TestsController extends AdminController
 {
-
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function showNewTestForm()
     {
+        $this->authorize('create-tests');
+
         /**
          * @var  \App\Models\TestSubject $subject
          */
@@ -26,7 +30,11 @@ class TestsController extends AdminController
         return view('pages.admin.tests-new', ['includeTests' => $tests]);
     }
 
-    public function newTest(CreateManageTestRequest $request)
+    /**
+     * @param CreateTestRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function newTest(CreateTestRequest $request)
     {
         /**
          * @var \App\Models\Test $newTest
@@ -64,9 +72,15 @@ class TestsController extends AdminController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function showUpdateTestForm(Request $request)
     {
-        //todo add field include self
+        $this->authorize('update-tests');
+
         $test = $this->urlManager->getCurrentTest();
         $subject = $this->urlManager->getCurrentSubject();
 
@@ -78,7 +92,11 @@ class TestsController extends AdminController
         ]);
     }
 
-    public function updateTest(UpdateManageTestRequest $request)
+    /**
+     * @param UpdateTestRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateTest(UpdateTestRequest $request)
     {
         $validated = $request->validated();
 
@@ -115,8 +133,14 @@ class TestsController extends AdminController
         ]);
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function deleteTest()
     {
+        $this->authorize('delete-tests');
+
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest();
         $currentTest->delete();

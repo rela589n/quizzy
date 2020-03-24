@@ -1,10 +1,12 @@
 @extends('layouts.tests-single', ['baseLayout' => 'layouts.root.admin'])
 
 @section('category-settings-link')
-    @include('blocks.admin.settings-link', [
-        'link' => route('admin.tests.subject.test.settings', [ $subject->uri_alias, $test->uri_alias ]),
-        'text' => 'Перейти до налаштувань теста'
-    ])
+    @if($authUser->can('update-tests'))
+        @include('blocks.admin.settings-link', [
+            'link' => route('admin.tests.subject.test.settings', [ $subject->uri_alias, $test->uri_alias ]),
+            'text' => 'Перейти до налаштувань теста'
+        ])
+    @endif
 @endsection
 
 @section('category-header-text') Тест по предмету {{ $subject->name }} - {{ $test->name }} @endsection
@@ -23,7 +25,7 @@
             'new' => boolval(old("q.new.{$question->id}", false))
         ])
     @empty
-        <h3 class="list-group-item empty-questions-list-label">В цього теста питань поки що немає. Ви можете створити їх
+        <h3 class="list-group-item empty-questions-list-label mb-4">В цього теста питань поки що немає. Ви можете створити їх
             натиснувши кнопку нижче:</h3>
     @endforelse
 @endsection

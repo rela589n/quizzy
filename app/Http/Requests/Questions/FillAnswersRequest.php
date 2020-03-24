@@ -10,6 +10,17 @@ use Illuminate\Support\Facades\Session;
 
 class FillAnswersRequest extends FormRequest
 {
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return $this->user('admin')->can('update-tests');
+    }
+
     /**
      * @var ValidationGenerator
      */
@@ -21,16 +32,6 @@ class FillAnswersRequest extends FormRequest
     public function setValidationGenerator($validationGenerator): void
     {
         $this->validationGenerator = $validationGenerator;
-    }
-
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
     }
 
     /**
