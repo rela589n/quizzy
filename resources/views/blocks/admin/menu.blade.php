@@ -12,9 +12,11 @@
         </li>
     @endif
 
-    <li class="nav-item @ifroute('admin.results') active @endifroute">
-        <a class="nav-link" href="{{ route('admin.results') }}" target="_self">Результати</a>
-    </li>
+    @if($authUser->can('view-results'))
+        <li class="nav-item @ifroute('admin.results') active @endifroute">
+            <a class="nav-link" href="{{ route('admin.results') }}" target="_self">Результати</a>
+        </li>
+    @endif
 
     @if ($authUser->can('view-administrators'))
         <li class="nav-item @ifroute('admin.teachers') active @endifroute">

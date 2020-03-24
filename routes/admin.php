@@ -138,6 +138,7 @@ Route::prefix('/teachers')
 Route::prefix('/results')
     ->name('.results')
     ->namespace('Results')
+    ->middleware('can:view-results')
     ->group(function () {
 
         $routePatterns = Route::getPatterns();

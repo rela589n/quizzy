@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Results;
 
+use App\Http\Requests\RequestUrlManager;
 use App\Lib\Filters\TestResultFilter;
 use App\Models\StudentGroup;
 use App\Http\Controllers\Admin\AdminController;
@@ -10,6 +11,9 @@ use Illuminate\Http\Request;
 
 class TestResultsController extends AdminController
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showSelectSubjectPage()
     {
         return view('pages.admin.results-select-subject', [
@@ -17,6 +21,9 @@ class TestResultsController extends AdminController
         ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showSelectTestPage()
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
@@ -27,6 +34,11 @@ class TestResultsController extends AdminController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param TestResultFilter $filters
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showTestResults(Request $request, TestResultFilter $filters)
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
