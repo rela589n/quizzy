@@ -1,5 +1,9 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.client' ])
 
+@section('title')
+    Вибір предмета тестування
+@endsection
+
 @section('category-header-text')
     Оберіть предмет тестування:
 @endsection

@@ -1,5 +1,9 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.client'])
 
+@section('title')
+    {{ $subject->name }} - вибір теста
+@endsection
+
 @section('category-header-text') {{ $subject->name }} - оберіть тест:  @endsection
 
 @section('category-links')

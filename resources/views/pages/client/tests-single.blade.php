@@ -1,4 +1,9 @@
 @extends('layouts.tests-single', ['baseLayout' => 'layouts.root.client', 'contentColumns' => 8])
+
+@section('title')
+    {{ $subject->name }} - {{ $test->name }}
+@endsection
+
 @section('category-header-text') Тест по предмету {{ $subject->name }} - {{ $test->name }} @endsection
 
 @section('additions')

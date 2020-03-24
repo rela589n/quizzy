@@ -3,6 +3,10 @@
     'contentColumns' => 8
 ])
 
+@section('title')
+    Результати: {{ $subject->name }} - {{ $test->name }}
+@endsection
+
 @section('category-header-text')
     Результати тестування {{ $subject->name }} - {{ $test->name }}:
 @endsection
