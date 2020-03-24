@@ -23,7 +23,7 @@ $(function () {
                 s = ('0' + Math.floor(t % 60000 / 1000)).slice(-2);
 
             // save to local storage each 5 seconds
-            if (s % 5 === 0) {
+            if (s % 2 === 0) {
                 window.localStorage.setItem('test-time-left', (t / 1000).toString());
                 console.log(s);
             }
