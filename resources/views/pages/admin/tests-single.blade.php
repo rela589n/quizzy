@@ -4,6 +4,11 @@
     {{ $subject->name }} - {{ $test->name }}
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.tests.subject.test', $test, $subject) }}
+    @parent
+@endsection
+
 @section('category-settings-link')
     @if($authUser->can('update-tests'))
         @include('blocks.admin.settings-link', [

@@ -11,14 +11,51 @@
 |
 */
 
-// Home
-use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
+Breadcrumbs::for('admin.tests',
+    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail) {
+        $trail->push('Предмети тестування', route('admin.tests'));
+    });
 
-Breadcrumbs::for('admin.tests', function (BreadcrumbsGenerator $trail) {
-    $trail->push('first', route('admin.tests'));
-});
+Breadcrumbs::for('admin.tests.subject',
+    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $subject) {
+        $trail->parent('admin.tests');
+        $trail->push($subject->name, route('admin.tests.subject', ['subject' => $subject->uri_alias]));
+    });
 
-Breadcrumbs::for('test', function (BreadcrumbsGenerator $trail) {
-    $trail->parent('admin.tests');
-    $trail->push('second', route('admin.tests.test'));
-});
+Breadcrumbs::for('admin.tests.subject.settings',
+    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $subject) {
+        $trail->parent('admin.tests.subject', $subject);
+        $trail->push('Налаштування', route(
+            'admin.tests.subject.settings',
+            [
+                'subject' => $subject->uri_alias
+            ])
+        );
+    });
+
+
+Breadcrumbs::for('admin.tests.subject.test',
+    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $test, $subject = null) {
+        $trail->parent('admin.tests.subject', $subject ?? $test->subject);
+
+        $trail->push($test->name, route(
+                'admin.tests.subject.test',
+                [
+                    'subject' => $subject->uri_alias ?? $test->subject->uri_alias,
+                    'test' => $test->uri_alias,
+                ])
+        );
+    });
+
+Breadcrumbs::for('admin.tests.subject.test.settings',
+    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $test, $subject = null) {
+        $trail->parent('admin.tests.subject.test', $test, $subject);
+        $trail->push('Налаштування', route(
+                'admin.tests.subject.test.settings',
+                [
+                    'subject' => $subject->uri_alias ?? $test->subject->uri_alias,
+                    'test' => $test->uri_alias,
+                ])
+        );
+    });
+

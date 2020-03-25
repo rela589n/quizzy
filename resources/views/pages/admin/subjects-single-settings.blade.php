@@ -7,6 +7,11 @@
     {{ $subject->name  }} - налаштування
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.tests.subject.settings', $subject) }}
+    @parent
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.subject-form', [
         'submitButtonText' => 'Зберегти',

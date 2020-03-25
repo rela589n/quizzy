@@ -6,6 +6,11 @@
     {{ $subject->name  }} - {{ $test->name }} - налаштування
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.tests.subject.test.settings', $test, $subject) }}
+    @parent
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.test-form', [
       'submitSize' => ($authUser->can('delete-tests')) ? 9 : 12

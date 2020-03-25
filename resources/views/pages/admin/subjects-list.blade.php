@@ -4,6 +4,11 @@
     Список предметів тестування
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.tests') }}
+    @parent
+@endsection
+
 @section('category-header-text')
     Усі доступні предмети тестування:
 @endsection
