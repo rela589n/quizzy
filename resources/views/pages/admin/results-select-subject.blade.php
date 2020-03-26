@@ -4,6 +4,11 @@
     Результати - вибір предмета
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.results') }}
+    @parent
+@endsection
+
 @section('category-header-text')
     Оберіть предмет:
 @endsection

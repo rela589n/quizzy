@@ -3,6 +3,12 @@
 @section('title')
     Результати {{ $subject->name }} - {{ $test->name }}
 @endsection
+
+@section('content')
+    {{ Breadcrumbs::render('admin.results.subject.test', $test, $subject) }}
+    @parent
+@endsection
+
 @section('category-header-text') {{ $subject->name }} - {{ $test->name }} результати: @endsection
 
 @section('category-main-content')

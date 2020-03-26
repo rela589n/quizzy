@@ -4,6 +4,11 @@
     Результати {{ $subject->name }} - вибір теста
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.results.subject', $subject) }}
+    @parent
+@endsection
+
 @section('category-header-text') Оберіть тест з предмету {{ $subject->name }}: @endsection
 
 @section('category-links')

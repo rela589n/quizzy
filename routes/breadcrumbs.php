@@ -26,10 +26,10 @@ Breadcrumbs::for('admin.tests.subject.settings',
     function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $subject) {
         $trail->parent('admin.tests.subject', $subject);
         $trail->push('Налаштування', route(
-            'admin.tests.subject.settings',
-            [
-                'subject' => $subject->uri_alias
-            ])
+                'admin.tests.subject.settings',
+                [
+                    'subject' => $subject->uri_alias
+                ])
         );
     });
 
@@ -58,4 +58,35 @@ Breadcrumbs::for('admin.tests.subject.test.settings',
                 ])
         );
     });
+
+Breadcrumbs::for('admin.results',
+    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail) {
+        $trail->push('Вибір предмета', route('admin.results'));
+    });
+
+Breadcrumbs::for('admin.results.subject',
+    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $subject) {
+        $trail->parent('admin.results');
+        $trail->push($subject->name, route(
+            'admin.results.subject',
+            [
+                'subject' => $subject->uri_alias
+            ]
+        ));
+    });
+
+Breadcrumbs::for('admin.results.subject.test',
+    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $test, $subject = null) {
+
+        $trail->parent('admin.results.subject', $subject ?? $test->subject);
+
+        $trail->push($test->name, route(
+            'admin.results.subject.test',
+            [
+                'subject' => $subject->uri_alias ?? $test->subject->uri_alias,
+                'test' => $test->uri_alias
+            ]
+        ));
+    });
+
 

@@ -173,8 +173,3 @@ Route::prefix('/results')
 
         Route::get('/', 'TestResultsController@showSelectSubjectPage');
     });
-
-Route::get('/breadcrumbs/tests/hello', function () {
-    return 'tests hello' . Breadcrumbs::render('test');
-})->name('.tests.test');
-
