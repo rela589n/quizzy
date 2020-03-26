@@ -7,6 +7,11 @@
     {{ $group->name }} - налаштування
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.students.group.settings', $group) }}
+    @parent
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.student-group-form', [
       'submitButtonText' => 'Зберегти',

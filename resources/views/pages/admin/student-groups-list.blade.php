@@ -4,6 +4,11 @@
     Групи студентів
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.students') }}
+    @parent
+@endsection
+
 @section('category-header-text')
     Список груп студентів:
 @endsection

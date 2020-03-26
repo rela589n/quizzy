@@ -6,6 +6,11 @@
     {{ $user->studentGroup->name }} - {{ $user->full_name }}
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.students.group.student', $user) }}
+    @parent
+@endsection
+
 @section('main-container-content')
     @if($authUser->can('update-students'))
 

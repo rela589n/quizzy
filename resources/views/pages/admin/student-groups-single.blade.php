@@ -4,6 +4,11 @@
     {{ $group->name }} - список студентів
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.students.group', $group) }}
+    @parent
+@endsection
+
 @section('category-settings-link')
     @if($authUser->can('update-groups'))
         @include('blocks.admin.settings-link', [

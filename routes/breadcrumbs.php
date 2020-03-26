@@ -11,19 +11,25 @@
 |
 */
 
+use App\Models\StudentGroup;
+use App\Models\Test;
+use App\Models\TestSubject;
+use App\Models\User;
+use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
+
 Breadcrumbs::for('admin.tests',
-    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail) {
+    function (BreadcrumbsGenerator $trail) {
         $trail->push('Предмети тестування', route('admin.tests'));
     });
 
 Breadcrumbs::for('admin.tests.subject',
-    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $subject) {
+    function (BreadcrumbsGenerator $trail, TestSubject $subject) {
         $trail->parent('admin.tests');
         $trail->push($subject->name, route('admin.tests.subject', ['subject' => $subject->uri_alias]));
     });
 
 Breadcrumbs::for('admin.tests.subject.settings',
-    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $subject) {
+    function (BreadcrumbsGenerator $trail, TestSubject $subject) {
         $trail->parent('admin.tests.subject', $subject);
         $trail->push('Налаштування', route(
                 'admin.tests.subject.settings',
@@ -33,9 +39,8 @@ Breadcrumbs::for('admin.tests.subject.settings',
         );
     });
 
-
 Breadcrumbs::for('admin.tests.subject.test',
-    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $test, $subject = null) {
+    function (BreadcrumbsGenerator $trail, Test $test, TestSubject $subject = null) {
         $trail->parent('admin.tests.subject', $subject ?? $test->subject);
 
         $trail->push($test->name, route(
@@ -48,7 +53,7 @@ Breadcrumbs::for('admin.tests.subject.test',
     });
 
 Breadcrumbs::for('admin.tests.subject.test.settings',
-    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $test, $subject = null) {
+    function (BreadcrumbsGenerator $trail, Test $test, TestSubject $subject = null) {
         $trail->parent('admin.tests.subject.test', $test, $subject);
         $trail->push('Налаштування', route(
                 'admin.tests.subject.test.settings',
@@ -60,12 +65,12 @@ Breadcrumbs::for('admin.tests.subject.test.settings',
     });
 
 Breadcrumbs::for('admin.results',
-    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail) {
+    function (BreadcrumbsGenerator $trail) {
         $trail->push('Вибір предмета', route('admin.results'));
     });
 
 Breadcrumbs::for('admin.results.subject',
-    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $subject) {
+    function (BreadcrumbsGenerator $trail, TestSubject $subject) {
         $trail->parent('admin.results');
         $trail->push($subject->name, route(
             'admin.results.subject',
@@ -76,7 +81,7 @@ Breadcrumbs::for('admin.results.subject',
     });
 
 Breadcrumbs::for('admin.results.subject.test',
-    function (\DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator $trail, $test, $subject = null) {
+    function (BreadcrumbsGenerator $trail, Test $test, TestSubject $subject = null) {
 
         $trail->parent('admin.results.subject', $subject ?? $test->subject);
 
@@ -85,6 +90,64 @@ Breadcrumbs::for('admin.results.subject.test',
             [
                 'subject' => $subject->uri_alias ?? $test->subject->uri_alias,
                 'test' => $test->uri_alias
+            ]
+        ));
+    });
+
+Breadcrumbs::for('admin.students',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->push('Список груп студентів', route('admin.students'));
+    });
+
+Breadcrumbs::for('admin.students.new',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->parent('admin.students');
+        $trail->push('Створити групу', route('admin.students.new'));
+    });
+
+Breadcrumbs::for('admin.students.group',
+    function (BreadcrumbsGenerator $trail, StudentGroup $group) {
+
+        $trail->parent('admin.students');
+        $trail->push($group->name, route(
+            'admin.students.group',
+            [
+                'group' => $group->uri_alias
+            ]
+        ));
+    });
+
+Breadcrumbs::for('admin.students.group.new',
+    function (BreadcrumbsGenerator $trail, StudentGroup $group) {
+        $trail->parent('admin.students.group', $group);
+        $trail->push('Додати студента', route(
+            'admin.students.group.new',
+            [
+                'group' => $group->uri_alias
+            ]
+        ));
+    });
+
+Breadcrumbs::for('admin.students.group.settings',
+    function (BreadcrumbsGenerator $trail, StudentGroup $group) {
+        $trail->parent('admin.students.group', $group);
+        $trail->push('Налаштування', route(
+            'admin.students.group.settings',
+            [
+                'group' => $group->uri_alias
+            ]
+        ));
+    });
+
+Breadcrumbs::for('admin.students.group.student',
+    function (BreadcrumbsGenerator $trail, User $student, StudentGroup $group = null) {
+
+        $trail->parent('admin.students.group', $group ?? $student->studentGroup);
+        $trail->push($student->full_name, route(
+            'admin.students.group.student',
+            [
+                'group' => $group->uri_alias ?? $student->studentGroup->uri_alias,
+                'studentId' => $student->id
             ]
         ));
     });

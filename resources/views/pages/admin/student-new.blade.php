@@ -6,6 +6,11 @@
     {{ $group->name }} - додати студента
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.students.group.new', $group) }}
+    @parent
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.student-form')
 @endsection
