@@ -11,6 +11,7 @@
 |
 */
 
+use App\Models\Administrator;
 use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
@@ -151,5 +152,25 @@ Breadcrumbs::for('admin.students.group.student',
             ]
         ));
     });
+
+Breadcrumbs::for('admin.teachers',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->push('Список адміністраторів', route('admin.teachers'));
+    });
+
+Breadcrumbs::for('admin.teachers.new',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->parent('admin.teachers');
+        $trail->push('Додати нового', route('admin.teachers.new'));
+    });
+
+Breadcrumbs::for('admin.teachers.teacher',
+    function (BreadcrumbsGenerator $trail, Administrator $user) {
+        $trail->parent('admin.teachers');
+        $trail->push($user->full_name, route('admin.teachers.teacher', [
+            'teacherId' => $user->id
+        ]));
+    });
+
 
 

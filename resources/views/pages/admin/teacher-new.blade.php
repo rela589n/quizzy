@@ -6,6 +6,11 @@
     Додати адміністратора
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.teachers.new') }}
+    @parent
+@endsection
+
 @section('main-container-content')
     @include('blocks.admin.teacher-form')
 @endsection

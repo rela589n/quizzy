@@ -4,6 +4,11 @@
     Список адміністраторів
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.teachers') }}
+    @parent
+@endsection
+
 @section('category-header-text')
     Список викладачів:
 @endsection

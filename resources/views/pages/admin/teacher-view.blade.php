@@ -6,6 +6,11 @@
     {{ $user->full_name }}
 @endsection
 
+@section('content')
+    {{ Breadcrumbs::render('admin.teachers.teacher', $user) }}
+    @parent
+@endsection
+
 @section('main-container-content')
     @if($authUser->can('update-administrators'))
 
