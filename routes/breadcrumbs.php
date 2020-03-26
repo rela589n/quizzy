@@ -23,6 +23,12 @@ Breadcrumbs::for('admin.tests',
         $trail->push('Предмети тестування', route('admin.tests'));
     });
 
+Breadcrumbs::for('admin.tests.new',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->parent('admin.tests');
+        $trail->push('Створити новий', route('admin.tests.new'));
+    });
+
 Breadcrumbs::for('admin.tests.subject',
     function (BreadcrumbsGenerator $trail, TestSubject $subject) {
         $trail->parent('admin.tests');
@@ -38,6 +44,12 @@ Breadcrumbs::for('admin.tests.subject.settings',
                     'subject' => $subject->uri_alias
                 ])
         );
+    });
+
+Breadcrumbs::for('admin.tests.subject.new',
+    function (BreadcrumbsGenerator $trail, TestSubject $subject) {
+        $trail->parent('admin.tests.subject', $subject);
+        $trail->push('Створити тест', route('admin.tests.subject.new', ['subject' => $subject->uri_alias]));
     });
 
 Breadcrumbs::for('admin.tests.subject.test',
@@ -171,6 +183,3 @@ Breadcrumbs::for('admin.teachers.teacher',
             'teacherId' => $user->id
         ]));
     });
-
-
-
