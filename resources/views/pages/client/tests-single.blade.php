@@ -45,9 +45,11 @@
 @endsection
 
 @push('bottom_scripts')
+    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
     <script src="{{ asset('js/stopwatch.js') }}"></script>
     <script type="text/javascript">
         window.passTestCountDownMinutes = +"{!! json_encode($test->time) !!}";
     </script>
     <script src="{{ asset('js/test-countdown.js') }}"></script>
+    <script src="{{ asset('js/close-when-switched-tab.js') }}"></script>
 @endpush

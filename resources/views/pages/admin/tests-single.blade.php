@@ -68,6 +68,7 @@
 @endsection
 
 @push('bottom_scripts')
+    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
     <script src="{{ asset('js/test_edit.js') }}"></script>
 @endpush
 
