@@ -46,6 +46,7 @@
 
 @push('bottom_scripts')
     <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
     <script src="{{ asset('js/stopwatch.js') }}"></script>
     <script type="text/javascript">
         window.passTestCountDownMinutes = +"{!! json_encode($test->time) !!}";
