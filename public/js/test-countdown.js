@@ -22,10 +22,9 @@ $(function () {
                 m = ('0' + Math.floor(t % 3600000 / 60000)).slice(-2),
                 s = ('0' + Math.floor(t % 60000 / 1000)).slice(-2);
 
-            // save to local storage each 5 seconds
+            // save to local storage each 2 seconds
             if (s % 2 === 0) {
                 window.localStorage.setItem('test-time-left', (t / 1000).toString());
-                console.log(s);
             }
 
             let formattedTime = (+h * 60 + +m) + ':' + s;
