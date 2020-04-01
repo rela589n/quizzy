@@ -17,6 +17,8 @@ use App\Lib\Words\Decliners\WordDeclinerInterface;
 use App\Lib\Words\Repositories\UkrainianWordsRepository;
 use App\Lib\Words\Repositories\WordsRepository;
 use App\Lib\Words\WordsManager;
+use App\Models\Administrator;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -70,6 +72,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(GroupStatementsGenerator::class)
             ->needs(ResultFileNameGenerator::class)
             ->give(GroupResultFileNameGenerator::class);
+
+        $this->app->bind(Administrator::class, function ($app) {
+            return Auth::guard('admin')->user();
+        });
+
+        $this->app->bind(User::class, function ($app) {
+            return Auth::guard('client')->user();
+        });
     }
 
     private function shareViews()
