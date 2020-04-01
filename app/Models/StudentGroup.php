@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\StudentGroup
@@ -32,6 +31,8 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\StudentGroup withoutTrashed()
  * @mixin \Eloquent
  * @property-read int $course
+ * @property int|null $created_by
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereCreatedBy($value)
  */
 class StudentGroup extends Model
 {

@@ -3,16 +3,19 @@
 namespace App\Http\Requests\Groups;
 
 
+use App\Models\Administrator;
+
 class CreateGroupRequest extends GroupRequest
 {
     /**
      * Determine if the user can create group.
      *
+     * @param Administrator $user
      * @return bool
      */
-    public function authorize()
+    public function authorize(Administrator $user)
     {
-        return $this->user('admin')->can('create-groups');
+        return $user->can('create-groups');
     }
 
     /**

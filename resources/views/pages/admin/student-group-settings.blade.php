@@ -15,10 +15,10 @@
 @section('main-container-content')
     @include('blocks.admin.student-group-form', [
       'submitButtonText' => 'Зберегти',
-      'submitSize' => ($authUser->can('delete-groups')) ? 9 : 12
+      'submitSize' => ($authUser->can('delete', $group)) ? 9 : 12
     ])
 
-    @if($authUser->can('delete-groups'))
+    @if($authUser->can('delete', $group))
         @include('blocks.admin.delete-entity-form')
     @endif
 @endsection

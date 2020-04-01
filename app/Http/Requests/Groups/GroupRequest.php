@@ -4,6 +4,7 @@ namespace App\Http\Requests\Groups;
 
 use App\Http\Requests\UrlManageable;
 use App\Http\Requests\UrlManageableRequests;
+use App\Models\Administrator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +12,15 @@ abstract class GroupRequest  extends FormRequest implements UrlManageable
 {
     use UrlManageableRequests;
 
-    public abstract function authorize();
+    public abstract function authorize(Administrator $administrator);
+
+    /**
+     * @return \App\Models\StudentGroup|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     */
+    public function studentGroup()
+    {
+        return $this->urlManager->getCurrentGroup();
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -22,7 +31,7 @@ abstract class GroupRequest  extends FormRequest implements UrlManageable
         $currentYear = date('Y');
 
         try {
-            $currentGroup = $this->urlManager->getCurrentGroup();
+            $currentGroup = $this->studentGroup();
             $groupYear = $currentGroup->year;
         } catch (ModelNotFoundException $e) {
             $groupYear = $currentYear;

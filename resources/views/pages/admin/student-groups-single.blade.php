@@ -10,7 +10,7 @@
 @endsection
 
 @section('category-settings-link')
-    @if($authUser->can('update-groups'))
+    @if($authUser->can('update', $group))
         @include('blocks.admin.settings-link', [
             'link' => route('admin.students.group.settings', ['group' => $group->uri_alias]),
             'text' => 'Перейти до налаштувань групи'

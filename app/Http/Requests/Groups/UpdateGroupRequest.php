@@ -5,21 +5,20 @@ namespace App\Http\Requests\Groups;
 
 
 use App\Http\Requests\UrlManageable;
-use App\Http\Requests\UrlManageableRequests;
+use App\Models\Administrator;
 use Illuminate\Validation\Rule;
 
 class UpdateGroupRequest extends GroupRequest implements UrlManageable
 {
-    use UrlManageableRequests;
-
     /**
      * Determine if the user can update group.
      *
+     * @param Administrator $administrator
      * @return bool
      */
-    public function authorize()
+    public function authorize(Administrator $administrator)
     {
-        return $this->user('admin')->can('update-groups');
+        return $administrator->can('update', $this->studentGroup());
     }
 
     /**
@@ -32,7 +31,7 @@ class UpdateGroupRequest extends GroupRequest implements UrlManageable
         $rules = parent::rules();
 
         $rules['uri_alias'][] = Rule::unique('test_subjects')
-            ->ignoreModel($this->urlManager->getCurrentGroup());
+            ->ignoreModel($this->studentGroup());
 
         return $rules;
     }

@@ -68,10 +68,11 @@ class GroupsController extends AdminController
      */
     public function showUpdateGroupForm()
     {
-        $this->authorize('update-groups');
+        $currentGroup = $this->urlManager->getCurrentGroup();
+        $this->authorize('update', $currentGroup);
 
         return view('pages.admin.student-group-settings', [
-            'group' => $this->urlManager->getCurrentGroup()
+            'group' => $currentGroup
         ]);
     }
 
@@ -81,7 +82,7 @@ class GroupsController extends AdminController
      */
     public function updateGroup(UpdateGroupRequest $request)
     {
-        $group = $this->urlManager->getCurrentGroup();
+        $group = $request->studentGroup();
         $group->update($request->validated());
 
         return redirect()->route('admin.students.group', [
@@ -96,11 +97,10 @@ class GroupsController extends AdminController
      */
     public function deleteGroup()
     {
-        $this->authorize('delete-groups');
-
         $group = $this->urlManager->getCurrentGroup();
-        $group->delete();
+        $this->authorize('delete', $group);
 
+        $group->delete();
         return redirect()->route('admin.students');
     }
 }
