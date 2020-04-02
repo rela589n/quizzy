@@ -12,7 +12,7 @@
 @endsection
 
 @section('main-container-content')
-    @if($authUser->can('update-students'))
+    @if($authUser->can('update', $user))
 
         @include('blocks.admin.student-form', [
             'submitButtonText' => 'Зберегти',
