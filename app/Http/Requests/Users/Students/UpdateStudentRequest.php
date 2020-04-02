@@ -21,7 +21,7 @@ class UpdateStudentRequest extends MakeStudentRequest
             return User::findOrFail($this->route('studentId'));
         });
     }
-    
+
     /**
      * @inheritDoc
      */
