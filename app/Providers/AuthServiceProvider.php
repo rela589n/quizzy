@@ -7,6 +7,7 @@ use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
 use App\Models\User;
+use App\Policies\AdministratorPolicy;
 use App\Policies\GroupPolicy;
 use App\Policies\StudentPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -22,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         StudentGroup::class => GroupPolicy::class,
         User::class => StudentPolicy::class,
+        Administrator::class => AdministratorPolicy::class,
         // 'App\Model' => 'App\Policies\ModelPolicy',
     ];
 
@@ -54,22 +56,9 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
-        $this->registerAdministratorGates();
-
         $this->registerSubjectGates();
 
         $this->registerTestGates();
-    }
-
-    protected function registerAdministratorGates()
-    {
-        Gate::define('update-administrator', function (Administrator $user, Administrator $admin) {
-            return $user->can('update-administrators');
-        });
-
-        Gate::define('delete-administrator', function (Administrator $user, Administrator $admin) {
-            return $user->can('delete-administrators');
-        });
     }
 
     protected function registerSubjectGates()

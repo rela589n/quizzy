@@ -5,13 +5,23 @@ namespace App\Http\Requests\Users\Teachers;
 
 
 use App\Lib\ValidationGenerator;
+use App\Models\Administrator;
 use Illuminate\Validation\Rule;
 
 class UpdateTeacherRequest extends MakeTeacherRequest
 {
-    public function authorize()
+    private $administrator;
+
+    public function administrator()
     {
-        return $this->user('admin')->can('update-administrators');
+        return singleVar($this->administrator, function () {
+            return Administrator::findOrFail($this->route('teacherId'));
+        });
+    }
+
+    public function authorize(Administrator $user)
+    {
+        return $user->can('update', $this->administrator());
     }
 
     public function rules(ValidationGenerator $generator)

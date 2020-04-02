@@ -58,7 +58,7 @@ class TeachersController extends AdminController
     }
 
     /**
-     * When user clicked go to user button, shows form for updating,
+     * When user clicked "go to user" button, shows form for updating,
      * if he is able to. Else if he can view info, shows information about
      * selected user.
      * @param $teacherId
@@ -67,13 +67,14 @@ class TeachersController extends AdminController
      */
     public function showUpdateFormOrInfoPage($teacherId)
     {
-        if (($response = Gate::inspect('update-administrators'))->denied()) {
-            $response = Gate::inspect('view-administrators');
+        $user = Administrator::findOrFail($teacherId);
+
+        if (($response = Gate::inspect('update', $user))->denied()) {
+            $response = Gate::inspect('view', $user);
         }
 
         $response->authorize();
 
-        $user = Administrator::findOrFail($teacherId);
         return view('pages.admin.teacher-view', [
             'user' => $user,
             'roles' => Role::where('guard_name', 'admin')->get()
@@ -117,9 +118,9 @@ class TeachersController extends AdminController
      */
     public function deleteTeacher(Request $request, $teacherId)
     {
-        $this->authorize('delete-administrators');
-
         $teacher = Administrator::findOrFail($teacherId);
+        $this->authorize('delete', $teacher);
+
         if ($teacher->id == $request->user()->id) {
             return redirect()->back()->withErrors(['delete'=> 'Ви не можете видалити власний аккаунт.']);
         }

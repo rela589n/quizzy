@@ -12,15 +12,15 @@
 @endsection
 
 @section('main-container-content')
-    @if($authUser->can('update-administrators'))
+    @if($authUser->can('update', $user))
 
         @include('blocks.admin.teacher-form', [
             'submitButtonText' => 'Зберегти',
             'userPasswordPlaceholder' => 'Введіть щоб змінити',
-            'submitSize' => ($authUser->can('delete-administrators')) ? 9 : 12
+            'submitSize' => ($authUser->can('delete', $user)) ? 9 : 12
         ])
 
-        @if($authUser->can('delete-administrators'))
+        @if($authUser->can('delete', $user))
             @include('blocks.admin.delete-entity-form')
         @endif
 

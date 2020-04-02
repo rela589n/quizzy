@@ -5,12 +5,13 @@ namespace App\Http\Requests\Users\Teachers;
 
 
 use App\Lib\ValidationGenerator;
+use App\Models\Administrator;
 
 class CreateTeacherRequest extends MakeTeacherRequest
 {
-    public function authorize()
+    public function authorize(Administrator $user)
     {
-        return $this->user('admin')->can('create-administrators');
+        return $user->can('create-administrators');
     }
 
     public function rules(ValidationGenerator $generator)
