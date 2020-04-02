@@ -4,12 +4,16 @@
 namespace App\Http\Requests\Users\Students;
 
 use App\Lib\ValidationGenerator;
+use App\Models\Administrator;
 
 class CreateStudentRequest extends MakeStudentRequest
 {
-    public function authorize()
+    /**
+     * @inheritDoc
+     */
+    public function authorize(Administrator $user)
     {
-        return $this->user('admin')->can('create-students');
+        return $user->can('create-students');
     }
 
     public function rules(ValidationGenerator $generator)

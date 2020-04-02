@@ -50,27 +50,27 @@ class StudentsController extends AdminController
      */
     public function showUpdateFormOrInfoPage($groupAlias, $userId)
     {
-        if (($response = Gate::inspect('update-students'))->denied()) {
-            $response = Gate::inspect('view-students');
+        $user = User::findOrFail($userId);
+
+        if (($response = Gate::inspect('update', $user))->denied()) {
+            $response = Gate::inspect('view', $user);
         }
 
         $response->authorize();
 
         return view('pages.admin.student-view', [
-            'user' => User::findOrFail($userId),
+            'user' => $user,
             'studentGroups' => StudentGroup::all()->sortByDesc('year')
         ]);
     }
 
     /**
      * @param UpdateStudentRequest $request
-     * @param $groupAlias
-     * @param $userId
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateStudent(UpdateStudentRequest $request, $groupAlias, $userId)
+    public function updateStudent(UpdateStudentRequest $request)
     {
-        $user = User::findOrFail($userId);
+        $user = $request->student();
         $validated = array_filter($request->validated());
 
         if (!empty($validated['password'])) {
@@ -93,9 +93,9 @@ class StudentsController extends AdminController
      */
     public function deleteStudent($groupAlias, $userId)
     {
-        $this->authorize('delete-students');
-
         $user = User::findOrFail($userId);
+        $this->authorize('delete', $user);
+
         $user->delete();
 
         return redirect()->route('admin.students.group', [

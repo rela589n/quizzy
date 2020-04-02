@@ -17,10 +17,10 @@
         @include('blocks.admin.student-form', [
             'submitButtonText' => 'Зберегти',
             'userPasswordPlaceholder' => 'Введіть щоб змінити',
-            'submitSize' => ($authUser->can('delete-students')) ? 9 : 12
+            'submitSize' => ($authUser->can('delete', $user)) ? 9 : 12
         ])
 
-        @if($authUser->can('delete-students'))
+        @if($authUser->can('delete', $user))
             @include('blocks.admin.delete-entity-form')
         @endif
 
