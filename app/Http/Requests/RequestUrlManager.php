@@ -37,29 +37,27 @@ class RequestUrlManager
         $this->request = $request;
     }
 
-    protected function resolveEntity(&$property, \Illuminate\Database\Eloquent\Builder $builder, bool $withTrashed = false)
+    protected function resolveEntity(\Illuminate\Database\Eloquent\Builder $builder, bool $withTrashed = false)
     {
-        if ($property === null) {
-            if ($withTrashed) {
-                $builder->withTrashed();
-            }
-
-            $property = $builder->firstOrFail();
+        if ($withTrashed) {
+            $builder->withTrashed();
         }
 
-        return $property;
+        return $builder->firstOrFail();
     }
 
     /**
+     * @param bool $withTrashed
      * @return TestSubject|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
-    public function getCurrentSubject()
+    public function getCurrentSubject(bool $withTrashed = false)
     {
-        return $this->resolveEntity($this->currentSubject, TestSubject::where(
-            'uri_alias',
-            '=',
-            $this->request->route('subject')
-        ));
+        return singleVar($this->currentSubject, function () use ($withTrashed) {
+            return $this->resolveEntity(
+                TestSubject::whereSlug($this->request->route('subject')),
+                $withTrashed
+            );
+        });
     }
 
     /**
@@ -68,22 +66,25 @@ class RequestUrlManager
      */
     public function getCurrentTest(bool $withTrashed = false)
     {
-        return $this->resolveEntity($this->currentTest, Test::where(
-            'uri_alias',
-            '=',
-            $this->request->route('test')
-        ), $withTrashed);
+        return singleVar($this->currentTest, function () use ($withTrashed) {
+            return $this->resolveEntity(
+                Test::whereSlug($this->request->route('test')),
+                $withTrashed
+            );
+        });
     }
 
     /**
+     * @param bool $withTrashed
      * @return StudentGroup|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
-    public function getCurrentGroup()
+    public function getCurrentGroup(bool $withTrashed = false)
     {
-        return $this->resolveEntity($this->currentGroup, StudentGroup::where(
-            'uri_alias',
-            '=',
-            $this->request->route('group')
-        ));
+        return singleVar($this->currentGroup, function () use ($withTrashed) {
+            return $this->resolveEntity(
+                StudentGroup::whereSlug($this->request->route('group')),
+                $withTrashed
+            );
+        });
     }
 }
