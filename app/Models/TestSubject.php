@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Lib\Traits\LoadTrashed;
+use App\Lib\Traits\SlugScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,10 +24,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereUriAlias($value)
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject availableFor($user)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereSlug($slug)
  */
 class TestSubject extends Model
 {
     use LoadTrashed;
+    use SlugScope;
 
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'course'];

@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Lib\Traits\SlugScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * App\Models\StudentGroup
@@ -33,16 +35,17 @@ use Illuminate\Support\Carbon;
  * @property-read int $course
  * @property int|null $created_by
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereSlug($slug)
  */
 class StudentGroup extends Model
 {
     use SoftDeletes;
-    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+    use HasRelationships;
+    use SlugScope;
 
     public $timestamps = false;
 
     protected $fillable = ['name', 'uri_alias', 'year'];
-
     protected $studyStartMonth = 9;
     protected $studyStartDay = 1;
 

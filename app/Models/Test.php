@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Lib\Traits\SlugScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -38,10 +39,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Test withoutTrashed()
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
  * @property-read int|null $test_results_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereSlug($slug)
  */
 class Test extends Model
 {
     use SoftDeletes;
+    use SlugScope;
 
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time'];
