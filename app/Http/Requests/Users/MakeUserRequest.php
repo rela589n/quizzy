@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Users;
 
 use App\Lib\ValidationGenerator;
+use App\Models\Administrator;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class MakeUserRequest extends FormRequest
@@ -10,9 +11,10 @@ abstract class MakeUserRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
+     * @param Administrator $user
      * @return bool
      */
-    public abstract function authorize();
+    public abstract function authorize(Administrator $user);
 
     /**
      * Get the validation rules that apply to the request.
