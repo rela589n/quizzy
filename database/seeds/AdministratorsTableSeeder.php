@@ -5,6 +5,41 @@ use Illuminate\Database\Seeder;
 
 class AdministratorsTableSeeder extends Seeder
 {
+    protected static $administrators = [
+        'super-admin' => [
+            'system' => [
+                'name' => 'system',
+                'surname' => 'system',
+                'patronymic' => 'system',
+                'password' => 'password',
+                'password_changed' => 1
+            ],
+            'admin' => [
+                'name' => 'Євген',
+                'surname' => 'Григоровський',
+                'patronymic' => 'Сергійович',
+                'password' => '1'
+            ],
+        ],
+        'teacher' => [
+            'iryna-hutnyk' => [
+                'name' => 'Ірина',
+                'surname' => 'Гутник',
+                'patronymic' => 'Іванівна',
+                'password' => '1'
+            ]
+        ],
+        'class-monitor' => [
+            'sand' => [
+                'name' => 'Олександр',
+                'surname' => 'Моїк',
+                'patronymic' => 'Ігорович',
+                'password' => 'password',
+                'password_changed' => 1
+            ]
+        ]
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -12,25 +47,15 @@ class AdministratorsTableSeeder extends Seeder
      */
     public function run()
     {
-        $admin = Administrator::create([
-            'name' => 'Євген',
-            'surname' => 'Григоровський',
-            'patronymic' => 'Сергійович',
-            'email' => 'admin',
-            'password' => Hash::make('password')
-        ]);
+        foreach (static::$administrators as $roleName => $users) {
 
-        $admin->assignRole('teacher');
+            foreach ($users as $userName => $info) {
+                $info['email'] = $userName;
+                $info['password'] = Hash::make($info['password']);
 
-        $system = Administrator::create([
-            'name' => 'system',
-            'surname' => 'system',
-            'patronymic' => 'system',
-            'email' => 'system',
-            'password' => Hash::make('Gfhjkm_Rehcfx'),
-            'password_changed' => 1
-        ]);
-
-        $system->assignRole('super-admin');
+                Administrator::create($info)
+                    ->assignRole($roleName);
+            }
+        }
     }
 }
