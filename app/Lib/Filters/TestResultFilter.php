@@ -6,9 +6,20 @@ namespace App\Lib\Filters;
 
 use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Http\Request;
 
 class TestResultFilter extends ResultFilter
 {
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     protected function loadRelations(EloquentCollection $results)
     {
         $results->loadMissing([
