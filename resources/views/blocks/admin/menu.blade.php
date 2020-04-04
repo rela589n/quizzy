@@ -6,7 +6,7 @@
         <a class="nav-link" href="{{ route('admin.dashboard') }}" target="_self">Особистий кабінет</a>
     </li>
 
-    @if ($authUser->can('view-subjects'))
+    @if ($authUser->can('access-subjects'))
         <li class="nav-item @ifroute('admin.tests') active @endifroute">
             <a class="nav-link" href="{{ route('admin.tests') }}" target="_self">Тести</a>
         </li>
@@ -18,13 +18,13 @@
         </li>
     @endif
 
-    @if ($authUser->can('view-administrators'))
+    @if ($authUser->can('access-administrators'))
         <li class="nav-item @ifroute('admin.teachers') active @endifroute">
             <a class="nav-link" href="{{ route('admin.teachers') }}" target="_self">Викладачі</a>
         </li>
     @endif
 
-    @if ($authUser->can('view-groups'))
+    @if ($authUser->can('access-groups'))
         <li class="nav-item @ifroute('admin.students') active @endifroute">
             <a class="nav-link" href="{{ route('admin.students') }}" target="_self">Студенти</a>
         </li>

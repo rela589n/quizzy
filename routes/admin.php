@@ -28,6 +28,7 @@ Route::get('/dashboard', 'DashboardController@showDashboardPage')->name('.dashbo
 Route::prefix('/tests')
     ->name('.tests')
     ->namespace('Tests')
+    ->middleware('can:access-subjects')
     ->group(function () {
 
         $routePatterns = Route::getPatterns();
@@ -76,6 +77,7 @@ Route::prefix('/tests')
 Route::prefix('/students')
     ->name('.students')
     ->namespace('Students')
+    ->middleware('can:access-groups')
     ->group(function () {
 
         $routePatterns = Route::getPatterns();
@@ -115,6 +117,7 @@ Route::prefix('/students')
 Route::prefix('/teachers')
     ->name('.teachers')
     ->namespace('Teachers')
+    ->middleware('can:access-administrators')
     ->group(function () {
         $routePatterns = Route::getPatterns();
 
