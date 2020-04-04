@@ -5,20 +5,22 @@ namespace App\Http\Controllers\Admin\Students;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Groups\CreateGroupRequest;
 use App\Http\Requests\Groups\UpdateGroupRequest;
+use App\Lib\Filters\AvailableGroupsFilter;
 use App\Models\StudentGroup;
 
 class GroupsController extends AdminController
 {
     /**
+     * @param AvailableGroupsFilter $filters
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showAll()
+    public function showAll(AvailableGroupsFilter $filters)
     {
-        $this->authorize('view-groups');
+        $groups = StudentGroup::withCount('students');
+        $groups = $groups->filtered($filters);
 
         return view('pages.admin.student-groups-list', [
-            'groups' => StudentGroup::withCount('students')->get()
+            'groups' => $groups
         ]);
     }
 
