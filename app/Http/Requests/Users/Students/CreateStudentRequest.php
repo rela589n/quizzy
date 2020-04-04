@@ -6,7 +6,7 @@ namespace App\Http\Requests\Users\Students;
 use App\Lib\ValidationGenerator;
 use App\Models\Administrator;
 
-class CreateStudentRequest extends MakeStudentRequest
+class CreateStudentRequest extends StudentRequest
 {
     /**
      * @inheritDoc

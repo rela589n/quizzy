@@ -5,17 +5,19 @@ namespace App\Http\Requests\Users\Students;
 
 use App\Http\Requests\Users\MakeUserRequest;
 use App\Lib\ValidationGenerator;
+use App\Models\User;
 
-abstract class MakeStudentRequest extends MakeUserRequest
+abstract class StudentRequest extends MakeUserRequest
 {
     protected $validateGroup = false;
 
-    /**
-     * @param bool $validateGroup
-     */
-    public function setValidateGroup(bool $validateGroup): void
+    private $student;
+
+    public function student()
     {
-        $this->validateGroup = $validateGroup;
+        return singleVar($this->student, function () {
+            return User::findOrFail($this->route('studentId'));
+        });
     }
 
     public function rules(ValidationGenerator $generator)
