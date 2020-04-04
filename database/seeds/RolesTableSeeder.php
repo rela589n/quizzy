@@ -13,28 +13,21 @@ class RolesTableSeeder extends Seeder
             ],
             'teacher' => [
                 'public_name' => 'Викладач',
-                'permissions' => [
+                'permissions-type' => 'all', // all | only
+                'permissions-except' => [
+                    'access-administrators',
+                    'create-administrators',
+                    'view-administrators',
+                    'update-administrators',
+                    'delete-administrators'
+                ]
+            ],
+            'class-monitor' => [
+                'public_name' => 'Староста',
+                'permissions-only' => [
+                    'access-groups',
                     'create-groups',
-                    'view-groups',
-                    'update-groups',
-                    'delete-groups',
-
                     'create-students',
-                    'view-students',
-                    'update-students',
-                    'delete-students',
-
-                    'create-subjects',
-                    'view-subjects',
-                    'update-subjects',
-
-                    'create-tests',
-                    'view-tests',
-                    'update-tests',
-
-                    'view-results',
-                    'generate-group-statement',
-                    'generate-student-statement',
                 ]
             ]
         ]
@@ -48,6 +41,23 @@ class RolesTableSeeder extends Seeder
         return static::$roles;
     }
 
+    public static function init()
+    {
+        foreach (static::$roles as $guardName => $roles) {
+            foreach ($roles as $name => $config) {
+                $permissionsAlias = &static::$roles[$guardName][$name]['permissions'];
+
+                $type = $config['permissions-type'] ?? 'only';
+                if ($type === 'all') {
+                    $permissionsAlias = array_keys(PermissionsTableSeeder::getPermissions()[$guardName]);
+                }
+
+                $permissionsAlias = ($permissionsAlias ?? []) + ($config['permissions-only'] ?? []);
+                $permissionsAlias = array_diff($permissionsAlias, $config['permissions-except'] ?? []);
+            }
+        }
+    }
+
     /**
      * Run the database seeds.
      *
@@ -55,6 +65,8 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
+        static::init();
+
         foreach (static::$roles as $guardName => $roles) {
 
             foreach ($roles as $name => $roleConfig) {
