@@ -14,13 +14,13 @@ class CreatedByObserver
      */
     private $user;
 
-    public function __construct(Administrator $user)
+    public function __construct(?Administrator $user)
     {
         $this->user = $user;
     }
 
     public function creating(Model $model)
     {
-        $model->created_by = $this->user->id;
+        $model->created_by = optional($this->user)->id;
     }
 }
