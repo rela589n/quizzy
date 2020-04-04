@@ -54,7 +54,8 @@
     <script src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
     <script src="{{ asset('js/stopwatch.js') }}"></script>
     <script type="text/javascript">
-        window.passTestCountDownMinutes = +"{!! json_encode($test->time) !!}";
+        window.passTestCountDownMinutes = {{ $test->time }};
+        window.passTestId = {{ $test->id }};
     </script>
     <script src="{{ asset('js/test-countdown.js') }}"></script>
     <script src="{{ asset('js/close-when-switched-tab.js') }}"></script>

@@ -1,8 +1,10 @@
 $(function () {
     let $form = $('.test-questions form');
-    let testTime = window.passTestCountDownMinutes || (5 * 60);
+    let testTime = window.passTestCountDownMinutes || 10;
+    let testId = window.passTestId || 1;
+
     testTime *= 60;
-    testTime = window.localStorage.getItem('test-time-left') || testTime;
+    testTime = window.localStorage.getItem(`test-time-left-${testId}`) || testTime;
 
     let stopwatch = new Stopwatch({
         'element': $('#test-countdown'),    // DOM element
@@ -22,10 +24,8 @@ $(function () {
                 m = ('0' + Math.floor(t % 3600000 / 60000)).slice(-2),
                 s = ('0' + Math.floor(t % 60000 / 1000)).slice(-2);
 
-            // save to local storage each 2 seconds
-            if (s % 2 === 0) {
-                window.localStorage.setItem('test-time-left', (t / 1000).toString());
-            }
+            // save to local storage each second
+            window.localStorage.setItem(`test-time-left-${testId}`, (t / 1000).toString());
 
             let formattedTime = (+h * 60 + +m) + ':' + s;
             $(this.element).text(formattedTime);
@@ -34,7 +34,7 @@ $(function () {
 
     $form.submit(function (e) {
         // remove from local storage
-        window.localStorage.removeItem('test-time-left');
+        window.localStorage.removeItem(`test-time-left-${testId}`);
     });
 
 
