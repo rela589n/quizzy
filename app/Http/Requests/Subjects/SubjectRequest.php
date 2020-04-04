@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Subjects;
 
+use App\Models\Administrator;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class SubjectRequest extends FormRequest
@@ -9,9 +10,10 @@ abstract class SubjectRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
+     * @param Administrator $user
      * @return bool
      */
-    public abstract function authorize();
+    public abstract function authorize(Administrator $user);
 
     public function attributes()
     {
@@ -27,7 +29,7 @@ abstract class SubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'name'      => [
                 'required',
                 'min:3',
                 'max:128'
@@ -37,7 +39,7 @@ abstract class SubjectRequest extends FormRequest
                 'min:3',
                 'max:48',
             ],
-            'course' => [
+            'course'    => [
                 'required',
                 'numeric',
                 'min:1',

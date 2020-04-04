@@ -10,7 +10,7 @@
 @endsection
 
 @section('category-settings-link')
-    @if($authUser->can('update-subjects'))
+    @if($authUser->can('update', $subject))
         @include('blocks.admin.settings-link', [
             'link' => route('admin.tests.subject.settings', ['subject' => $subject->uri_alias]),
             'text' => 'Перейти до налаштувань предмета'

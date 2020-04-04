@@ -4,18 +4,24 @@ namespace App\Http\Requests\Subjects;
 
 use App\Http\Requests\UrlManageable;
 use App\Http\Requests\UrlManageableRequests;
+use App\Models\Administrator;
 use Illuminate\Validation\Rule;
 
 class UpdateSubjectRequest extends SubjectRequest implements UrlManageable
 {
     use UrlManageableRequests;
 
+    public function subject()
+    {
+        return $this->urlManager->getCurrentSubject();
+    }
+
     /**
      * @inheritDoc
      */
-    public function authorize()
+    public function authorize(Administrator $user)
     {
-        return $this->user('admin')->can('update-subjects');
+        return $user->can('update', $this->subject());
     }
 
     /**
@@ -28,7 +34,7 @@ class UpdateSubjectRequest extends SubjectRequest implements UrlManageable
         $rules = parent::rules();
 
         $rules['uri_alias'][] = Rule::unique('test_subjects')
-            ->ignoreModel($this->urlManager->getCurrentSubject());
+            ->ignoreModel($this->subject());
 
         return $rules;
     }

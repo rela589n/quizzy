@@ -3,14 +3,16 @@
 namespace App\Http\Requests\Subjects;
 
 
+use App\Models\Administrator;
+
 class CreateSubjectRequest extends SubjectRequest
 {
     /**
      * @inheritDoc
      */
-    public function authorize()
+    public function authorize(Administrator $user)
     {
-        return $this->user('admin')->can('create-subjects');
+        return $user->can('create-subjects');
     }
 
     /**

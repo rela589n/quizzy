@@ -15,7 +15,7 @@ class SubjectsController extends AdminController
      */
     public function showAll()
     {
-        $this->authorize('view-subjects');
+        $this->authorize('access-subjects');
 
         return view('pages.admin.subjects-list', [
             'subjects' => TestSubject::withCount('tests')->get()
@@ -53,9 +53,9 @@ class SubjectsController extends AdminController
      */
     public function showSingleSubject()
     {
-        $this->authorize('view-subjects');
-
         $subject = $this->urlManager->getCurrentSubject();
+        $this->authorize('view', $subject);
+
         $subject->tests->loadCount('nativeQuestions as questions_count');
 
         return view('pages.admin.subjects-single', [
@@ -69,10 +69,11 @@ class SubjectsController extends AdminController
      */
     public function showUpdateSubjectForm()
     {
-        $this->authorize('update-subjects');
+        $subject = $this->urlManager->getCurrentSubject();
+        $this->authorize('update', $subject);
 
         return view('pages.admin.subjects-single-settings', [
-            'subject' => $this->urlManager->getCurrentSubject()
+            'subject' => $subject
         ]);
     }
 
@@ -82,7 +83,7 @@ class SubjectsController extends AdminController
      */
     public function updateSubject(UpdateSubjectRequest $request)
     {
-        $subject = $this->urlManager->getCurrentSubject();
+        $subject = $request->subject();
         $subject->update($request->validated());
 
         return redirect()->route('admin.tests.subject', [
@@ -96,11 +97,10 @@ class SubjectsController extends AdminController
      */
     public function deleteSubject()
     {
-        $this->authorize('delete-subjects');
-
         $subject = $this->urlManager->getCurrentSubject();
-        $subject->delete();
+        $this->authorize('delete', $subject);
 
+        $subject->delete();
         return redirect()->route('admin.tests');
     }
 }
