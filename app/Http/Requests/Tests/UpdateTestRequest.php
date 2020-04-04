@@ -4,6 +4,7 @@ namespace App\Http\Requests\Tests;
 
 
 use App\Http\Requests\RequestUrlManager;
+use App\Models\Administrator;
 use Illuminate\Validation\Rule;
 
 class UpdateTestRequest extends MakeTestRequest
@@ -11,9 +12,9 @@ class UpdateTestRequest extends MakeTestRequest
     /**
      * @inheritDoc
      */
-    public function authorize()
+    public function authorize(Administrator $user)
     {
-        return $this->user('admin')->can('update-tests');
+        return $user->can('update-tests');
     }
 
     /**

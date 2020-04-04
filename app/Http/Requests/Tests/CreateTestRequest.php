@@ -3,14 +3,16 @@
 namespace App\Http\Requests\Tests;
 
 
+use App\Models\Administrator;
+
 class CreateTestRequest extends MakeTestRequest
 {
     /**
      * @inheritDoc
      */
-    public function authorize()
+    public function authorize(Administrator $user)
     {
-        return $this->user('admin')->can('create-tests');
+        return $user->can('create-tests');
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Tests;
 
+use App\Models\Administrator;
 use App\Models\Test;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -10,9 +11,10 @@ abstract class MakeTestRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
+     * @param Administrator $user
      * @return bool
      */
-    public abstract function authorize();
+    public abstract function authorize(Administrator $user);
 
     /**
      * Get custom attributes for validator errors.
