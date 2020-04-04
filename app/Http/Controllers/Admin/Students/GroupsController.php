@@ -55,9 +55,8 @@ class GroupsController extends AdminController
      */
     public function showSingleGroup()
     {
-        $this->authorize('view-students');
-
         $group = $this->urlManager->getCurrentGroup();
+        $this->authorize('view', $group);
 
         return view('pages.admin.student-groups-single', [
             'group' => $group,

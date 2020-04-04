@@ -11,6 +11,18 @@ class GroupPolicy
     use HandlesAuthorization;
 
     /**
+     * Determine whether the user can view the student group.
+     *
+     * @param Administrator $user
+     * @param StudentGroup $group
+     * @return mixed
+     */
+    public function view(Administrator $user, StudentGroup $group)
+    {
+        return $group->created_by == $user->id || $user->can('view-groups');
+    }
+
+    /**
      * Determine whether the user can update the student group.
      *
      * @param Administrator $user
