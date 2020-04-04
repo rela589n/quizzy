@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Lib\Filters\TestResultFilter;
 use App\Lib\TestResultsEvaluator;
+use App\Lib\Traits\FilteredScope;
 use App\Lib\Words\WordsManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -16,13 +16,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $user_id
  * @property \Illuminate\Support\Carbon $created_at
  * @property-read \App\Models\Test|null $test
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereTestId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult whereUserId($value)
+ * @method static Builder|\App\Models\TestResult newModelQuery()
+ * @method static Builder|\App\Models\TestResult newQuery()
+ * @method static Builder|\App\Models\TestResult query()
+ * @method static Builder|\App\Models\TestResult whereCreatedAt($value)
+ * @method static Builder|\App\Models\TestResult whereId($value)
+ * @method static Builder|\App\Models\TestResult whereTestId($value)
+ * @method static Builder|\App\Models\TestResult whereUserId($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AskedQuestion[] $askedQuestions
  * @property-read int|null $asked_questions_count
@@ -32,12 +32,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $mark_readable
  * @property-read mixed $score
  * @property-read mixed $score_readable
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult filtered(\App\Lib\Filters\TestResultFilter $filters)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult ofTest($testId)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestResult recent($count)
+ * @method static Builder|\App\Models\TestResult filtered(\App\Lib\Filters\TestResultFilter $filters)
+ * @method static Builder|\App\Models\TestResult ofTest($testId)
+ * @method static Builder|\App\Models\TestResult recent($count)
  */
 class TestResult extends Model
 {
+    use FilteredScope;
+
     public const UPDATED_AT = null;
 
     /**
@@ -130,9 +132,9 @@ class TestResult extends Model
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param int | Test $test
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeOfTest($query, $test)
     {
@@ -144,24 +146,12 @@ class TestResult extends Model
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param $count
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeRecent($query, $count)
     {
         return $query->latest()->limit($count);
-    }
-
-    /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param TestResultFilter $filters
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function scopeFiltered($query, TestResultFilter $filters)
-    {
-        $response = $filters->applyQueryFilters($query)->get();
-
-        return $filters->apply($response);
     }
 }
