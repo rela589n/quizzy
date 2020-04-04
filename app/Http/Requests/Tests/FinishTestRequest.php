@@ -39,7 +39,7 @@ class FinishTestRequest extends FormRequest
                 'required',
                 'numeric'
             ],
-            'asked' => 'array',
+            'asked' => 'array|required',
             'asked.*' => 'array',
             'asked.*.question_id' => [
                 'required',

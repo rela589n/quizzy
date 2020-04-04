@@ -6,25 +6,18 @@
 
 @section('category-header-text') Тест по предмету {{ $subject->name }} - {{ $test->name }} @endsection
 
-@section('additions')
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-@endsection
-
 @section('main-container-class')
     @parent
     test-questions
 @endsection
 
 @section('save-button')
-    <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Завершити тест</button>
+    @if(count($allQuestions))
+        <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Завершити тест</button>
+    @else
+        <a href="{{ route('client.tests.subject', ['subject' => $subject->uri_alias]) }}"
+           class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Завершити тест</a>
+    @endif
 @endsection
 
 @section('test-questions')
@@ -37,6 +30,18 @@
             Немає доступних для проходження питань.
         @endcomponent
     @endforelse
+@endsection
+
+@section('additions')
+    @if ($errors->any())
+        <div class="alert alert-danger mt-5">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 @endsection
 
 @section('content')
