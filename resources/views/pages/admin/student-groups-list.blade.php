@@ -10,7 +10,7 @@
 @endsection
 
 @section('category-header-text')
-    Список груп студентів:
+    Список доступних груп студентів:
 @endsection
 
 @section('category-links')
