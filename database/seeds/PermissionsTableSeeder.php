@@ -7,6 +7,9 @@ class PermissionsTableSeeder extends Seeder
 {
     protected static $permissions = [
         'admin' => [
+            'access-administrators' => [
+                'public_name' => 'Доступ до управління адміністраторами (пункт меню)'
+            ],
             'create-administrators' => [
                 'public_name' => 'Реєстрація адміністраторів'
             ],
@@ -21,6 +24,9 @@ class PermissionsTableSeeder extends Seeder
             ],
 
 
+            'access-groups' => [
+                'public_name' => 'Доступ до груп (пункт меню)'
+            ],
             'create-groups' => [
                 'public_name' => 'Створення груп'
             ],
@@ -48,7 +54,9 @@ class PermissionsTableSeeder extends Seeder
                 'public_name' => 'Видалення студенів'
             ],
 
-
+            'access-subjects' => [
+                'public_name' => 'Доступ до тестів (пункт меню)'
+            ],
             'create-subjects' => [
                 'public_name' => 'Створення предметів тестування'
             ],
