@@ -11,6 +11,7 @@ use App\Policies\AdministratorPolicy;
 use App\Policies\GroupPolicy;
 use App\Policies\StudentPolicy;
 use App\Policies\SubjectPolicy;
+use App\Policies\TestPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -26,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class          => StudentPolicy::class,
         Administrator::class => AdministratorPolicy::class,
         TestSubject::class   => SubjectPolicy::class,
+        Test::class          => TestPolicy::class,
     ];
 
     /**
@@ -55,19 +57,6 @@ class AuthServiceProvider extends ServiceProvider
             if ($user instanceof Administrator) {
                 return $user->hasRole('super-admin');
             }
-        });
-
-        $this->registerTestGates();
-    }
-
-    protected function registerTestGates()
-    {
-        Gate::define('update-test', function (Administrator $user, Test $test) {
-            return $user->can('update-tests');
-        });
-
-        Gate::define('delete-test', function (Administrator $user, Test $test) {
-            return $user->can('delete-tests');
         });
     }
 }

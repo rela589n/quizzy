@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Tests;
 
 use App\Models\Administrator;
-use App\Models\Test;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class MakeTestRequest extends FormRequest

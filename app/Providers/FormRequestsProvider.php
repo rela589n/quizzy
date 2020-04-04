@@ -9,6 +9,7 @@ use App\Http\Requests\Groups\UpdateGroupRequest;
 use App\Http\Requests\Questions\FillAnswersRequest;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
+use App\Http\Requests\Tests\UpdateTestRequest;
 use App\Http\Requests\UrlManageable;
 use App\Lib\ValidationGenerator;
 use Illuminate\Contracts\Foundation\Application;
@@ -21,6 +22,7 @@ class FormRequestsProvider extends ServiceProvider
         CreateGroupRequest::class,
         UpdateGroupRequest::class,
         UpdateSubjectRequest::class,
+        UpdateTestRequest::class,
     ];
 
     /**

@@ -13,10 +13,10 @@
 
 @section('main-container-content')
     @include('blocks.admin.test-form', [
-      'submitSize' => ($authUser->can('delete-tests')) ? 9 : 12
+      'submitSize' => ($authUser->can('delete', $test)) ? 9 : 12
     ])
 
-    @if($authUser->can('delete-tests'))
+    @if($authUser->can('delete', $test))
         @include('blocks.admin.delete-entity-form')
     @endif
 @endsection

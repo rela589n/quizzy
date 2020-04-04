@@ -17,18 +17,12 @@ class TestsController extends AdminController
     {
         $this->authorize('create-tests');
 
-        /**
-         * @var  \App\Models\TestSubject $subject
-         */
-
         $subject = $this->urlManager->getCurrentSubject();
-
         $tests = $subject->tests()->has('nativeQuestions')
             ->withCount('nativeQuestions as questions_count')->get();
 
-
         return view('pages.admin.tests-new', [
-            'subject' => $subject,
+            'subject'      => $subject,
             'includeTests' => $tests
         ]);
     }
@@ -71,26 +65,26 @@ class TestsController extends AdminController
 
         return redirect()->route('admin.tests.subject.test', [
             'subject' => $currentSubject->uri_alias,
-            'test' => $newTest->uri_alias
+            'test'    => $newTest->uri_alias
         ]);
     }
 
     /**
-     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showUpdateTestForm(Request $request)
+    public function showUpdateTestForm()
     {
-        $this->authorize('update-tests');
-
         $test = $this->urlManager->getCurrentTest();
+        $this->authorize('update', $test);
+
         $subject = $this->urlManager->getCurrentSubject();
 
         return view('pages.admin.tests-single-settings', [
-            'test' => $test,
-            'subject' => $subject,
-            'includeTests' => $subject->tests()->has('nativeQuestions')
+            'test'         => $test,
+            'subject'      => $subject,
+            'includeTests' => $subject->tests()
+                ->has('nativeQuestions')
                 ->withCount('nativeQuestions as questions_count')
                 ->get()
         ]);
@@ -133,21 +127,22 @@ class TestsController extends AdminController
 
         return redirect()->route('admin.tests.subject.test', [
             'subject' => $currentSubject['uri_alias'],
-            'test' => $currentTest['uri_alias']
+            'test'    => $currentTest['uri_alias']
         ]);
     }
 
     /**
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Exception
      */
     public function deleteTest()
     {
-        $this->authorize('delete-tests');
-
-        $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest();
+        $this->authorize('delete', $currentTest);
+
         $currentTest->delete();
+        $currentSubject = $this->urlManager->getCurrentSubject();
 
         return redirect()->route('admin.tests.subject', [
             'subject' => $currentSubject['uri_alias']

@@ -20,12 +20,9 @@ class QuestionsController extends AdminController
      */
     public function showCreateOrUpdateForm(Request $request, QuestionsTransformer $transformer)
     {
-        $this->authorize('update-tests');
-
-        /**
-         * @var Test $currentTest
-         */
         $currentTest = $this->urlManager->getCurrentTest();
+        $this->authorize('update', $currentTest);
+
         $currentTest->loadMissing('nativeQuestions');
         $currentTest->nativeQuestions->load('answerOptions');
 
@@ -33,7 +30,7 @@ class QuestionsController extends AdminController
 
         $fullQuestions = collect($request->old('q.modified'))
             ->map(function ($modified, $id) use (&$exclude, $transformer) {
-                $exclude["$id"] = 1;
+                $exclude["$id"] = true;
 
                 return $transformer->requestToDto($modified, [
                     'id' => $id,
