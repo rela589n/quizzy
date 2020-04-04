@@ -15,27 +15,27 @@ class GroupsTableSeeder extends Seeder
     public function run()
     {
         StudentGroup::create([
-            'name' => 'ПІ-172',
-            'uri_alias' => 'pi-172',
-            'year' => '2017'
+            'name' => 'ПІ-132',
+            'uri_alias' => 'pi-132',
+            'year' => '2013'
         ]);
 
         StudentGroup::create([
-            'name' => 'ПІ-171',
-            'uri_alias' => 'pi-171',
-            'year' => '2017'
+            'name' => 'ПІ-131',
+            'uri_alias' => 'pi-131',
+            'year' => '2013'
         ]);
 
         StudentGroup::create([
-            'name' => 'ПІ-181',
-            'uri_alias' => 'pi-181',
-            'year' => '2018'
+            'name' => 'ПІ-141',
+            'uri_alias' => 'pi-141',
+            'year' => '2014'
         ]);
 
         StudentGroup::create([
-            'name' => 'ПІ-182',
-            'uri_alias' => 'pi-182',
-            'year' => '2017'
+            'name' => 'ПІ-142',
+            'uri_alias' => 'pi-142',
+            'year' => '2014'
         ]);
     }
 }
