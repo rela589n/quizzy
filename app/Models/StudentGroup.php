@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Lib\Traits\FilteredScope;
 use App\Lib\Traits\SlugScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -36,12 +37,15 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @property int|null $created_by
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereSlug($slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup filtered(\App\Lib\Filters\ResultFilter $filters)
  */
 class StudentGroup extends Model
 {
     use SoftDeletes;
     use HasRelationships;
+
     use SlugScope;
+    use FilteredScope;
 
     public $timestamps = false;
 
