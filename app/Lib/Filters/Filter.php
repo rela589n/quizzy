@@ -30,7 +30,7 @@ abstract class Filter
 
     /**
      * @param Collection $data
-     * @return mixed
+     * @return Collection
      */
     public function apply($data)
     {

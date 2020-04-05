@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Tests;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Tests\CreateTestRequest;
 use App\Http\Requests\Tests\UpdateTestRequest;
-use Illuminate\Http\Request;
+use App\Lib\Filters\Common\IncludeTestsFilter;
 
 class TestsController extends AdminController
 {
@@ -29,9 +29,10 @@ class TestsController extends AdminController
 
     /**
      * @param CreateTestRequest $request
+     * @param IncludeTestsFilter $filter
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function newTest(CreateTestRequest $request)
+    public function newTest(CreateTestRequest $request, IncludeTestsFilter $filter)
     {
         /**
          * @var \App\Models\Test $newTest
@@ -42,24 +43,19 @@ class TestsController extends AdminController
         $currentSubject = $this->urlManager->getCurrentSubject();
         $newTest = $currentSubject->tests()->create($request->validated());
 
-
-        // todo move this logic into another class and remove duplication
-        $includeTests = array_filter($validated['include'] ?? [], function ($v) {
-            return !empty($v['count']) && isset($v['necessary']);
-        });
+        $includeTests = collect($validated['include'] ?? []);
+        $includeTests = $filter->apply($includeTests);
 
         $includeTests[$newTest->id] = [ // todo remove duplicate
-            'count' => 999
+            'count' => "999"
         ];
 
-        $includeTests = array_map(
-            function ($value) {
-                return [
-                    'questions_quantity' => $value['count']
-                ];
-            },
-            $includeTests
-        );
+        // normalize for eloquent
+        $includeTests = $includeTests->map(function ($value) {
+            return [
+                'questions_quantity' => $value['count']
+            ];
+        });
 
         $newTest->tests()->attach($includeTests);
 
@@ -92,9 +88,10 @@ class TestsController extends AdminController
 
     /**
      * @param UpdateTestRequest $request
+     * @param IncludeTestsFilter $filter
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateTest(UpdateTestRequest $request)
+    public function updateTest(UpdateTestRequest $request, IncludeTestsFilter $filter)
     {
         $validated = $request->validated();
 
@@ -103,25 +100,21 @@ class TestsController extends AdminController
 
         $currentTest->update($validated);
 
-        // todo move this logic into another class and remove duplication
-        $includeTests = array_filter($validated['include'] ?? [], function ($v) {
-            return !empty($v['count']) && isset($v['necessary']);
-        });
+        $includeTests = collect($validated['include'] ?? []);
+        $includeTests = $filter->apply($includeTests);
 
         if (!isset($validated['include'][$currentTest->id])) {
             $includeTests[$currentTest->id] = [ // todo remove duplicate
-                'count' => 999
+                'count' => "999"
             ];
         }
 
-        $includeTests = array_map(
-            function ($value) {
-                return [
-                    'questions_quantity' => $value['count']
-                ];
-            },
-            $includeTests
-        );
+        // normalize for eloquent
+        $includeTests = $includeTests->map(function ($value) {
+            return [
+                'questions_quantity' => $value['count']
+            ];
+        });
 
         $currentTest->tests()->sync($includeTests);
 
