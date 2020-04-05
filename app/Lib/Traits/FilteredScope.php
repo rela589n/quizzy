@@ -4,14 +4,14 @@
 namespace App\Lib\Traits;
 
 
-use App\Lib\Filters\ResultFilter;
+use App\Lib\Filters\Eloquent\ResultFilter;
 use Illuminate\Database\Eloquent\Builder;
 
 trait FilteredScope
 {
     /**
      * @param Builder $query
-     * @param ResultFilter $filters
+     * @param \App\Lib\Filters\Eloquent\ResultFilter $filters
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function scopeFiltered($query, ResultFilter $filters)

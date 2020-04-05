@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Admin\Students;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Groups\CreateGroupRequest;
 use App\Http\Requests\Groups\UpdateGroupRequest;
-use App\Lib\Filters\AvailableGroupsFilter;
+use App\Lib\Filters\Eloquent\AvailableGroupsFilter;
 use App\Models\StudentGroup;
 
 class GroupsController extends AdminController
 {
     /**
-     * @param AvailableGroupsFilter $filters
+     * @param \App\Lib\Filters\Eloquent\AvailableGroupsFilter $filters
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showAll(AvailableGroupsFilter $filters)

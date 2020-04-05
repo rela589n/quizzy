@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $mark_readable
  * @property-read mixed $score
  * @property-read mixed $score_readable
- * @method static Builder|\App\Models\TestResult filtered(\App\Lib\Filters\TestResultFilter $filters)
+ * @method static Builder|\App\Models\TestResult filtered(\App\Lib\Filters\Eloquent\TestResultFilter $filters)
  * @method static Builder|\App\Models\TestResult ofTest($testId)
  * @method static Builder|\App\Models\TestResult recent($count)
  */

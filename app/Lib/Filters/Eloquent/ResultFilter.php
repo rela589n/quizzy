@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Lib\Filters;
+namespace App\Lib\Filters\Eloquent;
 
 
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
