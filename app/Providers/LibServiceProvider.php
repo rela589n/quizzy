@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Lib\transformers\QuestionsTransformer;
+use App\Lib\Transformers\QuestionsTransformer;
 use App\Lib\ValidationGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;

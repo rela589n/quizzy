@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Lib\transformers;
+namespace App\Lib\Transformers;
 
 
 use App\Models\Question;

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Lib\transformers\QuestionsTransformer;
+use App\Lib\Transformers\QuestionsTransformer;
 use App\Models\AnswerOption;
 use App\Http\Requests\Questions\FillAnswersRequest;
 use App\Models\Question;
