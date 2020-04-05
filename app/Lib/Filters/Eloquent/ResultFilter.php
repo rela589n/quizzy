@@ -4,22 +4,11 @@
 namespace App\Lib\Filters\Eloquent;
 
 
+use App\Lib\Filters\Filter;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
-abstract class ResultFilter
+abstract class ResultFilter extends Filter
 {
-    protected function applyFilters(array $filters, &$filterParam): bool
-    {
-        foreach ($filters as $filter => $value) {
-            if (method_exists($this, $filter) &&
-                $this->$filter($filterParam, $value) === false) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     /**
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -30,24 +19,19 @@ abstract class ResultFilter
         return $query;
     }
 
-    public function apply(EloquentCollection $results)
+    /**
+     * @param EloquentCollection $results
+     * @return mixed
+     */
+    public function apply($results)
     {
         $this->loadRelations($results);
-        $filters = $this->filters();
-
-        return $results->filter(function ($testResult) use(&$filters) {
-            return $this->applyFilters($filters, $testResult);
-        });
+        return parent::apply($results);
     }
 
     protected function loadRelations(EloquentCollection $results)
     {
         //
-    }
-
-    protected function filters()
-    {
-        return [];
     }
 
     protected function queryFilters()
