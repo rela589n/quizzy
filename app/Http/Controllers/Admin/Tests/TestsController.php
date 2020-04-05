@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Tests\CreateTestRequest;
 use App\Http\Requests\Tests\UpdateTestRequest;
 use App\Lib\Filters\Common\IncludeTestsFilter;
+use App\Lib\Transformers\Collection\IncludeTestsTransformer;
 
 class TestsController extends AdminController
 {
@@ -30,9 +31,10 @@ class TestsController extends AdminController
     /**
      * @param CreateTestRequest $request
      * @param IncludeTestsFilter $filter
+     * @param IncludeTestsTransformer $transformer
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function newTest(CreateTestRequest $request, IncludeTestsFilter $filter)
+    public function newTest(CreateTestRequest $request, IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
     {
         /**
          * @var \App\Models\Test $newTest
@@ -44,19 +46,14 @@ class TestsController extends AdminController
         $newTest = $currentSubject->tests()->create($request->validated());
 
         $includeTests = collect($validated['include'] ?? []);
-        $includeTests = $filter->apply($includeTests);
+        $includeTests = $filter->apply($includeTests); // remove not necessary and with empty count
 
         $includeTests[$newTest->id] = [ // todo remove duplicate
             'count' => "999"
         ];
 
         // normalize for eloquent
-        $includeTests = $includeTests->map(function ($value) {
-            return [
-                'questions_quantity' => $value['count']
-            ];
-        });
-
+        $includeTests = $transformer->transform($includeTests);
         $newTest->tests()->attach($includeTests);
 
         return redirect()->route('admin.tests.subject.test', [
@@ -89,9 +86,10 @@ class TestsController extends AdminController
     /**
      * @param UpdateTestRequest $request
      * @param IncludeTestsFilter $filter
+     * @param IncludeTestsTransformer $transformer
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateTest(UpdateTestRequest $request, IncludeTestsFilter $filter)
+    public function updateTest(UpdateTestRequest $request, IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
     {
         $validated = $request->validated();
 
@@ -101,7 +99,7 @@ class TestsController extends AdminController
         $currentTest->update($validated);
 
         $includeTests = collect($validated['include'] ?? []);
-        $includeTests = $filter->apply($includeTests);
+        $includeTests = $filter->apply($includeTests); // remove not necessary and with empty count
 
         if (!isset($validated['include'][$currentTest->id])) {
             $includeTests[$currentTest->id] = [ // todo remove duplicate
@@ -110,12 +108,7 @@ class TestsController extends AdminController
         }
 
         // normalize for eloquent
-        $includeTests = $includeTests->map(function ($value) {
-            return [
-                'questions_quantity' => $value['count']
-            ];
-        });
-
+        $includeTests = $transformer->transform($includeTests);
         $currentTest->tests()->sync($includeTests);
 
         return redirect()->route('admin.tests.subject.test', [
