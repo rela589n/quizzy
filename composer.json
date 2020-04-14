@@ -11,6 +11,7 @@
         "php": "^7.2",
         "caouecs/laravel-lang": "~4.0",
         "davejamesmiller/laravel-breadcrumbs": "^5.3",
+        "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "fzaninotto/faker": "^1.9",
         "laravel/framework": "^6.2",
