@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\StudentGroup;
+use App\Models\Test;
 use App\Models\TestResult;
 use App\Observers\CreatedByObserver;
 use App\Observers\TestResultObserver;
@@ -18,6 +19,8 @@ class ModelObserversProvider extends ServiceProvider
     public function boot()
     {
         TestResult::observe(TestResultObserver::class);
+
         StudentGroup::observe(CreatedByObserver::class);
+        Test::observe(CreatedByObserver::class);
     }
 }
