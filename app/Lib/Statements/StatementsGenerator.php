@@ -3,9 +3,7 @@
 namespace App\Lib\Statements;
 
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
-use App\Lib\TestResultsEvaluator;
 use App\Lib\Words\WordsManager;
-use App\Models\TestResult;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 abstract class StatementsGenerator
@@ -33,7 +31,6 @@ abstract class StatementsGenerator
 
     /**
      * @return string path to generated statement file
-     * @throws \App\Exceptions\NullPointerException
      * @throws \PhpOffice\PhpWord\Exception\CopyFileException
      * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
      * @throws \PhpOffice\PhpWord\Exception\Exception
