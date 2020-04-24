@@ -80,7 +80,6 @@ class Test extends Model
      */
     public function allQuestions()
     {
-        // todo move it into repository
         return \Illuminate\Database\Eloquent\Collection::make($this->testComposites->pluck('questions')->flatten());
     }
 
