@@ -27,34 +27,17 @@ class RouteServiceProvider extends ServiceProvider
 
     public static function getHomeUrl(?string $guardName)
     {
-        // todo create AdminRouteHandler and ClientRouteHandler and use polymorphism
-        switch ($guardName) {
-            case 'admin':
-                return route('admin.dashboard');
-            default:
-                return route('client.dashboard');
-        }
+        return route("$guardName.dashboard");
     }
 
     public static function getLoginUrl(?string $guardName)
     {
-        // todo get rid of this switch statements
-        switch ($guardName) {
-            case 'admin':
-                return route('admin.login');
-            default:
-                return route('client.login');
-        }
+        return route("$guardName.login");
     }
 
     public static function getChangePasswordUrl(?string $guardName)
     {
-        switch ($guardName) {
-            case 'admin':
-                return route('admin.change-password');
-            default:
-                return route('client.change-password');
-        }
+        return route("$guardName.change-password");
     }
 
     /**
