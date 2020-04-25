@@ -4,7 +4,9 @@
     <input type="checkbox"
            id=ans[{{ $questionId }}][{{ $option->id }}][is_chosen]
            name=ans[{{ $questionId }}][{{ $option->id }}][is_chosen]
-           value="1"> {{-- to send '1' instead of 'on'--}}
+           value="1" {{-- to send '1' instead of 'on'--}}
+           {{ $checkboxAdditions ?? '' }}
+    >
 
     {{ $option->text }}
 </label>
