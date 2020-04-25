@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,11 +41,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
  * @property-read int|null $test_results_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereSlug($slug)
+ * @property int|null $created_by
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereCreatedBy($value)
  */
 class Test extends Model
 {
     use SoftDeletes;
     use SlugScope;
+
+    use OwnerChecks;
 
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time'];

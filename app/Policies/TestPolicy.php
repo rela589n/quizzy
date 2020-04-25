@@ -31,7 +31,7 @@ class TestPolicy
      */
     public function update(Administrator $user, Test $test)
     {
-        return $user->can('update-tests');
+        return $test->isOwnedBy($user) || $user->can('update-tests');
     }
 
     /**
@@ -43,6 +43,6 @@ class TestPolicy
      */
     public function delete(Administrator $user, Test $test)
     {
-        return $user->can('delete-tests');
+        return $test->isOwnedBy($user) || $user->can('delete-tests');
     }
 }
