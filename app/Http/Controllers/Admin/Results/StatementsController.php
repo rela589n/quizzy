@@ -17,7 +17,6 @@ class StatementsController extends AdminController
      * @param Request $request
      * @param StudentStatementsGenerator $generator
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
-     * @throws \App\Exceptions\NullPointerException
      * @throws \PhpOffice\PhpWord\Exception\CopyFileException
      * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
      * @throws \PhpOffice\PhpWord\Exception\Exception
@@ -36,7 +35,6 @@ class StatementsController extends AdminController
      * @param Request $request
      * @param GroupStatementsGenerator $generator
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
-     * @throws \App\Exceptions\NullPointerException
      * @throws \PhpOffice\PhpWord\Exception\CopyFileException
      * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
      * @throws \PhpOffice\PhpWord\Exception\Exception

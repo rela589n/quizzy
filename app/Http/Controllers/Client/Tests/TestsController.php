@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Client\Tests;
 
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Requests\Tests\FinishTestRequest;
-use App\Lib\TestResultsEvaluator;
 use App\Models\AskedQuestion;
 use App\Models\TestResult;
 use Illuminate\Http\Request;
@@ -35,9 +34,7 @@ class TestsController extends ClientController
 
     /**
      * @param FinishTestRequest $request
-     * @param TestResultsEvaluator $evaluator
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \App\Exceptions\NullPointerException
      */
     public function finishTest(FinishTestRequest $request)
     {

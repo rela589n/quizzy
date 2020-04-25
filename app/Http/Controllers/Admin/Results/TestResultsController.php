@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Results;
 
-use App\Http\Requests\RequestUrlManager;
 use App\Lib\Filters\Eloquent\TestResultFilter;
 use App\Models\StudentGroup;
 use App\Http\Controllers\Admin\AdminController;

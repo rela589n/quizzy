@@ -11,7 +11,7 @@ use App\Models\StudentGroup;
 class GroupsController extends AdminController
 {
     /**
-     * @param \App\Lib\Filters\Eloquent\AvailableGroupsFilter $filters
+     * @param AvailableGroupsFilter $filters
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showAll(AvailableGroupsFilter $filters)

@@ -11,7 +11,7 @@ trait FilteredScope
 {
     /**
      * @param Builder $query
-     * @param \App\Lib\Filters\Eloquent\ResultFilter $filters
+     * @param ResultFilter $filters
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function scopeFiltered($query, ResultFilter $filters)
