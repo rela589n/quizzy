@@ -12,8 +12,9 @@ use App\Http\Requests\Subjects\UpdateSubjectRequest;
 use App\Http\Requests\Tests\UpdateTestRequest;
 use App\Http\Requests\UrlManageable;
 use App\Lib\ValidationGenerator;
+use App\Models\Administrator;
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class FormRequestsProvider extends ServiceProvider
@@ -37,13 +38,13 @@ class FormRequestsProvider extends ServiceProvider
             return $service;
         });
 
-        $this->app->extend(AdminChangePasswordRequest::class, function (AdminChangePasswordRequest $service) {
-            $service->setAuthUser(Auth::guard('admin')->user());
+        $this->app->extend(AdminChangePasswordRequest::class, function (AdminChangePasswordRequest $service, Application $app) {
+            $service->setAuthUser($app->make(Administrator::class));
             return $service;
         });
 
-        $this->app->extend(StudentChangePasswordRequest::class, function (StudentChangePasswordRequest $service) {
-            $service->setAuthUser(Auth::guard('client')->user());
+        $this->app->extend(StudentChangePasswordRequest::class, function (StudentChangePasswordRequest $service, Application $app) {
+            $service->setAuthUser($app->make(User::class));
             return $service;
         });
 
