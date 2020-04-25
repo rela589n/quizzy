@@ -19,7 +19,7 @@ class GroupPolicy
      */
     public function view(Administrator $user, StudentGroup $group)
     {
-        return $group->created_by == $user->id || $user->can('view-groups');
+        return $group->isOwnedBy($user) || $user->can('view-groups');
     }
 
     /**
@@ -31,7 +31,7 @@ class GroupPolicy
      */
     public function update(Administrator $user, StudentGroup $group)
     {
-        return $group->created_by == $user->id || $user->can('update-groups');
+        return $group->isOwnedBy($user) || $user->can('update-groups');
     }
 
     /**
@@ -43,6 +43,6 @@ class GroupPolicy
      */
     public function delete(Administrator $user, StudentGroup $group)
     {
-        return $group->created_by == $user->id || $user->can('delete-groups');
+        return $group->isOwnedBy($user) || $user->can('delete-groups');
     }
 }

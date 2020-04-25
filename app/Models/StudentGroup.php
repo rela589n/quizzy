@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Lib\Traits\FilteredScope;
+use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,6 +47,8 @@ class StudentGroup extends Model
 
     use SlugScope;
     use FilteredScope;
+
+    use OwnerChecks;
 
     public $timestamps = false;
 
