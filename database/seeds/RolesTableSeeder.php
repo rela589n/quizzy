@@ -8,22 +8,28 @@ class RolesTableSeeder extends Seeder
 {
     protected static $roles = [
         'admin' => [
-            'super-admin' => [
+            'super-admin'   => [
                 'public_name' => 'Адміністратор',
             ],
-            'teacher' => [
-                'public_name' => 'Викладач',
-                'permissions-type' => 'all', // all | only
+            'teacher'       => [
+                'public_name'        => 'Викладач',
+                'permissions-type'   => 'all', // all | only
                 'permissions-except' => [
                     'access-administrators',
                     'create-administrators',
                     'view-administrators',
                     'update-administrators',
-                    'delete-administrators'
+                    'delete-administrators',
+
+                    'update-subjects',
+                    'delete-subjects',
+
+                    'update-tests',
+                    'delete-tests',
                 ]
             ],
             'class-monitor' => [
-                'public_name' => 'Староста',
+                'public_name'      => 'Староста',
                 'permissions-only' => [
                     'access-groups',
                     'create-groups',
@@ -75,8 +81,8 @@ class RolesTableSeeder extends Seeder
                  * @var Role $role
                  */
                 $role = Role::create([
-                    'guard_name' => $guardName,
-                    'name' => $name,
+                    'guard_name'  => $guardName,
+                    'name'        => $name,
                     'public_name' => $roleConfig['public_name']
                 ]);
 

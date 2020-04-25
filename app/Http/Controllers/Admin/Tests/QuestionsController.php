@@ -8,6 +8,7 @@ use App\Models\AnswerOption;
 use App\Http\Requests\Questions\FillAnswersRequest;
 use App\Models\Question;
 use App\Models\Test;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 
 class QuestionsController extends AdminController
@@ -16,14 +17,31 @@ class QuestionsController extends AdminController
      * @param Request $request
      * @param QuestionsTransformer $transformer
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function showCreateOrUpdateForm(Request $request, QuestionsTransformer $transformer)
     {
         $currentTest = $this->urlManager->getCurrentTest();
+
+        try {
+            return $this->showUpdateForm($request, $transformer, $currentTest);
+        } catch (AuthorizationException $e) {
+            return $this->showReadOnlyView($request, $currentTest);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param QuestionsTransformer $transformer
+     * @param Test $currentTest
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws AuthorizationException
+     */
+    public function showUpdateForm(Request $request, QuestionsTransformer $transformer, Test $currentTest)
+    {
         $this->authorize('update', $currentTest);
 
-        $currentTest->loadMissing('nativeQuestions');
+        $currentTest->loadMissing('nativeQuestions'); // todo dependency loader
         $currentTest->nativeQuestions->load('answerOptions');
 
         $exclude = array_flip(old("q.deleted", []));
@@ -33,7 +51,7 @@ class QuestionsController extends AdminController
                 $exclude["$id"] = true;
 
                 return $transformer->requestToDto($modified, [
-                    'id' => $id,
+                    'id'   => $id,
                     'type' => 'modified'
                 ]);
             });
@@ -59,7 +77,7 @@ class QuestionsController extends AdminController
             collect($request->old('q.new', []))
                 ->map(function ($newQuestion, $id) use ($transformer) {
                     return $transformer->requestToDto($newQuestion, [
-                        'id' => $id,
+                        'id'   => $id,
                         'type' => 'new'
                     ]);
                 })
@@ -68,11 +86,30 @@ class QuestionsController extends AdminController
         $lastOptionId = $request->old('last-answer-option-id') ?? (AnswerOption::latest('id')->first()->id ?? 0);
 
         return view('pages.admin.tests-single', [
-            'subject' => $this->urlManager->getCurrentSubject(),
-            'test' => $currentTest,
-            'filteredQuestions' => $fullQuestions->all(),
-            'message' => \Session::pull('message'),
+            'subject'            => $this->urlManager->getCurrentSubject(),
+            'test'               => $currentTest,
+            'filteredQuestions'  => $fullQuestions->all(),
+            'message'            => \Session::pull('message'),
             'lastAnswerOptionId' => $lastOptionId
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Test $currentTest
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws AuthorizationException
+     */
+    public function showReadOnlyView(Request $request, Test $currentTest)
+    {
+        $this->authorize('view', $currentTest);
+
+        $currentTest->loadMissing('nativeQuestions');
+        $currentTest->nativeQuestions->load('answerOptions');
+
+        return view('pages.admin.tests-single-read-only', [
+            'subject' => $this->urlManager->getCurrentSubject(),
+            'test'    => $currentTest,
         ]);
     }
 
@@ -110,7 +147,7 @@ class QuestionsController extends AdminController
 
             foreach ($question['v'] as $vId => $variant) {
                 $new->answerOptions()->save(new AnswerOption([
-                    'text' => $variant['text'],
+                    'text'     => $variant['text'],
                     'is_right' => (int)(isset($variant['is_right']) ?? false)
                 ]));
             }
