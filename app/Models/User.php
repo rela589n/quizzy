@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\User
@@ -73,5 +74,14 @@ class User extends BaseUser
     public function lastResultOf($test)
     {
         return $this->testResults()->ofTest($test)->recent(1);
+    }
+
+    /**
+     * @param Model $model
+     * @return bool
+     */
+    public function isOwnedBy(Model $model)
+    {
+        return $this->studentGroup->isOwnedBy($model);
     }
 }

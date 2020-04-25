@@ -19,7 +19,7 @@ class StudentPolicy
      */
     public function view(Administrator $user, User $model)
     {
-        return $model->studentGroup->created_by == $user->id || $user->can('view-students');
+        return $model->isOwnedBy($user) || $user->can('view-students');
     }
 
     /**
@@ -31,7 +31,7 @@ class StudentPolicy
      */
     public function update(Administrator $user, User $model)
     {
-        return $model->studentGroup->created_by == $user->id || $user->can('update-students');
+        return $model->isOwnedBy($user) || $user->can('update-students');
     }
 
     /**
@@ -43,6 +43,6 @@ class StudentPolicy
      */
     public function delete(Administrator $user, User $model)
     {
-        return $model->studentGroup->created_by == $user->id || $user->can('delete-students');
+        return $model->isOwnedBy($user) || $user->can('delete-students');
     }
 }
