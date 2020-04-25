@@ -19,8 +19,13 @@ class QuestionsTableSeeder extends Seeder
             'test_id' => 1
         ]);
 
+        Question::create([
+            'question' => 'Скільки методів може містити клас?',
+            'test_id'  => 1
+        ]);
+
         $faker = Faker\Factory::create('uk_UA');
-        foreach (range(2, self::QUESTIONS_LIMIT) as $i) {
+        foreach (range(3, self::QUESTIONS_LIMIT) as $i) {
             Question::create([
                 'question' => rtrim($faker->realText(60), ' .') . '?',
                 'test_id' => $faker->numberBetween(2, TestsTableSeeder::TESTS_LIMIT)
