@@ -10,7 +10,7 @@
 @endsection
 
 @section('category-header-text')
-    Список викладачів:
+    Список адміністраторів:
 @endsection
 
 @section('category-links')
