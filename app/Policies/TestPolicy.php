@@ -19,7 +19,7 @@ class TestPolicy
      */
     public function view(Administrator $user, Test $test)
     {
-        return $user->can('view-tests');
+        return $test->isOwnedBy($user) || $user->can('view-tests');
     }
 
     /**
