@@ -11,8 +11,7 @@ class AdministratorsTableSeeder extends Seeder
                 'name' => 'system',
                 'surname' => 'system',
                 'patronymic' => 'system',
-                'password' => 'password',
-                'password_changed' => 1
+                'password' => '1',
             ],
             'admin' => [
                 'name' => 'Євген',
@@ -34,8 +33,7 @@ class AdministratorsTableSeeder extends Seeder
                 'name' => 'Олександр',
                 'surname' => 'Моїк',
                 'patronymic' => 'Ігорович',
-                'password' => 'password',
-                'password_changed' => 1
+                'password' => '1',
             ]
         ]
     ];
