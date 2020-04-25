@@ -7,6 +7,29 @@ class GroupsTableSeeder extends Seeder
 {
     public const GROUPS_LIMIT = 4;
 
+    protected $groups = [
+        [
+            'name' => 'ПІ-182',
+            'uri_alias' => 'example-pi-182',
+            'year' => '2018'
+        ],
+        [
+            'name' => 'ПІ-171',
+            'uri_alias' => 'example-pi-171',
+            'year' => '2017'
+        ],
+        [
+            'name' => 'ПІ-161',
+            'uri_alias' => 'example-pi-161',
+            'year' => '2016'
+        ],
+        [
+            'name' => 'ПІ-162',
+            'uri_alias' => 'example-pi-162',
+            'year' => '2016'
+        ]
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -14,28 +37,8 @@ class GroupsTableSeeder extends Seeder
      */
     public function run()
     {
-        StudentGroup::create([
-            'name' => 'ПІ-132',
-            'uri_alias' => 'pi-132',
-            'year' => '2013'
-        ]);
-
-        StudentGroup::create([
-            'name' => 'ПІ-131',
-            'uri_alias' => 'pi-131',
-            'year' => '2013'
-        ]);
-
-        StudentGroup::create([
-            'name' => 'ПІ-141',
-            'uri_alias' => 'pi-141',
-            'year' => '2014'
-        ]);
-
-        StudentGroup::create([
-            'name' => 'ПІ-142',
-            'uri_alias' => 'pi-142',
-            'year' => '2014'
-        ]);
+        for ($i = 0; $i < self::GROUPS_LIMIT; ++$i) {
+            StudentGroup::create($this->groups[$i]);
+        }
     }
 }
