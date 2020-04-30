@@ -9,7 +9,7 @@
     @parent
 @endsection
 
-@section('category-header-text') Тест по предмету {{ $subject->name }} - {{ $test->name }} @endsection
+@section('category-header-text') {{ $subject->name }} - {{ $test->name }}, список запитань: @endsection
 
 @section('test-questions')
     @forelse($test->nativeQuestions as $question)

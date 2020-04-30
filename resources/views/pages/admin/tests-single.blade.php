@@ -18,7 +18,7 @@
     @endif
 @endsection
 
-@section('category-header-text') Тест по предмету {{ $subject->name }} - {{ $test->name }} @endsection
+@section('category-header-text') {{ $subject->name }} - {{ $test->name }}, список запитань: @endsection
 
 @section('test-questions')
     @forelse($filteredQuestions as $question)
@@ -34,8 +34,7 @@
             'new' => boolval(old("q.new.{$question->id}", false))
         ])
     @empty
-        <h3 class="list-group-item empty-questions-list-label mb-4">В цього теста питань поки що немає. Ви можете створити їх
-            натиснувши кнопку нижче:</h3>
+        <h3 class="list-group-item empty-questions-list-label mb-4">Щоб створити питання, натисніть кнопку + нижче:</h3>
     @endforelse
 @endsection
 

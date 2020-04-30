@@ -13,12 +13,12 @@
     @if($authUser->can('update', $subject))
         @include('blocks.admin.settings-link', [
             'link' => route('admin.tests.subject.settings', ['subject' => $subject->uri_alias]),
-            'text' => 'Перейти до налаштувань предмета'
+            'text' => 'Налаштування предмета'
         ])
     @endif
 @endsection
 
-@section('category-header-text') Існуючі тести з предмету {{ $subject->name }} @endsection
+@section('category-header-text') Існуючі тести з предмету {{ $subject->name }}: @endsection
 
 @section('category-links')
     @forelse($subject->tests as $test)
@@ -29,7 +29,7 @@
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
-            Тестів поки що немає. Можете створити новий натиснувши кнопку нижче:
+            Список тестів пустий
         @endcomponent
     @endforelse
 @endsection
@@ -38,7 +38,7 @@
     @if($authUser->can('create-tests'))
         @include('blocks.admin.create-new-link', [
             'link' => route('admin.tests.subject.new', ['subject' => $subject->uri_alias]),
-            'text' => 'Новий'
+            'text' => 'Новий тест'
         ])
     @endif
 @endsection

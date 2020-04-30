@@ -18,7 +18,7 @@
     @endif
 @endsection
 
-@section('category-header-text') Студенти групи {{ $group->name }} @endsection
+@section('category-header-text') Студенти групи {{ $group->name }}: @endsection
 
 @section('category-links')
     @forelse($group->students as $student)
@@ -28,7 +28,7 @@
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
-            Жоден студент не належить до цієї групи
+            Немає студентів
         @endcomponent
     @endforelse
 @endsection
@@ -37,7 +37,7 @@
     @if($authUser->can('create-students'))
         @include('blocks.admin.create-new-link', [
             'link' => route('admin.students.group.new',  ['group' => $group->uri_alias]),
-            'text' => 'Створити студента'
+            'text' => 'Зареєструвати'
         ])
     @endif
 @endsection
