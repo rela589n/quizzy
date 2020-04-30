@@ -20,7 +20,7 @@
 
     @if ($authUser->can('access-administrators'))
         <li class="nav-item @ifroute('admin.teachers') active @endifroute">
-            <a class="nav-link" href="{{ route('admin.teachers') }}" target="_self">Викладачі</a>
+            <a class="nav-link" href="{{ route('admin.teachers') }}" target="_self">Адміністратори</a>
         </li>
     @endif
 

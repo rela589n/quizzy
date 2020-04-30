@@ -22,7 +22,7 @@
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
-            Немає жодного доступного предмета
+            Немає жодного предмета
         @endcomponent
     @endforelse
 @endsection

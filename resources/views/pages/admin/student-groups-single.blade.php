@@ -28,7 +28,7 @@
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
-            Група поки що пуста. Можете додати в неї студентів натиснувши кнопку нижче:
+            Жоден студент не належить до цієї групи
         @endcomponent
     @endforelse
 @endsection
