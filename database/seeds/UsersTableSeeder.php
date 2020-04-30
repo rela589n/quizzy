@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
                 'patronymic' => $faker->lastName,
                 'student_group_id' => $faker->numberBetween(1, GroupsTableSeeder::GROUPS_LIMIT),
                 'email' => $faker->unique()->userName,
-                'password' => Hash::make('password')
+                'password' => Hash::make('1')
             ]);
         }
     }
