@@ -64,6 +64,10 @@ class AnswerOptionsTableSeeder extends Seeder
             [
                 'text'     => 'Скільки потрібно',
                 'is_right' => true
+            ],
+            [
+                'text'     => 'Скільки визначить програміст',
+                'is_right' => false
             ]
         ]);
     }
