@@ -43,6 +43,6 @@ class StudentPolicy
      */
     public function delete(Administrator $user, User $model)
     {
-        return $model->isOwnedBy($user) || $user->can('delete-students');
+        return $user->can('delete-students');
     }
 }
