@@ -43,6 +43,6 @@ class GroupPolicy
      */
     public function delete(Administrator $user, StudentGroup $group)
     {
-        return $group->isOwnedBy($user) || $user->can('delete-groups');
+        return $user->can('delete-groups');
     }
 }
