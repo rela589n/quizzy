@@ -42,9 +42,7 @@ class SubjectsController extends AdminController
         $validated = $request->validated();
         TestSubject::create($validated);
 
-        return redirect()->route('admin.tests.subject', [
-            'subject' => $validated['uri_alias']
-        ]);
+        return redirect()->route('admin.tests');
     }
 
     /**

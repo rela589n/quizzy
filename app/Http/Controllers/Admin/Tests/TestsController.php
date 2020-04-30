@@ -56,9 +56,8 @@ class TestsController extends AdminController
         $includeTests = $transformer->transform($includeTests);
         $newTest->tests()->attach($includeTests);
 
-        return redirect()->route('admin.tests.subject.test', [
-            'subject' => $currentSubject->uri_alias,
-            'test'    => $newTest->uri_alias
+        return redirect()->route('admin.tests.subject', [
+            'subject' => $currentSubject->uri_alias
         ]);
     }
 

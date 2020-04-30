@@ -44,9 +44,7 @@ class GroupsController extends AdminController
         $validated = $request->validated();
         StudentGroup::create($validated);
 
-        return redirect()->route('admin.students.group', [
-            'group' => $validated['uri_alias']
-        ]);
+        return redirect()->route('admin.students');
     }
 
     /**
