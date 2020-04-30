@@ -37,8 +37,6 @@ class GroupsTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < self::GROUPS_LIMIT; ++$i) {
-            StudentGroup::create($this->groups[$i]);
-        }
+        StudentGroup::insert($this->groups);
     }
 }
