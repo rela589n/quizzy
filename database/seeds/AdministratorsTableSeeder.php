@@ -6,34 +6,34 @@ use Illuminate\Database\Seeder;
 class AdministratorsTableSeeder extends Seeder
 {
     protected static $administrators = [
-        'super-admin' => [
+        'super-admin'   => [
             'system' => [
-                'name' => 'system',
-                'surname' => 'system',
-                'patronymic' => 'system',
-                'password' => '1',
+                'name'       => '',
+                'surname'    => 'system',
+                'patronymic' => '',
+                'password'   => '1',
             ],
-            'admin' => [
-                'name' => 'Євген',
-                'surname' => 'Григоровський',
+            'admin'  => [
+                'name'       => 'Євген',
+                'surname'    => 'Григоровський',
                 'patronymic' => 'Сергійович',
-                'password' => '1'
+                'password'   => '1'
             ],
         ],
-        'teacher' => [
+        'teacher'       => [
             'iryna-hutnyk' => [
-                'name' => 'Ірина',
-                'surname' => 'Гутник',
+                'name'       => 'Ірина',
+                'surname'    => 'Гутник',
                 'patronymic' => 'Іванівна',
-                'password' => '1'
+                'password'   => '1'
             ]
         ],
         'class-monitor' => [
             'sand' => [
-                'name' => 'Олександр',
-                'surname' => 'Моїк',
+                'name'       => 'Олександр',
+                'surname'    => 'Моїк',
                 'patronymic' => 'Ігорович',
-                'password' => '1',
+                'password'   => '1',
             ]
         ]
     ];
