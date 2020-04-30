@@ -8,7 +8,7 @@
 
     @if ($authUser->can('access-subjects'))
         <li class="nav-item @ifroute('admin.tests') active @endifroute">
-            <a class="nav-link" href="{{ route('admin.tests') }}" target="_self">Тести</a>
+            <a class="nav-link" href="{{ route('admin.tests') }}" target="_self">Тестування</a>
         </li>
     @endif
 
