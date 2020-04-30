@@ -5,6 +5,19 @@ use Illuminate\Database\Seeder;
 
 class TestSubjectsTableSeeder extends Seeder
 {
+    protected $subjects = [
+        [
+            'name'      => 'ООП',
+            'uri_alias' => 'oop',
+            'course'    => 3
+        ],
+        [
+            'name'      => 'Алгоритми',
+            'uri_alias' => 'algorithms',
+            'course'    => 2
+        ],
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -12,16 +25,6 @@ class TestSubjectsTableSeeder extends Seeder
      */
     public function run()
     {
-        TestSubject::create([
-            'name' => 'ООП',
-            'uri_alias' => 'oop',
-            'course' => 3
-        ]);
-
-        TestSubject::create([
-            'name' => 'Алгоритми',
-            'uri_alias' => 'algorithms',
-            'course' => 2
-        ]);
+        TestSubject::insert($this->subjects);
     }
 }
