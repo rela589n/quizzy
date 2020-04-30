@@ -25,6 +25,9 @@ class TestSubjectsTableSeeder extends Seeder
      */
     public function run()
     {
+        if (env('APP_ENV') === 'production')
+            return;
+
         TestSubject::insert($this->subjects);
     }
 }

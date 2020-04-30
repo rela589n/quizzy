@@ -14,6 +14,9 @@ class TestsTableSeeder extends Seeder
      */
     public function run()
     {
+        if (env('APP_ENV') === 'production')
+            return;
+
         \App\Models\Test::create([
             'name' => 'Інкапсуляція',
             'uri_alias' => 'encapsulation',

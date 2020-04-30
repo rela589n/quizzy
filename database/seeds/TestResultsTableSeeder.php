@@ -14,6 +14,9 @@ class TestResultsTableSeeder extends Seeder
      */
     public function run()
     {
+        if (env('APP_ENV') === 'production')
+            return;
+
         $faker = Faker\Factory::create('uk_UA');
 
         foreach(range(1, self::TEST_RESULTS_LIMIT) as $i) {

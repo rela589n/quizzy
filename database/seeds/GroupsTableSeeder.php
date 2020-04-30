@@ -37,6 +37,9 @@ class GroupsTableSeeder extends Seeder
      */
     public function run()
     {
+        if (env('APP_ENV') === 'production')
+            return;
+
         StudentGroup::insert($this->groups);
     }
 }

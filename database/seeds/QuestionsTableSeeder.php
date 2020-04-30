@@ -14,6 +14,9 @@ class QuestionsTableSeeder extends Seeder
      */
     public function run()
     {
+        if (env('APP_ENV') === 'production')
+            return;
+
         Question::create([
             'question' => 'Що таке клас?',
             'test_id' => 1

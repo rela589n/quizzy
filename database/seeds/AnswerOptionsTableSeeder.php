@@ -16,6 +16,9 @@ class AnswerOptionsTableSeeder extends Seeder
      */
     public function run()
     {
+        if (env('APP_ENV') === 'production')
+            return;
+
         $faker = Faker\Factory::create('uk_UA');
 
         $questions = Question::all();

@@ -13,6 +13,9 @@ class AskedQuestionsTableSeeder extends Seeder
      */
     public function run()
     {
+        if (env('APP_ENV') === 'production')
+            return;
+
         foreach(range(1, TestResultsTableSeeder::TEST_RESULTS_LIMIT) as $resultId) {
             $testResult = TestResult::find($resultId);
 

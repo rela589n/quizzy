@@ -13,6 +13,9 @@ class AnswersTableSeeder extends Seeder
      */
     public function run()
     {
+        if (env('APP_ENV') === 'production')
+            return;
+
         /**
          * @var $askedQuestions AskedQuestion[]
          */

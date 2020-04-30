@@ -38,6 +38,19 @@ class AdministratorsTableSeeder extends Seeder
         ]
     ];
 
+    protected static $productionOnly = ['super-admin'];
+
+    public function __construct()
+    {
+        if (env('APP_ENV') === 'production') {
+            // seed only those from $productionOnly
+            self::$administrators = array_intersect_key(
+                self::$administrators,
+                array_flip(self::$productionOnly)
+            );
+        }
+    }
+
     /**
      * Run the database seeds.
      *
