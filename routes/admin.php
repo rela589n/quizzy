@@ -60,6 +60,8 @@ Route::prefix('/tests')
                         Route::get('/import', 'TestsTransferController@showImportForm')->name('.transfer');
                         Route::post('/import', 'TestsTransferController@import');
 
+                        Route::get('/export', 'TestsTransferController@export')->name('.export');
+
                         Route::get('/', 'QuestionsController@showCreateOrUpdateForm');
                         Route::post('/', 'QuestionsController@createOrUpdate');
                     });
