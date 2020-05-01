@@ -57,6 +57,9 @@ Route::prefix('/tests')
                         Route::post('/settings', 'TestsController@updateTest');
                         Route::delete('/settings', 'TestsController@deleteTest');
 
+                        Route::get('/import', 'TestsTransferController@showImportForm')->name('.transfer');
+                        Route::post('/import', 'TestsTransferController@import');
+
                         Route::get('/', 'QuestionsController@showCreateOrUpdateForm');
                         Route::post('/', 'QuestionsController@createOrUpdate');
                     });

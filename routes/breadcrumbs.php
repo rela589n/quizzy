@@ -60,7 +60,7 @@ Breadcrumbs::for('admin.tests.subject.test',
                 'admin.tests.subject.test',
                 [
                     'subject' => $subject->uri_alias ?? $test->subject->uri_alias,
-                    'test' => $test->uri_alias,
+                    'test'    => $test->uri_alias,
                 ])
         );
     });
@@ -72,7 +72,20 @@ Breadcrumbs::for('admin.tests.subject.test.settings',
                 'admin.tests.subject.test.settings',
                 [
                     'subject' => $subject->uri_alias ?? $test->subject->uri_alias,
-                    'test' => $test->uri_alias,
+                    'test'    => $test->uri_alias,
+                ])
+        );
+    });
+
+Breadcrumbs::for('admin.tests.subject.test.transfer',
+    function (BreadcrumbsGenerator $trail, Test $test, TestSubject $subject = null) {
+        $trail->parent('admin.tests.subject.test', $test, $subject);
+
+        $trail->push('Імпорт', route(
+                'admin.tests.subject.test.transfer',
+                [
+                    'subject' => $subject->uri_alias ?? $test->subject->uri_alias,
+                    'test'    => $test->uri_alias,
                 ])
         );
     });
@@ -102,7 +115,7 @@ Breadcrumbs::for('admin.results.subject.test',
             'admin.results.subject.test',
             [
                 'subject' => $subject->uri_alias ?? $test->subject->uri_alias,
-                'test' => $test->uri_alias
+                'test'    => $test->uri_alias
             ]
         ));
     });
@@ -159,7 +172,7 @@ Breadcrumbs::for('admin.students.group.student',
         $trail->push($student->full_name, route(
             'admin.students.group.student',
             [
-                'group' => $group->uri_alias ?? $student->studentGroup->uri_alias,
+                'group'     => $group->uri_alias ?? $student->studentGroup->uri_alias,
                 'studentId' => $student->id
             ]
         ));
