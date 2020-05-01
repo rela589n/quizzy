@@ -32,7 +32,7 @@ class ImportTestRequest extends FormRequest
                 'required',
                 'file',
                 'max:2048',
-                'mimes:docx'
+                'mimes:docx,txt'
             ]
         ];
     }

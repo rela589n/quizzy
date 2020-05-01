@@ -5,7 +5,7 @@
 @endsection
 
 @section('category-header-text')
-    Імпорт {{ $subject->name }} - {{ $test->name }} з docx:
+    Імпорт {{ $subject->name }} - {{ $test->name }} з файла:
 @endsection
 
 @section('content')

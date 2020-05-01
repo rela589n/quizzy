@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Tests\ImportTestRequest;
-use App\Lib\Parsers\TestDocxParser;
+use App\Lib\Parsers\TestParserFactory;
 use App\Lib\Statements\TestsExportManager;
 use App\Models\Question;
-use PhpOffice\PhpWord\IOFactory;
 
 class TestsTransferController extends AdminController
 {
@@ -27,18 +26,15 @@ class TestsTransferController extends AdminController
 
     /**
      * @param ImportTestRequest $request
-     * @param TestDocxParser $parser
+     * @param TestParserFactory $parserFactory
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \App\Exceptions\NullPointerException
      */
-    public function import(ImportTestRequest $request, TestDocxParser $parser)
+    public function import(ImportTestRequest $request, TestParserFactory $parserFactory)
     {
         $test = $this->urlManager->getCurrentTest();
         $file = $request->file('selected-file');
 
-        $phpWord = IOFactory::load($file->path());
-
-        $parser->setPhpWord($phpWord);
+        $parser = $parserFactory->getTextParser($file);
         $parser->parse();
 
         $parsed = $parser->getParsedQuestions();
