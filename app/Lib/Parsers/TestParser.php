@@ -18,6 +18,8 @@ abstract class TestParser
         $this->sanitizer = $sanitizer;
     }
 
+    abstract public function parse(): void;
+
     /**
      * @return array
      */
@@ -58,5 +60,4 @@ abstract class TestParser
                 throw new \RuntimeException("Undefined status!");
         }
     }
-
 }
