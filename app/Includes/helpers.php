@@ -49,3 +49,26 @@ if (!function_exists('floatReadable')) {
         return round($float, 2);
     }
 }
+
+if (!function_exists('next_line')) {
+
+    /**
+     * Reads file line by line
+     * @param string $fileName
+     * @return Generator
+     * @throws \App\Exceptions\FileUnopenableException
+     */
+    function next_line(string $fileName) {
+        $handle = fopen($fileName, 'r');
+
+        if ($handle) {
+            while (($line = fgets($handle)) !== false) {
+                yield $line;
+            }
+
+            fclose($handle);
+        } else {
+            throw new \App\Exceptions\FileUnopenableException("Could not open file $fileName");
+        }
+    }
+}
