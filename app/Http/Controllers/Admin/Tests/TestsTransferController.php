@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Tests;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Tests\ImportTestRequest;
 use App\Lib\Parsers\TestDocxParser;
+use App\Lib\Statements\TestsExportManager;
 use App\Models\Question;
 use PhpOffice\PhpWord\IOFactory;
 
@@ -58,5 +59,21 @@ class TestsTransferController extends AdminController
             'subject' => $test->subject->uri_alias,
             'test'    => $test->uri_alias,
         ]);
+    }
+
+    /**
+     * @param TestsExportManager $exportManager
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpWord\Exception\CopyFileException
+     * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
+    public function export(TestsExportManager $exportManager)
+    {
+        $exportManager->setTest($this->urlManager->getCurrentTest());
+
+        $exportedPath = $exportManager->generate();
+
+        return response()->download($exportedPath);
     }
 }

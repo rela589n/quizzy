@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Lib\Statements\FilePathGenerators\ExportResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\GroupResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\StudentResultFileNameGenerator;
@@ -12,6 +13,7 @@ use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Lib\TestResults\StrictMarkEvaluator;
 use App\Lib\TestResults\StrictScoreEvaluator;
 use App\Lib\TestResultsEvaluator;
+use App\Lib\Statements\TestsExportManager;
 use App\Lib\Words\Decliners\CyrillicWordDecliner;
 use App\Lib\Words\Decliners\WordDeclinerInterface;
 use App\Lib\Words\Repositories\UkrainianWordsRepository;
@@ -72,6 +74,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(GroupStatementsGenerator::class)
             ->needs(ResultFileNameGenerator::class)
             ->give(GroupResultFileNameGenerator::class);
+
+        $this->app->when(TestsExportManager::class)
+            ->needs(ResultFileNameGenerator::class)
+            ->give(ExportResultFileNameGenerator::class);
 
         $this->app->bind(Administrator::class, function ($app) {
             return Auth::guard('admin')->user();
