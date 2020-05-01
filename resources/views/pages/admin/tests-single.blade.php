@@ -57,11 +57,20 @@
 @section('save-button')
     <div class="button-wrap text-center form-row mb-4">
         <div class="col-3">
-            <button type="button" class="btn btn-primary btn-lg button-add-question"><i
+            <button type="button" class="btn btn-primary btn-lg button-add-question" title="Додати питання"><i
                     class="fas fa-plus"></i></button>
         </div>
         <div class="col-6">
             <button type="submit" class="btn btn-primary btn-lg btn-block finish-test-btn">Зберегти</button>
+        </div>
+        <div class="col-3">
+            <a href="{{ route('admin.tests.subject.test.transfer', [
+                            'subject' => $subject->uri_alias,
+                            'test'    => $test->uri_alias
+                        ]) }}"
+               class="btn btn-primary btn-lg" title="Імпорт">
+                <i class="fas fa-upload"></i>
+            </a>
         </div>
     </div>
 @endsection
