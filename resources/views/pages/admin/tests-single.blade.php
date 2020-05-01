@@ -63,13 +63,23 @@
         <div class="col-6">
             <button type="submit" class="btn btn-primary btn-lg btn-block finish-test-btn">Зберегти</button>
         </div>
-        <div class="col-3">
+        <div class="col-1"></div>
+        <div class="col-1">
             <a href="{{ route('admin.tests.subject.test.transfer', [
                             'subject' => $subject->uri_alias,
                             'test'    => $test->uri_alias
                         ]) }}"
                class="btn btn-primary btn-lg" title="Імпорт">
                 <i class="fas fa-upload"></i>
+            </a>
+        </div>
+        <div class="col-1">
+            <a href="{{ route('admin.tests.subject.test.export', [
+                            'subject' => $subject->uri_alias,
+                            'test'    => $test->uri_alias
+                        ]) }}"
+               class="btn btn-primary btn-lg" title="Експорт">
+                <i class="fas fa-download"></i>
             </a>
         </div>
     </div>
