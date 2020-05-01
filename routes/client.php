@@ -59,7 +59,3 @@ Route::prefix('/tests')
         Route::get('/', 'SubjectsController@showAll');
     });
 
-Route::get('/404', function () {
-    return 'check logging';
-})->middleware('logging');
-

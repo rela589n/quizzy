@@ -13,4 +13,7 @@ yarn-error.log
 #.gitignore
 /.idea
 .phpstorm.meta.php
+_ide_helper.php
+_ide_helper_models.php
+/deploy
 tasks.txt
