@@ -6,28 +6,13 @@ namespace App\Lib\Parsers;
 
 use App\Exceptions\NullPointerException;
 
-class TestDocxParser
+class TestDocxParser extends TestParser
 {
     protected $phpWord;
-    protected $parsedQuestions = [];
 
-    private const STATUS_QUESTION = 1;
-    private const STATUS_OPTION = 2;
-
-    protected $status = self::STATUS_QUESTION;
-
-    private const QUESTION_INDICATORS = ['Питання', 'Запитання'];
-
-    /**
-     * @return array
-     */
-    public function getParsedQuestions(): array
+    public function __construct(TestSanitizer $sanitizer, \PhpOffice\PhpWord\PhpWord $phpWord = null)
     {
-        return $this->parsedQuestions;
-    }
-
-    public function __construct(\PhpOffice\PhpWord\PhpWord $phpWord = null)
-    {
+        parent::__construct($sanitizer);
         $this->phpWord = $phpWord;
     }
 
@@ -78,78 +63,6 @@ class TestDocxParser
             }
 
         }
-    }
-
-    /**
-     * @param string $input
-     */
-    protected function handleText(string $input): void
-    {
-        switch ($this->status) {
-            case self::STATUS_QUESTION:
-                $question = $this->sanitizeQuestionText($input);
-
-                $this->parsedQuestions[] = [
-                    'question'       => $question,
-                    'insert_options' => [],
-                ];
-
-                $this->status = self::STATUS_OPTION;
-                break;
-
-            case self::STATUS_OPTION:
-                [$option, $isRight] = $this->sanitizeOptionText($input);
-
-
-                $this->parsedQuestions[count($this->parsedQuestions) - 1]['insert_options'][] = [
-                    'text'     => $option,
-                    'is_right' => $isRight,
-                ];
-
-                break;
-
-            default:
-                throw new \RuntimeException("Undefined status!");
-        }
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    protected function sanitizeQuestionText(string $text)
-    {
-        $text = $this->sanitizeMultipleSpaces($text);
-
-        foreach (self::QUESTION_INDICATORS as $indicator) {
-            $text = preg_replace("/^({$indicator})?[\s#№\d]*[.)]*/", '', $text);
-        }
-
-        return rtrim(ltrim($text), ':.?') . '?';
-    }
-
-    /**
-     * @param string $text
-     * @return array
-     */
-    protected function sanitizeOptionText(string $text)
-    {
-        $text = $this->sanitizeMultipleSpaces($text);
-
-        $text = preg_replace('/^\d+[.)\s]*/', '', $text);
-        $result = preg_replace('/\s*\*$/', '', $text);
-
-        $isRight = $result !== $text;
-        return [$result, $isRight];
-    }
-
-    /**
-     * @param string $text
-     * @return string
-     */
-    protected function sanitizeMultipleSpaces(string $text)
-    {
-        return preg_replace('/\s+/', ' ', trim($text));
     }
 
     /**
