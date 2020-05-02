@@ -13,3 +13,7 @@
     @parent
     text-dark
 @endsection
+
+@section('auth-form-header')
+    <h2>Вхід в адмін-панель:</h2>
+@endsection

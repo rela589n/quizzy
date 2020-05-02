@@ -174,3 +174,7 @@ form.auth.user-form .invalid-feedback {
 .selectpicker-button:hover {
     color: #fcfcfc !important;
 }
+
+.nav-menu-icon {
+    font-size: 30px;
+}
