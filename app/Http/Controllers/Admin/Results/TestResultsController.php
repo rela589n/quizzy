@@ -15,8 +15,11 @@ class TestResultsController extends AdminController
      */
     public function showSelectSubjectPage()
     {
-        return view('pages.admin.results-select-subject', [
-            'subjects' => TestSubject::all()
+        return view('pages.admin.results-select-subject', [ // todo
+            'subjects' => TestSubject::whereHas('tests', function ($query) {
+                $query->withTrashed();
+                $query->has('testResults');
+            })->get()
         ]);
     }
 
@@ -27,8 +30,8 @@ class TestResultsController extends AdminController
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
 
-        $currentSubject->load([
-            'tests' => function ($query){
+        $currentSubject->load([ // todo
+            'tests' => function ($query) {
                 $query->withTrashed();
                 $query->has('testResults');
             }
@@ -57,10 +60,10 @@ class TestResultsController extends AdminController
             ->appends($request->query());
 
         return view('pages.admin.results-single', [
-            'subject' => $currentSubject,
-            'test' => $currentTest,
+            'subject'     => $currentSubject,
+            'test'        => $currentTest,
             'testResults' => $filteredResults,
-            'userGroups' => StudentGroup::withTrashed()->get()
+            'userGroups'  => StudentGroup::withTrashed()->get()
         ]);
     }
 }
