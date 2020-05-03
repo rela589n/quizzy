@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Lib\Traits\LoadTrashed;
 use App\Lib\Traits\SlugScope;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,7 +27,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestSubject extends Model
 {
-    use LoadTrashed;
     use SlugScope;
 
     public $timestamps = false;

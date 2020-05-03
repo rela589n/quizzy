@@ -20,7 +20,7 @@
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
-            Немає жодного теста
+            Немає жодного теста, що містив би результати
         @endcomponent
     @endforelse
 @endsection

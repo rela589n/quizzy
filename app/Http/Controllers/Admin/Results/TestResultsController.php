@@ -26,7 +26,13 @@ class TestResultsController extends AdminController
     public function showSelectTestPage()
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
-        $currentSubject->withTrashed('tests');
+
+        $currentSubject->load([
+            'tests' => function ($query){
+                $query->withTrashed();
+                $query->has('testResults');
+            }
+        ]);
 
         return view('pages.admin.results-select-test', [
             'subject' => $currentSubject
