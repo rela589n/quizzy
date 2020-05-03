@@ -1,5 +1,9 @@
 @extends('layouts.blocks.menu')
 
+@section('menu-container-type')
+    container-fluid
+@endsection
+
 @section('links')
 
     <li class="nav-item @ifroute('admin.dashboard') active @endifroute">

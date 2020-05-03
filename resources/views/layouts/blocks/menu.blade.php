@@ -1,5 +1,5 @@
 <div class="bd-navbar">
-    <div class="container">
+    <div class="@yield('menu-container-type')">
         <header class="navbar navbar-expand navbar-dark flex-column flex-md-row">
             <a class="navbar-brand pr-0 pr-md-3 nav-menu-icon" href="/">
                 @section('header_icon')

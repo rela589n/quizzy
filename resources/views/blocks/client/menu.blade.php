@@ -1,5 +1,9 @@
 @extends('layouts.blocks.menu')
 
+@section('menu-container-type')
+    container
+@endsection
+
 @section('links')
     <li class="nav-item @ifroute('client.dashboard') active @endifroute">
         <a class="nav-link" href="{{ route('client.dashboard') }}" target="_self">Особистий
