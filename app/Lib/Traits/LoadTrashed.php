@@ -9,7 +9,7 @@ trait LoadTrashed
     public function withTrashed($relations, bool $loadMissing = true)
     {
         if (is_string($relations)) {
-            $relations = func_get_args();
+            $relations = [$relations];
         }
 
         $loadArray = [];
