@@ -22,7 +22,7 @@
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
-            Список предметів пустий
+            Немає предметів, що містили б результати
         @endcomponent
     @endforelse
 @endsection
