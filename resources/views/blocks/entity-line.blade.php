@@ -4,6 +4,6 @@
     <a href="{{ $link }}">{{ $linkText ?? 'Перейти' }}</a>
 
     @isset($badge)
-        <span class="badge badge-primary badge-pill">{{ $badge }}</span>
+        <span class="badge badge-primary badge-pill ml-3 ml-xl-0">{{ $badge }}</span>
     @endisset
 </li>
