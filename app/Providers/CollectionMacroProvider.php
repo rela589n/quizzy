@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Lib\Traits\LoadTrashed;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
