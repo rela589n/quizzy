@@ -6,7 +6,7 @@ namespace App\Lib\Traits;
 
 trait LoadTrashed
 {
-    public function withTrashed($relations, bool $loadMissing = true)
+    public function loadTrashed($relations, bool $loadMissing = true)
     {
         if (is_string($relations)) {
             $relations = [$relations];
