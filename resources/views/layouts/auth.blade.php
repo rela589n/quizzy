@@ -8,8 +8,7 @@
 @section('content')
     <div class="container h-100">
         <div class="row h-100">
-            <div class="col-4"></div>
-            <div class="col-4 mtb-auto">
+            <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4 m-auto mtb-auto">
                 <form method="post" class="@section('form-class') auth @show ">
                     @csrf
                     @section('auth-form-header')
