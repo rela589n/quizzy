@@ -71,7 +71,7 @@ class FillAnswersRequest extends FormRequest
                 'required',
                 'array',
             ],
-            'q.new.*.v.*.text|q.modified.*.v.*.text' => 'required|min:2|max:128',
+            'q.new.*.v.*.text|q.modified.*.v.*.text' => 'required|min:1|max:128',
             'q.deleted|v.deleted' => 'array|min:1',
         ]);
     }
