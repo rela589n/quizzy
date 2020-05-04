@@ -3,14 +3,29 @@
 
 namespace App\Lib\Parsers;
 
+use Onnov\DetectEncoding\EncodingDetector;
 
 class TestSanitizer
 {
     private const QUESTION_INDICATORS = ['Питання', 'Запитання'];
 
-    public function sanitizeEncoding(string $text)
+    protected $encodingDetector;
+    protected $encoding;
+
+    public function __construct(EncodingDetector $encodingDetector)
     {
-        return iconv(mb_detect_encoding($text, mb_detect_order(), true), "UTF-8", $text);
+        $this->encodingDetector = $encodingDetector;
+    }
+
+    public function sanitizeEncoding(string $text): string
+    {
+        return mb_convert_encoding(
+            $text,
+            'UTF-8',
+            singleVar($this->encoding, function () use ($text) {
+                return $this->encodingDetector->getEncoding($text);
+            })
+        );
     }
 
     /**
@@ -25,7 +40,7 @@ class TestSanitizer
             $text = preg_replace("/^({$indicator})?[\s\d#№]*[.)]*/i", '', $text);
         }
 
-        return preg_replace('/\s*\.$/','?', ltrim($text));
+        return preg_replace('/\s*\.$/', '?', ltrim($text));
     }
 
     /**

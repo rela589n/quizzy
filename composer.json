@@ -16,6 +16,7 @@
         "fzaninotto/faker": "^1.9",
         "laravel/framework": "^6.2",
         "laravel/tinker": "^2.0",
+        "onnov/detect-encoding": "^1.2",
         "phpoffice/phpword": "^0.17.0",
         "spatie/laravel-permission": "^3.8",
         "staudenmeir/eloquent-has-many-deep": "^1.11"
