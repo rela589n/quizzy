@@ -22,19 +22,10 @@ class TestTxtParser extends TestParser
     /**
      * @throws \App\Exceptions\FileUnopenableException
      */
-    public function parse(): void
+    protected function getTextLines()
     {
-        $this->status = self::STATUS_QUESTION;
-
-        foreach (next_line($this->fileName) as $line) {
-            $line = trim($line);
-
-            if ($line === '') {
-                $this->status = self::STATUS_QUESTION;
-                continue;
-            }
-
-            $this->handleText($line);
+        foreach (next_line($this->fileName) as $item) {
+            yield $item;
         }
     }
 }

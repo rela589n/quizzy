@@ -8,6 +8,11 @@ class TestSanitizer
 {
     private const QUESTION_INDICATORS = ['Питання', 'Запитання'];
 
+    public function sanitizeEncoding(string $text)
+    {
+        return iconv(mb_detect_encoding($text, mb_detect_order(), true), "UTF-8", $text);
+    }
+
     /**
      * @param string $text
      * @return string

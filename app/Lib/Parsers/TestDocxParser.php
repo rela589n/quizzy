@@ -25,43 +25,25 @@ class TestDocxParser extends TestParser
     }
 
     /**
+     * @return \Generator
      * @throws NullPointerException
      */
-    public function parse(): void
+    protected function getTextLines()
     {
         if ($this->phpWord === null) {
             throw new NullPointerException('PhpWord is required to parse docx document.');
         }
 
         foreach ($this->phpWord->getSections() as $section) {
-            $this->parseSection($section);
-        }
-    }
 
-    /**
-     * @param \PhpOffice\PhpWord\Element\Section $section
-     */
-    protected function parseSection(\PhpOffice\PhpWord\Element\Section $section): void
-    {
-        $this->status = self::STATUS_QUESTION;
+            foreach ($section->getElements() as $element) {
 
-        foreach ($section->getElements() as $element) {
+                if ($element instanceof \PhpOffice\PhpWord\Element\TextRun) {
 
-            if ($element instanceof \PhpOffice\PhpWord\Element\TextBreak) {
-                // new question starts
+                    yield $this->implodeElements($element->getElements());
 
-                $this->status = self::STATUS_QUESTION;
-
-                continue;
+                }
             }
-
-            if ($element instanceof \PhpOffice\PhpWord\Element\TextRun) {
-
-                $line = $this->implodeElements($element->getElements());
-
-                $this->handleText($line);
-            }
-
         }
     }
 

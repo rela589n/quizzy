@@ -18,8 +18,6 @@ abstract class TestParser
         $this->sanitizer = $sanitizer;
     }
 
-    abstract public function parse(): void;
-
     /**
      * @return array
      */
@@ -27,6 +25,26 @@ abstract class TestParser
     {
         return $this->parsedQuestions;
     }
+
+    public function parse(): void
+    {
+        $this->status = self::STATUS_QUESTION;
+
+        foreach ($this->getTextLines() as $line) {
+            $line = trim($line);
+
+            if ($line === '') {
+                continue;
+            }
+
+            $line = $this->sanitizer->sanitizeEncoding($line);
+
+            $this->status = $this->identifyStatus($line);
+            $this->handleText($line);
+        }
+    }
+
+    abstract protected function getTextLines();
 
     /**
      * @param string $input
@@ -42,7 +60,6 @@ abstract class TestParser
                     'insert_options' => [],
                 ];
 
-                $this->status = self::STATUS_OPTION;
                 break;
 
             case self::STATUS_OPTION:
@@ -59,5 +76,14 @@ abstract class TestParser
             default:
                 throw new \RuntimeException("Undefined status!");
         }
+    }
+
+    protected function identifyStatus(string $line)
+    {
+        if (preg_match('/^\d+\s?[).]/', $line)) {
+            return self::STATUS_OPTION;
+        }
+
+        return self::STATUS_QUESTION;
     }
 }
