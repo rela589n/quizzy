@@ -3,11 +3,11 @@
 @section('user-form-additions')
     @if (!empty($studentGroups))
         <div class="form-group form-row align-items-start">
-            <label for="student_group_id" class="form-info h3 m-0 col-2">
+            <label for="student_group_id" class="form-info h3 m-0 col-3 col-sm-2">
                 Група:
             </label>
 
-            <div class="col-10">
+            <div class="col-9 col-sm-10">
                 <select class="browser-default custom-select @error('student_group_id') is-invalid @enderror"
                         required="required"
                         id="student_group_id"

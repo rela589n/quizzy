@@ -1,10 +1,10 @@
 <form action="@yield('user-form-action')" method="post" class="auth user-form text-dark">
     @csrf
     <div class="form-group form-row align-items-start">
-        <label for="surname" class="form-info h3 m-0 col-3">
+        <label for="surname" class="form-info h3 m-0 col-5 col-sm-4 col-md-3">
             Прізвище:
         </label>
-        <div class="col-9">
+        <div class="col-7 col-sm-8 col-md-9">
             <input id="surname" name="surname" type="text"
                    class="form-control @error('surname') is-invalid @enderror"
                    placeholder="Прізвище" required="required" value="{{ old('surname', $user->surname ?? '') }}">
@@ -30,10 +30,10 @@
         </div>
     </div>
     <div class="form-group form-row align-items-start">
-        <label for="patronymic" class="form-info h3 m-0 col-3">
+        <label for="patronymic" class="form-info h3 m-0 col-5 col-sm-4 col-md-3">
             По-батькові:
         </label>
-        <div class="col-9">
+        <div class="col-7 col-sm-8 col-md-9">
             <input id="patronymic" name="patronymic" type="text"
                    class="form-control @error('patronymic') is-invalid @enderror" placeholder="По-батькові"
                    required="required" value="{{ old('patronymic', $user->patronymic ?? '') }}">
@@ -45,10 +45,10 @@
     </div>
 
     <div class="form-group form-row align-items-start">
-        <label for="email" class="form-info h3 m-0 col-3">
+        <label for="email" class="form-info h3 m-0 col-5 col-md-4 col-lg-3">
             Логін (email):
         </label>
-        <div class="col-9">
+        <div class="col-7 col-md-8 col-lg-9">
             <input id="email" name="email" type="text"
                    class="form-control @error('email') is-invalid @enderror" placeholder="Логін"
                    required="required" value="{{ old('email', $user->email ?? '') }}">
@@ -61,11 +61,11 @@
 
 
     <div class="form-group form-row align-items-start">
-        <label for="password" class="form-info h3 m-0 col-2">
+        <label for="password" class="form-info h3 m-0 col-4 col-sm-3 col-md-2">
             Пароль:
         </label>
 
-        <div class="input-group mb-1 col-10" id="show_hide_password">
+        <div class="input-group mb-1 col-8 col-sm-9 col-md-10" id="show_hide_password">
             <input id="password" name="password" type="password"
                    class="form-control @error('password') is-invalid @enderror"
                    placeholder="{{ $userPasswordPlaceholder ?? '1234'}}" value="{{ old('password') }}">
