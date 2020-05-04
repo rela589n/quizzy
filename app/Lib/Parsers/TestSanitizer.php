@@ -25,7 +25,7 @@ class TestSanitizer
             $text = preg_replace("/^({$indicator})?[\s\d#№]*[.)]*/i", '', $text);
         }
 
-        return rtrim(ltrim($text), " \t\n\r\0\x0B:.?") . '?';
+        return preg_replace('/\s*\.$/','?', ltrim($text));
     }
 
     /**
