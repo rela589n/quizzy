@@ -3,13 +3,23 @@
 namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Tests\CreateTestRequest;
 use App\Http\Requests\Tests\UpdateTestRequest;
 use App\Lib\Filters\Common\IncludeTestsFilter;
 use App\Lib\Transformers\Collection\IncludeTestsTransformer;
+use App\Repositories\SubjectsRepository;
 
 class TestsController extends AdminController
 {
+    private $subjectsRepository;
+
+    public function __construct(RequestUrlManager $urlManager, SubjectsRepository $subjectsRepository)
+    {
+        parent::__construct($urlManager);
+        $this->subjectsRepository = $subjectsRepository;
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -18,13 +28,9 @@ class TestsController extends AdminController
     {
         $this->authorize('create-tests');
 
-        $subject = $this->urlManager->getCurrentSubject();
-        $tests = $subject->tests()->has('nativeQuestions')
-            ->withCount('nativeQuestions as questions_count')->get();
-
         return view('pages.admin.tests-new', [
-            'subject'      => $subject,
-            'includeTests' => $tests
+            'subject'               => $this->urlManager->getCurrentSubject(),
+            'subjectsToIncludeFrom' => $this->subjectsRepository->subjectsToInclude()
         ]);
     }
 
@@ -73,12 +79,9 @@ class TestsController extends AdminController
         $subject = $this->urlManager->getCurrentSubject();
 
         return view('pages.admin.tests-single-settings', [
-            'test'         => $test,
-            'subject'      => $subject,
-            'includeTests' => $subject->tests()
-                ->has('nativeQuestions')
-                ->withCount('nativeQuestions as questions_count')
-                ->get()
+            'test'                  => $test,
+            'subject'               => $subject,
+            'subjectsToIncludeFrom' => $this->subjectsRepository->subjectsToInclude(),
         ]);
     }
 

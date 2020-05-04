@@ -7,7 +7,6 @@
                 Роль:
             </label>
             <div class="col-9 col-sm-10">
-
                 <div class="form-group">
                     <select class="selectpicker form-control dropup @error('role_ids') is-invalid @enderror"
                             data-dropup-auto="false" data-style="btn-outline-secondary selectpicker-button"
@@ -34,8 +33,6 @@
             </div>
         </div>
     @endif
-
-    {{-- todo handle admin permissions  --}}
 @endsection
 
 @section('head_styles')
