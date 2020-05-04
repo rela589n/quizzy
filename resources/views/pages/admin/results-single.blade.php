@@ -1,4 +1,8 @@
-@extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin', 'contentColumns' => 12])
+@extends('layouts.categories-single', [
+    'mainContainerType' => 'container-fluid',
+    'baseLayout' => 'layouts.root.admin',
+    'contentColumns' => 12
+    ])
 
 @section('title')
     Результати {{ $subject->name }} - {{ $test->name }}
@@ -35,7 +39,7 @@
     @endif
 
     <form method="get" class="form-clearable submit-only-filled">
-        <table class="table table-bordered table-hover test-results-table">
+        <table class="table table-responsive-lg table-bordered table-hover test-results-table">
             <thead>
             <tr>
                 <th scope="col">#</th>

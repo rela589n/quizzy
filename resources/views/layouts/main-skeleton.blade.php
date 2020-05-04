@@ -1,7 +1,7 @@
 @extends($baseLayout)
 
 @section('content')
-    <div class="@section('main-container-class') container mt-5 @show">
+    <div class="@section('main-container-class') {{ $mainContainerType ?? 'container' }} mt-5 @show">
         <div class="row">
             @php
                 $contentXl = $contentColumns ?? 8;

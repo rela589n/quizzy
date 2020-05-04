@@ -56,7 +56,7 @@ class TestResultsController extends AdminController
             ->testResults()
             ->orderByDesc('id')
             ->filtered($filters)
-            ->paginate(30)
+            ->paginate(20)
             ->appends($request->query());
 
         return view('pages.admin.results-single', [
