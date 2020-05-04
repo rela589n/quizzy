@@ -5,7 +5,7 @@
 @show
 
 <div class="form-group form-row align-items-start">
-    <div class="col-9">
+    <div class="col-8 col-sm-9">
         <input id="alias" name="uri_alias" type="text" class="form-control @error('uri_alias') is-invalid @enderror"
                placeholder="Псевдонім"
                required="required" value="{{ old('uri_alias', $test->uri_alias ?? '') }}">
@@ -16,7 +16,7 @@
         </div>
         @enderror
     </div>
-    <div class="col-3">
+    <div class="col-4 col-sm-3">
         <button tabindex="-1" type="button" id="auto-generate-translit" class="btn btn-primary btn-block"
                 disabled="disabled">Автоматично
         </button>
