@@ -54,22 +54,13 @@ abstract class TestParser
         switch ($this->status) {
             case self::STATUS_QUESTION:
                 $question = $this->sanitizer->sanitizeQuestionText($input);
-
-                $this->parsedQuestions[] = [
-                    'question'       => $question,
-                    'insert_options' => [],
-                ];
+                $this->appendQuestion($question, []);
 
                 break;
 
             case self::STATUS_OPTION:
                 [$option, $isRight] = $this->sanitizer->sanitizeOptionText($input);
-
-
-                $this->parsedQuestions[count($this->parsedQuestions) - 1]['insert_options'][] = [
-                    'text'     => $option,
-                    'is_right' => $isRight,
-                ];
+                $this->appendOption(count($this->parsedQuestions) - 1, $option, $isRight);
 
                 break;
 
@@ -85,5 +76,21 @@ abstract class TestParser
         }
 
         return self::STATUS_QUESTION;
+    }
+
+    protected function appendQuestion($question, $insertOptions)
+    {
+        $this->parsedQuestions[] = [
+            'question'       => $question,
+            'insert_options' => $insertOptions,
+        ];
+    }
+
+    protected function appendOption($questionIndex, $text, $isRight)
+    {
+        $this->parsedQuestions[$questionIndex]['insert_options'][] = [
+            'text'     => $text,
+            'is_right' => $isRight,
+        ];
     }
 }
