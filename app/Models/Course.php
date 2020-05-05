@@ -24,5 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Course extends Model
 {
-    //
+    public function testSubjects()
+    {
+        return $this->belongsToMany(TestSubject::class);
+    }
 }

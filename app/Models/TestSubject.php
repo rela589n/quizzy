@@ -32,6 +32,11 @@ class TestSubject extends Model
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'course'];
 
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
+    }
+
     public function tests()
     {
         return $this->hasMany(Test::class);
