@@ -12,7 +12,7 @@
     </div>
     @enderror
 
-    @include('blocks.admin.uri-alias-field', ['aliasable' => $group])
+    @include('blocks.admin.uri-alias-field', ['aliasable' => $group ?? null])
 
     <label for="year" class="form-info mb-4 h3">
         Виберіть рік вступу:

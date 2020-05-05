@@ -11,7 +11,7 @@
     </div>
     @enderror
 
-    @include('blocks.admin.uri-alias-field', ['aliasable' => $test])
+    @include('blocks.admin.uri-alias-field', ['aliasable' => $test ?? null])
 
     <label for="time" class="form-info mb-3 h3">
         Введіть час (у хвилинах) для проходження теста:
