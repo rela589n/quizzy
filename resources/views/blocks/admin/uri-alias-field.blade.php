@@ -8,7 +8,7 @@
     <div class="col-8 col-sm-9">
         <input id="alias" name="uri_alias" type="text" class="form-control @error('uri_alias') is-invalid @enderror"
                placeholder="Псевдонім"
-               required="required" value="{{ old('uri_alias', $test->uri_alias ?? '') }}">
+               required="required" value="{{ old('uri_alias', $aliasable->uri_alias ?? '') }}">
 
         @error('uri_alias')
         <div class="invalid-feedback">

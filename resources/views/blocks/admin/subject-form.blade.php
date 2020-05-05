@@ -12,7 +12,7 @@
     </div>
     @enderror
 
-    @include('blocks.admin.uri-alias-field')
+    @include('blocks.admin.uri-alias-field', ['aliasable' => $subject])
 
     <label for="course" class="form-info mb-4 h3">
         Виберіть курс, на якому викладається предмет:
