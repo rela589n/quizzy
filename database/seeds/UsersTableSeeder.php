@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
                 'name' => $faker->firstName,
                 'surname' => $faker->lastName,
                 'patronymic' => $faker->lastName,
-                'student_group_id' => $faker->numberBetween(1, GroupsTableSeeder::GROUPS_LIMIT),
+                'student_group_id' => $faker->numberBetween(1, GroupsTableSeeder::getGroupsCount()),
                 'email' => $faker->unique()->userName,
                 'password' => Hash::make('1')
             ]);

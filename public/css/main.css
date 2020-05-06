@@ -178,3 +178,7 @@ form.auth.user-form .invalid-feedback {
 .nav-menu-icon {
     font-size: 30px;
 }
+
+.card-header {
+    padding: .35rem 1.25rem;
+}

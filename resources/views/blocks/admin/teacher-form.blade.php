@@ -8,7 +8,7 @@
             </label>
             <div class="col-9 col-sm-10">
                 <div class="form-group">
-                    <select class="selectpicker form-control dropup @error('role_ids') is-invalid @enderror"
+                    <select class="selectpicker form-control dropup @error('role_ids.*') is-invalid @enderror"
                             data-dropup-auto="false" data-style="btn-outline-secondary selectpicker-button"
                             multiple="multiple"
                             title="Оберіть роль користувача" required="required"
@@ -19,14 +19,14 @@
                         @foreach($roles as $role)
                             <option value="{{ $role->id }}"
                                     @if(array_key_exists("$role->id", $oldRoleValues) ?: optional($user ?? null)->hasRole($role))
-                                            selected="selected"
-                                    @endif>
+                                    selected="selected"
+                                @endif>
                                 {{ $role->public_name }}
                             </option>
                         @endforeach
                     </select>
 
-                    @error('role_ids')
+                    @error('role_ids.*')
                     <span class="invalid-feedback" role="alert"><label for="role_ids">{{ $message }}</label></span>
                     @enderror
                 </div>
