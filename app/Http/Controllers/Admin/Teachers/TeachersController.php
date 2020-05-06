@@ -100,7 +100,7 @@ class TeachersController extends AdminController
         if ($teacher->id == $request->user()->id &&
             $teacher->roles->pluck('id')->toArray() != $validated['role_ids']
         ) {
-            return redirect()->back()->withErrors(['role_ids' => 'Ви не можете змінити свою роль']);
+            return redirect()->back()->withErrors(['role_ids.*' => 'Ви не можете змінити свою роль']);
         }
 
         $teacher->syncRoles($validated['role_ids']);
