@@ -7,7 +7,6 @@ use App\Http\Requests\Subjects\CreateSubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
 use App\Models\Course;
 use App\Models\TestSubject;
-use Illuminate\Support\Arr;
 
 class SubjectsController extends AdminController
 {
@@ -44,12 +43,9 @@ class SubjectsController extends AdminController
     public function newSubject(CreateSubjectRequest $request)
     {
         $validated = $request->validated();
-        $courses = $validated['courses'];
 
-        $validated['course'] = Arr::first($courses);
         $subject = TestSubject::create($validated);
-
-        $subject->courses()->sync($courses);
+        $subject->courses()->sync($validated['courses']);
 
         return redirect()->route('admin.tests');
     }
@@ -92,14 +88,10 @@ class SubjectsController extends AdminController
     public function updateSubject(UpdateSubjectRequest $request)
     {
         $subject = $request->subject();
-
         $validated = $request->validated();
-        $courses = $validated['courses'];
-
-        $validated['course'] = Arr::first($courses);
 
         $subject->update($validated);
-        $subject->courses()->sync($courses);
+        $subject->courses()->sync($validated['courses']);
 
         return redirect()->route('admin.tests.subject', [
             'subject' => $subject['uri_alias']

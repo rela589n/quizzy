@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property string $uri_alias
- * @property string $course
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
  * @property-read int|null $tests_count
  * @method static Builder|\App\Models\TestSubject newModelQuery()
@@ -34,7 +33,7 @@ class TestSubject extends Model
     use SlugScope;
 
     public $timestamps = false;
-    protected $fillable = ['name', 'uri_alias', 'course'];
+    protected $fillable = ['name', 'uri_alias'];
 
     public function courses()
     {
