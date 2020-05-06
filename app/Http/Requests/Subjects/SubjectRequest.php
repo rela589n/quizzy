@@ -18,7 +18,7 @@ abstract class SubjectRequest extends FormRequest
     public function attributes()
     {
         return [
-            'course' => 'Курс'
+            'courses.*' => '"курс"',
         ];
     }
 
@@ -39,11 +39,15 @@ abstract class SubjectRequest extends FormRequest
                 'min:3',
                 'max:48',
             ],
-            'course'    => [
+            'courses'   => [
+                'required',
+                'array',
+                'min:1',
+            ],
+            'courses.*' => [
                 'required',
                 'numeric',
-                'min:1',
-                'max:4'
+                'exists:courses,numeric_name'
             ]
         ];
     }
