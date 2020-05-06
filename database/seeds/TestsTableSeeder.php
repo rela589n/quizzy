@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 
 class TestsTableSeeder extends Seeder
 {
-    public const TESTS_LIMIT = 6;
+    public const TESTS_LIMIT = 7;
 
     /**
      * Run the database seeds.
@@ -16,6 +16,8 @@ class TestsTableSeeder extends Seeder
     {
         if (env('APP_ENV') === 'production')
             return;
+
+        $subjectsCount = TestSubjectsTableSeeder::getSubjectsCount();
 
         \App\Models\Test::create([
             'name' => 'Інкапсуляція',
@@ -37,7 +39,7 @@ class TestsTableSeeder extends Seeder
                 'name' => $faker->realText(15),
                 'uri_alias' => $faker->unique()->slug(2),
                 'time' => $faker->numberBetween(10, 30),
-                'test_subject_id' => $faker->numberBetween(1, 2)
+                'test_subject_id' => $faker->numberBetween(1, $subjectsCount)
             ]);
 
             TestComposite::create([

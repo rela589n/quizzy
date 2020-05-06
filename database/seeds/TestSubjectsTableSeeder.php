@@ -5,7 +5,12 @@ use Illuminate\Database\Seeder;
 
 class TestSubjectsTableSeeder extends Seeder
 {
-    protected $subjects = [
+    protected static $subjects = [
+        [
+            'name'      => 'Політологія',
+            'uri_alias' => 'politics',
+            'course'    => 4
+        ],
         [
             'name'      => 'ООП',
             'uri_alias' => 'oop',
@@ -16,7 +21,17 @@ class TestSubjectsTableSeeder extends Seeder
             'uri_alias' => 'algorithms',
             'course'    => 2
         ],
+        [
+            'name'      => 'Основи програмування',
+            'uri_alias' => 'programming-basics',
+            'course'    => 1
+        ]
     ];
+
+    public static function getSubjectsCount()
+    {
+        return count(self::$subjects);
+    }
 
     /**
      * Run the database seeds.
@@ -28,6 +43,6 @@ class TestSubjectsTableSeeder extends Seeder
         if (env('APP_ENV') === 'production')
             return;
 
-        TestSubject::insert($this->subjects);
+        TestSubject::insert(self::$subjects);
     }
 }
