@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin\Tests;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Subjects\CreateSubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
+use App\Models\Course;
 use App\Models\TestSubject;
+use Illuminate\Support\Arr;
 
 class SubjectsController extends AdminController
 {
@@ -30,7 +32,9 @@ class SubjectsController extends AdminController
     {
         $this->authorize('create-subjects');
 
-        return view('pages.admin.subjects-new');
+        return view('pages.admin.subjects-new', [
+            'allCourses' => Course::all()
+        ]);
     }
 
     /**
@@ -40,7 +44,12 @@ class SubjectsController extends AdminController
     public function newSubject(CreateSubjectRequest $request)
     {
         $validated = $request->validated();
-        TestSubject::create($validated);
+        $courses = $validated['courses'];
+
+        $validated['course'] = Arr::first($courses);
+        $subject = TestSubject::create($validated);
+
+        $subject->courses()->sync($courses);
 
         return redirect()->route('admin.tests');
     }
@@ -71,7 +80,8 @@ class SubjectsController extends AdminController
         $this->authorize('update', $subject);
 
         return view('pages.admin.subjects-single-settings', [
-            'subject' => $subject
+            'subject'    => $subject,
+            'allCourses' => Course::all()
         ]);
     }
 
@@ -82,7 +92,14 @@ class SubjectsController extends AdminController
     public function updateSubject(UpdateSubjectRequest $request)
     {
         $subject = $request->subject();
-        $subject->update($request->validated());
+
+        $validated = $request->validated();
+        $courses = $validated['courses'];
+
+        $validated['course'] = Arr::first($courses);
+
+        $subject->update($validated);
+        $subject->courses()->sync($courses);
 
         return redirect()->route('admin.tests.subject', [
             'subject' => $subject['uri_alias']
@@ -92,6 +109,7 @@ class SubjectsController extends AdminController
     /**
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Exception
      */
     public function deleteSubject()
     {
