@@ -14,22 +14,22 @@
 
     @include('blocks.admin.uri-alias-field', ['aliasable' => $subject ?? null])
 
-    <label for="course" class="form-info mb-4 h3">
+    <label for="courses" class="form-info mb-4 h3">
         Виберіть курс, на якому викладається предмет:
     </label>
 
-    @php
-        $subjectCourse = old('course', $subject['course'] ?? '');
-    @endphp
-    <select class="browser-default custom-select @error('course') is-invalid @enderror" required="required" id="course"
-            name="course">
-        <option value="1" @if( $subjectCourse === '1') selected="selected" @endif>Перший</option>
-        <option value="2" @if( $subjectCourse === '2') selected="selected" @endif>Другий</option>
-        <option value="3" @if( $subjectCourse === '3') selected="selected" @endif>Третій</option>
-        <option value="4" @if( $subjectCourse === '4') selected="selected" @endif>Четвертий</option>
-    </select>
+    @php($subjectCourses = array_flip(old('courses', $subject->courses_numeric ?? [$subject->course ?? "-1"])))
 
-    @error('course')
+    <select class="browser-default custom-select @error('courses.*') is-invalid @enderror" required="required" id="courses"
+            name="courses[]">
+        @foreach($allCourses as $course)
+            <option value="{{ $course->id }}"
+                    @if( array_key_exists("$course->id", $subjectCourses)) selected="selected" @endif>
+                {{ $course->public_name }}
+            </option>
+        @endforeach
+    </select>
+    @error("courses.*")
     <div class="invalid-feedback">
         {{ $message }}
     </div>
