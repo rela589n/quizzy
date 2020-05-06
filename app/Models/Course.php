@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\Course
@@ -21,11 +22,18 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course wherePublicName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestSubject[] $testSubjects
+ * @property-read int|null $test_subjects_count
  */
 class Course extends Model
 {
     public function testSubjects()
     {
         return $this->belongsToMany(TestSubject::class);
+    }
+
+    public function getPublicNameAttribute($publicName)
+    {
+        return Str::title($publicName);
     }
 }
