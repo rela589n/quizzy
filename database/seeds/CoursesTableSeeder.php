@@ -33,16 +33,5 @@ class CoursesTableSeeder extends Seeder
     public function run()
     {
         Course::insert(self::$courses);
-
-        if (env('APP_ENV') === 'production') {
-            /**
-             * @var TestSubject[] $subjects
-             */
-            $subjects = TestSubject::all();
-
-            foreach ($subjects as $subject) {
-                $subject->courses()->sync([$subject->course], false);
-            }
-        }
     }
 }
