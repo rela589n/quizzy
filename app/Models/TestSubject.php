@@ -24,6 +24,9 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject availableFor($user)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereSlug($slug)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Course[] $courses
+ * @property-read int|null $courses_count
+ * @property-read mixed $courses_numeric
  */
 class TestSubject extends Model
 {
@@ -35,6 +38,11 @@ class TestSubject extends Model
     public function courses()
     {
         return $this->belongsToMany(Course::class);
+    }
+
+    public function getCoursesNumericAttribute()
+    {
+        return $this->courses->pluck('id')->toArray();
     }
 
     public function tests()
