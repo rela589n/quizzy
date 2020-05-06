@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
  *
  * @property int $id
  * @property string $public_name
- * @property int $numeric_name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course newModelQuery()

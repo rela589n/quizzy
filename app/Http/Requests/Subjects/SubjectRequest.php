@@ -47,7 +47,7 @@ abstract class SubjectRequest extends FormRequest
             'courses.*' => [
                 'required',
                 'numeric',
-                'exists:courses,numeric_name'
+                'exists:courses,id'
             ]
         ];
     }

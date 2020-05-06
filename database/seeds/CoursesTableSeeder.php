@@ -7,19 +7,19 @@ class CoursesTableSeeder extends Seeder
 {
     protected static $courses = [
         [
-            'numeric_name' => 1,
+            'id' => 1,
             'public_name'  => 'перший',
         ],
         [
-            'numeric_name' => 2,
+            'id' => 2,
             'public_name'  => 'другий',
         ],
         [
-            'numeric_name' => 3,
+            'id' => 3,
             'public_name'  => 'третій',
         ],
         [
-            'numeric_name' => 4,
+            'id' => 4,
             'public_name'  => 'четвертий',
         ],
     ];
