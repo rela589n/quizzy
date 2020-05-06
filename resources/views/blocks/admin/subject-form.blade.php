@@ -18,7 +18,7 @@
         Виберіть курс, на якому викладається предмет:
     </label>
 
-    @php($subjectCourses = array_flip(old('courses', $subject->courses_numeric)))
+    @php($subjectCourses = array_flip(old('courses', $subject->courses_numeric ?? [])))
 
     <select class="browser-default custom-select @error('courses.*') is-invalid @enderror" required="required" id="courses"
             name="courses[]">
