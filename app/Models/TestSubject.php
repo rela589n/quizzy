@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Lib\Traits\SlugScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,16 +15,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $course
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
  * @property-read int|null $tests_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereCourse($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereUriAlias($value)
+ * @method static Builder|\App\Models\TestSubject newModelQuery()
+ * @method static Builder|\App\Models\TestSubject newQuery()
+ * @method static Builder|\App\Models\TestSubject query()
+ * @method static Builder|\App\Models\TestSubject whereCourse($value)
+ * @method static Builder|\App\Models\TestSubject whereId($value)
+ * @method static Builder|\App\Models\TestSubject whereName($value)
+ * @method static Builder|\App\Models\TestSubject whereUriAlias($value)
  * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject availableFor($user)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject whereSlug($slug)
+ * @method static Builder|\App\Models\TestSubject availableFor($user)
+ * @method static Builder|\App\Models\TestSubject whereSlug($slug)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Course[] $courses
  * @property-read int|null $courses_count
  * @property-read mixed $courses_numeric
@@ -51,12 +52,18 @@ class TestSubject extends Model
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param User $user
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeAvailableFor($query, $user)
     {
-        return $query->where('course', $user->course);
+        return $query->whereHas(
+            'courses',
+            function (Builder $coursesQuery) use ($user) {
+                // id represents int value of course
+                $coursesQuery->where('id', $user->course);
+            }
+        );
     }
 }
