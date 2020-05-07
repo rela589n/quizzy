@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Subjects;
 
 use App\Models\Administrator;
+use App\Rules\UriSlug;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class SubjectRequest extends FormRequest
@@ -38,6 +39,7 @@ abstract class SubjectRequest extends FormRequest
                 'required',
                 'min:3',
                 'max:48',
+                new UriSlug()
             ],
             'courses'   => [
                 'required',

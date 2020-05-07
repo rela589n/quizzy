@@ -5,10 +5,11 @@ namespace App\Http\Requests\Groups;
 use App\Http\Requests\UrlManageable;
 use App\Http\Requests\UrlManageableRequests;
 use App\Models\Administrator;
+use App\Rules\UriSlug;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Http\FormRequest;
 
-abstract class GroupRequest  extends FormRequest implements UrlManageable
+abstract class GroupRequest extends FormRequest implements UrlManageable
 {
     use UrlManageableRequests;
 
@@ -38,7 +39,7 @@ abstract class GroupRequest  extends FormRequest implements UrlManageable
         }
 
         return [
-            'name' => [
+            'name'      => [
                 'required',
                 'min:4',
                 'max:32'
@@ -47,8 +48,9 @@ abstract class GroupRequest  extends FormRequest implements UrlManageable
                 'required',
                 'min:4',
                 'max:32',
+                new UriSlug()
             ],
-            'year' => [
+            'year'      => [
                 'required',
                 'numeric',
                 'min:' . min($groupYear, $currentYear - 4),
