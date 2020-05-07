@@ -18,24 +18,39 @@
         Виберіть курс, на якому викладається предмет:
     </label>
 
-    @php($subjectCourses = array_flip(old('courses', $subject->courses_numeric ?? [])))
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
 
-    <select class="browser-default custom-select @error('courses.*') is-invalid @enderror" required="required" id="courses"
-            name="courses[]">
-        @foreach($allCourses as $course)
-            <option value="{{ $course->id }}"
-                    @if( array_key_exists("$course->id", $subjectCourses)) selected="selected" @endif>
-                {{ $course->public_name }}
-            </option>
-        @endforeach
-    </select>
-    @error("courses.*")
-    <div class="invalid-feedback">
-        {{ $message }}
+                <select class="selectpicker form-control dropup @error('courses.*') is-invalid @enderror"
+                        data-dropup-auto="false" data-style="btn-outline-secondary selectpicker-button"
+                        multiple="multiple"
+                        title="Оберіть курс(и)" required="required"
+                        id="courses" name="courses[]">
+
+                    @php($subjectCourses = array_flip(old('courses', $subject->courses_numeric ?? [])))
+
+                    @foreach($allCourses as $course)
+                        <option value="{{ $course->id }}"
+                                @if( array_key_exists("$course->id", $subjectCourses)) selected="selected" @endif>
+                            {{ $course->public_name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('courses.*')
+                <span class="invalid-feedback" role="alert"><label for="courses">{{ $message }}</label></span>
+                @enderror
+            </div>
+        </div>
     </div>
-    @enderror
-
     @component('blocks.admin.submit-button', ['columns' => $submitSize ?? 12])
         {{ $submitButtonText ?? 'Створити' }}
     @endcomponent
 </form>
+
+@section('head_styles')
+    @parent
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+@endsection
