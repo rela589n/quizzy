@@ -64,19 +64,19 @@
                     @show
                 </form>
 
-{{--                @if ($errors->any())--}}
-{{--                    <ul>--}}
-{{--                        @foreach ($errors->all() as $error)--}}
-{{--                            <li>{{ $error }}</li>--}}
-{{--                        @endforeach--}}
-{{--                    </ul>--}}
-{{--                @endif--}}
+                {{--                @if ($errors->any())--}}
+                {{--                    <ul>--}}
+                {{--                        @foreach ($errors->all() as $error)--}}
+                {{--                            <li>{{ $error }}</li>--}}
+                {{--                        @endforeach--}}
+                {{--                    </ul>--}}
+                {{--                @endif--}}
             </div>
         </div>
     </div>
 @endsection
 
-@push('bottom_scripts')
-    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('js/auth.js') }}"></script>
-@endpush
+@section('bottom-scripts')
+    @parent
+    <script defer src="{{ asset('js/auth.js') }}"></script>
+@endsection

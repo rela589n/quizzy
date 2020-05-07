@@ -41,3 +41,5 @@
         ])
     @endif
 @endsection
+
+@include('blocks.scripts.no-scripts')

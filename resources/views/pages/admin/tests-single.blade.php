@@ -85,16 +85,17 @@
     </div>
 @endsection
 
-@push('bottom_scripts')
-    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('js/test_edit.js') }}"></script>
-@endpush
+@section('bottom-scripts')
+    @parent
+    <script defer src="{{ asset('js/test_edit.js') }}"></script>
+@endsection
 
 @isset($message)
-    @push('bottom_scripts')
+    @section('bottom-scripts')
+        @parent
         <script>
             window.backEndMessage = {!! json_encode($message) !!};
         </script>
-        <script src="{{ asset('js/show-popup.js') }}"></script>
-    @endpush
+        <script defer src="{{ asset('js/show-popup.js') }}"></script>
+    @endsection
 @endisset

@@ -29,7 +29,7 @@
             class="fas fa-backward"></i> Назад</a>
 @endsection
 
-@push('bottom_scripts')
-    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('js/read-only-input.js') }}"></script>
-@endpush
+@section('bottom-scripts')
+    @parent
+    <script defer src="{{ asset('js/read-only-input.js') }}"></script>
+@endsection

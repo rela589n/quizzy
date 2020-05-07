@@ -21,3 +21,5 @@
         @endcomponent
     @endforelse
 @endsection
+
+@include('blocks.scripts.no-scripts')

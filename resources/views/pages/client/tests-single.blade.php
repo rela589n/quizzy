@@ -49,14 +49,14 @@
     <div id="test-countdown">10:00</div>
 @endsection
 
-@push('bottom_scripts')
-    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
-    <script src="{{ asset('js/stopwatch.js') }}"></script>
+@section('bottom-scripts')
+    @parent
+    <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
+    <script defer src="{{ asset('js/stopwatch.js') }}"></script>
     <script type="text/javascript">
         window.passTestCountDownMinutes = {{ $test->time }};
         window.passTestId = {{ $test->id }};
     </script>
-    <script src="{{ asset('js/test-countdown.js') }}"></script>
-    <script src="{{ asset('js/close-when-switched-tab.js') }}"></script>
-@endpush
+    <script defer src="{{ asset('js/test-countdown.js') }}"></script>
+    <script defer src="{{ asset('js/close-when-switched-tab.js') }}"></script>
+@endsection

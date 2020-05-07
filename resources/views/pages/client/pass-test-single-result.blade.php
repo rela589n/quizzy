@@ -26,3 +26,5 @@
         <a href="javascript: void(0);" class="btn btn-primary" onclick="document.querySelector('.logout-link').click();">Вихід</a>
     </div>
 @endsection
+
+@include('blocks.scripts.no-scripts')

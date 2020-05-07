@@ -1,18 +1,12 @@
-@extends('layouts.root.base')
+@extends('layouts.initial-password-change')
 
 @section('body-class')
     @parent
-    auth
     bg-lighter
 @endsection
 
-@section('content')
-    <div class="container h-100">
-        <div class="row h-100">
-            <div class="col-4"></div>
-            <div class="col-4 mtb-auto">
-                @include('layouts.blocks.change-password-form')
-            </div>
-        </div>
-    </div>
+@section('change-password-content')
+    @include('layouts.blocks.change-password-form')
 @endsection
+
+@include('blocks.scripts.no-scripts')

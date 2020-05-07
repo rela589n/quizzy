@@ -16,6 +16,8 @@
 
 @yield('content')
 
-@stack('bottom_scripts')
+@section('bottom-scripts')
+    <script defer src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+@show
 </body>
 </html>

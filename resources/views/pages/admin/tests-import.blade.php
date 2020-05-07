@@ -35,3 +35,5 @@
         Імпортувати
     @endcomponent
 @endsection
+
+@include('blocks.scripts.no-scripts')

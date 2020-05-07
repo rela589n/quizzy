@@ -143,8 +143,8 @@
     {{ $testResults->links() }}
 @endsection
 
-@push('bottom_scripts')
-    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('js/clear-form-fields.js') }}"></script>
-    <script src="{{ asset('js/submit-only-filled.js') }}"></script>
-@endpush
+@section('bottom-scripts')
+    @parent
+    <script defer src="{{ asset('js/clear-form-fields.js') }}"></script>
+    <script defer src="{{ asset('js/submit-only-filled.js') }}"></script>
+@endsection

@@ -88,7 +88,7 @@
     @show
 </form>
 
-@prepend('bottom_scripts')
-    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('js/auth.js') }}"></script>
-@endprepend
+@section('bottom-scripts')
+    @parent
+    <script defer src="{{ asset('js/auth.js') }}"></script>
+@endsection

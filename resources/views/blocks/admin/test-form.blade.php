@@ -40,7 +40,8 @@
                     <div class="card-header" id="heading-{{ $includeSubject->id }}">
                         <h5 class="mb-0">
                             <button class="btn btn-link" data-toggle="collapse" type="button"
-                                    data-target="#collapse-{{ $includeSubject->id }}" aria-expanded="{{ $subjectExpanded ? 'true' : 'false' }}"
+                                    data-target="#collapse-{{ $includeSubject->id }}"
+                                    aria-expanded="{{ $subjectExpanded ? 'true' : 'false' }}"
                                     aria-controls="collapse-{{ $includeSubject->id }}">
                                 {{ $includeSubject->name }}
                             </button>
@@ -101,3 +102,9 @@
         {{ $submitButtonText ?? 'Зберегти' }}
     @endcomponent
 </form>
+
+@section('bottom-scripts')
+    @parent
+    <script defer src="{{ asset('js/required-if.js') }}"></script>
+    @include('blocks.scripts.bootstrap')
+@endsection

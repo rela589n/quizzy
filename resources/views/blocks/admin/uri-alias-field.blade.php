@@ -22,3 +22,8 @@
         </button>
     </div>
 </div>
+
+@section('bottom-scripts')
+    @parent
+    @include('blocks.scripts.translit-uri')
+@endsection
