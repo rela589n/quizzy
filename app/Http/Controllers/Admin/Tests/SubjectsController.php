@@ -45,9 +45,10 @@ class SubjectsController extends AdminController
     public function newSubject(CreateSubjectRequest $request)
     {
         $validated = $request->validated();
-
         $subject = TestSubject::create($validated);
+
         $subject->courses()->sync($validated['courses']);
+        $subject->departments()->sync($validated['departments']);
 
         return redirect()->route('admin.tests');
     }
@@ -94,6 +95,7 @@ class SubjectsController extends AdminController
 
         $subject->update($validated);
         $subject->courses()->sync($validated['courses']);
+        $subject->departments()->sync($validated['departments']);
 
         return redirect()->route('admin.tests.subject', [
             'subject' => $subject['uri_alias']
