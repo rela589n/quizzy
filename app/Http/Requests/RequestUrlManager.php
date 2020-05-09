@@ -4,6 +4,7 @@
 namespace App\Http\Requests;
 
 
+use App\Models\Department;
 use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
@@ -27,6 +28,11 @@ class RequestUrlManager
      * @var StudentGroup
      */
     protected $currentGroup = null;
+
+    /**
+     * @var Department
+     */
+    protected $currentDepartment = null;
 
     /**
      * RequestUrlManager constructor.
@@ -83,6 +89,20 @@ class RequestUrlManager
         return singleVar($this->currentGroup, function () use ($withTrashed) {
             return $this->resolveEntity(
                 StudentGroup::whereSlug($this->request->route('group')),
+                $withTrashed
+            );
+        });
+    }
+
+    /**
+     * @param bool $withTrashed
+     * @return Department|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     */
+    public function getCurrentDepartment(bool $withTrashed = false)
+    {
+        return singleVar($this->currentDepartment, function () use ($withTrashed) {
+            return $this->resolveEntity(
+                Department::whereUriAlias($this->request->route('department')),
                 $withTrashed
             );
         });
