@@ -41,4 +41,14 @@ class DepartmentsController extends AdminController
 
         return view('pages.admin.student-department-settings', compact('department'));
     }
+
+    public function updateDepartment(UpdateDepartmentRequest $request)
+    {
+        $department = $this->urlManager->getCurrentDepartment();
+        $department->update($request->validated());
+
+        return redirect()->route('admin.students.department', [
+            'department' => $department->uri_alias
+        ]);
+    }
 }
