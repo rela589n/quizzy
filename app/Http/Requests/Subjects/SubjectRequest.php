@@ -19,7 +19,8 @@ abstract class SubjectRequest extends FormRequest
     public function attributes()
     {
         return [
-            'courses.*' => '"курс"',
+            'courses.*'     => '"курс"',
+            'departments.*' => '"відділення"',
         ];
     }
 
@@ -30,27 +31,39 @@ abstract class SubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => [
+            'name'          => [
                 'required',
                 'min:3',
                 'max:128'
             ],
-            'uri_alias' => [
+            'uri_alias'     => [
                 'required',
                 'min:3',
                 'max:48',
                 new UriSlug()
             ],
-            'courses'   => [
+            'courses'       => [
                 'required',
                 'array',
                 'min:1',
             ],
-            'courses.*' => [
+            'courses.*'     => [
                 'required',
                 'numeric',
+                'min:1',
                 'exists:courses,id'
-            ]
+            ],
+            'departments'   => [
+                'required',
+                'array',
+                'min:1',
+            ],
+            'departments.*' => [
+                'required',
+                'numeric',
+                'min:1',
+                'exists:departments,id'
+            ],
         ];
     }
 }
