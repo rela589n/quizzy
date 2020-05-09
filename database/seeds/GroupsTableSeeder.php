@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Department;
-use App\Models\StudentGroup;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr as Arr;
 
@@ -34,7 +33,7 @@ class GroupsTableSeeder extends Seeder
 
     public static function getGroupsCount()
     {
-        return count(self::$groups);
+        return count(Arr::flatten(self::$groups, 1));
     }
 
     /**
