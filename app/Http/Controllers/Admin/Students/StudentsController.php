@@ -7,14 +7,14 @@ use App\Http\Requests\Users\Students\CreateStudentRequest;
 use App\Http\Requests\Users\Students\UpdateStudentRequest;
 use App\Models\StudentGroup;
 use App\Models\User;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Hash;
 
 class StudentsController extends AdminController
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function showNewStudentForm()
     {
@@ -40,30 +40,55 @@ class StudentsController extends AdminController
 
         return redirect()->route('admin.students.department.group', [
             'department' => $this->urlManager->getCurrentDepartment()->uri_alias,
-            'group' => $group->uri_alias
+            'group'      => $group->uri_alias
         ]);
     }
 
     /**
+     * @param $departmentAlias
      * @param $groupAlias
      * @param $userId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
-    public function showUpdateFormOrInfoPage($groupAlias, $userId)
+    public function showUpdateFormOrInfoPage($departmentAlias, $groupAlias, $userId)
     {
         $user = User::findOrFail($userId);
 
-        if (($response = Gate::inspect('update', $user))->denied()) {
-            $response = Gate::inspect('view', $user);
+        try {
+            return $this->showUpdateForm($user);
+
+        } catch (AuthorizationException $e) {
+
+            return $this->showReadOnlyUserPage($user);
         }
+    }
 
-        $response->authorize();
+    /**
+     * @param User $user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws AuthorizationException
+     */
+    public function showUpdateForm(User $user)
+    {
+        $this->authorize('update', $user);
 
-        return view('pages.admin.student-view', [
+        return view('pages.admin.student-update', [
             'user'          => $user,
             'studentGroups' => StudentGroup::all()->sortByDesc('year')
         ]);
+    }
+
+    /**
+     * @param User $user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws AuthorizationException
+     */
+    public function showReadOnlyUserPage(User $user)
+    {
+        $this->authorize('view', $user);
+
+        return view('pages.admin.student-view', compact('user'));
     }
 
     /**
@@ -81,27 +106,30 @@ class StudentsController extends AdminController
 
         $user->update($validated);
 
-        return redirect()->route('admin.students.group', [
-            'group' => $user->studentGroup->uri_alias
+        return redirect()->route('admin.students.department.group', [
+            'department' => $user->studentGroup->department->uri_alias,
+            'group'      => $user->studentGroup->uri_alias
         ]);
     }
 
     /**
+     * @param $departmentAlias
      * @param $groupAlias
      * @param $userId
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      * @throws \Exception
      */
-    public function deleteStudent($groupAlias, $userId)
+    public function deleteStudent($departmentAlias, $groupAlias, $userId)
     {
         $user = User::findOrFail($userId);
         $this->authorize('delete', $user);
 
         $user->delete();
 
-        return redirect()->route('admin.students.group', [
-            'group' => $groupAlias
+        return redirect()->route('admin.students.department.group', [
+            'department' => $departmentAlias,
+            'group'      => $groupAlias
         ]);
     }
 }

@@ -7,24 +7,10 @@
 @endsection
 
 @section('content')
-    {{ Breadcrumbs::render('admin.students.group.student', $user) }}
+    {{ Breadcrumbs::render('admin.students.department.group.student', $user) }}
     @parent
 @endsection
 
 @section('main-container-content')
-    @if($authUser->can('update', $user))
-
-        @include('blocks.admin.student-form', [
-            'submitButtonText' => 'Зберегти',
-            'userPasswordPlaceholder' => 'Введіть щоб змінити',
-            'submitSize' => ($authUser->can('delete', $user)) ? 9 : 12
-        ])
-
-        @if($authUser->can('delete', $user))
-            @include('blocks.admin.delete-entity-form')
-        @endif
-
-    @else
-        @include('blocks.admin.student-info')
-    @endif
+    @include('blocks.admin.student-info')
 @endsection

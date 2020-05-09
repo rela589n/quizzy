@@ -208,20 +208,24 @@ Breadcrumbs::for('admin.students.department.group.new',
             ]
         ));
     });
-/*
-Breadcrumbs::for('admin.students.group.student',
-    function (BreadcrumbsGenerator $trail, User $student, StudentGroup $group = null) {
 
-        $trail->parent('admin.students.group', $group ?? $student->studentGroup);
+Breadcrumbs::for('admin.students.department.group.student',
+    function (BreadcrumbsGenerator $trail, User $student, StudentGroup $group = null, Department $department = null) {
+        $group = $group ?? $student->studentGroup;
+        $department = $department ?? $group->department;
+
+        $trail->parent('admin.students.department.group', $department, $group);
+
         $trail->push($student->full_name, route(
-            'admin.students.group.student',
+            'admin.students.department.group.student',
             [
-                'group'     => $group->uri_alias ?? $student->studentGroup->uri_alias,
+                'department' => $department->uri_alias,
+                'group'     => $group->uri_alias,
                 'studentId' => $student->id
             ]
         ));
     });
-*/
+
 Breadcrumbs::for('admin.teachers',
     function (BreadcrumbsGenerator $trail) {
         $trail->push('Список адміністраторів', route('admin.teachers'));
