@@ -157,6 +157,19 @@ Breadcrumbs::for('admin.students.department.new',
         );
     });
 
+Breadcrumbs::for('admin.students.department.settings',
+    function (BreadcrumbsGenerator $trail, Department $department) {
+        $trail->parent('admin.students.department', $department);
+
+        $trail->push(
+            'Налаштування',
+            route('admin.students.department.settings', [
+                'department' => $department->uri_alias
+            ])
+        );
+    });
+
+
 /*
 Breadcrumbs::for('admin.students.group',
     function (BreadcrumbsGenerator $trail, StudentGroup $group) {
