@@ -46,10 +46,14 @@ class GroupsController extends AdminController
      */
     public function newGroup(CreateGroupRequest $request)
     {
-        $validated = $request->validated();
-        StudentGroup::create($validated);
+        $department = $this->urlManager->getCurrentDepartment();
 
-        return redirect()->route('admin.students');
+        $validated = $request->validated();
+        $department->studentGroups()->create($validated);
+
+        return redirect()->route('admin.students.department', [
+            'department' => $department
+        ]);
     }
 
     /**
