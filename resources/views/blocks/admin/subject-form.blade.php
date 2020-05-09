@@ -14,6 +14,36 @@
 
     @include('blocks.admin.uri-alias-field', ['aliasable' => $subject ?? null])
 
+    <label for="departments" class="form-info mb-4 h3">
+        Відділення, на яких викладається предмет:
+    </label>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+
+                <select class="selectpicker form-control dropup @error('departments.*') is-invalid @enderror"
+                        data-dropup-auto="false" data-style="btn-outline-secondary selectpicker-button"
+                        multiple="multiple"
+                        title="Оберіть відділення" required="required"
+                        id="departments" name="departments[]">
+
+                    @php($subjectDepartments = array_flip(old('departments', $subject->department_ids ?? [])))
+
+                    @foreach($allDepartments as $department)
+                        <option value="{{ $department->id }}"
+                                @if( array_key_exists("$department->id", $subjectDepartments)) selected="selected" @endif>
+                            {{ $department->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('departments.*')
+                <span class="invalid-feedback" role="alert"><label for="departments">{{ $message }}</label></span>
+                @enderror
+            </div>
+        </div>
+    </div>
+
     <label for="courses" class="form-info mb-4 h3">
         Виберіть курс, на якому викладається предмет:
     </label>

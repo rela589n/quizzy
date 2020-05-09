@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereUriAlias($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\StudentGroup[] $studentGroups
+ * @property-read int|null $student_groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestSubject[] $testSubjects
+ * @property-read int|null $test_subjects_count
  */
 class Department extends Model
 {
