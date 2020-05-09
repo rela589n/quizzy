@@ -39,6 +39,8 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereSlug($slug)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
+ * @property int|null $department_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereDepartmentId($value)
  */
 class StudentGroup extends Model
 {
