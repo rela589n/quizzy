@@ -26,12 +26,19 @@ class RolesTableSeeder extends Seeder
 
                     'update-tests',
                     'delete-tests',
+
+                    'create-departments',
+                    'update-departments',
+                    'delete-departments',
                 ]
             ],
             'class-monitor' => [
                 'public_name'      => 'Староста',
                 'permissions-only' => [
                     'access-groups',
+
+                    'view-departments',
+
                     'create-groups',
                     'create-students',
                 ]
@@ -80,9 +87,10 @@ class RolesTableSeeder extends Seeder
                 /**
                  * @var Role $role
                  */
-                $role = Role::create([
+                $role = Role::firstOrCreate([
+                    'name' => $name,
                     'guard_name'  => $guardName,
-                    'name'        => $name,
+                ], [
                     'public_name' => $roleConfig['public_name']
                 ]);
 
@@ -91,7 +99,7 @@ class RolesTableSeeder extends Seeder
                     $roleConfig['permissions'] ?? []
                 )->get();
 
-                $role->syncPermissions($permissions);
+                $role->givePermissionTo($permissions);
             }
         }
     }

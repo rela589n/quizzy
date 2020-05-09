@@ -13,7 +13,7 @@ class PermissionsTableSeeder extends Seeder
             'create-administrators' => [
                 'public_name' => 'Реєстрація адміністраторів'
             ],
-            'view-administrators' => [
+            'view-administrators'   => [
                 'public_name' => 'Перегляд адміністраторів'
             ],
             'update-administrators' => [
@@ -25,12 +25,26 @@ class PermissionsTableSeeder extends Seeder
 
 
             'access-groups' => [
-                'public_name' => 'Доступ до груп (пункт меню)'
+                'public_name' => 'Доступ до управління студентами (пункт меню)'
             ],
+
+            'create-departments' => [
+                'public_name' => 'Створення відділень'
+            ],
+            'view-departments'   => [
+                'public_name' => 'Перегляд відділень'
+            ],
+            'update-departments' => [
+                'public_name' => 'Налаштування відділень'
+            ],
+            'delete-departments' => [
+                'public_name' => 'Видалення відділень'
+            ],
+
             'create-groups' => [
                 'public_name' => 'Створення груп'
             ],
-            'view-groups' => [
+            'view-groups'   => [
                 'public_name' => 'Перегляд груп'
             ],
             'update-groups' => [
@@ -44,7 +58,7 @@ class PermissionsTableSeeder extends Seeder
             'create-students' => [
                 'public_name' => 'Реєстрація студентів'
             ],
-            'view-students' => [
+            'view-students'   => [
                 'public_name' => 'Перегляд студентів'
             ],
             'update-students' => [
@@ -60,7 +74,7 @@ class PermissionsTableSeeder extends Seeder
             'create-subjects' => [
                 'public_name' => 'Створення предметів тестування'
             ],
-            'view-subjects' => [
+            'view-subjects'   => [
                 'public_name' => 'Перегляд предметів тестування'
             ],
             'update-subjects' => [
@@ -74,7 +88,7 @@ class PermissionsTableSeeder extends Seeder
             'create-tests' => [
                 'public_name' => 'Створення тестів'
             ],
-            'view-tests' => [
+            'view-tests'   => [
                 'public_name' => 'Перегляд тестів'
             ],
             'update-tests' => [
@@ -85,10 +99,10 @@ class PermissionsTableSeeder extends Seeder
             ],
 
 
-            'view-results' => [
+            'view-results'               => [
                 'public_name' => 'Перегляд результатів'
             ],
-            'generate-group-statement' => [
+            'generate-group-statement'   => [
                 'public_name' => 'Створення відомості по групі'
             ],
             'generate-student-statement' => [
@@ -113,15 +127,20 @@ class PermissionsTableSeeder extends Seeder
     public function run()
     {
         foreach (static::$permissions as $guardName => $permissions) {
+            $this->createNotCreatedPermissions($guardName, $permissions);
+        }
+    }
 
-            foreach ($permissions as $name => $permission) {
+    protected function createNotCreatedPermissions($guardName, $permissions)
+    {
+        foreach ($permissions as $name => $permission) {
 
-                Permission::create([
-                    'guard_name' => $guardName,
-                    'name' => $name,
-                    'public_name' => $permission['public_name']
-                ]);
-            }
+            Permission::firstOrCreate([
+                'name'        => $name,
+                'guard_name'  => $guardName,
+            ],[
+                'public_name' => $permission['public_name']
+            ]);
         }
     }
 }
