@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Department[] $departments
  * @property-read int|null $departments_count
  * @property-read mixed $department_ids
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject byUserCourse($user)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject byUserDepartment($user)
  */
 class TestSubject extends Model
 {
@@ -64,17 +66,43 @@ class TestSubject extends Model
     }
 
     /**
-     * @param Builder $query
+     * @param Builder|TestSubject $query
      * @param User $user
      * @return Builder
      */
     public function scopeAvailableFor($query, $user)
+    {
+        return $query->byUserCourse($user)
+            ->byUserDepartment($user);
+    }
+
+    /**
+     * @param Builder $query
+     * @param User $user
+     * @return Builder
+     */
+    public function scopeByUserCourse($query, $user)
     {
         return $query->whereHas(
             'courses',
             function (Builder $coursesQuery) use ($user) {
                 // id represents int value of course
                 $coursesQuery->where('id', $user->course);
+            }
+        );
+    }
+
+    /**
+     * @param Builder $query
+     * @param User $user
+     * @return Builder
+     */
+    public function scopeByUserDepartment($query, $user)
+    {
+        return $query->whereHas(
+            'departments',
+            function (Builder $departmentsQuery) use ($user) {
+                $departmentsQuery->where('id', $user->studentGroup->department->id);
             }
         );
     }
