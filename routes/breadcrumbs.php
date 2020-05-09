@@ -191,23 +191,24 @@ Breadcrumbs::for('admin.students.department.group.settings',
             'admin.students.department.group.settings',
             [
                 'department' => $department->uri_alias,
-                'group' => $group->uri_alias
+                'group'      => $group->uri_alias
             ]
         ));
     });
 
-/*
-Breadcrumbs::for('admin.students.group.new',
-    function (BreadcrumbsGenerator $trail, StudentGroup $group) {
-        $trail->parent('admin.students.group', $group);
+Breadcrumbs::for('admin.students.department.group.new',
+    function (BreadcrumbsGenerator $trail, Department $department, StudentGroup $group) {
+        $trail->parent('admin.students.department.group', $department, $group);
+
         $trail->push('Додати студента', route(
-            'admin.students.group.new',
+            'admin.students.department.group.new',
             [
-                'group' => $group->uri_alias
+                'department' => $department->uri_alias,
+                'group'      => $group->uri_alias
             ]
         ));
     });
-
+/*
 Breadcrumbs::for('admin.students.group.student',
     function (BreadcrumbsGenerator $trail, User $student, StudentGroup $group = null) {
 

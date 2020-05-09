@@ -21,7 +21,8 @@ class StudentsController extends AdminController
         $this->authorize('create-students');
 
         return view('pages.admin.student-new', [
-            'group' => $this->urlManager->getCurrentGroup()
+            'department' => $this->urlManager->getCurrentDepartment(),
+            'group'      => $this->urlManager->getCurrentGroup()
         ]);
     }
 
@@ -59,7 +60,7 @@ class StudentsController extends AdminController
         $response->authorize();
 
         return view('pages.admin.student-view', [
-            'user' => $user,
+            'user'          => $user,
             'studentGroups' => StudentGroup::all()->sortByDesc('year')
         ]);
     }
