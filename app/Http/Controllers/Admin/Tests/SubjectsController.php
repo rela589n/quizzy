@@ -79,8 +79,9 @@ class SubjectsController extends AdminController
         $this->authorize('update', $subject);
 
         return view('pages.admin.subjects-single-settings', [
-            'subject'    => $subject,
-            'allCourses' => Course::all()
+            'subject'        => $subject,
+            'allCourses'     => Course::all(),
+            'allDepartments' => Department::all(),
         ]);
     }
 
