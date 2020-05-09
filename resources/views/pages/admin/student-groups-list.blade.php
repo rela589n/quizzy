@@ -1,11 +1,11 @@
 @extends('layouts.categories-single', ['baseLayout' => 'layouts.root.admin' ])
 
 @section('title')
-    Групи студентів
+    Групи відділення "{{ $department->name }}"
 @endsection
 
 @section('content')
-    {{ Breadcrumbs::render('admin.students') }}
+    {{ Breadcrumbs::render('admin.students.department', $department) }}
     @parent
 @endsection
 
@@ -13,11 +13,23 @@
     Список доступних груп студентів:
 @endsection
 
+@section('category-settings-link')
+    @if($authUser->can('update', $department))
+        @include('blocks.admin.settings-link', [
+            'link' => route('admin.students.settings', ['group' => $department->uri_alias]),
+            'text' => 'Перейти до налаштувань відділення'
+        ])
+    @endif
+@endsection
+
 @section('category-links')
     @forelse($groups as $group)
         @include('blocks.entity-line', [
             'header' => $group->name,
-            'link' => route('admin.students.group', ['group' => $group['uri_alias'] ]),
+            'link' => route('admin.students.department.group', [
+                'department' => $department->uri_alias,
+                'group' => $group['uri_alias']
+            ]),
             'badge' => $group->students_count,
         ])
     @empty
@@ -27,11 +39,10 @@
     @endforelse
 @endsection
 
-
 @section('category-new-btn')
     @if ($authUser->can('create-groups'))
         @include('blocks.admin.create-new-link', [
-            'link' => route('admin.students.new'),
+            'link' => route('admin.students.department.new', ['department' => $department->uri_alias]),
             'text' => 'Створити групу'
         ])
     @endif

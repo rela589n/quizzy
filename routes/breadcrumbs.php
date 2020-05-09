@@ -135,8 +135,10 @@ Breadcrumbs::for('admin.students.new',
 
 Breadcrumbs::for('admin.students.department',
     function (BreadcrumbsGenerator $trail, Department $department) {
+        $trail->parent('admin.students');
+
         $trail->push(
-            'Групи відділення ' . $department->name,
+            $department->name,
             route('admin.students.department', [
                 'department' => $department->uri_alias
             ])

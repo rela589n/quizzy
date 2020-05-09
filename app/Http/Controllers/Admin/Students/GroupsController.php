@@ -16,11 +16,14 @@ class GroupsController extends AdminController
      */
     public function showAll(AvailableGroupsFilter $filters)
     {
-        $groups = StudentGroup::withCount('students');
+        $department = $this->urlManager->getCurrentDepartment();
+
+        $groups = $department->studentGroups()->withCount('students');
         $groups = $groups->filtered($filters);
 
         return view('pages.admin.student-groups-list', [
-            'groups' => $groups
+            'department' => $department,
+            'groups'     => $groups
         ]);
     }
 
