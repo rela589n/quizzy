@@ -66,7 +66,8 @@ class GroupsController extends AdminController
         $this->authorize('view', $group);
 
         return view('pages.admin.student-groups-single', [
-            'group' => $group,
+            'department' => $this->urlManager->getCurrentDepartment(),
+            'group'      => $group,
         ]);
     }
 

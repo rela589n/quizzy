@@ -106,7 +106,7 @@ Route::prefix('/students')
                     ->where(['group' => $routePatterns['name']])
                     ->name('.group')
                     ->group(function () use (&$routePatterns) {
-                        /*
+
                         Route::get('/settings', 'GroupsController@showUpdateGroupForm')->name('.settings');
                         Route::post('/settings', 'GroupsController@updateGroup');
                         Route::delete('/settings', 'GroupsController@deleteGroup');
@@ -124,7 +124,7 @@ Route::prefix('/students')
                                 Route::delete('/', 'StudentsController@deleteStudent');
 
                             });
-                        */
+
                         Route::get('/', 'GroupsController@showSingleGroup');
                     });
 

@@ -170,19 +170,20 @@ Breadcrumbs::for('admin.students.department.settings',
     });
 
 
-/*
-Breadcrumbs::for('admin.students.group',
-    function (BreadcrumbsGenerator $trail, StudentGroup $group) {
+Breadcrumbs::for('admin.students.department.group',
+    function (BreadcrumbsGenerator $trail, Department $department, StudentGroup $group) {
 
-        $trail->parent('admin.students');
+        $trail->parent('admin.students.department', $department);
         $trail->push($group->name, route(
-            'admin.students.group',
+            'admin.students.department.group',
             [
-                'group' => $group->uri_alias
+                'department' => $department->uri_alias,
+                'group'      => $group->uri_alias
             ]
         ));
     });
 
+/*
 Breadcrumbs::for('admin.students.group.new',
     function (BreadcrumbsGenerator $trail, StudentGroup $group) {
         $trail->parent('admin.students.group', $group);
