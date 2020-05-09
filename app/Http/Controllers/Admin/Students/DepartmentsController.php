@@ -16,4 +16,11 @@ class DepartmentsController extends AdminController
 
         return view('pages.admin.student-departments-list', compact('departments'));
     }
+
+    public function showNewDepartmentForm()
+    {
+        $this->authorize('create-departments');
+
+        return view('pages.admin.student-departments-new');
+    }
 }

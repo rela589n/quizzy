@@ -87,6 +87,8 @@ Route::prefix('/students')
 
         $routePatterns = Route::getPatterns();
 
+        Route::get('/new', 'DepartmentsController@showNewDepartmentForm')->name('.new');
+
         Route::prefix('/{department}')
             ->where(['department' => $routePatterns['name']])
             ->name('.department')
