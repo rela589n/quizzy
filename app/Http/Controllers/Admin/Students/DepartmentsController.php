@@ -51,4 +51,19 @@ class DepartmentsController extends AdminController
             'department' => $department->uri_alias
         ]);
     }
+
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Exception
+     */
+    public function deleteDepartment()
+    {
+        $department = $this->urlManager->getCurrentDepartment();
+        $this->authorize('delete', $department);
+
+        $department->delete();
+        return redirect()->route('admin.students');
+    }
 }

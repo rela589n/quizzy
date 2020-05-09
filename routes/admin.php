@@ -97,6 +97,7 @@ Route::prefix('/students')
 
                 Route::get('/settings', 'DepartmentsController@showUpdateDepartmentForm')->name('.settings');
                 Route::post('/settings', 'DepartmentsController@updateDepartment');
+                Route::delete('/settings', 'DepartmentsController@deleteDepartment');
 
                 Route::get('/new', 'GroupsController@showNewGroupForm')->name('.new');
                 Route::post('/new', 'GroupsController@newGroup');
