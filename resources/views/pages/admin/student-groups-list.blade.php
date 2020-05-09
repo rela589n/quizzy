@@ -16,7 +16,7 @@
 @section('category-settings-link')
     @if($authUser->can('update', $department))
         @include('blocks.admin.settings-link', [
-            'link' => route('admin.students.settings', ['group' => $department->uri_alias]),
+            'link' => route('admin.students.department.settings', ['department' => $department->uri_alias]),
             'text' => 'Перейти до налаштувань відділення'
         ])
     @endif

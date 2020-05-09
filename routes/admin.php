@@ -90,45 +90,45 @@ Route::prefix('/students')
         Route::get('/new', 'DepartmentsController@showNewDepartmentForm')->name('.new');
         Route::post('/new', 'DepartmentsController@newDepartment');
 
-        Route::get('/settings', 'DepartmentsController@showUpdateDepartmentForm')->name('.settings');
-
         Route::prefix('/{department}')
             ->where(['department' => $routePatterns['name']])
             ->name('.department')
-            ->group(
-                function () use ($routePatterns) {
+            ->group(function () use ($routePatterns) {
 
-                    Route::get('/new', 'GroupsController@showNewGroupForm')->name('.new');
-                    Route::post('/new', 'GroupsController@newGroup');
+                Route::get('/settings', 'DepartmentsController@showUpdateDepartmentForm')->name('.settings');
+                Route::post('/settings', 'DepartmentsController@updateDepartment');
 
-                    Route::prefix('/{group}')
-                        ->where(['group' => $routePatterns['name']])
-                        ->name('.group')
-                        ->group(function () use (&$routePatterns) {
-                            /*
-                            Route::get('/settings', 'GroupsController@showUpdateGroupForm')->name('.settings');
-                            Route::post('/settings', 'GroupsController@updateGroup');
-                            Route::delete('/settings', 'GroupsController@deleteGroup');
+                Route::get('/new', 'GroupsController@showNewGroupForm')->name('.new');
+                Route::post('/new', 'GroupsController@newGroup');
 
-                            Route::get('/new', 'StudentsController@showNewStudentForm')->name('.new');
-                            Route::post('/new', 'StudentsController@newStudent');
+                Route::prefix('/{group}')
+                    ->where(['group' => $routePatterns['name']])
+                    ->name('.group')
+                    ->group(function () use (&$routePatterns) {
+                        /*
+                        Route::get('/settings', 'GroupsController@showUpdateGroupForm')->name('.settings');
+                        Route::post('/settings', 'GroupsController@updateGroup');
+                        Route::delete('/settings', 'GroupsController@deleteGroup');
 
-                            Route::prefix('/{studentId}')
-                                ->where(['studentId' => $routePatterns['id']])
-                                ->name('.student')
-                                ->group(function () use (&$routePatterns) {
+                        Route::get('/new', 'StudentsController@showNewStudentForm')->name('.new');
+                        Route::post('/new', 'StudentsController@newStudent');
 
-                                    Route::get('/', 'StudentsController@showUpdateFormOrInfoPage');
-                                    Route::post('/', 'StudentsController@updateStudent');
-                                    Route::delete('/', 'StudentsController@deleteStudent');
+                        Route::prefix('/{studentId}')
+                            ->where(['studentId' => $routePatterns['id']])
+                            ->name('.student')
+                            ->group(function () use (&$routePatterns) {
 
-                                });
-                            */
-                            Route::get('/', 'GroupsController@showSingleGroup');
-                        });
+                                Route::get('/', 'StudentsController@showUpdateFormOrInfoPage');
+                                Route::post('/', 'StudentsController@updateStudent');
+                                Route::delete('/', 'StudentsController@deleteStudent');
 
-                    Route::get('/', 'GroupsController@showAll');
-                });
+                            });
+                        */
+                        Route::get('/', 'GroupsController@showSingleGroup');
+                    });
+
+                Route::get('/', 'GroupsController@showAll');
+            });
 
         Route::get('/', 'DepartmentsController@showAll');
     });
