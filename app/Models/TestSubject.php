@@ -50,6 +50,11 @@ class TestSubject extends Model
         return $this->hasMany(Test::class);
     }
 
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class);
+    }
+
     /**
      * @param Builder $query
      * @param User $user

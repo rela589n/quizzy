@@ -63,6 +63,11 @@ class StudentGroup extends Model
         return $this->hasMany(User::class)->orderBy('surname')->orderBy('name');
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
     /**
      * Get the group's course.
      *
