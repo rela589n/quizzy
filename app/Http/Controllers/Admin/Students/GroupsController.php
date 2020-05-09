@@ -35,7 +35,9 @@ class GroupsController extends AdminController
     {
         $this->authorize('create-groups');
 
-        return view('pages.admin.student-groups-new');
+        return view('pages.admin.student-groups-new', [
+            'department' => $this->urlManager->getCurrentDepartment()
+        ]);
     }
 
     /**

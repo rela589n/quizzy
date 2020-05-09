@@ -144,13 +144,20 @@ Breadcrumbs::for('admin.students.department',
             ])
         );
     });
-/*
-Breadcrumbs::for('admin.students.new',
-    function (BreadcrumbsGenerator $trail) {
-        $trail->parent('admin.students');
-        $trail->push('Створити групу', route('admin.students.new'));
+
+Breadcrumbs::for('admin.students.department.new',
+    function (BreadcrumbsGenerator $trail, Department $department) {
+        $trail->parent('admin.students.department', $department);
+
+        $trail->push(
+            'Створити групу',
+            route('admin.students.department.new', [
+                'department' => $department->uri_alias
+            ])
+        );
     });
 
+/*
 Breadcrumbs::for('admin.students.group',
     function (BreadcrumbsGenerator $trail, StudentGroup $group) {
 

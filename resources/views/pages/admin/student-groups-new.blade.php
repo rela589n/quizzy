@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-    {{ Breadcrumbs::render('admin.students.new') }}
+    {{ Breadcrumbs::render('admin.students.department.new', $department) }}
     @parent
 @endsection
 
