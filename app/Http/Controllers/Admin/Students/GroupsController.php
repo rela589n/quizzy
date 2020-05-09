@@ -51,7 +51,7 @@ class GroupsController extends AdminController
         $department->studentGroups()->create($validated);
 
         return redirect()->route('admin.students.department', [
-            'department' => $department
+            'department' => $department->uri_alias
         ]);
     }
 
