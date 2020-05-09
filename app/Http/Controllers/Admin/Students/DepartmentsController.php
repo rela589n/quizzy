@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Students;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Departments\CreateDepartmentsRequest;
+use App\Http\Requests\Departments\UpdateDepartmentRequest;
 use App\Models\Department;
 use Illuminate\Http\Request;
 
@@ -31,5 +32,13 @@ class DepartmentsController extends AdminController
         Department::create($validated);
 
         return redirect()->route('admin.students');
+    }
+
+    public function showUpdateDepartmentForm()
+    {
+        $department = $this->urlManager->getCurrentDepartment();
+        $this->authorize('update', $department);
+
+        return view('pages.admin.student-department-settings', compact('department'));
     }
 }
