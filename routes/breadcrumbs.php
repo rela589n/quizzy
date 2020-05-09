@@ -12,6 +12,7 @@
 */
 
 use App\Models\Administrator;
+use App\Models\Department;
 use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
@@ -122,9 +123,26 @@ Breadcrumbs::for('admin.results.subject.test',
 
 Breadcrumbs::for('admin.students',
     function (BreadcrumbsGenerator $trail) {
-        $trail->push('Список груп студентів', route('admin.students'));
+        $trail->push('Список відділень', route('admin.students'));
     });
 
+Breadcrumbs::for('admin.students.new',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->parent('admin.students');
+        $trail->push('Створити відділення', route('admin.students.new'));
+    });
+
+
+Breadcrumbs::for('admin.students.department',
+    function (BreadcrumbsGenerator $trail, Department $department) {
+        $trail->push(
+            'Групи відділення ' . $department->name,
+            route('admin.students.department', [
+                'department' => $department->uri_alias
+            ])
+        );
+    });
+/*
 Breadcrumbs::for('admin.students.new',
     function (BreadcrumbsGenerator $trail) {
         $trail->parent('admin.students');
@@ -177,7 +195,7 @@ Breadcrumbs::for('admin.students.group.student',
             ]
         ));
     });
-
+*/
 Breadcrumbs::for('admin.teachers',
     function (BreadcrumbsGenerator $trail) {
         $trail->push('Список адміністраторів', route('admin.teachers'));
