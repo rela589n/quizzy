@@ -45,7 +45,8 @@ class AuthServiceProvider extends ServiceProvider
     protected function registerGates()
     {
         Gate::define('pass-tests-of-subject', function (User $user, TestSubject $subject) {
-            return in_array($user->course, $subject->courses_numeric);
+            return in_array($user->course, $subject->courses_numeric) &&
+                in_array($user->studentGroup->department->id, $subject->department_ids);
         });
 
         Gate::define('pass-test', function (User $user, Test $test) {
