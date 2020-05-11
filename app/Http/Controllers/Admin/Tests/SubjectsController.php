@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Subjects\CreateSubjectRequest;
 use App\Http\Requests\Subjects\UpdateSubjectRequest;
 use App\Models\Course;
+use App\Models\Department;
 use App\Models\TestSubject;
 
 class SubjectsController extends AdminController
@@ -32,7 +33,8 @@ class SubjectsController extends AdminController
         $this->authorize('create-subjects');
 
         return view('pages.admin.subjects-new', [
-            'allCourses' => Course::all()
+            'allCourses'     => Course::all(),
+            'allDepartments' => Department::all(),
         ]);
     }
 
@@ -43,9 +45,10 @@ class SubjectsController extends AdminController
     public function newSubject(CreateSubjectRequest $request)
     {
         $validated = $request->validated();
-
         $subject = TestSubject::create($validated);
+
         $subject->courses()->sync($validated['courses']);
+        $subject->departments()->sync($validated['departments']);
 
         return redirect()->route('admin.tests');
     }
@@ -76,8 +79,9 @@ class SubjectsController extends AdminController
         $this->authorize('update', $subject);
 
         return view('pages.admin.subjects-single-settings', [
-            'subject'    => $subject,
-            'allCourses' => Course::all()
+            'subject'        => $subject,
+            'allCourses'     => Course::all(),
+            'allDepartments' => Department::all(),
         ]);
     }
 
@@ -92,6 +96,7 @@ class SubjectsController extends AdminController
 
         $subject->update($validated);
         $subject->courses()->sync($validated['courses']);
+        $subject->departments()->sync($validated['departments']);
 
         return redirect()->route('admin.tests.subject', [
             'subject' => $subject['uri_alias']

@@ -27,6 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Course[] $courses
  * @property-read int|null $courses_count
  * @property-read mixed $courses_numeric
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Department[] $departments
+ * @property-read int|null $departments_count
+ * @property-read mixed $department_ids
  */
 class TestSubject extends Model
 {
@@ -53,6 +56,11 @@ class TestSubject extends Model
     public function departments()
     {
         return $this->belongsToMany(Department::class);
+    }
+
+    public function getDepartmentIdsAttribute()
+    {
+        return $this->departments->pluck('id')->toArray();
     }
 
     /**

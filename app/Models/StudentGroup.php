@@ -41,6 +41,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
  * @property int|null $department_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereDepartmentId($value)
+ * @property-read \App\Models\Department|null $department
  */
 class StudentGroup extends Model
 {
