@@ -32,6 +32,7 @@ class CreateDepartmentTestSubjectTable extends Migration
                 ->onDelete('cascade');
 
             $table->primary(['department_id', 'test_subject_id'], 'department_test_subject_department_id_test_subject_id_primary');
+            $table->engine = 'InnoDB';
         });
     }
 

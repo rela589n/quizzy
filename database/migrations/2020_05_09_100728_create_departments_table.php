@@ -20,6 +20,7 @@ class CreateDepartmentsTable extends Migration
             $table->string('uri_alias', 64)->unique();
 
             $table->softDeletes();
+            $table->engine = 'InnoDB';
         });
     }
 
