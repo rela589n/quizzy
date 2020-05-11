@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Department extends Model
 {
+    use \Illuminate\Database\Eloquent\SoftDeletes;
+
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias'];
 
