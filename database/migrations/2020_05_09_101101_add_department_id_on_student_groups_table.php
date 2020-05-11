@@ -17,7 +17,9 @@ class AddDepartmentIdOnStudentGroupsTable extends Migration
             $table->unsignedBigInteger('department_id')
                 ->nullable()
                 ->after('id');
+        });
 
+        Schema::table('student_groups', function (Blueprint $table) {
             $table->foreign('department_id')
                 ->references('id')
                 ->on('departments')
@@ -35,6 +37,7 @@ class AddDepartmentIdOnStudentGroupsTable extends Migration
     {
         Schema::table('student_groups', function (Blueprint $table) {
             $table->dropForeign(['department_id']);
+            $table->dropColumn(['department_id']);
         });
     }
 }
