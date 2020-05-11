@@ -12,6 +12,7 @@
 */
 
 use App\Models\Administrator;
+use App\Models\Department;
 use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
@@ -122,57 +123,104 @@ Breadcrumbs::for('admin.results.subject.test',
 
 Breadcrumbs::for('admin.students',
     function (BreadcrumbsGenerator $trail) {
-        $trail->push('Список груп студентів', route('admin.students'));
+        $trail->push('Список відділень', route('admin.students'));
     });
 
 Breadcrumbs::for('admin.students.new',
     function (BreadcrumbsGenerator $trail) {
         $trail->parent('admin.students');
-        $trail->push('Створити групу', route('admin.students.new'));
+        $trail->push('Створити відділення', route('admin.students.new'));
     });
 
-Breadcrumbs::for('admin.students.group',
-    function (BreadcrumbsGenerator $trail, StudentGroup $group) {
 
+Breadcrumbs::for('admin.students.department',
+    function (BreadcrumbsGenerator $trail, Department $department) {
         $trail->parent('admin.students');
+
+        $trail->push(
+            $department->name,
+            route('admin.students.department', [
+                'department' => $department->uri_alias
+            ])
+        );
+    });
+
+Breadcrumbs::for('admin.students.department.new',
+    function (BreadcrumbsGenerator $trail, Department $department) {
+        $trail->parent('admin.students.department', $department);
+
+        $trail->push(
+            'Створити групу',
+            route('admin.students.department.new', [
+                'department' => $department->uri_alias
+            ])
+        );
+    });
+
+Breadcrumbs::for('admin.students.department.settings',
+    function (BreadcrumbsGenerator $trail, Department $department) {
+        $trail->parent('admin.students.department', $department);
+
+        $trail->push(
+            'Налаштування',
+            route('admin.students.department.settings', [
+                'department' => $department->uri_alias
+            ])
+        );
+    });
+
+
+Breadcrumbs::for('admin.students.department.group',
+    function (BreadcrumbsGenerator $trail, Department $department, StudentGroup $group) {
+
+        $trail->parent('admin.students.department', $department);
         $trail->push($group->name, route(
-            'admin.students.group',
+            'admin.students.department.group',
             [
-                'group' => $group->uri_alias
+                'department' => $department->uri_alias,
+                'group'      => $group->uri_alias
             ]
         ));
     });
 
-Breadcrumbs::for('admin.students.group.new',
-    function (BreadcrumbsGenerator $trail, StudentGroup $group) {
-        $trail->parent('admin.students.group', $group);
-        $trail->push('Додати студента', route(
-            'admin.students.group.new',
-            [
-                'group' => $group->uri_alias
-            ]
-        ));
-    });
+Breadcrumbs::for('admin.students.department.group.settings',
+    function (BreadcrumbsGenerator $trail, Department $department, StudentGroup $group) {
+        $trail->parent('admin.students.department.group', $department, $group);
 
-Breadcrumbs::for('admin.students.group.settings',
-    function (BreadcrumbsGenerator $trail, StudentGroup $group) {
-        $trail->parent('admin.students.group', $group);
         $trail->push('Налаштування', route(
-            'admin.students.group.settings',
+            'admin.students.department.group.settings',
             [
-                'group' => $group->uri_alias
+                'department' => $department->uri_alias,
+                'group'      => $group->uri_alias
             ]
         ));
     });
 
-Breadcrumbs::for('admin.students.group.student',
-    function (BreadcrumbsGenerator $trail, User $student, StudentGroup $group = null) {
+Breadcrumbs::for('admin.students.department.group.new',
+    function (BreadcrumbsGenerator $trail, Department $department, StudentGroup $group) {
+        $trail->parent('admin.students.department.group', $department, $group);
 
-        $trail->parent('admin.students.group', $group ?? $student->studentGroup);
-        $trail->push($student->full_name, route(
-            'admin.students.group.student',
+        $trail->push('Додати студента', route(
+            'admin.students.department.group.new',
             [
-                'group'     => $group->uri_alias ?? $student->studentGroup->uri_alias,
+                'department' => $department->uri_alias,
+                'group'      => $group->uri_alias
+            ]
+        ));
+    });
+
+Breadcrumbs::for('admin.students.department.group.student',
+    function (BreadcrumbsGenerator $trail, User $student, StudentGroup $group = null, Department $department = null) {
+        $group = $group ?? $student->studentGroup;
+        $department = $department ?? $group->department;
+
+        $trail->parent('admin.students.department.group', $department, $group);
+
+        $trail->push($student->full_name, route(
+            'admin.students.department.group.student',
+            [
+                'department' => $department->uri_alias,
+                'group'     => $group->uri_alias,
                 'studentId' => $student->id
             ]
         ));

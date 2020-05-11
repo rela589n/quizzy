@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Groups\CreateGroupRequest;
 use App\Http\Requests\Groups\UpdateGroupRequest;
 use App\Lib\Filters\Eloquent\AvailableGroupsFilter;
-use App\Models\StudentGroup;
 
 class GroupsController extends AdminController
 {
@@ -16,11 +15,14 @@ class GroupsController extends AdminController
      */
     public function showAll(AvailableGroupsFilter $filters)
     {
-        $groups = StudentGroup::withCount('students');
+        $department = $this->urlManager->getCurrentDepartment();
+
+        $groups = $department->studentGroups()->withCount('students');
         $groups = $groups->filtered($filters);
 
         return view('pages.admin.student-groups-list', [
-            'groups' => $groups
+            'department' => $department,
+            'groups'     => $groups
         ]);
     }
 
@@ -32,7 +34,9 @@ class GroupsController extends AdminController
     {
         $this->authorize('create-groups');
 
-        return view('pages.admin.student-groups-new');
+        return view('pages.admin.student-groups-new', [
+            'department' => $this->urlManager->getCurrentDepartment()
+        ]);
     }
 
     /**
@@ -41,10 +45,14 @@ class GroupsController extends AdminController
      */
     public function newGroup(CreateGroupRequest $request)
     {
-        $validated = $request->validated();
-        StudentGroup::create($validated);
+        $department = $this->urlManager->getCurrentDepartment();
 
-        return redirect()->route('admin.students');
+        $validated = $request->validated();
+        $department->studentGroups()->create($validated);
+
+        return redirect()->route('admin.students.department', [
+            'department' => $department->uri_alias
+        ]);
     }
 
     /**
@@ -57,7 +65,8 @@ class GroupsController extends AdminController
         $this->authorize('view', $group);
 
         return view('pages.admin.student-groups-single', [
-            'group' => $group,
+            'department' => $this->urlManager->getCurrentDepartment(),
+            'group'      => $group,
         ]);
     }
 
@@ -71,7 +80,8 @@ class GroupsController extends AdminController
         $this->authorize('update', $currentGroup);
 
         return view('pages.admin.student-group-settings', [
-            'group' => $currentGroup
+            'department' => $this->urlManager->getCurrentDepartment(),
+            'group'      => $currentGroup
         ]);
     }
 
@@ -84,8 +94,9 @@ class GroupsController extends AdminController
         $group = $request->studentGroup();
         $group->update($request->validated());
 
-        return redirect()->route('admin.students.group', [
-            'group' => $group->uri_alias
+        return redirect()->route('admin.students.department.group', [
+            'department' => $this->urlManager->getCurrentDepartment()->uri_alias,
+            'group'      => $group->uri_alias
         ]);
     }
 
@@ -100,6 +111,8 @@ class GroupsController extends AdminController
         $this->authorize('delete', $group);
 
         $group->delete();
-        return redirect()->route('admin.students');
+        return redirect()->route('admin.students.department', [
+            'department' => $this->urlManager->getCurrentDepartment()->uri_alias,
+        ]);
     }
 }

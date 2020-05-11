@@ -5,14 +5,17 @@
 @endsection
 
 @section('content')
-    {{ Breadcrumbs::render('admin.students.group', $group) }}
+    {{ Breadcrumbs::render('admin.students.department.group', $department, $group) }}
     @parent
 @endsection
 
 @section('category-settings-link')
     @if($authUser->can('update', $group))
         @include('blocks.admin.settings-link', [
-            'link' => route('admin.students.group.settings', ['group' => $group->uri_alias]),
+            'link' => route('admin.students.department.group.settings', [
+                'department' => $department->uri_alias,
+                'group' => $group->uri_alias
+            ]),
             'text' => 'Перейти до налаштувань групи'
         ])
     @endif
@@ -24,7 +27,11 @@
     @forelse($group->students as $student)
         @include('blocks.entity-line', [
             'header' => $student->full_name,
-            'link' => route('admin.students.group.student', ['group' => $group->uri_alias, 'studentId' => $student->id]),
+            'link' => route('admin.students.department.group.student', [
+                'department' => $department->uri_alias,
+                'group' => $group->uri_alias,
+                'studentId' => $student->id
+            ]),
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
@@ -36,7 +43,10 @@
 @section('category-new-btn')
     @if($authUser->can('create-students'))
         @include('blocks.admin.create-new-link', [
-            'link' => route('admin.students.group.new',  ['group' => $group->uri_alias]),
+            'link' => route('admin.students.department.group.new',  [
+                'department' => $department->uri_alias,
+                'group' => $group->uri_alias
+            ]),
             'text' => 'Зареєструвати'
         ])
     @endif

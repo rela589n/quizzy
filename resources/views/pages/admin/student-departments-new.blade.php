@@ -1,16 +1,17 @@
 @extends('layouts.main-skeleton', [
+    'contentColumns' => 7,
     'baseLayout' => 'layouts.root.admin'
 ])
 
 @section('title')
-    {{ $user->studentGroup->name }} - {{ $user->full_name }}
+     Створити відділення
 @endsection
 
 @section('content')
-    {{ Breadcrumbs::render('admin.students.department.group.student', $user) }}
+    {{ Breadcrumbs::render('admin.students.new') }}
     @parent
 @endsection
 
 @section('main-container-content')
-    @include('blocks.admin.student-info')
+    @include('blocks.admin.student-department-form')
 @endsection
