@@ -108,6 +108,9 @@ class PermissionsTableSeeder extends Seeder
             'generate-student-statement' => [
                 'public_name' => 'Створення відомості по студенту'
             ],
+            'edit-class-monitors'        => [
+                'public_name' => 'Оновлення старости групи'
+            ]
         ]
     ];
 
@@ -136,9 +139,9 @@ class PermissionsTableSeeder extends Seeder
         foreach ($permissions as $name => $permission) {
 
             Permission::firstOrCreate([
-                'name'        => $name,
-                'guard_name'  => $guardName,
-            ],[
+                'name'       => $name,
+                'guard_name' => $guardName,
+            ], [
                 'public_name' => $permission['public_name']
             ]);
         }
