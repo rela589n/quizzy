@@ -72,7 +72,7 @@ class StudentGroup extends Model
 
     public function classMonitor()
     {
-        return $this->belongsTo(Administrator::class, 'created_by');
+        return $this->belongsTo(Administrator::class, 'created_by')->ofRole('class-monitor');
     }
 
     /**
