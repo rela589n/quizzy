@@ -7,18 +7,19 @@ namespace App\Http\Controllers\Admin\Students;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Departments\CreateDepartmentsRequest;
 use App\Http\Requests\Departments\UpdateDepartmentRequest;
+use App\Lib\Filters\Eloquent\AvailableDepartmentsFilter;
 use App\Models\Department;
-use Illuminate\Http\Request;
 
 class DepartmentsController extends AdminController
 {
     /**
-     * @param Request $request
+     * @param AvailableDepartmentsFilter $filters
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showAll(Request $request)
+    public function showAll(AvailableDepartmentsFilter $filters)
     {
-        $departments = Department::withCount('studentGroups')->get();
+        $departments = Department::withCount('studentGroups');
+        $departments = $departments->filtered($filters);
 
         return view('pages.admin.student-departments-list', compact('departments'));
     }
@@ -71,7 +72,6 @@ class DepartmentsController extends AdminController
             'department' => $department->uri_alias
         ]);
     }
-
 
     /**
      * @return \Illuminate\Http\RedirectResponse
