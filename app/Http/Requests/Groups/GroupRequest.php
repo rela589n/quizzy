@@ -39,23 +39,37 @@ abstract class GroupRequest extends FormRequest implements UrlManageable
         }
 
         return [
-            'name'      => [
+            'name'       => [
                 'required',
                 'min:4',
                 'max:32'
             ],
-            'uri_alias' => [
+            'uri_alias'  => [
                 'required',
                 'min:4',
                 'max:32',
                 new UriSlug()
             ],
-            'year'      => [
+            'year'       => [
                 'required',
                 'numeric',
                 'min:' . min($groupYear, $currentYear - 4),
                 'max:' . $currentYear
+            ],
+            'created_by' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                'min:1',
+                'exists:' . Administrator::class . ',id'
             ]
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'created_by' => '"староста"'
         ];
     }
 }
