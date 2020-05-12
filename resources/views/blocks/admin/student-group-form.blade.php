@@ -45,7 +45,7 @@
 
             @foreach($classMonitors as $classMonitor)
                 <option value="{{ $classMonitor->id }}"
-                        @if($classMonitor->id === $group->created_by) selected="selected" @endif>
+                        @if($classMonitor->id === ($group->created_by ?? -1)) selected="selected" @endif>
                     {{ $classMonitor->full_name }}
                 </option>
             @endforeach
