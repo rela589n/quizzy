@@ -70,7 +70,7 @@
 
             @include('blocks.common.show-hide-password-input', [
                 'passwordInputName' => 'password',
-                'passwordPlaceholder' => '1234'
+                'passwordPlaceholder' => $userPasswordPlaceholder ?? '1234'
             ])
         </div>
     </div>
