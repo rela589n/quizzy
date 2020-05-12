@@ -15,5 +15,3 @@
         </div>
     </div>
 @endsection
-
-@include('blocks.scripts.no-scripts')

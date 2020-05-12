@@ -5,7 +5,7 @@
        @if($passwordRequired ?? true) required="required" @endif>
 
 <div class="input-group-append">
-    <a href="javascript: void(0);" class="input-group-text show-hide-password-link"><i class="fa fa-eye"
+    <a href="javascript: void(0);" tabindex="-1" class="input-group-text show-hide-password-link"><i class="fa fa-eye"
                                                                                        aria-hidden="true"></i></a>
 </div>
 

@@ -1,28 +1,31 @@
 $(function () {
+    let $showHidePasswordBlocks = $("[data-password-showable]");
 
-    let $showHidePasswordBlock = $("[data-password-showable]");
-    let $inp = $showHidePasswordBlock.find('input[type=password]');
+    $showHidePasswordBlocks.each(function(indx, el) {
+        let $el = $(el);
+        let $inp = $el.find('input[type=password]');
 
-    let $link = $showHidePasswordBlock.find($showHidePasswordBlock.attr('data-password-link-selector'));
-    let $icon = $showHidePasswordBlock.find($showHidePasswordBlock.attr('data-password-icon-selector'));
+        let $link = $el.find($el.attr('data-password-link-selector'));
+        let $icon = $el.find($el.attr('data-password-icon-selector'));
 
-    $link.on('click', function (event) {
-        event.preventDefault();
+        $link.on('click', function (event) {
+            event.preventDefault();
 
-        switch ($inp.attr("type")) {
-            case 'text':
-                $inp.attr('type', 'password');
-                break;
+            switch ($inp.attr("type")) {
+                case 'text':
+                    $inp.attr('type', 'password');
+                    break;
 
-            case 'password':
-                $inp.attr('type', 'text');
-                break;
+                case 'password':
+                    $inp.attr('type', 'text');
+                    break;
 
-            default:
-                return;
-        }
+                default:
+                    return;
+            }
 
-        $icon.toggleClass("fa-eye");
-        $icon.toggleClass("fa-eye-slash");
+            $icon.toggleClass("fa-eye");
+            $icon.toggleClass("fa-eye-slash");
+        });
     });
 });

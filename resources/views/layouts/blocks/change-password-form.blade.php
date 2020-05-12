@@ -10,11 +10,12 @@
         </label>
     @show
     @section('old-password-input')
-        <input id="password" name="password" type="password"
-               class="form-control @error('password') is-invalid @enderror" aria-label="Username" required="required" value="{{ old('password') }}">
-        @error('password')
-        <span class="invalid-feedback" role="alert"><label for="password">{{ $message }}</label></span>
-        @enderror
+        <div class="input-group" data-password-showable
+             data-password-link-selector=".show-hide-password-link"
+             data-password-icon-selector="i">
+
+            @include('blocks.common.show-hide-password-input', ['passwordInputName' => 'password', 'passwordPlaceholder' => ''])
+        </div>
     @show
 
     @section('new-password-label')
@@ -24,12 +25,13 @@
     @show
 
     @section('new-password-input')
-        <input id="new_password" name="new_password" type="password"
-               class="form-control @error('new_password') is-invalid @enderror"
-               aria-label="Password" required="required" value="{{ old('new_password') }}">
-        @error('new_password')
-        <span class="invalid-feedback" role="alert"><label for="new_password">{{ $message }}</label></span>
-        @enderror
+
+        <div class="input-group" data-password-showable
+             data-password-link-selector=".show-hide-password-link"
+             data-password-icon-selector="i">
+
+            @include('blocks.common.show-hide-password-input', ['passwordInputName' => 'new_password', 'passwordPlaceholder' => ''])
+        </div>
     @show
 
     @section('new-password-confirm-label')
@@ -39,15 +41,20 @@
     @show
 
     @section('new-password-confirm')
-        <input id="new_password_confirmation" name="new_password_confirmation" type="password"
-               class="form-control @error('new_password_confirmation') is-invalid @enderror"
-               aria-label="Password" required="required" value="{{ old('new_password_confirmation') }}">
-        @error('new_password_confirmation')
-        <span class="invalid-feedback" role="alert"><label for="new_password_confirmation">{{ $message }}</label></span>
-        @enderror
+        <div class="input-group" data-password-showable
+             data-password-link-selector=".show-hide-password-link"
+             data-password-icon-selector="i">
+
+            @include('blocks.common.show-hide-password-input', ['passwordInputName' => 'new_password_confirmation', 'passwordPlaceholder' => ''])
+        </div>
     @show
 
     @section('change-password-submit')
         <button type="submit" class="btn btn-primary btn-block mt-3">Продовжити</button>
     @show
 </form>
+
+@section('bottom-scripts')
+    @parent
+    <script defer src="{{ asset('js/auth.js') }}"></script>
+@endsection
