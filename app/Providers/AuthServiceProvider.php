@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Administrator;
+use App\Models\Department;
 use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
 use App\Models\User;
 use App\Policies\AdministratorPolicy;
+use App\Policies\DepartmentPolicy;
 use App\Policies\GroupPolicy;
 use App\Policies\StudentPolicy;
 use App\Policies\SubjectPolicy;
@@ -23,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
+        Department::class    => DepartmentPolicy::class,
         StudentGroup::class  => GroupPolicy::class,
         User::class          => StudentPolicy::class,
         Administrator::class => AdministratorPolicy::class,
