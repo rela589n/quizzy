@@ -37,9 +37,6 @@ class RolesTableSeeder extends Seeder
                 'permissions-only' => [
                     'access-groups',
 
-                    'view-departments',
-
-                    'create-groups',
                     'create-students',
                 ]
             ]
@@ -99,7 +96,7 @@ class RolesTableSeeder extends Seeder
                     $roleConfig['permissions'] ?? []
                 )->get();
 
-                $role->givePermissionTo($permissions);
+                $role->syncPermissions($permissions);
             }
         }
     }
