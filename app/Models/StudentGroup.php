@@ -56,7 +56,7 @@ class StudentGroup extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['name', 'uri_alias', 'year'];
+    protected $fillable = ['name', 'uri_alias', 'year', 'created_by'];
     protected $studyStartMonth = 9;
     protected $studyStartDay = 1;
 

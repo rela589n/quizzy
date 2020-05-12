@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Groups\CreateGroupRequest;
 use App\Http\Requests\Groups\UpdateGroupRequest;
 use App\Lib\Filters\Eloquent\AvailableGroupsFilter;
+use App\Repositories\AdministratorsRepository;
 
 class GroupsController extends AdminController
 {
@@ -29,15 +30,17 @@ class GroupsController extends AdminController
     }
 
     /**
+     * @param AdministratorsRepository $adminRepo
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showNewGroupForm()
+    public function showNewGroupForm(AdministratorsRepository $adminRepo)
     {
         $this->authorize('create-groups');
 
         return view('pages.admin.student-groups-new', [
-            'department' => $this->urlManager->getCurrentDepartment()
+            'department'    => $this->urlManager->getCurrentDepartment(),
+            'classMonitors' => $adminRepo->probableClassMonitors(),
         ]);
     }
 
@@ -73,17 +76,19 @@ class GroupsController extends AdminController
     }
 
     /**
+     * @param AdministratorsRepository $adminRepo
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showUpdateGroupForm()
+    public function showUpdateGroupForm(AdministratorsRepository $adminRepo)
     {
         $currentGroup = $this->urlManager->getCurrentGroup();
         $this->authorize('update', $currentGroup);
 
         return view('pages.admin.student-group-settings', [
-            'department' => $this->urlManager->getCurrentDepartment(),
-            'group'      => $currentGroup
+            'department'    => $this->urlManager->getCurrentDepartment(),
+            'group'         => $currentGroup,
+            'classMonitors' => $adminRepo->probableClassMonitors($currentGroup)
         ]);
     }
 
