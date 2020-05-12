@@ -42,6 +42,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @property int|null $department_id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereDepartmentId($value)
  * @property-read \App\Models\Department|null $department
+ * @property-read \App\Models\Administrator|null $classMonitor
  */
 class StudentGroup extends Model
 {
@@ -69,6 +70,11 @@ class StudentGroup extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function classMonitor()
+    {
+        return $this->belongsTo(Administrator::class, 'created_by');
+    }
+
     /**
      * Get the group's course.
      *
@@ -91,7 +97,7 @@ class StudentGroup extends Model
         $students = $this->students;
         $builder = clone $students[0]->lastResultOf($test);
 
-        for ($i = 1; $i < $students->count(); ++$i) {
+        for ($i = 1; $i < $students->count(); ++$i) { // todo tobase
             $builder->union($students[$i]->lastResultOf($test));
         }
 

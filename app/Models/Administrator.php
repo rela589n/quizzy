@@ -4,6 +4,7 @@
 namespace App\Models;
 
 
+use App\Lib\Traits\FilteredScope;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -40,18 +41,26 @@ use Spatie\Permission\Traits\HasRoles;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read int|null $permissions_count
+ * @property-read string|null $roles_readable
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
  * @property-read int|null $roles_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Administrator ofRole($roleName)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Administrator permission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Administrator role($roles, $guard = null)
  */
 class Administrator extends BaseUser
 {
     use HasRoles;
+    use FilteredScope;
 
     public function guardName()
     {
         return 'admin';
+    }
+
+    public function studentGroup()
+    {
+        return $this->hasOne(StudentGroup::class, 'created_by');
     }
 
     public function getRolesReadableAttribute()
@@ -60,5 +69,17 @@ class Administrator extends BaseUser
         $roles = $roles->pluck('public_name');
 
         return implode(', ', $roles->toArray());
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $roleName
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfRole($query, string $roleName)
+    {
+        return $query->whereHas('roles', function ($q) use ($roleName) {
+            $q->whereName($roleName);
+        });
     }
 }
