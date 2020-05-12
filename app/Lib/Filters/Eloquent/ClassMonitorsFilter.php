@@ -14,7 +14,7 @@ class ClassMonitorsFilter extends ResultFilter
      */
     protected $group;
 
-    public function setGroup(StudentGroup $group): void
+    public function setGroup(?StudentGroup $group): void
     {
         $this->group = $group;
     }
@@ -29,7 +29,10 @@ class ClassMonitorsFilter extends ResultFilter
      */
     protected function availableClassMonitors($query)
     {
-        $query->doesntHave('studentGroup')
-            ->union($this->group->classMonitor()->toBase());
+        $query->doesntHave('studentGroup');
+
+        if (!is_null($this->group)) {
+            $query->union($this->group->classMonitor()->toBase());
+        }
     }
 }
