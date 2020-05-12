@@ -59,23 +59,19 @@
         </div>
     </div>
 
-
     <div class="form-group form-row align-items-start">
         <label for="password" class="form-info h3 m-0 col-4 col-sm-3 col-md-2">
             Пароль:
         </label>
 
-        <div class="input-group mb-1 col-8 col-sm-9 col-md-10" id="show_hide_password">
-            <input id="password" name="password" type="password"
-                   class="form-control @error('password') is-invalid @enderror"
-                   placeholder="{{ $userPasswordPlaceholder ?? '1234'}}" value="{{ old('password') }}">
+        <div class="input-group mb-1 col-8 col-sm-9 col-md-10" data-password-showable
+             data-password-link-selector=".show-hide-password-link"
+             data-password-icon-selector="i">
 
-            <div class="input-group-append">
-                <a href="javascript: void(0);" class="input-group-text"><i class="fa fa-eye" aria-hidden="true"></i></a>
-            </div>
-            @error('password')
-            <span class="invalid-feedback" role="alert"><label for="password">{{ $message }}</label></span>
-            @enderror
+            @include('blocks.common.show-hide-password-input', [
+                'passwordInputName' => 'password',
+                'passwordPlaceholder' => '1234'
+            ])
         </div>
     </div>
 

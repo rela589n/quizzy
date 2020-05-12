@@ -40,15 +40,12 @@
                     @show
 
                     @section('password-input')
-                        <input id="password" name="password" type="password"
-                               class="form-control @error('password') is-invalid @enderror"
-                               placeholder="Пароль"
-                               required="required"
-                               value="{{ old('password') }}">
+                        <div class="input-group mb-1" data-password-showable
+                             data-password-link-selector=".show-hide-password-link"
+                             data-password-icon-selector="i">
 
-                        @error('password')
-                        <span class="invalid-feedback" role="alert"><label for="password">{{ $message }}</label></span>
-                        @enderror
+                            @include('blocks.common.show-hide-password-input', ['passwordInputName' => 'password'])
+                        </div>
                     @show
 
                     @section('remember-checkbox')
