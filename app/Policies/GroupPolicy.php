@@ -31,7 +31,7 @@ class GroupPolicy
      */
     public function update(Administrator $user, StudentGroup $group)
     {
-        return $group->isOwnedBy($user) || $user->can('update-groups');
+        return $user->can('update-groups');
     }
 
     /**
