@@ -7,6 +7,11 @@ namespace App\Lib\Traits;
 use App\Lib\Filters\Eloquent\ResultFilter;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Trait FilteredScope
+ * @package App\Lib\Traits
+ * @method static Builder|static filtered(ResultFilter $filters)
+ */
 trait FilteredScope
 {
     /**
