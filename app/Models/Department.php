@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Lib\Traits\FilteredScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,10 +24,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $student_groups_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestSubject[] $testSubjects
  * @property-read int|null $test_subjects_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Department onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Department withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Department withoutTrashed()
  */
 class Department extends Model
 {
     use \Illuminate\Database\Eloquent\SoftDeletes;
+    use FilteredScope;
 
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias'];
