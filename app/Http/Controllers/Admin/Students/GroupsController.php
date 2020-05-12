@@ -12,10 +12,12 @@ class GroupsController extends AdminController
     /**
      * @param AvailableGroupsFilter $filters
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function showAll(AvailableGroupsFilter $filters)
     {
         $department = $this->urlManager->getCurrentDepartment();
+        $this->authorize('view', $department);
 
         $groups = $department->studentGroups()->withCount('students');
         $groups = $groups->filtered($filters);
