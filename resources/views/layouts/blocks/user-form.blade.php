@@ -1,5 +1,6 @@
 <form action="@yield('user-form-action')" method="post" class="auth user-form text-dark">
     @csrf
+    @yield('user-form-before')
     <div class="form-group form-row align-items-start">
         <label for="surname" class="form-info h3 m-0 col-5 col-sm-4 col-md-3">
             Прізвище:
@@ -70,7 +71,8 @@
 
             @include('blocks.common.show-hide-password-input', [
                 'passwordInputName' => 'password',
-                'passwordPlaceholder' => $userPasswordPlaceholder ?? '1234'
+                'passwordPlaceholder' => $userPasswordPlaceholder ?? '1234',
+                'passwordRequired' => !isset($user)
             ])
         </div>
     </div>
