@@ -64,6 +64,9 @@ class TestSanitizer
      */
     public function sanitizeMultipleSpaces(string $text)
     {
-        return preg_replace('/\s+/', ' ', trim($text));
+        return html_entity_decode(
+            preg_replace('/\s+/', ' ', trim($text)),
+            ENT_QUOTES
+        );
     }
 }
