@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title> @yield('title') </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=3.0, minimum-scale=0.8">
 
     @section('head_styles')
         <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
