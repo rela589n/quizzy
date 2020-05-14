@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client\Tests;
 
 use App\Http\Controllers\Client\ClientController;
+use App\Models\Test;
 use App\Models\TestSubject;
 use Illuminate\Http\Request;
 
@@ -26,14 +27,19 @@ class SubjectsController extends ClientController
         $subject = $this->urlManager->getCurrentSubject();
         $this->authorize('pass-tests-of-subject', $subject);
 
-        // necessary to remove duplicated queries
-        $subject->tests->loadMissing('testComposites');
-        $subject->tests->each(function ($test) {
+
+        $availableTests = $subject->tests()->orderBy('name')->with('testComposites')->get();
+
+        $availableTests->each(function ($test) {
+            /**
+             * @var Test $test
+             */
             $test->questions_count = $test->allQuestions()->count();
         });
 
         return view('pages.client.subjects-single', [
-            'subject' => $subject
+            'subject'        => $subject,
+            'availableTests' => $availableTests
         ]);
     }
 }

@@ -7,7 +7,7 @@
 @section('category-header-text') {{ $subject->name }} - оберіть тест:  @endsection
 
 @section('category-links')
-    @forelse($subject->tests as $test)
+    @forelse($availableTests as $test)
         @include('blocks.entity-line', [
             'header' => $test->name,
             'link' => route('client.tests.subject.test', ['subject' => $subject->uri_alias, 'test' => $test->uri_alias]),
