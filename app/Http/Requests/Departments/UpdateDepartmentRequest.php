@@ -8,7 +8,7 @@ use App\Rules\Containers\DepartmentRulesContainer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateDepartmentRequest extends FormRequest
+final class UpdateDepartmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

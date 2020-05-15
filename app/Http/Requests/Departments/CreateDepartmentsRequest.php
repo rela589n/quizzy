@@ -6,7 +6,7 @@ use App\Models\Administrator;
 use App\Rules\Containers\DepartmentRulesContainer;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateDepartmentsRequest extends FormRequest
+final class CreateDepartmentsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
