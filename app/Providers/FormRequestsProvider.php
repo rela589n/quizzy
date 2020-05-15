@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Http\Requests\Auth\AdminChangePasswordRequest;
 use App\Http\Requests\Auth\StudentChangePasswordRequest;
-use App\Http\Requests\Groups\CreateGroupRequest;
 use App\Http\Requests\Groups\UpdateGroupRequest;
 use App\Http\Requests\Questions\FillAnswersRequest;
 use App\Http\Requests\RequestUrlManager;
@@ -20,7 +19,6 @@ use Illuminate\Support\ServiceProvider;
 class FormRequestsProvider extends ServiceProvider
 {
     protected $urlManageable = [
-        CreateGroupRequest::class,
         UpdateGroupRequest::class,
         UpdateSubjectRequest::class,
         UpdateTestRequest::class,

@@ -52,8 +52,7 @@ class GroupsController extends AdminController
     {
         $department = $this->urlManager->getCurrentDepartment();
 
-        $validated = $request->validated();
-        $department->studentGroups()->create($validated);
+        $department->studentGroups()->create($request->validated());
 
         return redirect()->route('admin.students.department', [
             'department' => $department->uri_alias

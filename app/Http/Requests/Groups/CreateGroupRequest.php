@@ -4,8 +4,10 @@ namespace App\Http\Requests\Groups;
 
 
 use App\Models\Administrator;
+use App\Rules\Containers\GroupRulesContainer;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreateGroupRequest extends GroupRequest
+class CreateGroupRequest extends FormRequest
 {
     /**
      * Determine if the user can create group.
@@ -21,12 +23,14 @@ class CreateGroupRequest extends GroupRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param GroupRulesContainer $rulesContainer
      * @return array
      */
-    public function rules()
+    public function rules(GroupRulesContainer $rulesContainer)
     {
-        $rules = parent::rules();
+        $rules = $rulesContainer->getRules();
         $rules['uri_alias'][] = 'unique:student_groups';
+
         return $rules;
     }
 }
