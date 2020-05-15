@@ -9,7 +9,7 @@ abstract class GroupRequest extends FormRequest
     public function attributes()
     {
         return [
-            'created_by' => '"староста"'
+            'created_by' => trans('validation.attributes.class_monitor')
         ];
     }
 }
