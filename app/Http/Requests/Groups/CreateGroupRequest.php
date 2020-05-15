@@ -5,9 +5,8 @@ namespace App\Http\Requests\Groups;
 
 use App\Models\Administrator;
 use App\Rules\Containers\GroupRulesContainer;
-use Illuminate\Foundation\Http\FormRequest;
 
-class CreateGroupRequest extends FormRequest
+final class CreateGroupRequest extends GroupRequest
 {
     /**
      * Determine if the user can create group.

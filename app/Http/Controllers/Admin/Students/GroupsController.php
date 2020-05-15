@@ -97,7 +97,7 @@ class GroupsController extends AdminController
      */
     public function updateGroup(UpdateGroupRequest $request)
     {
-        $group = $request->studentGroup();
+        $group = $this->urlManager->getCurrentGroup();
         $group->update($request->validated());
 
         return redirect()->route('admin.students.department.group', [
