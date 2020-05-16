@@ -10,8 +10,11 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Session;
 
-class FillAnswersRequest extends FormRequest
+final class FillAnswersRequest extends FormRequest
 {
+    /** @var ValidationGenerator */
+    protected $validationGenerator;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,19 +28,6 @@ class FillAnswersRequest extends FormRequest
     }
 
     /**
-     * @var ValidationGenerator
-     */
-    protected $validationGenerator;
-
-    /**
-     * @param ValidationGenerator $validationGenerator
-     */
-    public function setValidationGenerator($validationGenerator): void
-    {
-        $this->validationGenerator = $validationGenerator;
-    }
-
-    /**
      * Get custom attributes for validator errors.
      *
      * @return array
@@ -45,40 +35,43 @@ class FillAnswersRequest extends FormRequest
     public function attributes()
     {
         return $this->validationGenerator->buildManyAttributes([
-            'q.new.*.v.*.text|q.modified.*.v.*.text' => '',
-            'q.new.*.name|q.modified.*.name' => '"Питання"',
-            'q.new.*.v|q.modified.*.v' => '"Варіанти відповідей"'
+            'q.new.*.v.*.text|q.modified.*.v.*.text' => trans('validation.attributes.option_text'),
+            'q.new.*.name|q.modified.*.name'         => trans('validation.attributes.questions'),
+            'q.new.*.v|q.modified.*.v'               => trans('validation.attributes.answer_options'),
         ]);
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param ValidationGenerator $generator
      * @return array
      */
-    public function rules()
+    public function rules(ValidationGenerator $generator)
     {
+        $this->validationGenerator = $generator;
+
         return $this->validationGenerator->buildManyRules([
-            'q|q.new|q.modified' => 'array',
-            'q.new.*.name|q.modified.*.name' => 'required|min:3|max:255',
-            'q.new.*.v|q.modified.*.v' => [
+            'q|q.new|q.modified'                     => 'array',
+            'q.new.*.name|q.modified.*.name'         => 'required|min:3|max:255',
+            'q.new.*.v|q.modified.*.v'               => [
                 'required',
                 'array',
                 'min:2',
                 new AtLeastOneSelected('is_right')
             ],
-            'q.new.*.v.*|q.modified.*.v.*' => [
+            'q.new.*.v.*|q.modified.*.v.*'           => [
                 'required',
                 'array',
             ],
             'q.new.*.v.*.text|q.modified.*.v.*.text' => 'required|min:1|max:128',
-            'q.deleted|v.deleted' => 'array|min:1',
+            'q.deleted|v.deleted'                    => 'array|min:1',
         ]);
     }
 
     protected function failedValidation(Validator $validator)
     {
-        Session::push('message', 'Деякі питання містять помилки!');
+        Session::push('message', trans('validation.custom.some-questions-have-errors'));
 
         parent::failedValidation($validator);
     }
