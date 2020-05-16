@@ -6,7 +6,7 @@ namespace App\Rules\Containers;
 
 use App\Rules\UriSlug;
 
-class TestRulesContainer
+final class TestRulesContainer
 {
     public function getRules()
     {

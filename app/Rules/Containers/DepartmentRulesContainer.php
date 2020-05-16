@@ -6,7 +6,7 @@ namespace App\Rules\Containers;
 
 use App\Rules\UriSlug;
 
-class DepartmentRulesContainer implements RulesContainerInterface
+final class DepartmentRulesContainer
 {
     public function getRules()
     {
