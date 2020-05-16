@@ -9,6 +9,7 @@ use App\Rules\AtLeastOneSelected;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 
 final class FillAnswersRequest extends FormRequest
 {
@@ -63,6 +64,10 @@ final class FillAnswersRequest extends FormRequest
             'q.new.*.v.*|q.modified.*.v.*'           => [
                 'required',
                 'array',
+            ],
+            'q.new.*.v.*.is_right|q.modified.*.v.*.is_right'           => [
+                'sometimes',
+                Rule::in('0', '1')
             ],
             'q.new.*.v.*.text|q.modified.*.v.*.text' => 'required|min:1|max:128',
             'q.deleted|v.deleted'                    => 'array|min:1',
