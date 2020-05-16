@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\Tests\ImportTestRequest;
+use App\Http\Requests\Tests\Transfers\ImportTestRequest;
 use App\Lib\Parsers\TestParserFactory;
 use App\Lib\Statements\TestsExportManager;
 use App\Models\Question;
