@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client\Tests;
 
 use App\Http\Controllers\Client\ClientController;
-use App\Http\Requests\Tests\FinishTestRequest;
+use App\Http\Requests\Tests\Pass\FinishTestRequest;
 use App\Models\AskedQuestion;
 use App\Models\TestResult;
 use Illuminate\Http\Request;
