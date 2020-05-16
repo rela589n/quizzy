@@ -7,7 +7,7 @@ use App\Http\Requests\RequestUrlManager;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FinishTestRequest extends FormRequest
+final class FinishTestRequest extends FormRequest
 {
     /**
      * Determine if the student is authorized to pass current test.
