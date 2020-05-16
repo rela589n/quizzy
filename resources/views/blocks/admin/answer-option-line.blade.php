@@ -1,16 +1,18 @@
 <div class="form-row align-items-center" data-variant="{{ $optionIndex }}" data-variant-id="{{ $option->id }}">
     <div class="col-auto">
         <label class="form-check d-inline pb-1 mb-0">
-            <input class="form-check-input is-correct"
-                   type="checkbox"
+            <input type="checkbox"
+                   class="form-check-input is-correct"
                    name="q[{{ $type }}][{{ $question->id }}][v][{{ $option->id }}][is_right]"
                    @if( $option->is_right ?? false) checked="checked" @endif
+                   value="1"
             >
         </label>
     </div>
     <div class="col-form-label col-xl-11 col-lg-10 col-sm-9 col-8">
         <label class="form-check-label d-block">
-            <input type="text" class="form-control form-control-sm variant-text @error("q.{$type}.{$question->id}.v.{$option->id}.text") is-invalid @enderror"
+            <input type="text"
+                   class="form-control form-control-sm variant-text @error("q.{$type}.{$question->id}.v.{$option->id}.text") is-invalid @enderror"
                    name="q[{{ $type }}][{{ $question->id }}][v][{{ $option->id }}][text]"
                    placeholder="Варіант № {{ $optionIndex }}"
                    value="{{ $option->text }}"

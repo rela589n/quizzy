@@ -343,7 +343,8 @@ $(function () {
                     <div class="col-auto">
                         <label class="form-check d-inline pb-1 mb-0">
                             <input class="form-check-input is-correct" type="checkbox"
-                                   name="${context.generateCheckBoxName(questionId, variantId, type)}">
+                                   name="${context.generateCheckBoxName(questionId, variantId, type)}"
+                                   value="1">
                         </label>
                     </div>
                     <div class="col-form-label col-xl-11 col-lg-10 col-sm-9 col-8">
