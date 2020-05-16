@@ -3,38 +3,37 @@
 namespace App\Http\Requests\Tests\CRUD;
 
 
-use App\Http\Requests\UrlManageable;
-use App\Http\Requests\UrlManageableRequests;
+use App\Http\Requests\RequestUrlManager;
 use App\Models\Administrator;
+use App\Rules\Containers\TestRulesContainer;
 use Illuminate\Validation\Rule;
 
-class UpdateTestRequest extends MakeTestRequest implements UrlManageable
+class UpdateTestRequest extends MakeTestRequest
 {
-    use UrlManageableRequests;
-
     /**
-     * @inheritDoc
+     * Determine if the user is authorized to make this request.
+     *
+     * @param Administrator $user
+     * @param RequestUrlManager $urlManager
+     * @return bool
      */
-    public function authorize(Administrator $user)
+    public function authorize(Administrator $user, RequestUrlManager $urlManager)
     {
-        return $user->can('update', $this->test());
-    }
-
-    public function test()
-    {
-        return $this->urlManager->getCurrentTest();
+        return $user->can('update', $urlManager->getCurrentTest());
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param TestRulesContainer $rulesContainer
+     * @param RequestUrlManager $urlManager
      * @return array
      */
-    public function rules()
+    public function rules(TestRulesContainer $rulesContainer, RequestUrlManager $urlManager)
     {
-        $rules = $this->baseRules;
+        $rules = $rulesContainer->getRules();
         $rules['uri_alias'][] = Rule::unique('tests')
-            ->ignoreModel($this->test());
+            ->ignoreModel($urlManager->getCurrentTest());
 
         return $rules;
     }

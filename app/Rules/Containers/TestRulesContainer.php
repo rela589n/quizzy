@@ -15,12 +15,12 @@ class TestRulesContainer
                 'required',
                 'min:3',
                 'max:128',
-                new UriSlug()
             ],
             'uri_alias'       => [
                 'required',
                 'min:3',
                 'max:48',
+                new UriSlug()
             ],
             'time'            => [
                 'required',

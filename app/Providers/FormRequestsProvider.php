@@ -6,7 +6,6 @@ use App\Http\Requests\Auth\AdminChangePasswordRequest;
 use App\Http\Requests\Auth\StudentChangePasswordRequest;
 use App\Http\Requests\Questions\FillAnswersRequest;
 use App\Http\Requests\RequestUrlManager;
-use App\Http\Requests\Tests\CRUD\UpdateTestRequest;
 use App\Http\Requests\UrlManageable;
 use App\Lib\ValidationGenerator;
 use App\Models\Administrator;
@@ -17,7 +16,6 @@ use Illuminate\Support\ServiceProvider;
 class FormRequestsProvider extends ServiceProvider
 {
     protected $urlManageable = [
-        UpdateTestRequest::class,
     ];
 
     /**

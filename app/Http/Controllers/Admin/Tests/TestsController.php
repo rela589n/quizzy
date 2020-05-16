@@ -35,12 +35,12 @@ class TestsController extends AdminController
     }
 
     /**
-     * @param \App\Http\Requests\Tests\CRUD\CreateTestRequest $request
+     * @param CreateTestRequest $request
      * @param IncludeTestsFilter $filter
      * @param IncludeTestsTransformer $transformer
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function newTest(\App\Http\Requests\Tests\CRUD\CreateTestRequest $request, IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
+    public function newTest(CreateTestRequest $request, IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
     {
         /**
          * @var \App\Models\Test $newTest
@@ -86,7 +86,7 @@ class TestsController extends AdminController
     }
 
     /**
-     * @param \App\Http\Requests\Tests\CRUD\UpdateTestRequest $request
+     * @param UpdateTestRequest $request
      * @param IncludeTestsFilter $filter
      * @param IncludeTestsTransformer $transformer
      * @return \Illuminate\Http\RedirectResponse

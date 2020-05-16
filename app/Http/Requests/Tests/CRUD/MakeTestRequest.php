@@ -2,20 +2,11 @@
 
 namespace App\Http\Requests\Tests\CRUD;
 
-use App\Models\Administrator;
 use App\Rules\UriSlug;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class MakeTestRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @return bool
-     */
-    public abstract function authorize(Administrator $user);
-
     public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
