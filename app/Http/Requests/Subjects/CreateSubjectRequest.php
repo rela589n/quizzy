@@ -7,7 +7,7 @@ use App\Models\Administrator;
 use App\Rules\Containers\SubjectRulesContainer;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateSubjectRequest extends FormRequest
+final class CreateSubjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
