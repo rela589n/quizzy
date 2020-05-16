@@ -36,11 +36,4 @@ class ImportTestRequest extends FormRequest
             ]
         ];
     }
-
-    public function attributes()
-    {
-        return [
-            'selected-file' => '"Вибраний файл"'
-        ];
-    }
 }
