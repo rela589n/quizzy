@@ -6,9 +6,9 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Tests\CRUD\CreateTestRequest;
 use App\Http\Requests\Tests\CRUD\UpdateTestRequest;
-use App\Lib\Filters\Common\IncludeTestsFilter;
-use App\Lib\Transformers\Collection\IncludeTestsTransformer;
 use App\Repositories\SubjectsRepository;
+use App\Services\Tests\CreateTestService;
+use App\Services\Tests\UpdateTestService;
 
 class TestsController extends AdminController
 {
@@ -36,31 +36,15 @@ class TestsController extends AdminController
 
     /**
      * @param CreateTestRequest $request
-     * @param IncludeTestsFilter $filter
-     * @param IncludeTestsTransformer $transformer
+     * @param CreateTestService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function newTest(CreateTestRequest $request, IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
+    public function newTest(CreateTestRequest $request, CreateTestService $service)
     {
-        /**
-         * @var \App\Models\Test $newTest
-         */
-
-        $validated = $request->validated();
-
         $currentSubject = $this->urlManager->getCurrentSubject();
-        $newTest = $currentSubject->tests()->create($request->validated());
 
-        $includeTests = collect($validated['include'] ?? []);
-        $includeTests = $filter->apply($includeTests); // remove not necessary and with empty count
-
-        $includeTests[$newTest->id] = [ // todo remove duplicate
-            'count' => "999"
-        ];
-
-        // normalize for eloquent
-        $includeTests = $transformer->transform($includeTests);
-        $newTest->tests()->attach($includeTests);
+        $service->ofSubject($currentSubject)
+            ->handle($request);
 
         return redirect()->route('admin.tests.subject', [
             'subject' => $currentSubject->uri_alias
@@ -87,35 +71,20 @@ class TestsController extends AdminController
 
     /**
      * @param UpdateTestRequest $request
-     * @param IncludeTestsFilter $filter
-     * @param IncludeTestsTransformer $transformer
+     * @param UpdateTestService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateTest(UpdateTestRequest $request, IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
+    public function updateTest(UpdateTestRequest $request, UpdateTestService $service)
     {
-        $validated = $request->validated();
-
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest();
 
-        $currentTest->update($validated);
-
-        $includeTests = collect($validated['include'] ?? []);
-        $includeTests = $filter->apply($includeTests); // remove not necessary and with empty count
-
-        if (!isset($validated['include'][$currentTest->id])) {
-            $includeTests[$currentTest->id] = [ // todo remove duplicate
-                'count' => "999"
-            ];
-        }
-
-        // normalize for eloquent
-        $includeTests = $transformer->transform($includeTests);
-        $currentTest->tests()->sync($includeTests);
+        $service->setTest($currentTest)
+            ->handle($request);
 
         return redirect()->route('admin.tests.subject.test', [
-            'subject' => $currentSubject['uri_alias'],
-            'test'    => $currentTest['uri_alias']
+            'subject' => $currentSubject->uri_alias,
+            'test'    => $currentTest->uri_alias
         ]);
     }
 
@@ -130,10 +99,9 @@ class TestsController extends AdminController
         $this->authorize('delete', $currentTest);
 
         $currentTest->delete();
-        $currentSubject = $this->urlManager->getCurrentSubject();
 
         return redirect()->route('admin.tests.subject', [
-            'subject' => $currentSubject['uri_alias']
+            'subject' => $this->urlManager->getCurrentSubject()->uri_alias
         ]);
     }
 }
