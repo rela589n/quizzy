@@ -7,6 +7,9 @@ use App\Http\Requests\RequestUrlManager;
 
 abstract class AdminController extends Controller
 {
+    /** @var RequestUrlManager */
+    protected $urlManager;
+
     public function __construct(RequestUrlManager $urlManager)
     {
         $this->urlManager = $urlManager;
