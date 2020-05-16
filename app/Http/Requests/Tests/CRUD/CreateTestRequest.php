@@ -4,11 +4,15 @@ namespace App\Http\Requests\Tests\CRUD;
 
 
 use App\Models\Administrator;
+use App\Rules\Containers\TestRulesContainer;
 
 class CreateTestRequest extends MakeTestRequest
 {
     /**
-     * @inheritDoc
+     * Determine if the user is authorized to make this request.
+     *
+     * @param Administrator $user
+     * @return bool
      */
     public function authorize(Administrator $user)
     {
@@ -18,12 +22,14 @@ class CreateTestRequest extends MakeTestRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param TestRulesContainer $rulesContainer
      * @return array
      */
-    public function rules()
+    public function rules(TestRulesContainer $rulesContainer)
     {
-        $rules = $this->baseRules;
+        $rules = $rulesContainer->getRules();
         $rules['uri_alias'][] = 'unique:tests';
+
         return $rules;
     }
 }
