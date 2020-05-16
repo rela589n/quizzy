@@ -2,6 +2,6 @@
 
 namespace App\Http\Requests\Auth;
 
-class AdminChangePasswordRequest extends ChangePasswordRequest
+final class AdminChangePasswordRequest extends ChangePasswordRequest
 {
 }
