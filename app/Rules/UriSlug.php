@@ -25,6 +25,6 @@ final class UriSlug implements Rule
      */
     public function message()
     {
-        return 'URI-псевдонім може містити лише латинські літери, цифри та дефіси!';
+        return trans('validation.custom.uri_slug');
     }
 }
