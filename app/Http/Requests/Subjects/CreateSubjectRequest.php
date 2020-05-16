@@ -4,11 +4,16 @@ namespace App\Http\Requests\Subjects;
 
 
 use App\Models\Administrator;
+use App\Rules\Containers\SubjectRulesContainer;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreateSubjectRequest extends SubjectRequest
+class CreateSubjectRequest extends FormRequest
 {
     /**
-     * @inheritDoc
+     * Determine if the user is authorized to make this request.
+     *
+     * @param Administrator $user
+     * @return bool
      */
     public function authorize(Administrator $user)
     {
@@ -18,12 +23,14 @@ class CreateSubjectRequest extends SubjectRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param SubjectRulesContainer $rulesContainer
      * @return array
      */
-    public function rules()
+    public function rules(SubjectRulesContainer $rulesContainer)
     {
-        $rules = parent::rules();
+        $rules = $rulesContainer->getRules();
         $rules['uri_alias'][] = 'unique:test_subjects';
+
         return $rules;
     }
 }

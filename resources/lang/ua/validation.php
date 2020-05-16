@@ -183,5 +183,7 @@ return [
 
         'uri_alias'     => 'uri-псевдонім',
         'class_monitor' => '"староста"',
+        'courses.*'     => '"курс"',
+        'departments.*' => '"відділення"',
     ],
 ];
