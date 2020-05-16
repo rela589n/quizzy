@@ -91,7 +91,7 @@ class SubjectsController extends AdminController
      */
     public function updateSubject(UpdateSubjectRequest $request)
     {
-        $subject = $request->subject();
+        $subject = $this->urlManager->getCurrentSubject();
         $validated = $request->validated();
 
         $subject->update($validated);

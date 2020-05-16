@@ -2,41 +2,40 @@
 
 namespace App\Http\Requests\Subjects;
 
-use App\Http\Requests\UrlManageable;
-use App\Http\Requests\UrlManageableRequests;
+use App\Http\Requests\RequestUrlManager;
 use App\Models\Administrator;
+use App\Rules\Containers\SubjectRulesContainer;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateSubjectRequest extends SubjectRequest implements UrlManageable
+class UpdateSubjectRequest extends FormRequest
 {
-    use UrlManageableRequests;
-
-    public function subject()
-    {
-        return $this->urlManager->getCurrentSubject();
-    }
-
     /**
-     * @inheritDoc
+     * Determine if the user is authorized to make this request.
+     *
+     * @param Administrator $user
+     * @param RequestUrlManager $urlManager
+     * @return bool
      */
-    public function authorize(Administrator $user)
+    public function authorize(Administrator $user, RequestUrlManager $urlManager)
     {
-        return $user->can('update', $this->subject());
+        return $user->can('update', $urlManager->getCurrentSubject());
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param SubjectRulesContainer $rulesContainer
+     * @param RequestUrlManager $urlManager
      * @return array
      */
-    public function rules()
+    public function rules(SubjectRulesContainer $rulesContainer, RequestUrlManager $urlManager)
     {
-        $rules = parent::rules();
+        $rules = $rulesContainer->getRules();
 
         $rules['uri_alias'][] = Rule::unique('test_subjects')
-            ->ignoreModel($this->subject());
+            ->ignoreModel($urlManager->getCurrentSubject());
 
         return $rules;
     }
-
 }
