@@ -4,20 +4,31 @@
 namespace App\Http\Requests\Users\Teachers;
 
 
-use App\Lib\ValidationGenerator;
 use App\Models\Administrator;
+use App\Rules\Containers\Users\TeacherRulesContainer;
 
-class CreateTeacherRequest extends MakeTeacherRequest
+class CreateTeacherRequest extends TeacherRequest
 {
+    /** @var TeacherRulesContainer */
+    protected $rulesContainer;
+
     public function authorize(Administrator $user)
     {
         return $user->can('create-administrators');
     }
 
-    public function rules(ValidationGenerator $generator)
+    public function rules(TeacherRulesContainer $container)
     {
-        $rules = parent::rules($generator);
-        $rules[$this->username()][] = 'unique:administrators';
+        $this->rulesContainer = $container;
+
+        $rules = $container->getRules();
+        $rules[$container->usernameAttr()][] = 'unique:administrators';
+
         return $rules;
+    }
+
+    protected function getRulesContainer(): TeacherRulesContainer
+    {
+        return $this->rulesContainer;
     }
 }
