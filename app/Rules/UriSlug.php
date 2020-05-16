@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class UriSlug implements Rule
+final class UriSlug implements Rule
 {
     /**
      * Determine if the validation rule passes.

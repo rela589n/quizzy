@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class AtLeastOneSelected implements Rule
+final class AtLeastOneSelected implements Rule
 {
     private $key;
 

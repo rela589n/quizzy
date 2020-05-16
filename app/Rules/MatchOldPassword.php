@@ -5,7 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Validation\Rule;
 
-class MatchOldPassword implements Rule
+final class MatchOldPassword implements Rule
 {
     protected $user;
 
