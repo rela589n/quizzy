@@ -4,13 +4,13 @@
 namespace App\Http\Requests\Users\Students;
 
 
-use App\Http\Requests\Users\MakeUserRequest;
-use App\Lib\ValidationGenerator;
 use App\Models\Administrator;
 use App\Models\User;
+use App\Rules\Containers\Users\StudentRulesContainer;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateStudentRequest extends MakeUserRequest
+class UpdateStudentRequest extends FormRequest
 {
     private $student;
 
@@ -22,21 +22,30 @@ class UpdateStudentRequest extends MakeUserRequest
     }
 
     /**
-     * @inheritDoc
+     * Determine if the user is authorized to make this request.
+     *
+     * @param Administrator $user
+     * @return bool
      */
     public function authorize(Administrator $user)
     {
         return $user->can('update', $this->student());
     }
 
-    public function rules(ValidationGenerator $generator)
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @param StudentRulesContainer $container
+     * @return array
+     */
+    public function rules(StudentRulesContainer $container): array
     {
-        $rules = parent::rules($generator);
+        $rules = $container->getRules();
 
-        $rules[$this->username()][] = Rule::unique('users')
+        $rules[$container->usernameAttr()][] = Rule::unique('users')
             ->ignoreModel($this->student());
 
-        $rules['password'][] = 'nullable';
+        $rules[$container->passwordAttr()][] = 'nullable';
 
         $rules['student_group_id'] = [
             'required',

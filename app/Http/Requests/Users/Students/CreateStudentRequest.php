@@ -3,11 +3,11 @@
 
 namespace App\Http\Requests\Users\Students;
 
-use App\Http\Requests\Users\MakeUserRequest;
-use App\Lib\ValidationGenerator;
 use App\Models\Administrator;
+use App\Rules\Containers\Users\StudentRulesContainer;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreateStudentRequest extends MakeUserRequest
+class CreateStudentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,10 +20,16 @@ class CreateStudentRequest extends MakeUserRequest
         return $user->can('create-students');
     }
 
-    public function rules(ValidationGenerator $generator)
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @param StudentRulesContainer $container
+     * @return array
+     */
+    public function rules(StudentRulesContainer $container): array
     {
-        $rules = parent::rules($generator);
-        $rules[$this->username()][] = 'unique:users';
+        $rules = $container->getRules();
+        $rules[$container->usernameAttr()][] = 'unique:users';
 
         return $rules;
     }
