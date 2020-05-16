@@ -8,7 +8,7 @@ use App\Models\Administrator;
 use App\Rules\Containers\Users\TeacherRulesContainer;
 use Illuminate\Validation\Rule;
 
-class UpdateTeacherRequest extends TeacherRequest
+final class UpdateTeacherRequest extends TeacherRequest
 {
     /** @var TeacherRulesContainer */
     private $rulesContainer;

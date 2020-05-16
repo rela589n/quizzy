@@ -7,7 +7,7 @@ namespace App\Http\Requests\Users\Teachers;
 use App\Models\Administrator;
 use App\Rules\Containers\Users\TeacherRulesContainer;
 
-class CreateTeacherRequest extends TeacherRequest
+final class CreateTeacherRequest extends TeacherRequest
 {
     /** @var TeacherRulesContainer */
     protected $rulesContainer;

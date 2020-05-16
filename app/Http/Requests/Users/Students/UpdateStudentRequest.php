@@ -10,7 +10,7 @@ use App\Rules\Containers\Users\StudentRulesContainer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateStudentRequest extends FormRequest
+final class UpdateStudentRequest extends FormRequest
 {
     private $student;
 
