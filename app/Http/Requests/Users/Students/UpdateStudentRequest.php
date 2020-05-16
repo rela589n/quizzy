@@ -6,11 +6,21 @@ namespace App\Http\Requests\Users\Students;
 
 use App\Lib\ValidationGenerator;
 use App\Models\Administrator;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 
 class UpdateStudentRequest extends StudentRequest
 {
     protected $validateGroup = true;
+
+    private $student;
+
+    public function student()
+    {
+        return singleVar($this->student, function () {
+            return User::findOrFail($this->route('studentId'));
+        });
+    }
 
     /**
      * @inheritDoc
