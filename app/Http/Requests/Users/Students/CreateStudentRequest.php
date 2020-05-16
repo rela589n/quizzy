@@ -3,13 +3,17 @@
 
 namespace App\Http\Requests\Users\Students;
 
+use App\Http\Requests\Users\MakeUserRequest;
 use App\Lib\ValidationGenerator;
 use App\Models\Administrator;
 
-class CreateStudentRequest extends StudentRequest
+class CreateStudentRequest extends MakeUserRequest
 {
     /**
-     * @inheritDoc
+     * Determine if the user is authorized to make this request.
+     *
+     * @param Administrator $user
+     * @return bool
      */
     public function authorize(Administrator $user)
     {
@@ -20,6 +24,7 @@ class CreateStudentRequest extends StudentRequest
     {
         $rules = parent::rules($generator);
         $rules[$this->username()][] = 'unique:users';
+
         return $rules;
     }
 }

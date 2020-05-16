@@ -4,15 +4,14 @@
 namespace App\Http\Requests\Users\Students;
 
 
+use App\Http\Requests\Users\MakeUserRequest;
 use App\Lib\ValidationGenerator;
 use App\Models\Administrator;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 
-class UpdateStudentRequest extends StudentRequest
+class UpdateStudentRequest extends MakeUserRequest
 {
-    protected $validateGroup = true;
-
     private $student;
 
     public function student()
@@ -36,6 +35,11 @@ class UpdateStudentRequest extends StudentRequest
 
         $rules[$this->username()][] = Rule::unique('users')->ignore($this->route('studentId'));
         $rules['password'][] = 'nullable';
+
+        $rules['student_group_id'] = [
+            'required',
+            'numeric'
+        ];
 
         return $rules;
     }
