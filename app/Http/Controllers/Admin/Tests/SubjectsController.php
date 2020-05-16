@@ -8,6 +8,8 @@ use App\Http\Requests\Subjects\UpdateSubjectRequest;
 use App\Models\Course;
 use App\Models\Department;
 use App\Models\TestSubject;
+use App\Services\Subjects\CreateSubjectService;
+use App\Services\Subjects\UpdateSubjectService;
 
 class SubjectsController extends AdminController
 {
@@ -40,15 +42,12 @@ class SubjectsController extends AdminController
 
     /**
      * @param CreateSubjectRequest $request
+     * @param CreateSubjectService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function newSubject(CreateSubjectRequest $request)
+    public function newSubject(CreateSubjectRequest $request, CreateSubjectService $service)
     {
-        $validated = $request->validated();
-        $subject = TestSubject::create($validated);
-
-        $subject->courses()->sync($validated['courses']);
-        $subject->departments()->sync($validated['departments']);
+        $subject = $service->handle($request);
 
         return redirect()->route('admin.tests');
     }
@@ -87,19 +86,18 @@ class SubjectsController extends AdminController
 
     /**
      * @param UpdateSubjectRequest $request
+     * @param UpdateSubjectService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateSubject(UpdateSubjectRequest $request)
+    public function updateSubject(UpdateSubjectRequest $request, UpdateSubjectService $service)
     {
         $subject = $this->urlManager->getCurrentSubject();
-        $validated = $request->validated();
 
-        $subject->update($validated);
-        $subject->courses()->sync($validated['courses']);
-        $subject->departments()->sync($validated['departments']);
+        $service->setSubject($subject)
+            ->handle($request);
 
         return redirect()->route('admin.tests.subject', [
-            'subject' => $subject['uri_alias']
+            'subject' => $subject->uri_alias
         ]);
     }
 
