@@ -5,28 +5,25 @@ namespace App\Http\Requests\Auth;
 use App\Lib\ValidationGenerator;
 use App\Models\BaseUser;
 use App\Rules\MatchOldPassword;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class ChangePasswordRequest extends FormRequest
 {
-    /**
-     * @var BaseUser
-     */
+    /** @var BaseUser */
     protected $authUser;
 
     /**
-     * @param Authenticatable $authUser
+     * @param BaseUser $authUser
      */
-    public function setAuthUser($authUser): void
+    public function setAuthUser(BaseUser $authUser): void
     {
         $this->authUser = $authUser;
     }
 
     /**
-     * @return mixed
+     * @return BaseUser
      */
-    public function getAuthUser()
+    public function getAuthUser(): BaseUser
     {
         return $this->authUser;
     }
@@ -54,7 +51,8 @@ abstract class ChangePasswordRequest extends FormRequest
 
         return $generator->buildManyRules([
             'new_password|new_password_confirmation' => 'required|string|min:6',
-            'password' => [
+
+            'password'     => [
                 'required',
                 'string',
                 new MatchOldPassword($this->authUser)
