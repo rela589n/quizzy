@@ -10,7 +10,7 @@ $(function () {
     let $lastOptionId = $('#last-answer-option-id');
 
     let $questionsContainer = $editTestForm.find('ul.list-group.questions');
-    let questionsManager = new QuestionsManager($questionsContainer, $lastOptionId.val());
+    let questionsManager = new QuestionsManager($questionsContainer, +$lastOptionId.val() + 999999);
     let $labelEmptyQuestionsList = $('.empty-questions-list-label');
 
     $document.on('click', '.button-add-question', function () {
@@ -39,7 +39,7 @@ $(function () {
         let $thisVariant = $(this).closest('[data-variant]');
         let $thisQuestion = $thisVariant.closest('li.question');
 
-        questionsManager.removeVariant($thisQuestion.attr('data-question'), $thisVariant.attr('data-variant'))
+        questionsManager.removeVariant($thisQuestion.attr('data-question'), $thisVariant.attr('data-variant'));
         console.log('deleted!');
     });
 
@@ -361,6 +361,7 @@ $(function () {
         };
 
         this.generateVariantId = function () {
+            console.log(context.lastVariantId);
             return ++context.lastVariantId;
         };
 
