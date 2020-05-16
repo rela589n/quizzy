@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Tests;
+namespace App\Http\Requests\Tests\CRUD;
 
 
 use App\Http\Requests\UrlManageable;

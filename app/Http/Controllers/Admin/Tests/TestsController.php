@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin\Tests;
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\RequestUrlManager;
-use App\Http\Requests\Tests\CreateTestRequest;
-use App\Http\Requests\Tests\UpdateTestRequest;
+use App\Http\Requests\Tests\CRUD\CreateTestRequest;
+use App\Http\Requests\Tests\CRUD\UpdateTestRequest;
 use App\Lib\Filters\Common\IncludeTestsFilter;
 use App\Lib\Transformers\Collection\IncludeTestsTransformer;
 use App\Repositories\SubjectsRepository;
@@ -35,12 +35,12 @@ class TestsController extends AdminController
     }
 
     /**
-     * @param CreateTestRequest $request
+     * @param \App\Http\Requests\Tests\CRUD\CreateTestRequest $request
      * @param IncludeTestsFilter $filter
      * @param IncludeTestsTransformer $transformer
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function newTest(CreateTestRequest $request, IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
+    public function newTest(\App\Http\Requests\Tests\CRUD\CreateTestRequest $request, IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
     {
         /**
          * @var \App\Models\Test $newTest
@@ -86,7 +86,7 @@ class TestsController extends AdminController
     }
 
     /**
-     * @param UpdateTestRequest $request
+     * @param \App\Http\Requests\Tests\CRUD\UpdateTestRequest $request
      * @param IncludeTestsFilter $filter
      * @param IncludeTestsTransformer $transformer
      * @return \Illuminate\Http\RedirectResponse
