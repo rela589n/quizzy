@@ -33,7 +33,9 @@ class UpdateStudentRequest extends MakeUserRequest
     {
         $rules = parent::rules($generator);
 
-        $rules[$this->username()][] = Rule::unique('users')->ignore($this->route('studentId'));
+        $rules[$this->username()][] = Rule::unique('users')
+            ->ignoreModel($this->student());
+
         $rules['password'][] = 'nullable';
 
         $rules['student_group_id'] = [
