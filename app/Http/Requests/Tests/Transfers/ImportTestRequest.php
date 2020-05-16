@@ -6,7 +6,7 @@ use App\Http\Requests\RequestUrlManager;
 use App\Models\Administrator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ImportTestRequest extends FormRequest
+final class ImportTestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
