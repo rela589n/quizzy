@@ -195,6 +195,7 @@ return [
 
 
         'include.*.count' => '"Ліміт питань"',
-        'selected-file'   => '"Вибраний файл"'
+        'selected-file'   => '"Вибраний файл"',
+        'roles'           => '"Ролі"',
     ],
 ];
