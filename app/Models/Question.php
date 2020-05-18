@@ -34,7 +34,7 @@ class Question extends Model
 {
     use SoftDeletes;
     public $timestamps = false;
-    public $guarded = ['id'];
+    public $fillable = ['question', 'test_id'];
 
     public function test()
     {
