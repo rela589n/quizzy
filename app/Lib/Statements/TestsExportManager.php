@@ -4,10 +4,10 @@
 namespace App\Lib\Statements;
 
 
+use App\Lib\PHPWord\TemplateProcessor;
 use App\Models\Question;
 use App\Models\Test;
 use Illuminate\Database\Eloquent\Collection;
-use PhpOffice\PhpWord\TemplateProcessor;
 
 class TestsExportManager extends StatementsGenerator
 {

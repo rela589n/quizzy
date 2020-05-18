@@ -2,9 +2,9 @@
 
 namespace App\Lib\Statements;
 
+use App\Lib\PHPWord\TemplateProcessor;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Words\WordsManager;
-use PhpOffice\PhpWord\TemplateProcessor;
 
 abstract class StatementsGenerator
 {
@@ -37,12 +37,15 @@ abstract class StatementsGenerator
      */
     public function generate()
     {
+        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
+
         $templateProcessor = new TemplateProcessor(resource_path($this->templateResourcePath()));
         $this->doGenerate($templateProcessor);
 
         $filePath = $this->filePathGenerator->generate();
         $templateProcessor->saveAs($filePath);
 
+        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(false);
         return $filePath;
     }
 

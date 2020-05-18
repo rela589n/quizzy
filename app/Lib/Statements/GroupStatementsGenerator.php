@@ -5,11 +5,11 @@ namespace App\Lib\Statements;
 
 
 use App\Lib\GroupResultsManager;
+use App\Lib\PHPWord\TemplateProcessor;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Words\WordsManager;
 use App\Models\StudentGroup;
 use App\Models\Test;
-use PhpOffice\PhpWord\TemplateProcessor;
 
 class GroupStatementsGenerator extends StatementsGenerator
 {
