@@ -23,7 +23,7 @@ if (!function_exists('singleVar')) {
      * @param callable $initializer
      * @return mixed <b>$var</b>
      */
-    function singleVar(&$var, $initializer)
+    function &singleVar(&$var, $initializer)
     {
         if ($var !== null) {
             return $var;
