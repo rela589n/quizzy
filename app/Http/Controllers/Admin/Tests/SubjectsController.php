@@ -8,6 +8,7 @@ use App\Http\Requests\Subjects\UpdateSubjectRequest;
 use App\Models\Course;
 use App\Models\Department;
 use App\Models\TestSubject;
+use App\Repositories\TestsRepository;
 use App\Services\Subjects\CreateSubjectService;
 use App\Services\Subjects\UpdateSubjectService;
 
@@ -53,19 +54,18 @@ class SubjectsController extends AdminController
     }
 
     /**
+     * @param TestsRepository $testsRepository
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showSingleSubject()
+    public function showSingleSubject(TestsRepository $testsRepository)
     {
         $subject = $this->urlManager->getCurrentSubject();
         $this->authorize('view', $subject);
 
-        $subject->tests->loadCount('nativeQuestions as questions_count');
-
         return view('pages.admin.subjects-single', [
             'subject'      => $subject,
-            'subjectTests' => $subject->tests,
+            'subjectTests' => $testsRepository->testsForSubjectPage(),
         ]);
     }
 

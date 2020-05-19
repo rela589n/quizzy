@@ -31,6 +31,15 @@ class TestsRepository
             ->get();
     }
 
+    public function testsForSubjectPage()
+    {
+        return $this->urlManager->getCurrentSubject()
+            ->tests()
+            ->orderBy('name')
+            ->withCount('nativeQuestions as questions_count')
+            ->get();
+    }
+
     public function testsForSelectingByUser()
     {
         return $this->urlManager->getCurrentSubject()
