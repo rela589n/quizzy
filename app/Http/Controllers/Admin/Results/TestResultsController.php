@@ -30,15 +30,14 @@ class TestResultsController extends AdminController
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
 
-        $currentSubject->load([ // todo
-            'tests' => function ($query) {
-                $query->withTrashed();
-                $query->has('testResults');
-            }
-        ]);
+        $tests = $currentSubject->tests()
+            ->withTrashed()
+            ->whereHas('testResults')
+            ->get();
 
         return view('pages.admin.results-select-test', [
-            'subject' => $currentSubject
+            'subject'      => $currentSubject,
+            'subjectTests' => $tests
         ]);
     }
 

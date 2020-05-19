@@ -64,7 +64,8 @@ class SubjectsController extends AdminController
         $subject->tests->loadCount('nativeQuestions as questions_count');
 
         return view('pages.admin.subjects-single', [
-            'subject' => $subject
+            'subject'      => $subject,
+            'subjectTests' => $subject->tests,
         ]);
     }
 
