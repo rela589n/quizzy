@@ -6,8 +6,13 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Lib\Transformers\QuestionsTransformer;
 use App\Models\AnswerOption;
 use App\Http\Requests\Questions\FillAnswersRequest;
-use App\Models\Question;
 use App\Models\Test;
+use App\Services\AnswerOptions\DeleteAnswerOptionsService;
+use App\Services\Questions\DeleteQuestionsService;
+use App\Services\Questions\QuestionsCRUDService;
+use App\Services\Questions\Store\Multiple\CreateQuestionsService;
+use App\Services\Questions\Store\Multiple\UpdateQuestionsService;
+use App\Services\Questions\Store\Single\UpdateQuestionService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 
@@ -41,8 +46,8 @@ class QuestionsController extends AdminController
     {
         $this->authorize('update', $currentTest);
 
-        $currentTest->loadMissing('nativeQuestions'); // todo dependency loader
-        $currentTest->nativeQuestions->load('answerOptions');
+        $currentTest->loadMissing('nativeQuestions.answerOptions'); // todo dependency loader
+//        $currentTest->nativeQuestions->load('answerOptions');
 
         $exclude = array_flip(old("q.deleted", []));
 
@@ -104,8 +109,7 @@ class QuestionsController extends AdminController
     {
         $this->authorize('view', $currentTest);
 
-        $currentTest->loadMissing('nativeQuestions');
-        $currentTest->nativeQuestions->load('answerOptions');
+        $currentTest->loadMissing('nativeQuestions.answerOptions');
 
         return view('pages.admin.tests-single-read-only', [
             'subject' => $this->urlManager->getCurrentSubject(),
@@ -115,85 +119,29 @@ class QuestionsController extends AdminController
 
     /**
      * @param FillAnswersRequest $request
+     * @param DeleteQuestionsService $deleteQuestionsService
+     * @param DeleteAnswerOptionsService $deleteAnswerOptionsService
+     * @param CreateQuestionsService $createQuestionsService
+     * @param UpdateQuestionsService $updateQuestionsService
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createOrUpdate(FillAnswersRequest $request)
+    public function createOrUpdate(FillAnswersRequest $request,
+                                   DeleteQuestionsService $deleteQuestionsService,
+                                   DeleteAnswerOptionsService $deleteAnswerOptionsService,
+                                   CreateQuestionsService $createQuestionsService,
+                                   UpdateQuestionsService $updateQuestionsService)
     {
-        /**
-         * @var Test $currentTest
-         */
         $currentTest = $this->urlManager->getCurrentTest();
-        $currentTest->loadMissing('nativeQuestions');
 
-        $validated = $request->validated();
+        $deleteQuestionsService->handle($request->questionsToDelete());
+        $deleteAnswerOptionsService->handle($request->answerOptionsToDelete());
 
-        $this->performQuestionsDelete($validated['q']['deleted'] ?? []);
-        $this->performVariantsDelete($validated['v']['deleted'] ?? []);
+        $createQuestionsService->ofTest($currentTest)
+            ->handle($request->questionsToCreate());
 
-        $this->performCreate($currentTest, $validated['q']['new'] ?? []);
-        $this->performModify($currentTest, $validated['q']['modified'] ?? []);
+        $updateQuestionsService->ofTest($currentTest)
+            ->handle($request->questionsToUpdate());
 
         return redirect()->back()->with('message', 'Збережено');
-    }
-
-    // todo remove duplicate
-    private function performCreate(Test $currentTest, array $questions)
-    {
-        foreach ($questions as $id => $question) {
-            /**
-             * @var Question $new
-             */
-            $new = $currentTest->nativeQuestions()->save(new Question(['question' => $question['name']]));
-
-            foreach ($question['v'] as $vId => $variant) {
-                $new->answerOptions()->save(new AnswerOption([
-                    'text'     => $variant['text'],
-                    'is_right' => (int)(isset($variant['is_right']) ?? false)
-                ]));
-            }
-        }
-    }
-
-    // todo remove duplicate
-    private function performModify(Test $currentTest, array $questions)
-    {
-        $currentTest->loadMissing('nativeQuestions.answerOptions');
-
-        foreach ($questions as $id => $question) {
-            /**
-             * @var Question $toModify
-             */
-            $toModify = $currentTest->nativeQuestions->find($id); //update(['toModify' => $modified['name']]);
-            $toModify->question = $question['name'];
-            $toModify->save();
-
-            foreach ($question['v'] as $vId => $variant) {
-                $option = $toModify->answerOptions->where('id', $vId)->first();
-
-                if ($option === null) {
-                    $option = new AnswerOption();
-                    $option->question()->associate($toModify);
-                }
-
-                $option->text = $variant['text'];
-                $option->is_right = (int)(isset($variant['is_right']) ?? false);
-
-                $option->save();
-            }
-        }
-    }
-
-    private function performQuestionsDelete(array $ids)
-    {
-        if (count($ids) > 0) {
-            Question::whereIn('id', $ids)->delete();
-        }
-    }
-
-    private function performVariantsDelete(array $ids)
-    {
-        if (count($ids) > 0) {
-            AnswerOption::whereIn('id', $ids)->delete();
-        }
     }
 }
