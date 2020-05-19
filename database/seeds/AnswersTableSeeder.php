@@ -25,7 +25,7 @@ class AnswersTableSeeder extends Seeder
 
         foreach ($askedQuestions as $askedQuestion) {
             foreach ($askedQuestion->question->answerOptions as $answerOption) {
-                $chance = $answerOption->is_right ? 85 : 15;
+                $chance = $answerOption->is_right ? 95 : 5;
 
                 Answer::create([
                     'asked_question_id' => $askedQuestion->id,
