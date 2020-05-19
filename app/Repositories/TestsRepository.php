@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Http\Requests\RequestUrlManager;
 use App\Models\Test;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class TestsRepository
 {
@@ -23,32 +24,50 @@ class TestsRepository
 
     public function testsForResultPage()
     {
-        return $this->urlManager->getCurrentSubject(true)
-            ->tests()
-            ->withTrashed()
-            ->orderBy('name')
-            ->whereHas('testResults')
-            ->get();
+        return tap(
+            $this->urlManager->getCurrentSubject(true)
+                ->tests()
+                ->withTrashed()
+                ->whereHas('testResults'),
+            function (Relation $query) {
+
+                $this->applyOrder($query);
+
+            }
+        )->get();
     }
 
     public function testsForSubjectPage()
     {
-        return $this->urlManager->getCurrentSubject()
-            ->tests()
-            ->orderBy('name')
-            ->withCount('nativeQuestions as questions_count')
-            ->get();
+        return tap(
+            $this->urlManager->getCurrentSubject()
+                ->tests()
+                ->withCount('nativeQuestions as questions_count')
+            , function (Relation $query) {
+
+            $this->applyOrder($query);
+
+        })->get();
     }
 
     public function testsForSelectingByUser()
     {
-        return $this->urlManager->getCurrentSubject()
-            ->tests()
-            ->with('testComposites')
-            ->orderBy('name')
-            ->get()
+        return tap(
+            $this->urlManager->getCurrentSubject()
+                ->tests()
+                ->with('testComposites'),
+            function (Relation $builder) {
+
+                $this->applyOrder($builder);
+
+            })->get()
             ->each(function (Test $test) {
                 $test->questions_count = $test->allQuestions()->count();
             });
+    }
+
+    protected function applyOrder(Relation $builder)
+    {
+        $builder->orderBy('name');
     }
 }
