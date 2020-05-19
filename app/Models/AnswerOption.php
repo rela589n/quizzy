@@ -33,7 +33,8 @@ class AnswerOption extends Model
 {
     use SoftDeletes;
     public $timestamps = false;
-    public $guarded = ['id'];
+
+    protected $fillable = ['text', 'question_id', 'is_right'];
 
     public function question()
     {
