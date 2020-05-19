@@ -5,7 +5,7 @@ namespace App\Repositories;
 
 
 use App\Http\Requests\RequestUrlManager;
-use App\Models\TestSubject;
+use App\Models\Test;
 
 class TestsRepository
 {
@@ -31,4 +31,15 @@ class TestsRepository
             ->get();
     }
 
+    public function testsForSelectingByUser()
+    {
+        return $this->urlManager->getCurrentSubject()
+            ->tests()
+            ->with('testComposites')
+            ->orderBy('name')
+            ->get()
+            ->each(function (Test $test) {
+                $test->questions_count = $test->allQuestions()->count();
+            });
+    }
 }

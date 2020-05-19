@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Client\Tests;
 
 use App\Http\Controllers\Client\ClientController;
-use App\Models\Test;
 use App\Models\TestSubject;
+use App\Repositories\TestsRepository;
 use Illuminate\Http\Request;
 
 class SubjectsController extends ClientController
@@ -19,27 +19,18 @@ class SubjectsController extends ClientController
     }
 
     /**
+     * @param TestsRepository $testsRepository
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showSingleSubject()
+    public function showSingleSubject(TestsRepository $testsRepository)
     {
         $subject = $this->urlManager->getCurrentSubject();
         $this->authorize('pass-tests-of-subject', $subject);
 
-
-        $availableTests = $subject->tests()->orderBy('name')->with('testComposites')->get();
-
-        $availableTests->each(function ($test) {
-            /**
-             * @var Test $test
-             */
-            $test->questions_count = $test->allQuestions()->count();
-        });
-
         return view('pages.client.subjects-single', [
             'subject'        => $subject,
-            'availableTests' => $availableTests
+            'availableTests' => $testsRepository->testsForSelectingByUser()
         ]);
     }
 }
