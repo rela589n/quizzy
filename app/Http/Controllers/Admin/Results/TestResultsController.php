@@ -2,14 +2,31 @@
 
 namespace App\Http\Controllers\Admin\Results;
 
+use App\Http\Requests\RequestUrlManager;
 use App\Lib\Filters\Eloquent\TestResultFilter;
 use App\Models\StudentGroup;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\TestSubject;
+use App\Repositories\TestsRepository;
 use Illuminate\Http\Request;
 
 class TestResultsController extends AdminController
 {
+    /** @var TestsRepository */
+    private $testsRepository;
+
+    /**
+     * TestResultsController constructor.
+     * @param TestsRepository $testsRepository
+     * @param RequestUrlManager $urlManager
+     */
+    public function __construct(TestsRepository $testsRepository, RequestUrlManager $urlManager)
+    {
+        $this->testsRepository = $testsRepository;
+
+        parent::__construct($urlManager);
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -24,20 +41,14 @@ class TestResultsController extends AdminController
     }
 
     /**
+     * @param TestsRepository $testsRepository
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showSelectTestPage()
+    public function showSelectTestPage(TestsRepository $testsRepository)
     {
-        $currentSubject = $this->urlManager->getCurrentSubject();
-
-        $tests = $currentSubject->tests()
-            ->withTrashed()
-            ->whereHas('testResults')
-            ->get();
-
         return view('pages.admin.results-select-test', [
-            'subject'      => $currentSubject,
-            'subjectTests' => $tests
+            'subject'      => $this->urlManager->getCurrentSubject(),
+            'subjectTests' => $testsRepository->testsForResultPage()
         ]);
     }
 
