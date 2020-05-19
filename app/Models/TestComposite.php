@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * App\Models\TestComposite
@@ -43,9 +44,20 @@ class TestComposite extends Pivot
 
     public function questions()
     {
-        return $this->hasManyDeepFromRelations(
+        $builder = $this->hasManyDeepFromRelations(
             $this->includeTest(),
             (new Test)->nativeQuestions()
-        )->random($this->questions_quantity);
+        );
+
+        return $this->applySort($builder);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder|Relation|Question  $query
+     * @return \Illuminate\Database\Eloquent\Builder|Relation|Question
+     */
+    protected function applySort($query)
+    {
+        return $query->random($this->questions_quantity);
     }
 }
