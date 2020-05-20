@@ -8,7 +8,6 @@ use App\Lib\Filters\Common\IncludeTestsFilter;
 use App\Lib\Transformers\Collection\IncludeTestsTransformer;
 use App\Models\Test;
 use App\Models\TestSubject;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 
 abstract class StoreTestService
@@ -44,9 +43,9 @@ abstract class StoreTestService
         return $this;
     }
 
-    public function handle(FormRequest $request): Test
+    public function handle(array $request): Test
     {
-        $this->fields = array_merge($request->validated(), $this->fields);
+        $this->fields = array_merge($request, $this->fields);
 
         $this->test = $this->doHandle();
         $this->handleInclude(collect($this->fields['include'] ?? []));

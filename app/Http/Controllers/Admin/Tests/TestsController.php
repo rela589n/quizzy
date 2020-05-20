@@ -44,7 +44,7 @@ class TestsController extends AdminController
         $currentSubject = $this->urlManager->getCurrentSubject();
 
         $service->ofSubject($currentSubject)
-            ->handle($request);
+            ->handle($request->validated());
 
         return redirect()->route('admin.tests.subject', [
             'subject' => $currentSubject->uri_alias
@@ -80,7 +80,7 @@ class TestsController extends AdminController
         $currentTest = $this->urlManager->getCurrentTest();
 
         $service->setTest($currentTest)
-            ->handle($request);
+            ->handle($request->validated());
 
         return redirect()->route('admin.tests.subject.test', [
             'subject' => $currentSubject->uri_alias,
