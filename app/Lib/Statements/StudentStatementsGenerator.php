@@ -54,7 +54,7 @@ class StudentStatementsGenerator extends StatementsGenerator
         foreach ($this->result->askedQuestions as $askedQuestion) {
 
             $question = $askedQuestion->question;
-            $score = $questionsScore[$question->id] * 5;
+            $score = $questionsScore[$question->id] * 100; // score in percents
 
             $selectedNotRight = [];
 
@@ -77,7 +77,7 @@ class StudentStatementsGenerator extends StatementsGenerator
             $this->setQuestionInfo(
                 $i,
                 $question->question,
-                round($score, 2) . $this->wordsManager->decline($score, ' бал'),
+                round($score, 2) . $this->wordsManager->decline($score, ' відсот'),
                 empty($selectedNotRight) ? self::EMPTY_WRONG_CHOICES_LABEL : implode(', ', $selectedNotRight)
             );
 
