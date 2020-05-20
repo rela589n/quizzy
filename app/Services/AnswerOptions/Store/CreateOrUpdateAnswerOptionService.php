@@ -56,6 +56,8 @@ class CreateOrUpdateAnswerOptionService extends StoreAnswerOptionService
             if ($option !== null) {
                 return $option;
             }
+
+            throw new ModelNotFoundException();
         }
 
         return AnswerOption::findOrFail($this->fields['id']);
