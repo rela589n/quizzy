@@ -77,7 +77,7 @@ class StudentStatementsGenerator extends StatementsGenerator
             $this->setQuestionInfo(
                 $i,
                 $question->question,
-                round($score, 2) . $this->wordsManager->decline($score, ' відсот'),
+                round($score, 2) . ' %',
                 empty($selectedNotRight) ? self::EMPTY_WRONG_CHOICES_LABEL : implode(', ', $selectedNotRight)
             );
 
