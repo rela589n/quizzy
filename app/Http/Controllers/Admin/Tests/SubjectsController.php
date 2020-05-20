@@ -48,7 +48,7 @@ class SubjectsController extends AdminController
      */
     public function newSubject(CreateSubjectRequest $request, CreateSubjectService $service)
     {
-        $subject = $service->handle($request);
+        $subject = $service->handle($request->validated());
 
         return redirect()->route('admin.tests');
     }
@@ -95,7 +95,7 @@ class SubjectsController extends AdminController
         $subject = $this->urlManager->getCurrentSubject();
 
         $service->setSubject($subject)
-            ->handle($request);
+            ->handle($request->validated());
 
         return redirect()->route('admin.tests.subject', [
             'subject' => $subject->uri_alias

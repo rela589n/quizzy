@@ -5,7 +5,6 @@ namespace App\Services\Subjects;
 
 
 use App\Models\TestSubject;
-use Illuminate\Foundation\Http\FormRequest;
 
 abstract class StoreSubjectService
 {
@@ -15,9 +14,9 @@ abstract class StoreSubjectService
     /** @var TestSubject */
     protected $subject;
 
-    public function handle(FormRequest $request): TestSubject
+    public function handle(array $request): TestSubject
     {
-        $this->fields = $request->validated();
+        $this->fields = $request;
         $this->subject = $this->doHandle();
 
         $this->syncCourses($this->fields['courses']);
