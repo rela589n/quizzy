@@ -5,8 +5,10 @@ namespace App\Lib\Filters\Eloquent;
 
 
 use App\Models\TestResult;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class TestResultFilter extends ResultFilter
 {
@@ -23,13 +25,13 @@ class TestResultFilter extends ResultFilter
     protected function loadRelations(EloquentCollection $results)
     {
         $results->loadMissing([
-            'askedQuestions.question' => function ($query) {
+            'askedQuestions.question'             => function ($query) {
                 $query->withTrashed();
             },
             'askedQuestions.answers.answerOption' => function ($query) {
                 $query->withTrashed();
             },
-            'user.studentGroup' => function ($query) {
+            'user.studentGroup'                   => function ($query) {
                 $query->withTrashed();
             }
         ]);
@@ -52,12 +54,12 @@ class TestResultFilter extends ResultFilter
     protected function queryFilters()
     {
         return $this->filterFilters(
-            $this->request->only(['resultId', 'groupId', 'name', 'surname', 'patronymic'])
+            $this->request->only(['resultId', 'groupId', 'name', 'surname', 'patronymic', 'resultDateIn'])
         );
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param EloquentBuilder $query
      * @param $value
      */
     public function resultId($query, $value)
@@ -66,7 +68,7 @@ class TestResultFilter extends ResultFilter
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param EloquentBuilder $query
      * @param $groupId
      */
     public function groupId($query, $groupId)
@@ -78,7 +80,7 @@ class TestResultFilter extends ResultFilter
 
     /**
      * @param string $relation
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param EloquentBuilder $query
      * @param string $field
      * @param $fieldValue
      */
@@ -90,7 +92,7 @@ class TestResultFilter extends ResultFilter
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param EloquentBuilder $query
      * @param $name
      */
     public function name($query, $name)
@@ -99,7 +101,7 @@ class TestResultFilter extends ResultFilter
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param EloquentBuilder $query
      * @param $surname
      */
     public function surname($query, $surname)
@@ -108,12 +110,28 @@ class TestResultFilter extends ResultFilter
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param EloquentBuilder $query
      * @param $patronymic
      */
     public function patronymic($query, $patronymic)
     {
         $this->textFieldFilter('user', $query, 'patronymic', $patronymic);
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param $dates
+     */
+    public function resultDateIn($query, $dates)
+    {
+        $query->where(function(EloquentBuilder $query) use ($dates) {
+
+            array_map(function (string $date) use ($query) {
+
+                $query->orWhereDate('created_at', Carbon::createFromFormat('d/m/Y', trim($date)));
+
+            }, explode(',', $dates));
+        });
     }
 
     /**
