@@ -126,7 +126,12 @@
                         @endforeach
                     </select>
                 </th>
-                <th></th>
+                <th>
+                    <input name="resultDateIn" type="text"
+                           class="form-control form-control-sm table-input-middle"
+                           value="{{ request('resultDateIn') }}"
+                           data-datepicker>
+                </th>
             </tr>
             <tr>
                 <td colspan="8">
@@ -143,8 +148,17 @@
     {{ $testResults->links() }}
 @endsection
 
+@section('head_styles')
+    @parent
+    <link rel="stylesheet" href="{{ asset('libs/bootstrap-selectpicker/css/bootstrap-datepicker.min.css') }}">
+@endsection
+
 @section('bottom-scripts')
     @parent
     <script defer src="{{ asset('js/clear-form-fields.js') }}"></script>
     <script defer src="{{ asset('js/submit-only-filled.js') }}"></script>
+
+    @include('blocks.scripts.bootstrap-datepicker')
+
+    <script defer src="{{ asset('js/datepicker.js') }}"></script>
 @endsection
