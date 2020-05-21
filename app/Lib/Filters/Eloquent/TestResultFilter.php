@@ -7,6 +7,7 @@ namespace App\Lib\Filters\Eloquent;
 use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -25,13 +26,13 @@ class TestResultFilter extends ResultFilter
     protected function loadRelations(EloquentCollection $results)
     {
         $results->loadMissing([
-            'askedQuestions.question'             => function ($query) {
+            'askedQuestions.question'             => function (Relation $query) {
                 $query->withTrashed();
             },
-            'askedQuestions.answers.answerOption' => function ($query) {
+            'askedQuestions.answers.answerOption' => function (Relation $query) {
                 $query->withTrashed();
             },
-            'user.studentGroup'                   => function ($query) {
+            'user.studentGroup'                   => function (Relation $query) {
                 $query->withTrashed();
             }
         ]);
@@ -73,7 +74,7 @@ class TestResultFilter extends ResultFilter
      */
     public function groupId($query, $groupId)
     {
-        $query->whereHas('user.studentGroup', function ($builder) use ($groupId) {
+        $query->whereHas('user.studentGroup', function (EloquentBuilder $builder) use ($groupId) {
             $builder->where('id', $groupId);
         });
     }
@@ -86,7 +87,7 @@ class TestResultFilter extends ResultFilter
      */
     protected function textFieldFilter(string $relation, $query, string $field, $fieldValue)
     {
-        $query->whereHas($relation, function ($builder) use ($field, $fieldValue) {
+        $query->whereHas($relation, function (EloquentBuilder $builder) use ($field, $fieldValue) {
             $builder->where($field, 'like', "%$fieldValue%");
         });
     }
@@ -124,7 +125,7 @@ class TestResultFilter extends ResultFilter
      */
     public function resultDateIn($query, $dates)
     {
-        $query->where(function(EloquentBuilder $query) use ($dates) {
+        $query->where(function (EloquentBuilder $query) use ($dates) {
 
             array_map(function (string $date) use ($query) {
 
