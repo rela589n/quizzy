@@ -9,6 +9,7 @@ use App\Lib\Statements\GroupStatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
 use App\Models\StudentGroup;
 use App\Models\TestResult;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 
 class StatementsController extends AdminController
@@ -41,12 +42,26 @@ class StatementsController extends AdminController
      */
     public function groupStatement(Request $request, GroupStatementsGenerator $generator)
     {
-        $id = $request->input('groupId');
-        $group = StudentGroup::findOrFail($id);
+        $group = StudentGroup::withTrashed()->findOrFail($request->input('groupId'));
         $test = $this->urlManager->getCurrentTest(true);
 
         $generator->setGroup($group);
         $generator->setTest($test);
+        $generator->setTestResults($group->lastResults($test)->with([
+            'askedQuestions.question'             => function (Relation $query) {
+                $query->withTrashed();
+            },
+            'askedQuestions.answers.answerOption' => function (Relation $query) {
+                $query->withTrashed();
+            },
+            'user'                                => function (Relation $query) {
+                $query->withTrashed();
+            },
+            'user.studentGroup'                   => function (Relation $query) {
+                $query->withTrashed();
+            }
+        ])->get());
+
         $statementPath = $generator->generate();
 
         return response()->download($statementPath);
