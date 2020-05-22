@@ -32,6 +32,14 @@ class ValidationGenerator
         $this->request = $request;
     }
 
+    /**
+     * @param Request $request
+     */
+    public function setRequest(Request $request): void
+    {
+        $this->request = $request;
+    }
+
     protected function buildRecursive(string $base, int $nextPartIndex)
     {
         if ($nextPartIndex >= count($this->parts)) {
