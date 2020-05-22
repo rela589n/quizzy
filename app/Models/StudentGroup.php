@@ -70,6 +70,9 @@ class StudentGroup extends Model
         return $this->belongsTo(Department::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function classMonitor()
     {
         return $this->belongsTo(Administrator::class, 'created_by')->ofRole('class-monitor');
