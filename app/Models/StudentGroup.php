@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Lib\Traits\FilteredScope;
 use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -95,13 +96,16 @@ class StudentGroup extends Model
         return Carbon::now()->diffInYears($started) + 1;
     }
 
-    public function lastResults($test)
+    public function lastResults(Test $test)
     {
-        $students = $this->students;
+        /**
+         * @var $students Collection|User[]
+         */
+        $students = $this->students()->withTrashed()->get();
         $builder = clone $students[0]->lastResultOf($test);
 
-        for ($i = 1; $i < $students->count(); ++$i) { // todo tobase
-            $builder->union($students[$i]->lastResultOf($test));
+        for ($i = 1; $i < $students->count(); ++$i) {
+            $builder->union($students[$i]->lastResultOf($test)->toBase());
         }
 
         return $builder;
