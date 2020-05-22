@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -40,9 +41,11 @@ use Illuminate\Notifications\Notifiable;
  * @mixin \Eloquent
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\BaseUser wherePasswordChanged($value)
  * @property-read mixed $full_name
-    */
+ */
 abstract class BaseUser extends Authenticatable
 {
+    use SoftDeletes;
+
     use Notifiable;
 
     /**
