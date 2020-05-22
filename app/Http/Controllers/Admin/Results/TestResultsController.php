@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Results;
 
+use App\Http\Requests\FilterTestResultsRequest;
 use App\Http\Requests\RequestUrlManager;
 use App\Lib\Filters\Eloquent\TestResultFilter;
 use App\Models\StudentGroup;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\TestSubject;
 use App\Repositories\TestsRepository;
-use Illuminate\Http\Request;
 
 class TestResultsController extends AdminController
 {
@@ -53,14 +53,17 @@ class TestResultsController extends AdminController
     }
 
     /**
-     * @param Request $request
+     * @param FilterTestResultsRequest $request
      * @param TestResultFilter $filters
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showTestResults(Request $request, TestResultFilter $filters)
+    public function showTestResults(FilterTestResultsRequest $request, TestResultFilter $filters)
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest(true);
+
+        $filters->setQueryFilters($request->getQueryFilters());
+        $filters->setFilters($request->getFilters());
 
         $filteredResults = $currentTest
             ->testResults()

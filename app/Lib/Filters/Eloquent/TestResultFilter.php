@@ -8,19 +8,34 @@ use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class TestResultFilter extends ResultFilter
 {
     /**
-     * @var Request
+     * @var array
      */
-    protected $request;
+    protected $queryFilters;
 
-    public function __construct(Request $request)
+    /**
+     * @var array
+     */
+    protected $filters;
+
+    /**
+     * @param array $queryFilters
+     */
+    public function setQueryFilters(array $queryFilters): void
     {
-        $this->request = $request;
+        $this->queryFilters = $queryFilters;
+    }
+
+    /**
+     * @param array $filters
+     */
+    public function setFilters(array $filters): void
+    {
+        $this->filters = $filters;
     }
 
     protected function loadRelations(EloquentCollection $results)
@@ -41,22 +56,18 @@ class TestResultFilter extends ResultFilter
     protected function filterFilters(array $arr)
     {
         return array_filter($arr, function ($val) {
-            return $val !== '' && $val !== null;
+            return $val !== '' && $val !== null && $val !== [];
         });
     }
 
     protected function filters()
     {
-        return $this->filterFilters(
-            $this->request->only('result', 'mark')
-        );
+        return $this->filterFilters($this->filters);
     }
 
     protected function queryFilters()
     {
-        return $this->filterFilters(
-            $this->request->only(['resultId', 'groupId', 'name', 'surname', 'patronymic', 'resultDateIn'])
-        );
+        return $this->filterFilters($this->queryFilters);
     }
 
     /**
@@ -121,17 +132,17 @@ class TestResultFilter extends ResultFilter
 
     /**
      * @param EloquentBuilder $query
-     * @param $dates
+     * @param Carbon[] $dates
      */
     public function resultDateIn($query, $dates)
     {
         $query->where(function (EloquentBuilder $query) use ($dates) {
 
-            array_map(function (string $date) use ($query) {
+            array_map(function (Carbon $date) use ($query) {
 
-                $query->orWhereDate('created_at', Carbon::createFromFormat('d.m.Y', trim($date)));
+                $query->orWhereDate('created_at', $date);
 
-            }, explode(',', $dates));
+            }, $dates);
         });
     }
 
