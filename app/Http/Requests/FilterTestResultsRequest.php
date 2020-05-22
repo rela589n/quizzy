@@ -9,6 +9,11 @@ use Illuminate\Support\Carbon as Carbon;
 class FilterTestResultsRequest extends FormRequest
 {
     /**
+     * @var ValidationGenerator
+     */
+    private $validationGenerator;
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -18,15 +23,22 @@ class FilterTestResultsRequest extends FormRequest
         return true;
     }
 
+    public function attributes()
+    {
+        return $this->validationGenerator->buildAttribute('resultDateIn.*', trans('validation.attributes.resultDateIn'));
+    }
+
     protected function prepareForValidation()
     {
         if ($this->has('resultDateIn')) {
             $this->merge([
 
-                'resultDateIn' => array_map(function (string $date) {
-
-                    return trim($date);
-                }, explode(',', $this->input('resultDateIn')))
+                'resultDateIn' => array_map(
+                    function (string $date) {
+                        return trim($date);
+                    },
+                    explode(',', $this->input('resultDateIn'))
+                )
             ]);
         }
     }
@@ -57,6 +69,7 @@ class FilterTestResultsRequest extends FormRequest
      */
     public function rules(ValidationGenerator $generator)
     {
+        $this->validationGenerator = $generator;
         $generator->setRequest($this);
 
         return $generator->buildManyRules([

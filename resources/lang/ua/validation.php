@@ -201,6 +201,14 @@ return [
         'roles'           => '"Ролі"',
         'questions'       => '"Питання"',
         'answer_options'  => '"Варіанти відповідей"',
-        'option_text'     => ''
+        'option_text'     => '',
+
+        'result'       => 'результат',
+        'resultId'     => 'id результата',
+        'groupId'      => 'id групи',
+        'patronymic'   => 'по-батькові',
+        'surname'      => 'прізвище',
+        'mark'         => 'оцінка',
+        'resultDateIn' => 'дата здачі',
     ],
 ];

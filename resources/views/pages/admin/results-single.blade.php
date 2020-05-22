@@ -87,50 +87,91 @@
             <tfoot>
             <tr class="table-active">
                 <th class="input ui-state-default" rowspan="1" colspan="1">
-                    <input name="resultId" value="{{ request('resultId') }}" type="number"
-                           class="form-control form-control-sm table-input-extra-narrow" min="1" placeholder="id">
+                    <input name="resultId" id="resultId" value="{{ request('resultId') }}" type="number" min="1"
+                           placeholder="id" title="id"
+                           class="form-control form-control-sm table-input-extra-narrow @error('resultId') is-invalid @enderror">
+
+                    @error('resultId')
+                    <span class="invalid-feedback" role="alert"><label for="resultId">{{ $message }}</label></span>
+                    @enderror
                 </th>
                 <th>
-                    <select name="groupId" class="form-control form-control-sm">
+                    <select name="groupId" id="groupId"
+                            title="Група"
+                            class="form-control form-control-sm @error('groupId') is-invalid @enderror">
                         <option value="">Усі</option>
                         @foreach($userGroups as $group)
                             <option value="{{ $group->id }}"
                                     @if($group->id == request('groupId')) selected @endif>{{ $group->name }}</option>
                         @endforeach
                     </select>
+
+                    @error('groupId')
+                    <span class="invalid-feedback" role="alert"><label for="groupId">{{ $message }}</label></span>
+                    @enderror
                 </th>
                 <th>
-                    <input name="surname" type="text" value="{{ request('surname') }}"
-                           class="form-control form-control-sm table-input-middle"
-                           placeholder="Прізвище">
+                    <input name="surname" id="surname" type="text" value="{{ request('surname') }}"
+                           placeholder="Прізвище" title="Прізвище"
+                           class="form-control form-control-sm table-input-middle @error('surname') is-invalid @enderror"
+                    >
+                    @error('surname')
+                    <span class="invalid-feedback" role="alert"><label for="surname">{{ $message }}</label></span>
+                    @enderror
                 </th>
                 <th>
-                    <input name="name" type="text" value="{{ request('name') }}"
-                           class="form-control form-control-sm table-input-middle"
-                           placeholder="Ім'я">
+                    <input name="name" id="name" type="text" value="{{ request('name') }}"
+                           placeholder="Ім'я" title="Ім'я"
+                           class="form-control form-control-sm table-input-middle @error('name') is-invalid @enderror"
+                    >
+
+                    @error('name')
+                    <span class="invalid-feedback" role="alert"><label for="name">{{ $message }}</label></span>
+                    @enderror
                 </th>
                 <th>
-                    <input name="patronymic" type="text" value="{{ request('patronymic') }}"
-                           class="form-control form-control-sm table-input-middle" placeholder="По-батькові">
+                    <input name="patronymic" id="patronymic" type="text" value="{{ request('patronymic') }}"
+                           placeholder="По-батькові" title="По-батькові"
+                           class="form-control form-control-sm table-input-middle @error('patronymic') is-invalid @enderror">
+
+                    @error('patronymic')
+                    <span class="invalid-feedback" role="alert"><label for="patronymic">{{ $message }}</label></span>
+                    @enderror
                 </th>
                 <th>
-                    <input name="result" type="number" value="{{ request('result') }}" min="0" max="100" step="0.1"
-                           placeholder="Результат"
-                           class="form-control form-control-sm table-input-narrow">
+                    <input name="result" id="result" type="number" value="{{ request('result') }}" min="0" max="100"
+                           step="0.1"
+                           placeholder="Результат" title="Результат"
+                           class="form-control form-control-sm table-input-narrow @error('result') is-invalid @enderror">
+
+                    @error('result')
+                    <span class="invalid-feedback" role="alert"><label for="result">{{ $message }}</label></span>
+                    @enderror
                 </th>
                 <th>
-                    <select name="mark" class="form-control form-control-sm">
+                    <select name="mark" id="mark"
+                            title="Оцінка"
+                            class="form-control form-control-sm @error('mark') is-invalid @enderror">
                         <option value="">Всі</option>
                         @foreach (range(1, 5) as $i)
                             <option value="{{ $i }}" @if($i == request('mark')) selected @endif>{{ $i }}</option>
                         @endforeach
                     </select>
+
+                    @error('mark')
+                    <span class="invalid-feedback" role="alert"><label for="mark">{{ $message }}</label></span>
+                    @enderror
                 </th>
                 <th>
-                    <input name="resultDateIn" type="text"
-                           class="form-control form-control-sm table-input-middle"
+                    <input name="resultDateIn" id="resultDateIn" type="text"
+                           placeholder="Дата" title="Дата"
+                           class="form-control form-control-sm table-input-middle @error('resultDateIn.*') is-invalid @enderror"
                            value="{{ request('resultDateIn') }}"
                            data-datepicker>
+
+                    @error('resultDateIn.*')
+                    <span class="invalid-feedback" role="alert"><label for="resultDateIn">{{ $message }}</label></span>
+                    @enderror
                 </th>
             </tr>
             <tr>
