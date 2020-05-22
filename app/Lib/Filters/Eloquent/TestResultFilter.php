@@ -47,6 +47,9 @@ class TestResultFilter extends ResultFilter
             'askedQuestions.answers.answerOption' => function (Relation $query) {
                 $query->withTrashed();
             },
+            'user'                                => function (Relation $query) {
+                $query->withTrashed();
+            },
             'user.studentGroup'                   => function (Relation $query) {
                 $query->withTrashed();
             }
