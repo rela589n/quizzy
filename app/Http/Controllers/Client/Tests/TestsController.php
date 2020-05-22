@@ -6,6 +6,7 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Requests\Tests\Pass\FinishTestRequest;
 use App\Models\AskedQuestion;
 use App\Models\TestResult;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 
 class TestsController extends ClientController
@@ -23,11 +24,13 @@ class TestsController extends ClientController
         $this->authorize('pass-test', $currentTest);
 
         $questions = $currentTest->allQuestions();
-        $questions->loadMissing('answerOptions');
+        $questions->loadMissing(['answerOptions' => function (Relation $q) {
+            $q->inRandomOrder();
+        }]);
 
         return view('pages.client.tests-single', [
-            'subject' => $currentSubject,
-            'test' => $currentTest,
+            'subject'      => $currentSubject,
+            'test'         => $currentTest,
             'allQuestions' => $questions,
         ]);
     }
@@ -59,10 +62,10 @@ class TestsController extends ClientController
         }
 
         return view('pages.client.pass-test-single-result', [
-            'subject' => $currentTest->subject,
-            'test' => $currentTest,
+            'subject'        => $currentTest->subject,
+            'test'           => $currentTest,
             'resultPercents' => $testResult->score_readable,
-            'resultMark' => $testResult->mark_readable
+            'resultMark'     => $testResult->mark_readable
         ]);
     }
 }
