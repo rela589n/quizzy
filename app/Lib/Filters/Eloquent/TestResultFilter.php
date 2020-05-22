@@ -129,7 +129,7 @@ class TestResultFilter extends ResultFilter
 
             array_map(function (string $date) use ($query) {
 
-                $query->orWhereDate('created_at', Carbon::createFromFormat('d/m/Y', trim($date)));
+                $query->orWhereDate('created_at', Carbon::createFromFormat('d.m.Y', trim($date)));
 
             }, explode(',', $dates));
         });
