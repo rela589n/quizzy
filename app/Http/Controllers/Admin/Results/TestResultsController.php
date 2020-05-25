@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin\Results;
 use App\Http\Requests\FilterTestResultsRequest;
 use App\Http\Requests\RequestUrlManager;
 use App\Lib\Filters\Eloquent\TestResultFilter;
-use App\Models\StudentGroup;
 use App\Http\Controllers\Admin\AdminController;
 use App\Models\TestSubject;
+use App\Repositories\StudentGroupsRepository;
 use App\Repositories\TestsRepository;
 
 class TestResultsController extends AdminController
@@ -55,9 +55,12 @@ class TestResultsController extends AdminController
     /**
      * @param FilterTestResultsRequest $request
      * @param TestResultFilter $filters
+     * @param StudentGroupsRepository $groupsRepository
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showTestResults(FilterTestResultsRequest $request, TestResultFilter $filters)
+    public function showTestResults(FilterTestResultsRequest $request,
+                                    TestResultFilter $filters,
+                                    StudentGroupsRepository $groupsRepository)
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest(true);
@@ -76,7 +79,7 @@ class TestResultsController extends AdminController
             'subject'     => $currentSubject,
             'test'        => $currentTest,
             'testResults' => $filteredResults,
-            'userGroups'  => StudentGroup::withTrashed()->get()
+            'userGroups'  => $groupsRepository->groupsWitResultsOf($currentTest->id),
         ]);
     }
 }

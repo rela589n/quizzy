@@ -11,7 +11,17 @@ use Illuminate\Database\Eloquent\Builder;
 
 class StudentGroupsRepository
 {
-    public function withResultsOf(int $id, int $testId)
+    public function withResultsOf(int $groupId, int $testId)
+    {
+        return $this->builderForResultsPage($testId)->findOrFail($groupId);
+    }
+
+    public function groupsWitResultsOf(int $testId)
+    {
+        return $this->builderForResultsPage($testId)->orderByDesc('year')->get();
+    }
+
+    protected function builderForResultsPage(int $testId)
     {
         return StudentGroup::withTrashed()->whereHas('students', function (Builder $studentQuery) use ($testId) {
             /**
@@ -28,6 +38,6 @@ class StudentGroupsRepository
                 $resultQuery->whereTestId($testId);
             });
 
-        })->findOrFail($id);
+        });
     }
 }
