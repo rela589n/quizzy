@@ -105,11 +105,12 @@ class StudentGroup extends Model
         return Carbon::now()->diffInYears($started) + 1;
     }
 
+    /**
+     * @param Test $test
+     * @return \Illuminate\Database\Eloquent\Builder|TestResult
+     */
     public function lastResults(Test $test)
     {
-        /**
-         * @var $students Collection|User[]
-         */
         $students = $this->students()->withTrashed()->get();
         $builder = clone $students[0]->lastResultOf($test);
 

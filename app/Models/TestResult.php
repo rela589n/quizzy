@@ -15,26 +15,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $test_id
  * @property int|null $user_id
  * @property \Illuminate\Support\Carbon $created_at
- * @property-read \App\Models\Test|null $test
- * @method static Builder|\App\Models\TestResult newModelQuery()
- * @method static Builder|\App\Models\TestResult newQuery()
- * @method static Builder|\App\Models\TestResult query()
- * @method static Builder|\App\Models\TestResult whereCreatedAt($value)
- * @method static Builder|\App\Models\TestResult whereId($value)
- * @method static Builder|\App\Models\TestResult whereTestId($value)
- * @method static Builder|\App\Models\TestResult whereUserId($value)
+ * @property-read Test|null $test
+ * @method static Builder|TestResult newModelQuery()
+ * @method static Builder|TestResult newQuery()
+ * @method static Builder|TestResult query()
+ * @method static Builder|TestResult whereCreatedAt($value)
+ * @method static Builder|TestResult whereId($value)
+ * @method static Builder|TestResult whereTestId($value)
+ * @method static Builder|TestResult whereUserId($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AskedQuestion[] $askedQuestions
+ * @property-read \Illuminate\Database\Eloquent\Collection|AskedQuestion[] $askedQuestions
  * @property-read int|null $asked_questions_count
- * @property-read \App\Models\User|null $user
+ * @property-read User|null $user
  * @property-read mixed $date_readable
  * @property-read mixed $mark
  * @property-read mixed $mark_readable
  * @property-read mixed $score
  * @property-read mixed $score_readable
- * @method static Builder|\App\Models\TestResult filtered(\App\Lib\Filters\Eloquent\TestResultFilter $filters)
- * @method static Builder|\App\Models\TestResult ofTest($testId)
- * @method static Builder|\App\Models\TestResult recent($count)
+ * @method static Builder|TestResult ofTest($testId)
+ * @method static Builder|TestResult recent($count)
  */
 class TestResult extends Model
 {

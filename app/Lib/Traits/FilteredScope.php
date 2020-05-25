@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * Trait FilteredScope
  * @package App\Lib\Traits
- * @method static Builder|static filtered(ResultFilter $filters)
+ * @method static \Illuminate\Database\Eloquent\Collection|static filtered(ResultFilter $filters)
  */
 trait FilteredScope
 {
