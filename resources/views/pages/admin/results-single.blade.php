@@ -177,8 +177,15 @@
             <tr>
                 <td colspan="8">
                     <div class="d-flex justify-content-between filter-buttons">
-                        <button type="reset" class="btn btn-primary">Очистити фільтри</button>
-                        <button type="submit" class="btn btn-primary">Фільтрувати</button>
+                        <div>
+                            @if($authUser->can('generate-group-statement'))
+                                <button type="button" class="btn btn-primary generateGroupStatementByFilters">Відомість по групі згідно фільтрів</button>
+                            @endif
+                        </div>
+                        <div>
+                            <button type="reset" class="btn btn-primary mr-3">Очистити фільтри</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i>Фільтрувати</button>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -187,6 +194,24 @@
     </form>
 
     {{ $testResults->links() }}
+
+    @if($authUser->can('generate-group-statement'))
+        <form action="{{ route('admin.results.subject.test.statements.group', [
+                            'subject' => $subject->uri_alias,
+                            'test' => $test->uri_alias,
+                        ]) }}"
+              method="get"
+              class="d-none generateGroupStatementByFiltersForm submit-only-filled">
+            <input type="hidden" name="resultId">
+            <input type="hidden" name="groupId">
+            <input type="hidden" name="surname">
+            <input type="hidden" name="name">
+            <input type="hidden" name="patronymic">
+            <input type="hidden" name="result">
+            <input type="hidden" name="mark">
+            <input type="hidden" name="resultDateIn">
+        </form>
+    @endif
 @endsection
 
 @section('head_styles')
@@ -202,4 +227,5 @@
     @include('blocks.scripts.bootstrap-datepicker')
 
     <script defer src="{{ asset('js/datepicker.js') }}"></script>
+    <script defer src="{{ asset('js/pages/test-result.js') }}"></script>
 @endsection
