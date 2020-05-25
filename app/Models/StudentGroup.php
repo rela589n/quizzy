@@ -17,32 +17,32 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string $uri_alias
  * @property int $year
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $students
+ * @property Carbon|null $deleted_at
+ * @property-read Collection|User[] $students
  * @property-read int|null $students_count
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup newQuery()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\StudentGroup onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup query()
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup newQuery()
+ * @method static \Illuminate\Database\Query\Builder|StudentGroup onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereUriAlias($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereYear($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\StudentGroup withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\StudentGroup withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereUriAlias($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereYear($value)
+ * @method static \Illuminate\Database\Query\Builder|StudentGroup withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|StudentGroup withoutTrashed()
  * @mixin \Eloquent
  * @property-read int $course
  * @property int|null $created_by
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereCreatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereSlug($slug)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereSlug($slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
  * @property int|null $department_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\StudentGroup whereDepartmentId($value)
- * @property-read \App\Models\Department|null $department
- * @property-read \App\Models\Administrator|null $classMonitor
+ * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereDepartmentId($value)
+ * @property-read Department|null $department
+ * @property-read Administrator|null $classMonitor
  */
 class StudentGroup extends Model
 {
@@ -59,6 +59,9 @@ class StudentGroup extends Model
     protected $studyStartMonth = 9;
     protected $studyStartDay = 1;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|User
+     */
     public function students()
     {
         return $this->hasMany(User::class)->orderBy('surname')->orderBy('name');
@@ -70,11 +73,19 @@ class StudentGroup extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|Administrator
+     */
+    protected function administrator()
+    {
+        return $this->belongsTo(Administrator::class, 'created_by');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder|Administrator
      */
     public function classMonitor()
     {
-        return $this->belongsTo(Administrator::class, 'created_by')->ofRole('class-monitor');
+        return $this->administrator()->ofRole('class-monitor');
     }
 
     /**
