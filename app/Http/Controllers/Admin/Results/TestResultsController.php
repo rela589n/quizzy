@@ -6,8 +6,8 @@ use App\Http\Requests\FilterTestResultsRequest;
 use App\Http\Requests\RequestUrlManager;
 use App\Lib\Filters\Eloquent\TestResultFilter;
 use App\Http\Controllers\Admin\AdminController;
-use App\Models\TestSubject;
 use App\Repositories\StudentGroupsRepository;
+use App\Repositories\SubjectsRepository;
 use App\Repositories\TestsRepository;
 
 class TestResultsController extends AdminController
@@ -28,15 +28,13 @@ class TestResultsController extends AdminController
     }
 
     /**
+     * @param SubjectsRepository $repository
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showSelectSubjectPage()
+    public function showSelectSubjectPage(SubjectsRepository $repository)
     {
-        return view('pages.admin.results-select-subject', [ // todo
-            'subjects' => TestSubject::whereHas('tests', function ($query) {
-                $query->withTrashed();
-                $query->has('testResults');
-            })->get()
+        return view('pages.admin.results-select-subject', [
+            'subjects' => $repository->subjectsForResults()
         ]);
     }
 
