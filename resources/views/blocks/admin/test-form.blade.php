@@ -33,7 +33,7 @@
         </label>
         <div id="include-tests-accordion">
             @foreach($subjectsToIncludeFrom as $includeSubject)
-                <div class="card">
+                <div class="card mt-2">
                     <div class="card-header" id="heading-{{ $includeSubject->id }}">
                         <h5 class="mb-0 d-flex justify-content-between">
                             <button class="btn btn-link flex-grow-1 text-left" data-toggle="collapse" type="button"
