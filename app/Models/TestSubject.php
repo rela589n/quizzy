@@ -12,26 +12,26 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property string $uri_alias
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
+ * @property-read \Illuminate\Database\Eloquent\Collection|Test[] $tests
  * @property-read int|null $tests_count
- * @method static Builder|\App\Models\TestSubject newModelQuery()
- * @method static Builder|\App\Models\TestSubject newQuery()
- * @method static Builder|\App\Models\TestSubject query()
- * @method static Builder|\App\Models\TestSubject whereCourse($value)
- * @method static Builder|\App\Models\TestSubject whereId($value)
- * @method static Builder|\App\Models\TestSubject whereName($value)
- * @method static Builder|\App\Models\TestSubject whereUriAlias($value)
+ * @method static Builder|TestSubject newModelQuery()
+ * @method static Builder|TestSubject newQuery()
+ * @method static Builder|TestSubject query()
+ * @method static Builder|TestSubject whereCourse($value)
+ * @method static Builder|TestSubject whereId($value)
+ * @method static Builder|TestSubject whereName($value)
+ * @method static Builder|TestSubject whereUriAlias($value)
  * @mixin \Eloquent
- * @method static Builder|\App\Models\TestSubject availableFor($user)
- * @method static Builder|\App\Models\TestSubject whereSlug($slug)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Course[] $courses
+ * @method static Builder|TestSubject availableFor($user)
+ * @method static Builder|TestSubject whereSlug($slug)
+ * @property-read \Illuminate\Database\Eloquent\Collection|Course[] $courses
  * @property-read int|null $courses_count
  * @property-read mixed $courses_numeric
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Department[] $departments
+ * @property-read \Illuminate\Database\Eloquent\Collection|Department[] $departments
  * @property-read int|null $departments_count
  * @property-read mixed $department_ids
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject byUserCourse($user)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject byUserDepartment($user)
+ * @method static Builder|TestSubject byUserCourse($user)
+ * @method static Builder|TestSubject byUserDepartment($user)
  */
 class TestSubject extends Model
 {
