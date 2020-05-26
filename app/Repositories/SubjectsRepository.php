@@ -21,6 +21,10 @@ class SubjectsRepository
         $this->subjectsToInclude = $subjectsToInclude;
     }
 
+    /**
+     * @param array|null $departmentIds
+     * @return \Illuminate\Database\Eloquent\Collection|TestSubject[]
+     */
     public function subjectsToInclude(array $departmentIds = null)
     {
         $this->subjectsToInclude->setDepartmentIds($departmentIds);
