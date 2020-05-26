@@ -119,7 +119,6 @@ class TestResultFilter extends ResultFilter
             /**
              * @var Model|EloquentBuilder $builder
              */
-            
             $builder->withTrashed();
             $builder->where($field, 'like', "%$fieldValue%");
         });
