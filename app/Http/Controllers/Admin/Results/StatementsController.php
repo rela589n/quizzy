@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Results;
 
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\FilterTestResults\FilterTestResultsRequest;
+use App\Http\Requests\FilterTestResults\GroupStatementByFiltersRequest;
 use App\Lib\Filters\Eloquent\TestResultFilter;
 use App\Lib\Statements\GroupStatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
@@ -34,7 +34,7 @@ class StatementsController extends AdminController
     }
 
     /**
-     * @param FilterTestResultsRequest $request
+     * @param GroupStatementByFiltersRequest $request
      * @param GroupStatementsGenerator $generator
      * @param TestResultFilter $filter
      * @param StudentGroupsRepository $groupsRepository
@@ -43,13 +43,13 @@ class StatementsController extends AdminController
      * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
      * @throws \PhpOffice\PhpWord\Exception\Exception
      */
-    public function groupStatement(FilterTestResultsRequest $request,
+    public function groupStatement(GroupStatementByFiltersRequest $request,
                                    GroupStatementsGenerator $generator,
                                    TestResultFilter $filter,
                                    StudentGroupsRepository $groupsRepository)
     {
         $test = $this->urlManager->getCurrentTest(true);
-        $group = $groupsRepository->whereHasResultsOf($request->input('groupId') ?? -1, $test->id);
+        $group = $groupsRepository->whereHasResultsOf($request->input('groupId'), $test->id);
 
         $generator->setGroup($group);
         $generator->setTest($test);
