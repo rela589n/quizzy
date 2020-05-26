@@ -35,12 +35,16 @@
             @foreach($subjectsToIncludeFrom as $includeSubject)
                 <div class="card">
                     <div class="card-header" id="heading-{{ $includeSubject->id }}">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" type="button"
+                        <h5 class="mb-0 d-flex justify-content-between">
+                            <button class="btn btn-link flex-grow-1 text-left" data-toggle="collapse" type="button"
                                     data-target="#collapse-{{ $includeSubject->id }}"
                                     aria-expanded="{{ $includeSubject->isExpanded ? 'true' : 'false' }}"
                                     aria-controls="collapse-{{ $includeSubject->id }}">
                                 {{ $includeSubject->name }}
+                            </button>
+
+                            <button class="btn btn-sm btn-outline-dark include-full-subject-button" data-toggle="collapse" type="button">
+                                повністю
                             </button>
                         </h5>
                     </div>
@@ -104,4 +108,5 @@
     @parent
     <script defer src="{{ asset('js/required-if.js') }}"></script>
     @include('blocks.scripts.bootstrap')
+    <script defer src="{{ asset('js/pages/test-form.js') }}"></script>
 @endsection
