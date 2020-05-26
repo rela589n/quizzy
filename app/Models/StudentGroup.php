@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Lib\Traits\FilteredScope;
 use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\StudentGroup
@@ -21,26 +23,26 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|User[] $students
  * @property-read int|null $students_count
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup newQuery()
+ * @method static Builder|StudentGroup newModelQuery()
+ * @method static Builder|StudentGroup newQuery()
  * @method static \Illuminate\Database\Query\Builder|StudentGroup onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup query()
+ * @method static Builder|StudentGroup query()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereUriAlias($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereYear($value)
+ * @method static Builder|StudentGroup whereDeletedAt($value)
+ * @method static Builder|StudentGroup whereId($value)
+ * @method static Builder|StudentGroup whereName($value)
+ * @method static Builder|StudentGroup whereUriAlias($value)
+ * @method static Builder|StudentGroup whereYear($value)
  * @method static \Illuminate\Database\Query\Builder|StudentGroup withTrashed()
  * @method static \Illuminate\Database\Query\Builder|StudentGroup withoutTrashed()
  * @mixin \Eloquent
  * @property-read int $course
  * @property int|null $created_by
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereCreatedBy($value)
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereSlug($slug)
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
+ * @method static Builder|StudentGroup whereCreatedBy($value)
+ * @method static Builder|StudentGroup whereSlug($slug)
+ * @method static Builder|StudentGroup filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
  * @property int|null $department_id
- * @method static \Illuminate\Database\Eloquent\Builder|StudentGroup whereDepartmentId($value)
+ * @method static Builder|StudentGroup whereDepartmentId($value)
  * @property-read Department|null $department
  * @property-read Administrator|null $classMonitor
  */
@@ -81,7 +83,7 @@ class StudentGroup extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|\Illuminate\Database\Eloquent\Builder|Administrator
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|Builder|Administrator
      */
     public function classMonitor()
     {
@@ -107,7 +109,7 @@ class StudentGroup extends Model
 
     /**
      * @param Test $test
-     * @return \Illuminate\Database\Eloquent\Builder|TestResult
+     * @return TestResult|Builder
      */
     public function lastResults(Test $test)
     {
@@ -118,6 +120,10 @@ class StudentGroup extends Model
             $builder->union($students[$i]->lastResultOf($test)->toBase());
         }
 
-        return $builder;
+        $query = DB::table($builder->toBase(), 'test_results');
+
+        return (new Builder(DB::query()))
+            ->setModel(TestResult::newModelInstance())
+            ->setQuery($query);
     }
 }
