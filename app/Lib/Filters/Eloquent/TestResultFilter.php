@@ -4,9 +4,12 @@
 namespace App\Lib\Filters\Eloquent;
 
 
+use App\Models\StudentGroup;
 use App\Models\TestResult;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Carbon;
 
@@ -88,8 +91,19 @@ class TestResultFilter extends ResultFilter
      */
     public function groupId($query, $groupId)
     {
-        $query->whereHas('user.studentGroup', function (EloquentBuilder $builder) use ($groupId) {
-            $builder->where('id', $groupId);
+        $query->whereHas('user', function (EloquentBuilder $userBuilder) use ($groupId) {
+            /**
+             * @var EloquentBuilder|User $userBuilder
+             */
+            $userBuilder->withTrashed();
+
+            $userBuilder->whereHas('studentGroup', function (EloquentBuilder $groupBuilder) use ($groupId) {
+                /**
+                 * @var EloquentBuilder|StudentGroup $groupBuilder
+                 */
+                $groupBuilder->withTrashed();
+                $groupBuilder->where('id', $groupId);
+            });
         });
     }
 
@@ -102,6 +116,11 @@ class TestResultFilter extends ResultFilter
     protected function textFieldFilter(string $relation, $query, string $field, $fieldValue)
     {
         $query->whereHas($relation, function (EloquentBuilder $builder) use ($field, $fieldValue) {
+            /**
+             * @var Model|EloquentBuilder $builder
+             */
+            
+            $builder->withTrashed();
             $builder->where($field, 'like', "%$fieldValue%");
         });
     }
