@@ -77,7 +77,7 @@ class TestResultsController extends AdminController
             'subject'     => $currentSubject,
             'test'        => $currentTest,
             'testResults' => $filteredResults,
-            'userGroups'  => $groupsRepository->groupsWitResultsOf($currentTest->id),
+            'userGroups'  => $groupsRepository->groupsWhereHasResultsOf($currentTest->id),
         ]);
     }
 }

@@ -49,7 +49,7 @@ class StatementsController extends AdminController
                                    StudentGroupsRepository $groupsRepository)
     {
         $test = $this->urlManager->getCurrentTest(true);
-        $group = $groupsRepository->withResultsOf($request->input('groupId'), $test->id);
+        $group = $groupsRepository->whereHasResultsOf($request->input('groupId') ?? -1, $test->id);
 
         $generator->setGroup($group);
         $generator->setTest($test);
@@ -57,7 +57,9 @@ class StatementsController extends AdminController
         $filter->setQueryFilters($request->getQueryFilters());
         $filter->setFilters($request->getFilters());
 
-        $generator->setTestResults($group->lastResults($test)->filtered($filter));
+        $generator->setTestResults(
+            $group->lastResults($test)->filtered($filter)
+        );
 
         $statementPath = $generator->generate();
 

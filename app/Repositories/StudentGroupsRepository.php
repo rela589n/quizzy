@@ -11,12 +11,12 @@ use Illuminate\Database\Eloquent\Builder;
 
 class StudentGroupsRepository
 {
-    public function withResultsOf(int $groupId, int $testId)
+    public function whereHasResultsOf(int $groupId, int $testId)
     {
         return $this->builderForResultsPage($testId)->findOrFail($groupId);
     }
 
-    public function groupsWitResultsOf(int $testId)
+    public function groupsWhereHasResultsOf(int $testId)
     {
         return $this->builderForResultsPage($testId)->orderByDesc('year')->get();
     }
