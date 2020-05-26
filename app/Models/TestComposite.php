@@ -12,16 +12,16 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * @property int $id_test
  * @property int $id_include_test
  * @property int $questions_quantity
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Question[] $questions
+ * @property-read \Illuminate\Database\Eloquent\Collection|Question[] $questions
  * @property-read int|null $questions_count
- * @property-read \App\Models\Test $includeTest
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite whereIdIncludeTest($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite whereIdTest($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TestComposite whereQuestionsQuantity($value)
+ * @property-read Test $includeTest
+ * @method static \Illuminate\Database\Eloquent\Builder|TestComposite newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TestComposite newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TestComposite query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TestComposite whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TestComposite whereIdIncludeTest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TestComposite whereIdTest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TestComposite whereQuestionsQuantity($value)
  * @mixin \Eloquent
  */
 class TestComposite extends Pivot

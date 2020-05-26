@@ -140,6 +140,11 @@ class TestResult extends Model
         $testId = is_numeric($test) ? $test : $test->id;
 
         return $query->whereHas('test', function (Builder $query) use ($testId) {
+            /**
+             * @var Builder|Test $query
+             */
+
+            $query->withTrashed();
             $query->where('id', $testId);
         });
     }

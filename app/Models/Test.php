@@ -15,34 +15,34 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $uri_alias
  * @property int $time
  * @property int $test_subject_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Question[] $nativeQuestions
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestComposite[] $testComposites
+ * @property-read \Illuminate\Database\Eloquent\Collection|Question[] $nativeQuestions
+ * @property-read \Illuminate\Database\Eloquent\Collection|TestComposite[] $testComposites
  * @property-read int|null $native_questions_count
- * @property-read \App\Models\TestSubject $subject
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Test[] $tests
+ * @property-read TestSubject $subject
+ * @property-read \Illuminate\Database\Eloquent\Collection|Test[] $tests
  * @property-read int|null $tests_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereTestSubjectId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereUriAlias($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Test newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Test newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Test query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereTestSubjectId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereUriAlias($value)
  * @mixin \Eloquent
  * @property-read int|null $test_composites_count
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Test onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Test onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Test withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Test withoutTrashed()
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Test withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Test withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection|TestResult[] $testResults
  * @property-read int|null $test_results_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereSlug($slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereSlug($slug)
  * @property int|null $created_by
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Test whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereCreatedBy($value)
  */
 class Test extends Model
 {
@@ -81,7 +81,7 @@ class Test extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection|\App\Models\Question[]
+     * @return \Illuminate\Database\Eloquent\Collection|Question[]
      */
     public function allQuestions()
     {

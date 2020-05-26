@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $student_group_id
  * @property-read StudentGroup $studentGroup
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereStudentGroupId($value)
+ * @method static Builder|User whereStudentGroupId($value)
  * @property int $id
  * @property string $name
  * @property string $surname
@@ -25,20 +25,20 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $full_name
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePasswordChanged($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User wherePatronymic($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereSurname($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\User whereUpdatedAt($value)
+ * @method static Builder|User newModelQuery()
+ * @method static Builder|User newQuery()
+ * @method static Builder|User query()
+ * @method static Builder|User whereCreatedAt($value)
+ * @method static Builder|User whereEmail($value)
+ * @method static Builder|User whereEmailVerifiedAt($value)
+ * @method static Builder|User whereId($value)
+ * @method static Builder|User whereName($value)
+ * @method static Builder|User wherePassword($value)
+ * @method static Builder|User wherePasswordChanged($value)
+ * @method static Builder|User wherePatronymic($value)
+ * @method static Builder|User whereRememberToken($value)
+ * @method static Builder|User whereSurname($value)
+ * @method static Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestResult[] $testResults
  * @property-read int|null $test_results_count
@@ -57,6 +57,9 @@ class User extends BaseUser
         return $this->belongsTo(StudentGroup::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany|TestResult
+     */
     public function testResults()
     {
         return $this->hasMany(TestResult::class);

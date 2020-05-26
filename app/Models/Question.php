@@ -11,24 +11,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  * @property string $question
  * @property int $test_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AnswerOption[] $answerOptions
+ * @property-read \Illuminate\Database\Eloquent\Collection|AnswerOption[] $answerOptions
  * @property-read int|null $answer_options_count
  * @property-read Test $test
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question whereQuestion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question whereTestId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Question newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Question newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Question query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Question whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Question whereQuestion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Question whereTestId($value)
  * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question random($limit)
+ * @method static \Illuminate\Database\Eloquent\Builder|Question random($limit)
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Question onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Question onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Question whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Question withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Question withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Question whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Question withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Question withoutTrashed()
  */
 class Question extends Model
 {

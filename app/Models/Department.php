@@ -12,22 +12,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $uri_alias
  * @property string|null $deleted_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department whereUriAlias($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Department newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Department newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Department query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Department whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Department whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Department whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Department whereUriAlias($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\StudentGroup[] $studentGroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|StudentGroup[] $studentGroups
  * @property-read int|null $student_groups_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TestSubject[] $testSubjects
+ * @property-read \Illuminate\Database\Eloquent\Collection|TestSubject[] $testSubjects
  * @property-read int|null $test_subjects_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Department filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Department onlyTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Department withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\App\Models\Department withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Department filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
+ * @method static \Illuminate\Database\Query\Builder|Department onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Department withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Department withoutTrashed()
  */
 class Department extends Model
 {
