@@ -46,8 +46,9 @@
                     </div>
 
                     <div id="collapse-{{ $includeSubject->id }}"
-                         class="collapse @if($includeSubject->isExpanded) show @endif"
-                         aria-labelledby="heading-{{ $includeSubject->id }}" data-parent="#include-tests-accordion">
+                         class="collapse multi-collapse @if($includeSubject->isExpanded) show @endif"
+                         aria-labelledby="heading-{{ $includeSubject->id }}">
+
                         <div class="card-body">
                             @foreach($includeSubject->tests as $includeTest)
                                 <div class="form-row align-items-center flex-nowrap justify-content-start">
