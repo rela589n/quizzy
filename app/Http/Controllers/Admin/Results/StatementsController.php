@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Results;
 
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Requests\FilterTestResultsRequest;
+use App\Http\Requests\FilterTestResults\FilterTestResultsRequest;
 use App\Lib\Filters\Eloquent\TestResultFilter;
 use App\Lib\Statements\GroupStatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\FilterTestResults;
 
 use App\Lib\ValidationGenerator;
 use Illuminate\Foundation\Http\FormRequest;

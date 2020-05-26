@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Results;
 
-use App\Http\Requests\FilterTestResultsRequest;
+use App\Http\Requests\FilterTestResults\FilterTestResultsRequest;
 use App\Http\Requests\RequestUrlManager;
 use App\Lib\Filters\Eloquent\TestResultFilter;
 use App\Http\Controllers\Admin\AdminController;
