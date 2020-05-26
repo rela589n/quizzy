@@ -34,26 +34,22 @@
         <div id="include-tests-accordion">
             @foreach($subjectsToIncludeFrom as $includeSubject)
                 <div class="card">
-
-                    @php($subjectExpanded = isset($test) && $includeSubject->id === $test->test_subject_id)
-
                     <div class="card-header" id="heading-{{ $includeSubject->id }}">
                         <h5 class="mb-0">
                             <button class="btn btn-link" data-toggle="collapse" type="button"
                                     data-target="#collapse-{{ $includeSubject->id }}"
-                                    aria-expanded="{{ $subjectExpanded ? 'true' : 'false' }}"
+                                    aria-expanded="{{ $includeSubject->isExpanded ? 'true' : 'false' }}"
                                     aria-controls="collapse-{{ $includeSubject->id }}">
                                 {{ $includeSubject->name }}
                             </button>
                         </h5>
                     </div>
 
-                    <div id="collapse-{{ $includeSubject->id }}" class="collapse @if($subjectExpanded) show @endif"
+                    <div id="collapse-{{ $includeSubject->id }}"
+                         class="collapse @if($includeSubject->isExpanded) show @endif"
                          aria-labelledby="heading-{{ $includeSubject->id }}" data-parent="#include-tests-accordion">
                         <div class="card-body">
                             @foreach($includeSubject->tests as $includeTest)
-                                @php($pivot = (isset($test)) ? ($test->tests->find($includeTest->id)->pivot ?? null) : null)
-
                                 <div class="form-row align-items-center flex-nowrap justify-content-start">
                                     <div class="col-auto">
                                         <div class="form-check ">
@@ -63,13 +59,13 @@
                                                    type="checkbox"
                                                    class="form-check-input mt-2 is-correct required-target"
                                                    data-required="include[{{ $includeTest->id }}][count]"
-                                                   @if(old("include.{$includeTest->id}.necessary", $pivot  ?? false)) checked="checked" @endif>
+                                                   @if($includeTest->isNecessary) checked="checked" @endif>
                                         </div>
                                     </div>
                                     <div class="col-form-label">
                                         <label for="include[{{ $includeTest->id }}][necessary]"
                                                class="form-check-label variant-text">
-                                            {{ $includeTest->name }} {{ ($includeTest->id == ($test->id ?? '-7')) ? '(Поточний тест)' : '' }}
+                                            {{ $includeTest->name }} {{ ($includeTest->id == ($test->id ?? -1)) ? '(Поточний тест)' : '' }}
                                         </label>
                                     </div>
 
@@ -80,8 +76,8 @@
                                                class="form-control form-control-sm @error("include.{$includeTest->id}.count") is-invalid @enderror"
                                                placeholder="{{ $includeTest->questions_count }}"
                                                min="1" max="999"
-                                               value="{{ old("include.{$includeTest->id}.count", $pivot->questions_quantity ??  '') }}"
-                                               @if(old("include.{$includeTest->id}.necessary", $pivot ?? false)) required="required" @endif {{-- if checkbox checked then it is required--}}
+                                               value="{{ $includeTest->includeCount }}"
+                                               @if($includeTest->isNecessary) required="required" @endif {{-- if checkbox checked then it is required--}}
                                         >
                                         @error("include.{$includeTest->id}.count")
                                         <div class="invalid-feedback">

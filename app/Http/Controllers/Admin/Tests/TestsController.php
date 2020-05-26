@@ -7,6 +7,7 @@ use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Tests\CRUD\CreateTestRequest;
 use App\Http\Requests\Tests\CRUD\UpdateTestRequest;
 use App\Repositories\SubjectsRepository;
+use App\Services\Subjects\IncludeTestsFormManager;
 use App\Services\Tests\CreateTestService;
 use App\Services\Tests\UpdateTestService;
 
@@ -21,15 +22,18 @@ class TestsController extends AdminController
     }
 
     /**
+     * @param IncludeTestsFormManager $includeTestsManager
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showNewTestForm()
+    public function showNewTestForm(IncludeTestsFormManager $includeTestsManager)
     {
         $this->authorize('create-tests');
 
         $subject = $this->urlManager->getCurrentSubject();
         $toInclude = $this->subjectsRepository->subjectsToInclude($subject->department_ids);
+
+        $includeTestsManager->transform($toInclude);
 
         return view('pages.admin.tests-new', [
             'subject'               => $subject,
@@ -55,16 +59,21 @@ class TestsController extends AdminController
     }
 
     /**
+     * @param IncludeTestsFormManager $includeTestsManager
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showUpdateTestForm()
+    public function showUpdateTestForm(IncludeTestsFormManager $includeTestsManager)
     {
         $test = $this->urlManager->getCurrentTest();
         $this->authorize('update', $test);
 
         $subject = $this->urlManager->getCurrentSubject();
         $toInclude = $this->subjectsRepository->subjectsToInclude($subject->department_ids);
+
+        $includeTestsManager
+            ->setTest($test)
+            ->transform($toInclude);
 
         return view('pages.admin.tests-single-settings', [
             'test'    => $test,
