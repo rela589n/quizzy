@@ -4,6 +4,7 @@
 namespace App\Lib\Statements;
 
 
+use App\Exceptions\EmptyTestResultsException;
 use App\Lib\GroupResultsManager;
 use App\Lib\PHPWord\TemplateProcessor;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
@@ -63,6 +64,10 @@ class GroupStatementsGenerator extends StatementsGenerator
      */
     public function setTestResults(Collection $testResults): void
     {
+        if (count($testResults) === 0) {
+            throw new EmptyTestResultsException("Test results collection must have at least 1 element.");
+        }
+
         $this->testResults = $testResults;
     }
 
