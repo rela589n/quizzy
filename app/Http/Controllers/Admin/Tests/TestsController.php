@@ -28,9 +28,12 @@ class TestsController extends AdminController
     {
         $this->authorize('create-tests');
 
+        $subject = $this->urlManager->getCurrentSubject();
+        $toInclude = $this->subjectsRepository->subjectsToInclude($subject->department_ids);
+
         return view('pages.admin.tests-new', [
-            'subject'               => $this->urlManager->getCurrentSubject(),
-            'subjectsToIncludeFrom' => $this->subjectsRepository->subjectsToInclude()
+            'subject'               => $subject,
+            'subjectsToIncludeFrom' => $toInclude
         ]);
     }
 
@@ -61,11 +64,13 @@ class TestsController extends AdminController
         $this->authorize('update', $test);
 
         $subject = $this->urlManager->getCurrentSubject();
+        $toInclude = $this->subjectsRepository->subjectsToInclude($subject->department_ids);
 
         return view('pages.admin.tests-single-settings', [
-            'test'                  => $test,
-            'subject'               => $subject,
-            'subjectsToIncludeFrom' => $this->subjectsRepository->subjectsToInclude(),
+            'test'    => $test,
+            'subject' => $subject,
+
+            'subjectsToIncludeFrom' => $toInclude,
         ]);
     }
 

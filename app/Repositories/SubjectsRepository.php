@@ -6,17 +6,26 @@ namespace App\Repositories;
 
 use App\Models\Test;
 use App\Models\TestSubject;
+use App\Repositories\Commands\SubjectsToIncludeCommand;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\Relation;
 
 class SubjectsRepository
 {
-    public function subjectsToInclude()
+    /**
+     * @var SubjectsToIncludeCommand
+     */
+    private $subjectsToInclude;
+
+    public function __construct(SubjectsToIncludeCommand $subjectsToInclude)
     {
-        return TestSubject::with(['tests' => function (Relation $query) {
-            $query->has('nativeQuestions')
-                ->withCount('nativeQuestions as questions_count');
-        }])->get();
+        $this->subjectsToInclude = $subjectsToInclude;
+    }
+
+    public function subjectsToInclude(array $departmentIds = null)
+    {
+        $this->subjectsToInclude->setDepartmentIds($departmentIds);
+
+        return $this->subjectsToInclude->execute();
     }
 
     public function subjectsForResults()
