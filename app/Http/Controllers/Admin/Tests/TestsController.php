@@ -33,7 +33,8 @@ class TestsController extends AdminController
         $subject = $this->urlManager->getCurrentSubject();
         $toInclude = $this->subjectsRepository->subjectsToInclude($subject->department_ids);
 
-        $includeTestsManager->transform($toInclude);
+        $includeTestsManager->setSubject($subject)
+            ->transform($toInclude);
 
         return view('pages.admin.tests-new', [
             'subject'               => $subject,

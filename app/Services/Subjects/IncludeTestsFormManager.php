@@ -28,6 +28,22 @@ class IncludeTestsFormManager
     }
 
     /**
+     * @var TestSubject
+     */
+    protected $subject;
+
+    /**
+     * @param TestSubject $subject
+     * @return IncludeTestsFormManager
+     */
+    public function setSubject(TestSubject $subject): self
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
      * @var array
      */
     protected $pivotsMap;
@@ -58,7 +74,8 @@ class IncludeTestsFormManager
                 $includeSubject->isExpanded |= $includeTest->isNecessary;
             }
 
-            $includeSubject->isExpanded |= isset($this->test) && $includeSubject->id === $this->test->test_subject_id;
+            $includeSubject->isExpanded |= (isset($this->test) && $includeSubject->id === $this->test->test_subject_id) ||
+                (isset($this->subject) && $includeSubject->id === $this->subject->id);
         }
     }
 }
