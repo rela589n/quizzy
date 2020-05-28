@@ -79,7 +79,7 @@ final class FillAnswersRequest extends FormRequest
                 'sometimes',
                 Rule::in('0', '1')
             ],
-            'q.new.*.v.*.text|q.modified.*.v.*.text'         => 'required|min:1|max:128',
+            'q.new.*.v.*.text|q.modified.*.v.*.text'         => 'required|min:1|max:255',
             'q.deleted|v.deleted'                            => 'array|min:1',
         ]);
     }
