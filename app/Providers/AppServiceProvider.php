@@ -8,7 +8,7 @@ use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\StudentResultFileNameGenerator;
 use App\Lib\Statements\GroupStatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
-use App\Lib\TestResults\MarkEvaluatorInterface;
+use App\Lib\TestResults\MarkEvaluator;
 use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Lib\TestResults\StrictMarkEvaluator;
 use App\Lib\TestResults\StrictScoreEvaluator;
@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
             ->give(StrictScoreEvaluator::class);
 
         $this->app->when(TestResultsEvaluator::class)
-            ->needs(MarkEvaluatorInterface::class)
+            ->needs(MarkEvaluator::class)
             ->give(StrictMarkEvaluator::class);
 
         $this->app->when(WordsManager::class)

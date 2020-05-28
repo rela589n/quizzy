@@ -5,7 +5,7 @@ namespace App\Lib;
 
 
 use App\Exceptions\NullPointerException;
-use App\Lib\TestResults\MarkEvaluatorInterface;
+use App\Lib\TestResults\MarkEvaluator;
 use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -27,7 +27,7 @@ class TestResultsEvaluator
     protected $scoreEvaluator;
 
     /**
-     * @var MarkEvaluatorInterface
+     * @var MarkEvaluator
      */
     protected $markEvaluator;
 
@@ -38,9 +38,9 @@ class TestResultsEvaluator
     /**
      * TestResultsEvaluator constructor.
      * @param ScoreEvaluatorInterface $scoreEvaluator
-     * @param MarkEvaluatorInterface $markEvaluator
+     * @param MarkEvaluator $markEvaluator
      */
-    public function __construct(ScoreEvaluatorInterface $scoreEvaluator, MarkEvaluatorInterface $markEvaluator)
+    public function __construct(ScoreEvaluatorInterface $scoreEvaluator, MarkEvaluator $markEvaluator)
     {
         $this->scoreEvaluator = $scoreEvaluator;
         $this->markEvaluator = $markEvaluator;

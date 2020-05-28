@@ -4,7 +4,7 @@
 namespace App\Lib\TestResults;
 
 
-class StrictMarkEvaluator implements MarkEvaluatorInterface
+class StrictMarkEvaluator implements MarkEvaluator
 {
     /**
      * @inheritDoc

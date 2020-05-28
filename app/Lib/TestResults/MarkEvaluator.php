@@ -4,7 +4,7 @@
 namespace App\Lib\TestResults;
 
 
-interface MarkEvaluatorInterface
+interface MarkEvaluator
 {
     /**
      * @param float $fullTestScore score between [0 and 1]
