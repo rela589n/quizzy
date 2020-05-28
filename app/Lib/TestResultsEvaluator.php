@@ -5,6 +5,7 @@ namespace App\Lib;
 
 
 use App\Exceptions\NullPointerException;
+use App\Factories\MarkEvaluatorsFactory;
 use App\Lib\TestResults\MarkEvaluator;
 use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Models\TestResult;
@@ -27,9 +28,14 @@ class TestResultsEvaluator
     protected $scoreEvaluator;
 
     /**
+     * @var MarkEvaluatorsFactory
+     */
+    protected $markEvaluatorsFactory;
+
+    /**
      * @var MarkEvaluator
      */
-    protected $markEvaluator;
+    private $markEvaluator;
 
     protected $evaluatedQuestions;
     protected $questionsScore;
@@ -38,12 +44,12 @@ class TestResultsEvaluator
     /**
      * TestResultsEvaluator constructor.
      * @param ScoreEvaluatorInterface $scoreEvaluator
-     * @param MarkEvaluator $markEvaluator
+     * @param MarkEvaluatorsFactory $markEvaluatorsFactory
      */
-    public function __construct(ScoreEvaluatorInterface $scoreEvaluator, MarkEvaluator $markEvaluator)
+    public function __construct(ScoreEvaluatorInterface $scoreEvaluator, MarkEvaluatorsFactory $markEvaluatorsFactory)
     {
         $this->scoreEvaluator = $scoreEvaluator;
-        $this->markEvaluator = $markEvaluator;
+        $this->markEvaluatorsFactory = $markEvaluatorsFactory;
     }
 
     /**
@@ -52,6 +58,15 @@ class TestResultsEvaluator
     public function setTestResult(TestResult $testResult): void
     {
         $this->testResult = $testResult;
+    }
+
+    protected function markEvaluator()
+    {
+        return singleVar($this->markEvaluator, function () {
+            return $this->markEvaluatorsFactory
+                ->setTest($this->testResult->test)
+                ->resolve();
+        });
     }
 
     protected function loadDependencies()
@@ -138,6 +153,6 @@ class TestResultsEvaluator
      */
     public function getMark(): int
     {
-        return $this->markEvaluator->putMark($this->getTestScore());
+        return $this->markEvaluator()->putMark($this->getTestScore());
     }
 }

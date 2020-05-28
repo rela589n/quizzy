@@ -59,7 +59,6 @@ class TestResult extends Model
 
     /**
      * @param TestResultsEvaluator $resultsEvaluator
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function setResultsEvaluator(TestResultsEvaluator $resultsEvaluator): void
     {

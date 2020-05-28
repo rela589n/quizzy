@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Repositories\StudentGroupsRepository;
 use App\Repositories\SubjectsRepository;
 use App\Repositories\TestsRepository;
+use Illuminate\Support\Collection;
 
 class TestResultsController extends AdminController
 {
@@ -69,7 +70,9 @@ class TestResultsController extends AdminController
         $filteredResults = $currentTest
             ->testResults()
             ->orderByDesc('id')
-            ->filtered($filters)
+            ->filtered($filters, function (Collection $results) use ($currentTest) {
+                $results->setRelation('test', $currentTest);
+            })
             ->paginate(20)
             ->appends($request->query());
 
