@@ -43,6 +43,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Test whereSlug($slug)
  * @property int|null $created_by
  * @method static \Illuminate\Database\Eloquent\Builder|Test whereCreatedBy($value)
+ * @property string $mark_evaluator_type
+ * @property-read \Illuminate\Database\Eloquent\Collection|MarkPercent[] $marksPercents
+ * @property-read int|null $marks_percents_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereMarkEvaluatorType($value)
  */
 class Test extends Model
 {

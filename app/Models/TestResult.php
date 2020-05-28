@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $score_readable
  * @method static Builder|TestResult ofTest($testId)
  * @method static Builder|TestResult recent($count)
+ * @method static Builder|TestResult filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
  */
 class TestResult extends Model
 {
@@ -58,6 +59,7 @@ class TestResult extends Model
 
     /**
      * @param TestResultsEvaluator $resultsEvaluator
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function setResultsEvaluator(TestResultsEvaluator $resultsEvaluator): void
     {
