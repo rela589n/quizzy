@@ -92,4 +92,9 @@ class Test extends Model
     {
         return $this->hasMany(TestResult::class);
     }
+
+    public function marksPercents()
+    {
+        return $this->hasMany(MarkPercent::class);
+    }
 }
