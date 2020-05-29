@@ -71,4 +71,20 @@ class CustomMarkEvaluator implements MarkEvaluator
 
         return self::UNBOUND_MARK;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function minPossibleMark(): int
+    {
+        return array_key_last($this->markPercentsMap);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function maxPossibleMark(): int
+    {
+        return array_key_first($this->markPercentsMap);
+    }
 }
