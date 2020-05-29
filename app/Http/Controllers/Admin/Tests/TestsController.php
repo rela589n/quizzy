@@ -6,10 +6,10 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Tests\CRUD\CreateTestRequest;
 use App\Http\Requests\Tests\CRUD\UpdateTestRequest;
-use App\Repositories\MarkPercentsRepository;
 use App\Repositories\SubjectsRepository;
 use App\Services\Subjects\IncludeTestsFormManager;
 use App\Services\Tests\CreateTestService;
+use App\Services\Tests\MarkPercentsMapCollector;
 use App\Services\Tests\UpdateTestService;
 
 class TestsController extends AdminController
@@ -24,10 +24,11 @@ class TestsController extends AdminController
 
     /**
      * @param IncludeTestsFormManager $includeTestsManager
+     * @param MarkPercentsMapCollector $mapCollector
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showNewTestForm(IncludeTestsFormManager $includeTestsManager)
+    public function showNewTestForm(IncludeTestsFormManager $includeTestsManager, MarkPercentsMapCollector $mapCollector)
     {
         $this->authorize('create-tests');
 
@@ -37,9 +38,13 @@ class TestsController extends AdminController
         $includeTestsManager->setSubject($subject)
             ->transform($toInclude);
 
+        $markPercents = $mapCollector->markPercents();
+
         return view('pages.admin.tests-new', [
             'subject'               => $subject,
-            'subjectsToIncludeFrom' => $toInclude
+            'subjectsToIncludeFrom' => $toInclude,
+
+            'marksPercentsMap' => $markPercents
         ]);
     }
 
@@ -62,11 +67,12 @@ class TestsController extends AdminController
 
     /**
      * @param IncludeTestsFormManager $includeTestsManager
-     * @param MarkPercentsRepository $markPercentsRepository
+     * @param MarkPercentsMapCollector $mapCollector
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showUpdateTestForm(IncludeTestsFormManager $includeTestsManager, MarkPercentsRepository $markPercentsRepository)
+    public function showUpdateTestForm(IncludeTestsFormManager $includeTestsManager,
+                                       MarkPercentsMapCollector $mapCollector)
     {
         $test = $this->urlManager->getCurrentTest();
         $this->authorize('update', $test);
@@ -78,12 +84,16 @@ class TestsController extends AdminController
             ->setTest($test)
             ->transform($toInclude);
 
+        $markPercents = $mapCollector
+            ->setTest($test)
+            ->markPercents();
+
         return view('pages.admin.tests-single-settings', [
             'test'    => $test,
             'subject' => $subject,
 
             'subjectsToIncludeFrom' => $toInclude,
-            'marksPercentsMap' => $markPercentsRepository->mapForTest($test)
+            'marksPercentsMap'      => $markPercents
         ]);
     }
 
@@ -92,7 +102,8 @@ class TestsController extends AdminController
      * @param UpdateTestService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateTest(UpdateTestRequest $request, UpdateTestService $service)
+    public
+    function updateTest(UpdateTestRequest $request, UpdateTestService $service)
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest();
@@ -111,7 +122,8 @@ class TestsController extends AdminController
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Exception
      */
-    public function deleteTest()
+    public
+    function deleteTest()
     {
         $currentTest = $this->urlManager->getCurrentTest();
         $this->authorize('delete', $currentTest);

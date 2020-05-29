@@ -31,12 +31,13 @@
         Методика виставлення оцінок
     </label>
 
+    @php($markEvaluatorType = old('mark_evaluator_type', $test->mark_evaluator_type ?? null))
     <select class="browser-default custom-select mb-2 @error('mark_evaluator_type') is-invalid @enderror"
             id="mark_evaluator_type" name="mark_evaluator_type">
-        <option value="default" @if(($test->mark_evaluator_type ?? null) === 'default') selected="selected" @endif>За
+        <option value="default" @if($markEvaluatorType === 'default') selected="selected" @endif>За
             замовчуванням
         </option>
-        <option value="custom" @if(($test->mark_evaluator_type ?? null) === 'custom') selected="selected" @endif>Власна
+        <option value="custom" @if($markEvaluatorType === 'custom') selected="selected" @endif>Власна
         </option>
     </select>
 
@@ -71,7 +72,7 @@
                         <input type="number" min="1" max="100"
                                id="correlation_table[{{$entry->id}}][mark]"
                                name="correlation_table[{{$entry->id}}][mark]"
-                               value="{{ old("correlation_table.{$entry->id}.mark", $entry->mark) }}"
+                               value="{{ $entry->mark }}"
                                class="form-control form-control-sm map-mark-input @error("correlation_table.{$entry->id}.mark") is-invalid @enderror"/>
 
                         @error("correlation_table.{$entry->id}.mark")
@@ -84,7 +85,7 @@
                         <input type="number" min="0" max="100" step=".01"
                                id="correlation_table[{{$entry->id}}][percent]"
                                name="correlation_table[{{$entry->id}}][percent]"
-                               value="{{ old("correlation_table.{$entry->id}.percent", $entry->percent) }}"
+                               value="{{ $entry->percent }}"
                                class="form-control form-control-sm map-percent-input @error("correlation_table.{$entry->id}.percent") is-invalid @enderror"/>
 
                         @error("correlation_table.{$entry->id}.percent")
