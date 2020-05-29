@@ -46,10 +46,16 @@
     </div>
     @enderror
 
-    <div class="assessment-table-wrapper" style="display: none;">
-        <div class="form-info ml-2 my-3 h4">
+    <div class="assessment-table-wrapper ml-2" style="display: none;">
+        <div class="form-info my-3 h4 @error('correlation_table') is-invalid @enderror">
             Таблиця оцінювання
         </div>
+        @error('correlation_table')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+        @enderror
+
         <table class="table order-list assignmentTable">
             <thead>
             <tr>
@@ -63,15 +69,29 @@
                 <tr data-counter="{{$entry->id}}">
                     <td class="col-1">
                         <input type="number" min="1" max="100"
+                               id="correlation_table[{{$entry->id}}][mark]"
                                name="correlation_table[{{$entry->id}}][mark]"
-                               value="{{ $entry->mark }}"
-                               class="form-control form-control-sm map-mark-input"/>
+                               value="{{ old("correlation_table.{$entry->id}.mark", $entry->mark) }}"
+                               class="form-control form-control-sm map-mark-input @error("correlation_table.{$entry->id}.mark") is-invalid @enderror"/>
+
+                        @error("correlation_table.{$entry->id}.mark")
+                        <span class="invalid-feedback" role="alert">
+                            <label for="correlation_table[{{$entry->id}}][mark]">{{ $message }}</label>
+                        </span>
+                        @enderror
                     </td>
                     <td class="col-1">
                         <input type="number" min="0" max="100" step=".01"
+                               id="correlation_table[{{$entry->id}}][percent]"
                                name="correlation_table[{{$entry->id}}][percent]"
-                               value="{{ $entry->percent }}"
-                               class="form-control form-control-sm map-percent-input"/>
+                               value="{{ old("correlation_table.{$entry->id}.percent", $entry->percent) }}"
+                               class="form-control form-control-sm map-percent-input @error("correlation_table.{$entry->id}.percent") is-invalid @enderror"/>
+
+                        @error("correlation_table.{$entry->id}.percent")
+                        <span class="invalid-feedback" role="alert">
+                            <label for="correlation_table[{{$entry->id}}][percent]">{{ $message }}</label>
+                        </span>
+                        @enderror
                     </td>
                     <td class="col-1">
                         <button type="button" class="btn btn-sm btn-danger mt-1 position-absolute delete-row-button"

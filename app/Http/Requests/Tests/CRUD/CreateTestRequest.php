@@ -5,9 +5,8 @@ namespace App\Http\Requests\Tests\CRUD;
 
 use App\Models\Administrator;
 use App\Rules\Containers\TestRulesContainer;
-use Illuminate\Foundation\Http\FormRequest;
 
-final class CreateTestRequest extends FormRequest
+final class CreateTestRequest extends TestRequest
 {
     /**
      * Determine if the user is authorized to make this request.

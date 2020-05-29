@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\RequestUrlManager;
 use App\Http\Requests\Tests\CRUD\CreateTestRequest;
 use App\Http\Requests\Tests\CRUD\UpdateTestRequest;
+use App\Repositories\MarkPercentsRepository;
 use App\Repositories\SubjectsRepository;
 use App\Services\Subjects\IncludeTestsFormManager;
 use App\Services\Tests\CreateTestService;
@@ -61,10 +62,11 @@ class TestsController extends AdminController
 
     /**
      * @param IncludeTestsFormManager $includeTestsManager
+     * @param MarkPercentsRepository $markPercentsRepository
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showUpdateTestForm(IncludeTestsFormManager $includeTestsManager)
+    public function showUpdateTestForm(IncludeTestsFormManager $includeTestsManager, MarkPercentsRepository $markPercentsRepository)
     {
         $test = $this->urlManager->getCurrentTest();
         $this->authorize('update', $test);
@@ -81,6 +83,7 @@ class TestsController extends AdminController
             'subject' => $subject,
 
             'subjectsToIncludeFrom' => $toInclude,
+            'marksPercentsMap' => $markPercentsRepository->mapForTest($test)
         ]);
     }
 
