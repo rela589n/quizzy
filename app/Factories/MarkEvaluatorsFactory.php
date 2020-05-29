@@ -6,6 +6,7 @@ namespace App\Factories;
 
 use App\Exceptions\UnknownMarkEvaluatorTypeException;
 use App\Lib\TestResults\CustomMarkEvaluator;
+use App\Lib\TestResults\MarkEvaluator;
 use App\Lib\TestResults\StrictMarkEvaluator;
 use App\Models\Test;
 use Illuminate\Foundation\Application;
@@ -40,10 +41,10 @@ class MarkEvaluatorsFactory
 
     /**
      * @param string|null $type
-     * @return CustomMarkEvaluator|StrictMarkEvaluator|mixed
+     * @return MarkEvaluator
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function resolve(string $type = null)
+    public function resolve(string $type = null) : MarkEvaluator
     {
         if ($type === null) {
             $type = $this->test->mark_evaluator_type;
