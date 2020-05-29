@@ -45,7 +45,8 @@ $(function () {
                             <input type="number" min="1" max="100"
                                    name="correlation_table[${counter}][mark]"
                                    value="${prevMark + 1}"
-                                   class="form-control form-control-sm map-mark-input"/>
+                                   class="form-control form-control-sm map-mark-input"
+                                   required="required"/>
                         </td>`;
 
         cols += `<td class="col-1">
@@ -53,7 +54,8 @@ $(function () {
                                    name="correlation_table[${counter}][percent]"
                                    value=""
                                    class="form-control form-control-sm"
-                                   title="Введіть кількість відсотків, скільки повинен набрати студент на відповідну оцінку"/>
+                                   title="Введіть кількість відсотків, скільки повинен набрати студент на відповідну оцінку"
+                                   required="required"/>
                         </td>`;
 
         cols += `<td class="col-1">

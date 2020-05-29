@@ -73,7 +73,8 @@
                                id="correlation_table[{{$entry->id}}][mark]"
                                name="correlation_table[{{$entry->id}}][mark]"
                                value="{{ $entry->mark }}"
-                               class="form-control form-control-sm map-mark-input @error("correlation_table.{$entry->id}.mark") is-invalid @enderror"/>
+                               class="form-control form-control-sm map-mark-input @error("correlation_table.{$entry->id}.mark") is-invalid @enderror"
+                               required="required"/>
 
                         @error("correlation_table.{$entry->id}.mark")
                         <span class="invalid-feedback" role="alert">
@@ -87,7 +88,8 @@
                                name="correlation_table[{{$entry->id}}][percent]"
                                value="{{ $entry->percent }}"
                                class="form-control form-control-sm map-percent-input @error("correlation_table.{$entry->id}.percent") is-invalid @enderror"
-                               title="Введіть кількість відсотків, скільки повинен набрати студент на відповідну оцінку"/>
+                               title="Введіть кількість відсотків, скільки повинен набрати студент на відповідну оцінку"
+                               required="required"/>
 
                         @error("correlation_table.{$entry->id}.percent")
                         <span class="invalid-feedback" role="alert">
