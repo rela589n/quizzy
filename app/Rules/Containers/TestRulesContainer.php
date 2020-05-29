@@ -5,6 +5,7 @@ namespace App\Rules\Containers;
 
 
 use App\Rules\UriSlug;
+use Illuminate\Validation\Rules\In;
 
 final class TestRulesContainer
 {
@@ -27,6 +28,11 @@ final class TestRulesContainer
                 'numeric',
                 'min:1',
                 'max:65000'
+            ],
+            'mark_evaluator_type' => [
+                'required',
+                'string',
+                new In(['default', 'custom'])
             ],
             'include'         => 'nullable|array',
             'include.*'       => 'array',

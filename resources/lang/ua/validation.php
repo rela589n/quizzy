@@ -210,5 +210,7 @@ return [
         'surname'      => 'прізвище',
         'mark'         => 'оцінка',
         'resultDateIn' => 'дата здачі',
+
+        'mark_evaluator_type' => 'методика оцінювання',
     ],
 ];
