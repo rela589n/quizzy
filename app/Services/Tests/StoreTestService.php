@@ -49,6 +49,7 @@ abstract class StoreTestService
 
         $this->test = $this->doHandle();
         $this->handleInclude(collect($this->fields['include'] ?? []));
+        $this->handleCustomEvaluation(collect($this->fields['correlation_table'] ?? []));
 
         return $this->test;
     }
@@ -74,6 +75,22 @@ abstract class StoreTestService
     protected function syncIncludeTests(Collection $include): void
     {
         $this->test->tests()->sync($include);
+    }
+
+    protected function handleCustomEvaluation(Collection $collection)
+    {
+        $this->detachMarkPercents();
+        $this->saveMarkPercents($collection);
+    }
+
+    protected function detachMarkPercents()
+    {
+        $this->test->marksPercents()->delete();
+    }
+
+    protected function saveMarkPercents(Collection $collection)
+    {
+        $this->test->marksPercents()->createMany($collection);
     }
 
     protected abstract function doHandle(): Test;

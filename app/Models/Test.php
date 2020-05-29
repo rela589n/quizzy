@@ -56,7 +56,7 @@ class Test extends Model
     use OwnerChecks;
 
     public $timestamps = false;
-    protected $fillable = ['name', 'uri_alias', 'time', 'test_subject_id'];
+    protected $fillable = ['name', 'uri_alias', 'time', 'mark_evaluator_type', 'test_subject_id'];
 
     public function subject()
     {

@@ -26,6 +26,8 @@ class MarkPercent extends Model
     public $timestamps = false;
     protected $table = 'marks_percents_map';
 
+    protected $fillable = ['mark', 'percent'];
+
     public function test()
     {
         return $this->belongsTo(Test::class);
