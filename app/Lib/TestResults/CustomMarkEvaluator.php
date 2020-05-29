@@ -9,6 +9,7 @@ use App\Models\Test;
 
 class CustomMarkEvaluator implements MarkEvaluator
 {
+    const MARK_EPS = 0.09;
     protected const UNBOUND_MARK = 2;
 
     /**
@@ -63,7 +64,7 @@ class CustomMarkEvaluator implements MarkEvaluator
 
         foreach ($this->markPercentsMap as $mark => $percents) {
 
-            if ($fullTestScore >= $percents) {
+            if ($fullTestScore >= ($percents - self::MARK_EPS)) {
                 return $mark;
             }
         }
