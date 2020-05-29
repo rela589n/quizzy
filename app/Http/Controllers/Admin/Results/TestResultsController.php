@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Repositories\StudentGroupsRepository;
 use App\Repositories\SubjectsRepository;
 use App\Repositories\TestsRepository;
+use App\Services\TestResults\MarksCollector;
 use Illuminate\Support\Collection;
 
 class TestResultsController extends AdminController
@@ -55,11 +56,14 @@ class TestResultsController extends AdminController
      * @param FilterTestResultsRequest $request
      * @param TestResultFilter $filters
      * @param StudentGroupsRepository $groupsRepository
+     * @param MarksCollector $marksCollector
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function showTestResults(FilterTestResultsRequest $request,
                                     TestResultFilter $filters,
-                                    StudentGroupsRepository $groupsRepository)
+                                    StudentGroupsRepository $groupsRepository,
+                                    MarksCollector $marksCollector)
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest(true);
@@ -81,6 +85,7 @@ class TestResultsController extends AdminController
             'test'        => $currentTest,
             'testResults' => $filteredResults,
             'userGroups'  => $groupsRepository->groupsWhereHasResultsOf($currentTest->id),
+            'possibleMarks' => $marksCollector->setTest($currentTest)->collect(),
         ]);
     }
 }

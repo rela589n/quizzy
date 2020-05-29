@@ -153,8 +153,8 @@
                             title="Оцінка"
                             class="form-control form-control-sm @error('mark') is-invalid @enderror">
                         <option value="">Всі</option>
-                        @foreach (range(1, 5) as $i)
-                            <option value="{{ $i }}" @if($i == request('mark')) selected @endif>{{ $i }}</option>
+                        @foreach ($possibleMarks as $mark)
+                            <option value="{{ $mark }}" @if($mark == request('mark')) selected @endif>{{ $mark }}</option>
                         @endforeach
                     </select>
 
@@ -179,7 +179,9 @@
                     <div class="d-flex justify-content-between filter-buttons">
                         <div>
                             @if($authUser->can('generate-group-statement'))
-                                <button type="button" class="btn btn-primary generateGroupStatementByFilters">Відомість по групі згідно фільтрів</button>
+                                <button type="button" class="btn btn-primary generateGroupStatementByFilters">Відомість по
+                                    групі згідно фільтрів
+                                </button>
                             @endif
                         </div>
                         <div>
