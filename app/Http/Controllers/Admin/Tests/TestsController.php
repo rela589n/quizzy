@@ -44,7 +44,8 @@ class TestsController extends AdminController
             'subject'               => $subject,
             'subjectsToIncludeFrom' => $toInclude,
 
-            'marksPercentsMap' => $markPercents
+            'marksPercentsMap' => $markPercents,
+            'messageToUser'    => \Session::pull('messageToUser'),
         ]);
     }
 
@@ -93,7 +94,8 @@ class TestsController extends AdminController
             'subject' => $subject,
 
             'subjectsToIncludeFrom' => $toInclude,
-            'marksPercentsMap'      => $markPercents
+            'marksPercentsMap'      => $markPercents,
+            'messageToUser'         => \Session::pull('messageToUser'),
         ]);
     }
 
