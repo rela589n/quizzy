@@ -52,7 +52,8 @@ $(function () {
                             <input type="number" min="0" max="100" step=".01"
                                    name="correlation_table[${counter}][percent]"
                                    value=""
-                                   class="form-control form-control-sm"/>
+                                   class="form-control form-control-sm"
+                                   title="Введіть кількість відсотків, скільки повинен набрати студент на відповідну оцінку"/>
                         </td>`;
 
         cols += `<td class="col-1">

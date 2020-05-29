@@ -61,7 +61,7 @@
             <thead>
             <tr>
                 <td>Оцінка</td>
-                <td>Відсоток від</td>
+                <td>Мінімум відсотків</td>
                 <td></td>
             </tr>
             </thead>
@@ -86,7 +86,8 @@
                                id="correlation_table[{{$entry->id}}][percent]"
                                name="correlation_table[{{$entry->id}}][percent]"
                                value="{{ $entry->percent }}"
-                               class="form-control form-control-sm map-percent-input @error("correlation_table.{$entry->id}.percent") is-invalid @enderror"/>
+                               class="form-control form-control-sm map-percent-input @error("correlation_table.{$entry->id}.percent") is-invalid @enderror"
+                               title="Введіть кількість відсотків, скільки повинен набрати студент на відповідну оцінку"/>
 
                         @error("correlation_table.{$entry->id}.percent")
                         <span class="invalid-feedback" role="alert">
