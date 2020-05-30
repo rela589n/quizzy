@@ -24,7 +24,9 @@ trait FilteredScope
     {
         $response = $filters->applyQueryFilters($query)->get();
 
-        ($callback ?? 'isset')($response);
+        if (is_callable($callback)) {
+            call_user_func($callback, $response);
+        }
 
         return $filters->apply($response);
     }
