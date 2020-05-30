@@ -1,7 +1,7 @@
 @extends('layouts.blocks.user-form')
 
 @section('user-form-additions')
-    @if (!empty($studentGroups))
+    @if (!empty($studentGroups && $authUser->can('edit-group-of-student')))
         <div class="form-group form-row align-items-start">
             <label for="student_group_id" class="form-info h3 m-0 col-3 col-sm-2">
                 Група:
