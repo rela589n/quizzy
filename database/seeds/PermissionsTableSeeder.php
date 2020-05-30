@@ -110,7 +110,10 @@ class PermissionsTableSeeder extends Seeder
             ],
             'edit-class-monitors'        => [
                 'public_name' => 'Оновлення старости групи'
-            ]
+            ],
+            'edit-group-of-student'         => [
+                'public_name' => 'Змінювати групу студента'
+            ],
         ]
     ];
 
