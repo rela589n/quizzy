@@ -39,6 +39,17 @@ class GroupResultsManager
         $this->testResults = $testResults;
     }
 
+    /**
+     * @param array $marksCorrelation
+     * @return GroupResultsManager
+     */
+    public function setMarksCorrelation(array $marksCorrelation): self
+    {
+        $this->marksCorrelation = $marksCorrelation;
+
+        return $this;
+    }
+
     private function nullifyProperties()
     {
         foreach ($this->marksCorrelation as $propName) {
@@ -76,12 +87,12 @@ class GroupResultsManager
 
     public function getSatisfactorilyCount(): int
     {
-        return singleVar($this->satisfactorily, [$this, '__evaluate']);
+        return (int)singleVar($this->satisfactorily, [$this, '__evaluate']);
     }
 
     public function getUnsatisfactorilyCount(): int
     {
-        return singleVar($this->unsatisfactorily, [$this, '__evaluate']);
+        return (int)singleVar($this->unsatisfactorily, [$this, '__evaluate']);
     }
 
     public function getSuccessPercentage(): float
