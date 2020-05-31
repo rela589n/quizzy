@@ -134,7 +134,7 @@ final class FillAnswersRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        Session::push('message', trans('validation.custom.some-questions-have-errors'));
+        Session::push('messageToUser', trans('validation.custom.some-questions-have-errors'));
 
         parent::failedValidation($validator);
     }

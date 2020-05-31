@@ -92,7 +92,7 @@ class QuestionsController extends AdminController
             'subject'            => $this->urlManager->getCurrentSubject(),
             'test'               => $currentTest,
             'filteredQuestions'  => $fullQuestions->all(),
-            'message'            => \Session::pull('message'),
+            'messageToUser'      => \Session::pull('messageToUser'),
             'lastAnswerOptionId' => $lastOptionId
         ]);
     }

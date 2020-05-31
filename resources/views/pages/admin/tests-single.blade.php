@@ -89,13 +89,3 @@
     @parent
     <script defer src="{{ asset('js/test_edit.js') }}"></script>
 @endsection
-
-@isset($message)
-    @section('bottom-scripts')
-        @parent
-        <script>
-            window.backEndMessage = {!! json_encode($message) !!};
-        </script>
-        <script defer src="{{ asset('js/show-popup.js') }}"></script>
-    @endsection
-@endisset

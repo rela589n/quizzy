@@ -6,9 +6,10 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Users\Teachers\CreateTeacherRequest;
 use App\Http\Requests\Users\Teachers\UpdateTeacherRequest;
 use App\Models\Administrator;
+use App\Services\Users\Administrators\CreateAdministratorService;
+use App\Services\Users\Administrators\UpdateAdministratorService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class TeachersController extends AdminController
@@ -44,15 +45,12 @@ class TeachersController extends AdminController
     /**
      * Handle submit of new administrator form
      * @param CreateTeacherRequest $request
+     * @param CreateAdministratorService $createAdministratorService
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createTeacher(CreateTeacherRequest $request)
+    public function createTeacher(CreateTeacherRequest $request, CreateAdministratorService $createAdministratorService)
     {
-        $validated = $request->validated();
-        $validated['password'] = Hash::make($validated['password']);
-
-        $newTeacher = Administrator::create($validated);
-        $newTeacher->syncRoles($validated['role_ids']);
+        $createAdministratorService->handle($request->validated());
 
         return redirect()->route('admin.teachers');
     }
@@ -76,7 +74,7 @@ class TeachersController extends AdminController
         $response->authorize();
 
         return view('pages.admin.teacher-view', [
-            'user' => $user,
+            'user'  => $user,
             'roles' => Role::where('guard_name', 'admin')->get()
         ]);
     }
@@ -85,25 +83,25 @@ class TeachersController extends AdminController
      * Handles submit of update admin form.
      * @param UpdateTeacherRequest $request
      * @param $teacherId
+     * @param UpdateAdministratorService $updateAdministratorService
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateTeacher(UpdateTeacherRequest $request, $teacherId)
+    public function updateTeacher(UpdateTeacherRequest $request, $teacherId, UpdateAdministratorService $updateAdministratorService)
     {
         $teacher = Administrator::findOrFail($teacherId);
+
         $validated = array_filter($request->validated());
 
-        if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        }
-
-        $teacher->update($validated);
         if ($teacher->id == $request->user()->id &&
             $teacher->roles->pluck('id')->toArray() != $validated['role_ids']
         ) {
             return redirect()->back()->withErrors(['role_ids.*' => 'Ви не можете змінити свою роль']);
         }
 
-        $teacher->syncRoles($validated['role_ids']);
+        $updateAdministratorService
+            ->setAdministrator($teacher)
+            ->setNeedPasswordHash(!empty($validated['password']))
+            ->handle($validated);
 
         return redirect()->route('admin.teachers');
     }
@@ -122,7 +120,7 @@ class TeachersController extends AdminController
         $this->authorize('delete', $teacher);
 
         if ($teacher->id == $request->user()->id) {
-            return redirect()->back()->withErrors(['delete'=> 'Ви не можете видалити власний аккаунт.']);
+            return redirect()->back()->withErrors(['delete' => 'Ви не можете видалити власний аккаунт.']);
         }
 
         $teacher->delete();

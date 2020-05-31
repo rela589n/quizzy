@@ -29,7 +29,13 @@ final class UpdateStudentRequest extends FormRequest
      */
     public function authorize(Administrator $user)
     {
-        return $user->can('update', $this->student());
+        if (!$user->can('update', $this->student()))
+            return false;
+
+        if (!is_null($this->input('student_group_id')))
+            return $user->can('edit-group-of-student');
+
+        return true;
     }
 
     /**
@@ -48,8 +54,9 @@ final class UpdateStudentRequest extends FormRequest
         $rules[$container->passwordAttr()][] = 'nullable';
 
         $rules['student_group_id'] = [
-            'required',
-            'numeric'
+            'sometimes',
+            'numeric',
+            'exists:student_groups,id'
         ];
 
         return $rules;

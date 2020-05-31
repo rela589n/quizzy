@@ -123,6 +123,7 @@ Route::prefix('/students')
                                 Route::post('/', 'StudentsController@updateStudent');
                                 Route::delete('/', 'StudentsController@deleteStudent');
 
+                                Route::get('/make-class-monitor', 'StudentsController@makeClassMonitor')->name('.make-class-monitor');
                             });
 
                         Route::get('/', 'GroupsController@showSingleGroup');

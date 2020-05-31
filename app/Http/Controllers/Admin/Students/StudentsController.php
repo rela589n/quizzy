@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Admin\Students;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Users\Students\CreateStudentRequest;
 use App\Http\Requests\Users\Students\UpdateStudentRequest;
+use App\Models\Administrator;
 use App\Models\StudentGroup;
 use App\Models\User;
+use App\Services\Users\Administrators\CreateAdministratorService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 
 class StudentsController extends AdminController
 {
@@ -75,7 +80,8 @@ class StudentsController extends AdminController
 
         return view('pages.admin.student-update', [
             'user'          => $user,
-            'studentGroups' => StudentGroup::all()->sortByDesc('year')
+            'studentGroups' => StudentGroup::all()->sortByDesc('year'),
+            'messageToUser' => Session::pull('messageToUser'),
         ]);
     }
 
@@ -131,5 +137,53 @@ class StudentsController extends AdminController
             'department' => $departmentAlias,
             'group'      => $groupAlias
         ]);
+    }
+
+    /**
+     * @param $departmentAlias
+     * @param $groupAlias
+     * @param $userId
+     * @param CreateAdministratorService $createAdministratorService
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws AuthorizationException
+     * @throws ValidationException
+     */
+    public function makeClassMonitor($departmentAlias, $groupAlias, $userId, CreateAdministratorService $createAdministratorService)
+    {
+        $user = User::findOrFail($userId);
+        $this->authorize('update', $user);
+        $this->authorize('make-student-class-monitor');
+
+        $group = StudentGroup::whereUriAlias($groupAlias)->first();
+
+        if ($group->classMonitor()->exists()) {
+            throw ValidationException::withMessages([
+                'student_group_id' => 'Група вже має старосту'
+            ]);
+        }
+
+        if (Administrator::whereEmail($user->email)->exists()) {
+            throw ValidationException::withMessages([
+                'email' => 'В адмін-панелі вже є користувач з заданим email'
+            ]);
+        }
+
+        $classMonitor = $createAdministratorService
+            ->withoutPasswordHashing()
+            ->handle([
+                'name'       => $user->name,
+                'surname'    => $user->surname,
+                'patronymic' => $user->patronymic,
+                'email'      => $user->email,
+                'password'   => $user->password,
+                'role_ids'   => [Role::whereName('class-monitor')->first('id')->id]
+            ]);
+
+        $group->created_by = $classMonitor->id;
+        $group->save();
+
+        return redirect()
+            ->back()
+            ->with('messageToUser', 'Успішно створено аккаунт старости в адмін-панелі (логін та пароль такі ж як поточні).');
     }
 }
