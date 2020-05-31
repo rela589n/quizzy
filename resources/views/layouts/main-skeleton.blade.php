@@ -15,3 +15,13 @@
         </div>
     </div>
 @endsection
+
+@isset($messageToUser)
+@section('bottom-scripts')
+    @parent
+    <script>
+        window.backEndMessage = {!! json_encode($messageToUser) !!};
+    </script>
+    <script defer src="{{ asset('js/show-popup.js') }}"></script>
+@endsection
+@endisset
