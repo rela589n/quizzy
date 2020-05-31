@@ -9,6 +9,7 @@ use App\Http\Requests\Tests\CRUD\UpdateTestRequest;
 use App\Repositories\SubjectsRepository;
 use App\Services\Subjects\IncludeTestsFormManager;
 use App\Services\Tests\CreateTestService;
+use App\Services\Tests\MarkPercentsMapCollector;
 use App\Services\Tests\UpdateTestService;
 
 class TestsController extends AdminController
@@ -23,10 +24,11 @@ class TestsController extends AdminController
 
     /**
      * @param IncludeTestsFormManager $includeTestsManager
+     * @param MarkPercentsMapCollector $mapCollector
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showNewTestForm(IncludeTestsFormManager $includeTestsManager)
+    public function showNewTestForm(IncludeTestsFormManager $includeTestsManager, MarkPercentsMapCollector $mapCollector)
     {
         $this->authorize('create-tests');
 
@@ -36,9 +38,14 @@ class TestsController extends AdminController
         $includeTestsManager->setSubject($subject)
             ->transform($toInclude);
 
+        $markPercents = $mapCollector->markPercents();
+
         return view('pages.admin.tests-new', [
             'subject'               => $subject,
-            'subjectsToIncludeFrom' => $toInclude
+            'subjectsToIncludeFrom' => $toInclude,
+
+            'marksPercentsMap' => $markPercents,
+            'messageToUser'    => \Session::pull('messageToUser'),
         ]);
     }
 
@@ -61,10 +68,12 @@ class TestsController extends AdminController
 
     /**
      * @param IncludeTestsFormManager $includeTestsManager
+     * @param MarkPercentsMapCollector $mapCollector
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showUpdateTestForm(IncludeTestsFormManager $includeTestsManager)
+    public function showUpdateTestForm(IncludeTestsFormManager $includeTestsManager,
+                                       MarkPercentsMapCollector $mapCollector)
     {
         $test = $this->urlManager->getCurrentTest();
         $this->authorize('update', $test);
@@ -76,11 +85,17 @@ class TestsController extends AdminController
             ->setTest($test)
             ->transform($toInclude);
 
+        $markPercents = $mapCollector
+            ->setTest($test)
+            ->markPercents();
+
         return view('pages.admin.tests-single-settings', [
             'test'    => $test,
             'subject' => $subject,
 
             'subjectsToIncludeFrom' => $toInclude,
+            'marksPercentsMap'      => $markPercents,
+            'messageToUser'         => \Session::pull('messageToUser'),
         ]);
     }
 

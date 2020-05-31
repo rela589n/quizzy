@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +27,16 @@ class CollectionMacroProvider extends ServiceProvider
                     $page,
                     $options)
                 )->withPath('');
+            });
+        }
+
+        if (!EloquentCollection::hasMacro('setRelation')) {
+            EloquentCollection::macro('setRelation', function ($relation, $value) {
+                $this->map(function (Model $model) use ($relation, $value) {
+                    $model->setRelation($relation, $value);
+                });
+
+                return $this;
             });
         }
     }

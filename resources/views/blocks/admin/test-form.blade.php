@@ -27,6 +27,99 @@
     </div>
     @enderror
 
+    <label for="mark_evaluator_type" class="form-info mb-4 h3">
+        Методика виставлення оцінок
+    </label>
+
+    @php($markEvaluatorType = old('mark_evaluator_type', $test->mark_evaluator_type ?? null))
+    <select class="browser-default custom-select mb-2 @error('mark_evaluator_type') is-invalid @enderror"
+            id="mark_evaluator_type" name="mark_evaluator_type">
+        <option value="default" @if($markEvaluatorType === 'default') selected="selected" @endif>За
+            замовчуванням
+        </option>
+        <option value="custom" @if($markEvaluatorType === 'custom') selected="selected" @endif>Власна
+        </option>
+    </select>
+
+    @error('mark_evaluator_type')
+    <div class="invalid-feedback">
+        {{ $message }}
+    </div>
+    @enderror
+
+    <div class="assessment-table-wrapper ml-2" style="display: none;">
+        <div class="form-info my-3 h4 @error('correlation_table') is-invalid @enderror">
+            Таблиця оцінювання
+        </div>
+        @error('correlation_table')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+        @enderror
+
+        <table class="table order-list assignmentTable">
+            <thead>
+            <tr>
+                <td>Оцінка</td>
+                <td>Мінімум відсотків</td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($marksPercentsMap ?? [] as $entry)
+                <tr data-counter="{{$entry->id}}">
+                    <td class="col-1">
+                        <input type="number" min="1" max="100"
+                               id="correlation_table[{{$entry->id}}][mark]"
+                               name="correlation_table[{{$entry->id}}][mark]"
+                               value="{{ $entry->mark }}"
+                               class="form-control form-control-sm map-mark-input @error("correlation_table.{$entry->id}.mark") is-invalid @enderror"
+                               required="required"/>
+
+                        @error("correlation_table.{$entry->id}.mark")
+                        <span class="invalid-feedback" role="alert">
+                            <label for="correlation_table[{{$entry->id}}][mark]">{{ $message }}</label>
+                        </span>
+                        @enderror
+                    </td>
+                    <td class="col-1">
+                        <input type="number" min="0" max="100" step=".01"
+                               id="correlation_table[{{$entry->id}}][percent]"
+                               name="correlation_table[{{$entry->id}}][percent]"
+                               value="{{ $entry->percent }}"
+                               class="form-control form-control-sm map-percent-input @error("correlation_table.{$entry->id}.percent") is-invalid @enderror"
+                               title="Введіть кількість відсотків, скільки повинен набрати студент на відповідну оцінку"
+                               required="required"/>
+
+                        @error("correlation_table.{$entry->id}.percent")
+                        <span class="invalid-feedback" role="alert">
+                            <label for="correlation_table[{{$entry->id}}][percent]">{{ $message }}</label>
+                        </span>
+                        @enderror
+                    </td>
+                    <td class="col-1">
+                        <button type="button" class="btn btn-sm btn-danger mt-1 position-absolute delete-row-button"
+                                tabindex="-1">
+                            <i class="fas fa-backspace"></i>
+                        </button>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <button type="button" class="btn m-auto btn-sm btn-secondary add-row-button">Додати рядок
+                    </button>
+                </td>
+            </tr>
+            <tr>
+            </tr>
+            </tfoot>
+        </table>
+        <hr class="mt-n1">
+    </div>
+
     @if(isset($subjectsToIncludeFrom) && count($subjectsToIncludeFrom) > 0)
         <label for="include" class="form-info mb-2 h3">
             Включити питання з наступних тестів:
@@ -43,8 +136,9 @@
                                 {{ $includeSubject->name }}
                             </button>
 
-                            <button class="btn btn-sm btn-outline-dark include-full-subject-button" data-toggle="collapse" type="button">
-                                повністю
+                            <button class="btn btn-sm btn-outline-dark include-full-subject-button" data-toggle="collapse"
+                                    type="button">
+                                включити повністю
                             </button>
                         </h5>
                     </div>
@@ -67,10 +161,18 @@
                                                    @if($includeTest->isNecessary) checked="checked" @endif>
                                         </div>
                                     </div>
+
+                                    @php($isCurrentTest = ($includeTest->id === ($test->id ?? -1)))
+
                                     <div class="col-form-label">
                                         <label for="include[{{ $includeTest->id }}][necessary]"
                                                class="form-check-label variant-text">
-                                            {{ $includeTest->name }} {{ ($includeTest->id == ($test->id ?? -1)) ? '(Поточний тест)' : '' }}
+
+                                            @if($isCurrentTest)
+                                                <strong>{{ $includeTest->name }} (Поточний тест)</strong>
+                                            @else
+                                                {{ $includeTest->name }}
+                                            @endif
                                         </label>
                                     </div>
 
@@ -109,4 +211,11 @@
     <script defer src="{{ asset('js/required-if.js') }}"></script>
     @include('blocks.scripts.bootstrap')
     <script defer src="{{ asset('js/pages/test-form.js') }}"></script>
+
+    @isset($messageToUser)
+        <script>
+            window.backEndMessage = {!! json_encode($messageToUser) !!};
+        </script>
+        <script defer src="{{ asset('js/show-popup.js') }}"></script>
+    @endisset
 @endsection

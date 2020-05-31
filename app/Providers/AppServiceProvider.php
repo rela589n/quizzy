@@ -8,7 +8,7 @@ use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\StudentResultFileNameGenerator;
 use App\Lib\Statements\GroupStatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
-use App\Lib\TestResults\MarkEvaluatorInterface;
+use App\Lib\TestResults\CustomMarkEvaluator;
 use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Lib\TestResults\StrictMarkEvaluator;
 use App\Lib\TestResults\StrictScoreEvaluator;
@@ -55,10 +55,6 @@ class AppServiceProvider extends ServiceProvider
             ->needs(ScoreEvaluatorInterface::class)
             ->give(StrictScoreEvaluator::class);
 
-        $this->app->when(TestResultsEvaluator::class)
-            ->needs(MarkEvaluatorInterface::class)
-            ->give(StrictMarkEvaluator::class);
-
         $this->app->when(WordsManager::class)
             ->needs(WordDeclinerInterface::class)
             ->give(CyrillicWordDecliner::class);
@@ -79,6 +75,20 @@ class AppServiceProvider extends ServiceProvider
             ->needs(ResultFileNameGenerator::class)
             ->give(ExportResultFileNameGenerator::class);
 
+        $this->bindAuthUsers();
+
+        $this->registerSingletons();
+    }
+
+    private function shareViews()
+    {
+        View::composer('*', function ($view) {
+            $view->with('authUser', Auth::user());
+        });
+    }
+
+    private function bindAuthUsers()
+    {
         $this->app->bind(Administrator::class, function ($app) {
             return Auth::guard('admin')->user();
         });
@@ -88,10 +98,9 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 
-    private function shareViews()
+    private function registerSingletons()
     {
-        View::composer('*', function ($view) {
-            $view->with('authUser', Auth::user());
-        });
+        $this->app->singleton(StrictMarkEvaluator::class);
+        $this->app->singleton(CustomMarkEvaluator::class);
     }
 }

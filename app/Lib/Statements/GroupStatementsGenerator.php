@@ -6,6 +6,7 @@ namespace App\Lib\Statements;
 
 use App\Exceptions\EmptyTestResultsException;
 use App\Lib\GroupResultsManager;
+use App\Lib\MarksCorrelationCreator;
 use App\Lib\PHPWord\TemplateProcessor;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Words\WordsManager;
@@ -35,10 +36,20 @@ class GroupStatementsGenerator extends StatementsGenerator
      */
     protected $groupResultsManager;
 
-    public function __construct(WordsManager $wordsManager, ResultFileNameGenerator $filePathGenerator, GroupResultsManager $groupResultsManager)
+    /**
+     * @var MarksCorrelationCreator
+     */
+    protected $marksCorrelationCreator;
+
+    public function __construct(WordsManager $wordsManager,
+                                ResultFileNameGenerator $filePathGenerator,
+                                GroupResultsManager $groupResultsManager,
+                                MarksCorrelationCreator $marksCorrelationCreator)
     {
         parent::__construct($wordsManager, $filePathGenerator);
+
         $this->groupResultsManager = $groupResultsManager;
+        $this->marksCorrelationCreator = $marksCorrelationCreator;
     }
 
     /**
@@ -52,11 +63,18 @@ class GroupStatementsGenerator extends StatementsGenerator
 
     /**
      * @param Test $test
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function setTest(Test $test): void
     {
         $this->test = $test;
         $this->filePathGenerator->setTest($test);
+
+        $this->groupResultsManager->setMarksCorrelation(
+            $this->marksCorrelationCreator
+                ->setTest($test)
+                ->marksMap()
+        );
     }
 
     /**

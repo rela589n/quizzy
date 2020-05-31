@@ -43,6 +43,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Test whereSlug($slug)
  * @property int|null $created_by
  * @method static \Illuminate\Database\Eloquent\Builder|Test whereCreatedBy($value)
+ * @property string $mark_evaluator_type
+ * @property-read \Illuminate\Database\Eloquent\Collection|MarkPercent[] $marksPercents
+ * @property-read int|null $marks_percents_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Test whereMarkEvaluatorType($value)
  */
 class Test extends Model
 {
@@ -52,7 +56,7 @@ class Test extends Model
     use OwnerChecks;
 
     public $timestamps = false;
-    protected $fillable = ['name', 'uri_alias', 'time', 'test_subject_id'];
+    protected $fillable = ['name', 'uri_alias', 'time', 'mark_evaluator_type', 'test_subject_id'];
 
     public function subject()
     {
@@ -91,5 +95,10 @@ class Test extends Model
     public function testResults()
     {
         return $this->hasMany(TestResult::class);
+    }
+
+    public function marksPercents()
+    {
+        return $this->hasMany(MarkPercent::class);
     }
 }

@@ -17,11 +17,16 @@ trait FilteredScope
     /**
      * @param Builder $query
      * @param ResultFilter $filters
+     * @param callable|null $callback
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function scopeFiltered($query, ResultFilter $filters)
+    public function scopeFiltered($query, ResultFilter $filters, callable $callback = null)
     {
         $response = $filters->applyQueryFilters($query)->get();
+
+        if (is_callable($callback)) {
+            call_user_func($callback, $response);
+        }
 
         return $filters->apply($response);
     }
