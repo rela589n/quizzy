@@ -3,7 +3,7 @@ $(function () {
     let testTime = window.passTestCountDownMinutes || 10;
     let testId = window.passTestId || 1;
 
-    testTime *= 60;
+    testTime *= 60; // convert into seconds
     testTime = window.localStorage.getItem(`test-time-left-${testId}`) || testTime;
 
     let stopwatch = new Stopwatch({
@@ -14,7 +14,7 @@ $(function () {
         'timeLimit': 1000,                      // Time limit in milliseconds
         'updateRate': 1000,                     // Update rate, in milliseconds
         'onTimeUp': function () {                // onTimeUp callback
-            console.log('Countdown finished!');
+            // Countdown finished
             this.stop();
             $form.submit();
         },
@@ -25,7 +25,7 @@ $(function () {
                 s = ('0' + Math.floor(t % 60000 / 1000)).slice(-2);
 
             // save to local storage each second
-            window.localStorage.setItem(`test-time-left-${testId}`, (t / 1000).toString());
+            saveTime(t / 1000 - 3); // minus 3 second to reload page
 
             let formattedTime = (+h * 60 + +m) + ':' + s;
             $(this.element).text(formattedTime);
@@ -34,9 +34,29 @@ $(function () {
 
     $form.submit(function (e) {
         // remove from local storage
-        window.localStorage.removeItem(`test-time-left-${testId}`);
+        clearTime();
     });
 
-
     stopwatch.element.show();
+
+    // when switch tab, need delete time from storage
+    window.closeWhenSwitchedTabsConfigOnClose = function() {
+        clearTime();
+    };
+
+    // on leave page, delete time from storage
+    window.onunload = function () {
+        stopwatch.stop();
+        clearTime();
+        return undefined;
+    };
+
+    // used functions
+    function saveTime(time) {
+        window.localStorage.setItem(`test-time-left-${testId}`, time.toString());
+    }
+
+    function clearTime() {
+        window.localStorage.removeItem(`test-time-left-${testId}`);
+    }
 });
