@@ -211,11 +211,4 @@
     <script defer src="{{ asset('js/required-if.js') }}"></script>
     @include('blocks.scripts.bootstrap')
     <script defer src="{{ asset('js/pages/test-form.js') }}"></script>
-
-    @isset($messageToUser)
-        <script>
-            window.backEndMessage = {!! json_encode($messageToUser) !!};
-        </script>
-        <script defer src="{{ asset('js/show-popup.js') }}"></script>
-    @endisset
 @endsection
