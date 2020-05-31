@@ -25,8 +25,8 @@ class CreateTestService extends StoreTestService
         return $include;
     }
 
-    protected function handleCustomEvaluation(Collection $collection)
+    protected function detachMarkPercents()
     {
-        $this->saveMarkPercents($collection);
+        // do nothing
     }
 }

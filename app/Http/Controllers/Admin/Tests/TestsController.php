@@ -104,8 +104,7 @@ class TestsController extends AdminController
      * @param UpdateTestService $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public
-    function updateTest(UpdateTestRequest $request, UpdateTestService $service)
+    public function updateTest(UpdateTestRequest $request, UpdateTestService $service)
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest();
@@ -124,8 +123,7 @@ class TestsController extends AdminController
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Exception
      */
-    public
-    function deleteTest()
+    public function deleteTest()
     {
         $currentTest = $this->urlManager->getCurrentTest();
         $this->authorize('delete', $currentTest);

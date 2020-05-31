@@ -80,12 +80,20 @@ abstract class StoreTestService
     protected function handleCustomEvaluation(Collection $collection)
     {
         $this->detachMarkPercents();
+        $this->prepareMarkPercents($collection);
         $this->saveMarkPercents($collection);
     }
 
     protected function detachMarkPercents()
     {
         $this->test->marksPercents()->delete();
+    }
+
+    protected function prepareMarkPercents(Collection &$collection)
+    {
+        $collection = $collection->sortBy(function($element) {
+            return (int)$element['mark'];
+        });
     }
 
     protected function saveMarkPercents(Collection $collection)
