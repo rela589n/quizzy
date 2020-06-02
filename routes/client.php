@@ -23,6 +23,7 @@ Route::namespace('Auth')->group(function () {
 });
 
 Route::get('/dashboard', 'DashboardController@showDashboardPage')->name('.dashboard');
+Route::get('/documentation', 'DocumentationController@getWordDocument')->name('.documentation');
 
 Route::prefix('/tests')
     ->name('.tests')
