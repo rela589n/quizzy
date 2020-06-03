@@ -9,7 +9,7 @@ class DocumentationController extends ClientController
     public function getWordDocument()
     {
         return response()->download(
-            resource_path('storage/documentation/Student.docx'),
+            resource_path('documentation/Student.docx'),
             self::FILE_NAME
         );
     }

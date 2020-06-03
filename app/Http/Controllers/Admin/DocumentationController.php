@@ -9,7 +9,7 @@ class DocumentationController extends AdminController
     public function getWordDocument()
     {
         return response()->download(
-            resource_path('storage/documentation/Teacher.docx'),
+            resource_path('documentation/Teacher.docx'),
             self::FILE_NAME
         );
     }
