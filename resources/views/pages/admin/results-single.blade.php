@@ -179,8 +179,10 @@
                     <div class="d-flex justify-content-between filter-buttons">
                         <div>
                             @if($authUser->can('generate-group-statement'))
-                                <button type="button" class="btn btn-primary generateGroupStatementByFilters">Відомість по
-                                    групі згідно фільтрів
+                                <button type="button"
+                                        class="btn btn-primary generateGroupStatementByFilters"
+                                        title="Обираються останні результати групи та застосовуються фільтри">
+                                    Відомість по групі згідно фільтрів
                                 </button>
                             @endif
                         </div>
