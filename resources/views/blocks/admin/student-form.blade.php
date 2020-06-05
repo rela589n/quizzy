@@ -3,8 +3,7 @@
 
 @section('user-form-before')
 
-    @if($authUser->can('make-student-class-monitor'))
-
+    @if($authUser->can('make-student-class-monitor') && isset($user))
         @if(optional($user->studentGroup->classMonitor)->email === $user->email)
 
             <p class="text-right">Існує користувач-староста з заданим логіном.</p>
@@ -26,7 +25,7 @@
 @endsection
 
 @section('user-form-additions')
-    @if (!empty($studentGroups && $authUser->can('edit-group-of-student')))
+    @if (!empty($studentGroups) && $authUser->can('edit-group-of-student'))
         <div class="form-group form-row align-items-start">
             <label for="student_group_id" class="form-info h3 m-0 col-3 col-sm-2">
                 Група:
