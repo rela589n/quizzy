@@ -3,6 +3,11 @@ $(function () {
     let testTime = window.passTestCountDownMinutes || 10;
     let testId = window.passTestId || 1;
 
+    if (!(window.performance && performance.navigation.type === 1)) {
+        // This page is not reloaded (first load)
+        clearTime(); // user start test from scratch
+    }
+
     testTime *= 60; // convert into seconds
     testTime = window.localStorage.getItem(`test-time-left-${testId}`) || testTime;
 
@@ -40,15 +45,8 @@ $(function () {
     stopwatch.element.show();
 
     // when switch tab, need delete time from storage
-    window.closeWhenSwitchedTabsConfigOnClose = function() {
+    window.closeWhenSwitchedTabsConfigOnClose = function () {
         clearTime();
-    };
-
-    // on leave page, delete time from storage
-    window.onunload = function () {
-        stopwatch.stop();
-        clearTime();
-        return undefined;
     };
 
     // used functions
