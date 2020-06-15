@@ -6,6 +6,8 @@ namespace App\Lib\TestResults;
 
 class StrictMarkEvaluator implements MarkEvaluator
 {
+    const MARK_EPS = 0.09;
+
     const MIN_MARK = 2;
     const MAX_MARK = 5;
 
@@ -15,6 +17,7 @@ class StrictMarkEvaluator implements MarkEvaluator
     public function putMark(float $fullTestScore): int
     {
         $fullTestScore *= 100;
+        $fullTestScore += self::MARK_EPS;
 
         if ($fullTestScore < 60) {
             return self::MIN_MARK;
