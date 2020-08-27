@@ -7,8 +7,7 @@ use App\Http\Requests\RequestUrlManager;
 
 abstract class ClientController extends Controller
 {
-    /** @var RequestUrlManager */
-    protected $urlManager;
+    protected RequestUrlManager $urlManager;
 
     public function __construct(RequestUrlManager $urlManager)
     {

@@ -38,29 +38,39 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerPolicies();
 
         $this->registerGates();
     }
 
-    protected function registerGates()
+    protected function registerGates(): void
     {
-        Gate::define('pass-tests-of-subject', function (User $user, TestSubject $subject) {
-            return in_array($user->course, $subject->courses_numeric) &&
-                in_array($user->studentGroup->department->id, $subject->department_ids);
-        });
+        Gate::define(
+            'pass-tests-of-subject',
+            static function (User $user, TestSubject $subject) {
+                return in_array($user->course, $subject->courses_numeric) &&
+                    in_array($user->studentGroup->department->id, $subject->department_ids);
+            }
+        );
 
-        Gate::define('pass-test', function (User $user, Test $test) {
-            return $user->can('pass-tests-of-subject', $test->subject);
-        });
+        Gate::define(
+            'pass-test',
+            static function (User $user, Test $test) {
+                return $user->can('pass-tests-of-subject', $test->subject);
+            }
+        );
 
         // Implicitly grant "Super Admin" role all permissions
-        Gate::after(function ($user, $ability) {
-            if ($user instanceof Administrator) {
-                return $user->hasRole('super-admin');
+        Gate::after(
+            static function ($user, $ability) {
+                if ($user instanceof Administrator) {
+                    return $user->hasRole('super-admin');
+                }
+
+                return null;
             }
-        });
+        );
     }
 }

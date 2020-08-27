@@ -7,27 +7,23 @@ namespace App\Services\TestResults;
 use App\Factories\MarkEvaluatorsFactory;
 use App\Lib\TestResults\MarkEvaluator;
 use App\Models\Test;
+use Generator;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 class MarksCollector
 {
-    /**
-     * @var MarkEvaluatorsFactory
-     */
-    protected $markEvaluatorsFactory;
+    protected MarkEvaluatorsFactory $markEvaluatorsFactory;
 
     public function __construct(MarkEvaluatorsFactory $markEvaluatorsFactory)
     {
         $this->markEvaluatorsFactory = $markEvaluatorsFactory;
     }
 
-    /**
-     * @var Test
-     */
-    protected $test;
+    protected Test $test;
 
     /**
-     * @param Test $test
-     * @return MarksCollector
+     * @param  Test  $test
+     * @return $this
      */
     public function setTest(Test $test): self
     {
@@ -36,14 +32,11 @@ class MarksCollector
         return $this;
     }
 
-    /**
-     * @var MarkEvaluator
-     */
-    protected $markEvaluator;
+    protected ?MarkEvaluator $markEvaluator = null;
 
     /**
      * @return MarkEvaluator
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function markEvaluator(): MarkEvaluator
     {
@@ -55,8 +48,8 @@ class MarksCollector
     }
 
     /**
-     * @return \Generator|array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return Generator|array
+     * @throws BindingResolutionException
      */
     public function collect()
     {

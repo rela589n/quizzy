@@ -9,24 +9,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 final class FinishTestRequest extends FormRequest
 {
-    /**
-     * Determine if the student is authorized to pass current test.
-     *
-     * @param User $user
-     * @param RequestUrlManager $urlManager
-     * @return bool
-     */
-    public function authorize(User $user, RequestUrlManager $urlManager)
+    public function authorize(User $user, RequestUrlManager $urlManager): bool
     {
         return $user->can('pass-test', $urlManager->getCurrentTest());
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'ans'     => 'array',

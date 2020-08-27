@@ -6,8 +6,8 @@ namespace App\Lib\TestResults;
 
 class StrictMarkEvaluator implements MarkEvaluator
 {
-    const MIN_MARK = 2;
-    const MAX_MARK = 5;
+    public const MIN_MARK = 2;
+    public const MAX_MARK = 5;
 
     /**
      * @inheritDoc
@@ -31,17 +31,11 @@ class StrictMarkEvaluator implements MarkEvaluator
         return self::MAX_MARK;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function minPossibleMark(): int
     {
         return self::MIN_MARK;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function maxPossibleMark(): int
     {
         return self::MAX_MARK;

@@ -10,15 +10,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CreateOrUpdateAnswerOptionService extends StoreAnswerOptionService
 {
-    /**
-     * @var CreateAnswerOptionService
-     */
-    private $createAnswerOptionService;
-
-    /**
-     * @var UpdateAnswerOptionService
-     */
-    private $updateAnswerOptionService;
+    private CreateAnswerOptionService $createAnswerOptionService;
+    private UpdateAnswerOptionService $updateAnswerOptionService;
 
     public function ofQuestion(Question $question): StoreAnswerOptionService
     {
@@ -57,7 +50,7 @@ class CreateOrUpdateAnswerOptionService extends StoreAnswerOptionService
                 return $option;
             }
 
-            throw new ModelNotFoundException();
+            throw new ModelNotFoundException("Answer option with id ({$this->fields['id']}) not found.");
         }
 
         return AnswerOption::findOrFail($this->fields['id']);

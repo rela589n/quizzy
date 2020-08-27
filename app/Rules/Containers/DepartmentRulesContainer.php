@@ -8,10 +8,10 @@ use App\Rules\UriSlug;
 
 final class DepartmentRulesContainer
 {
-    public function getRules()
+    public function getRules(): array
     {
         return [
-            'name' => [
+            'name'      => [
                 'required',
                 'min:4',
                 'max:128'

@@ -2,8 +2,13 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\AnswerOption
@@ -13,21 +18,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $question_id
  * @property int $is_right
  * @property-read Question $question
- * @method static \Illuminate\Database\Eloquent\Builder|AnswerOption newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|AnswerOption newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|AnswerOption query()
- * @method static \Illuminate\Database\Eloquent\Builder|AnswerOption whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AnswerOption whereIsRight($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AnswerOption whereQuestionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AnswerOption whereText($value)
- * @mixin \Eloquent
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static EloquentBuilder|AnswerOption newModelQuery()
+ * @method static EloquentBuilder|AnswerOption newQuery()
+ * @method static EloquentBuilder|AnswerOption query()
+ * @method static EloquentBuilder|AnswerOption whereId($value)
+ * @method static EloquentBuilder|AnswerOption whereIsRight($value)
+ * @method static EloquentBuilder|AnswerOption whereQuestionId($value)
+ * @method static EloquentBuilder|AnswerOption whereText($value)
+ * @mixin Eloquent
+ * @property Carbon|null $deleted_at
  * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|AnswerOption onlyTrashed()
+ * @method static QueryBuilder|AnswerOption onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|AnswerOption whereDeletedAt($value)
- * @method static \Illuminate\Database\Query\Builder|AnswerOption withTrashed()
- * @method static \Illuminate\Database\Query\Builder|AnswerOption withoutTrashed()
+ * @method static EloquentBuilder|AnswerOption whereDeletedAt($value)
+ * @method static QueryBuilder|AnswerOption withTrashed()
+ * @method static QueryBuilder|AnswerOption withoutTrashed()
  */
 class AnswerOption extends Model
 {
@@ -36,7 +41,7 @@ class AnswerOption extends Model
 
     protected $fillable = ['text', 'question_id', 'is_right'];
 
-    public function question()
+    public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
     }

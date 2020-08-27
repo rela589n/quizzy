@@ -3,48 +3,26 @@
 namespace App\Http\Controllers\Admin\Results;
 
 use App\Http\Requests\FilterTestResults\FilterTestResultsRequest;
-use App\Http\Requests\RequestUrlManager;
 use App\Lib\Filters\Eloquent\TestResultFilter;
 use App\Http\Controllers\Admin\AdminController;
 use App\Repositories\StudentGroupsRepository;
 use App\Repositories\SubjectsRepository;
 use App\Repositories\TestsRepository;
 use App\Services\TestResults\MarksCollector;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 
 class TestResultsController extends AdminController
 {
-    /** @var TestsRepository */
-    private $testsRepository;
-
-    /**
-     * TestResultsController constructor.
-     * @param TestsRepository $testsRepository
-     * @param RequestUrlManager $urlManager
-     */
-    public function __construct(TestsRepository $testsRepository, RequestUrlManager $urlManager)
-    {
-        $this->testsRepository = $testsRepository;
-
-        parent::__construct($urlManager);
-    }
-
-    /**
-     * @param SubjectsRepository $repository
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function showSelectSubjectPage(SubjectsRepository $repository)
+    public function showSelectSubjectPage(SubjectsRepository $repository): View
     {
         return view('pages.admin.results-select-subject', [
             'subjects' => $repository->subjectsForResults()
         ]);
     }
 
-    /**
-     * @param TestsRepository $testsRepository
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function showSelectTestPage(TestsRepository $testsRepository)
+    public function showSelectTestPage(TestsRepository $testsRepository): View
     {
         return view('pages.admin.results-select-test', [
             'subject'      => $this->urlManager->getCurrentSubject(),
@@ -57,13 +35,13 @@ class TestResultsController extends AdminController
      * @param TestResultFilter $filters
      * @param StudentGroupsRepository $groupsRepository
      * @param MarksCollector $marksCollector
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return View
+     * @throws BindingResolutionException
      */
     public function showTestResults(FilterTestResultsRequest $request,
                                     TestResultFilter $filters,
                                     StudentGroupsRepository $groupsRepository,
-                                    MarksCollector $marksCollector)
+                                    MarksCollector $marksCollector): View
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest(true);
@@ -74,7 +52,7 @@ class TestResultsController extends AdminController
         $filteredResults = $currentTest
             ->testResults()
             ->orderByDesc('id')
-            ->filtered($filters, function (Collection $results) use ($currentTest) {
+            ->filtered($filters, static function (Collection $results) use ($currentTest) {
                 $results->setRelation('test', $currentTest);
             })
             ->paginate(20)

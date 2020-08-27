@@ -7,40 +7,42 @@ namespace App\Repositories\Queries;
 use App\Models\BaseUser;
 use App\Models\Department;
 use App\Models\StudentGroup;
-use Illuminate\Database\Eloquent\Builder as Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class AccessibleDepartments
 {
-    protected $user;
+    protected BaseUser $user;
 
-    /**
-     * @param mixed $user
-     */
     public function setUser(BaseUser $user): void
     {
         $this->user = $user;
     }
 
     /**
-     * @param Builder $departmentsQuery
+     * @param  Builder  $departmentsQuery
      */
-    public function apply($departmentsQuery)
+    public function apply($departmentsQuery): void
     {
-        $departmentsQuery->whereHas('studentGroups', function ($q) {
-            $this->groupsQuerySelector($q);
-        });
+        $departmentsQuery->whereHas(
+            'studentGroups',
+            function ($q) {
+                $this->groupsQuerySelector($q);
+            }
+        );
     }
 
-    public function isAccessible(Department $department)
+    public function isAccessible(Department $department): bool
     {
         if ($department->relationLoaded('studentGroups')) {
             return $this->groupsLoadedSelector($department)
                 ->isNotEmpty();
         }
 
-        return $department->studentGroups()->where(function ($q) {
-            $this->groupsQuerySelector($q);
-        })->exists();
+        return $department->studentGroups()->where(
+            function ($q) {
+                $this->groupsQuerySelector($q);
+            }
+        )->exists();
     }
 
     protected function groupsLoadedSelector(Department $department)
@@ -50,9 +52,9 @@ class AccessibleDepartments
     }
 
     /**
-     * @param StudentGroup|Builder $groupQuery
+     * @param  StudentGroup|Builder  $groupQuery
      */
-    protected function groupsQuerySelector($groupQuery)
+    protected function groupsQuerySelector($groupQuery): void
     {
         $groupQuery->whereCreatedBy($this->user->id);
     }

@@ -30,8 +30,8 @@
         @include('blocks.admin.question-single', [
             'questionIndex' => $loop->iteration,
             'type' => $question->type,
-            'modified' => boolval(old("q.modified.{$question->id}", false)),
-            'new' => boolval(old("q.new.{$question->id}", false))
+            'modified' => (bool)old("q.modified.{$question->id}", false),
+            'new' => (bool)old("q.new.{$question->id}", false)
         ])
     @empty
         <h3 class="list-group-item empty-questions-list-label mb-4">Щоб створити питання, натисніть кнопку + нижче:</h3>

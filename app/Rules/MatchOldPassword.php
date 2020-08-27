@@ -7,36 +7,19 @@ use Illuminate\Contracts\Validation\Rule;
 
 final class MatchOldPassword implements Rule
 {
-    protected $user;
+    protected Authenticatable $user;
 
-    /**
-     * Create a new rule instance.
-     *
-     * @param Authenticatable $user
-     */
     public function __construct($user)
     {
         $this->user = $user;
     }
 
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         return \Hash::check($value, $this->user->getAuthPassword());
     }
 
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
+    public function message(): string
     {
         return trans('auth.custom.password_doesnt_match');
     }

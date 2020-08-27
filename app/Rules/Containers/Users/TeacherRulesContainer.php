@@ -16,8 +16,11 @@ final class TeacherRulesContainer extends UserRulesContainer
         return $rules;
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
-        return $this->validationGenerator->buildAttribute('role_ids.*', trans('validation.attributes.roles'));
+        return $this->validationGenerator->buildAttribute(
+            'role_ids.*',
+            trans('validation.attributes.roles')
+        );
     }
 }

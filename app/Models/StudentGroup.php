@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Lib\Filters\Eloquent\ResultFilter;
 use App\Lib\Traits\FilteredScope;
 use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -35,12 +39,12 @@ use Illuminate\Support\Facades\DB;
  * @method static Builder|StudentGroup whereYear($value)
  * @method static \Illuminate\Database\Query\Builder|StudentGroup withTrashed()
  * @method static \Illuminate\Database\Query\Builder|StudentGroup withoutTrashed()
- * @mixin \Eloquent
+ * @mixin Eloquent
  * @property-read int $course
  * @property int|null $created_by
  * @method static Builder|StudentGroup whereCreatedBy($value)
  * @method static Builder|StudentGroup whereSlug($slug)
- * @method static Builder|StudentGroup filtered(\App\Lib\Filters\Eloquent\ResultFilter $filters)
+ * @method static Builder|StudentGroup filtered(ResultFilter $filters)
  * @property int|null $department_id
  * @method static Builder|StudentGroup whereDepartmentId($value)
  * @property-read Department|null $department
@@ -58,24 +62,24 @@ class StudentGroup extends Model
     public $timestamps = false;
 
     protected $fillable = ['name', 'uri_alias', 'year', 'created_by'];
-    protected $studyStartMonth = 9;
-    protected $studyStartDay = 1;
+    protected int $studyStartMonth = 9;
+    protected int $studyStartDay = 1;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany|User
+     * @return HasMany|User
      */
     public function students()
     {
         return $this->hasMany(User::class)->orderBy('surname')->orderBy('name');
     }
 
-    public function department()
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|Administrator
+     * @return BelongsTo|Administrator
      */
     protected function administrator()
     {
@@ -83,7 +87,7 @@ class StudentGroup extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo|Builder|Administrator
+     * @return BelongsTo|Builder|Administrator
      */
     public function classMonitor()
     {
@@ -95,7 +99,7 @@ class StudentGroup extends Model
      *
      * @return int
      */
-    public function getCourseAttribute()
+    public function getCourseAttribute(): int
     {
         $started = Carbon::parse(
             sprintf('%s-%s-%s',

@@ -5,13 +5,14 @@ namespace App\Lib\Filters\Eloquent;
 
 
 use App\Lib\Filters\Filter;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 abstract class ResultFilter extends Filter
 {
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function applyQueryFilters($query)
     {
@@ -20,21 +21,21 @@ abstract class ResultFilter extends Filter
     }
 
     /**
-     * @param EloquentCollection $results
-     * @return mixed
+     * @param  Collection  $results
+     * @return Collection
      */
-    public function apply($results)
+    public function apply($results): Collection
     {
         $this->loadRelations($results);
         return parent::apply($results);
     }
 
-    protected function loadRelations(EloquentCollection $results)
+    protected function loadRelations(Collection $results): void
     {
         //
     }
 
-    protected function queryFilters()
+    protected function queryFilters(): array
     {
         return [];
     }

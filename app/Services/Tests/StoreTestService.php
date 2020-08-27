@@ -12,28 +12,23 @@ use Illuminate\Support\Collection;
 
 abstract class StoreTestService
 {
-    const NEW_TEST_INCLUDE_QUANTITY = 999;
+    public const NEW_TEST_INCLUDE_QUANTITY = 999;
 
-    /** @var IncludeTestsFilter */
-    protected $filter;
+    protected IncludeTestsFilter $filter;
+    protected IncludeTestsTransformer $transformer;
+    protected array $fields = [];
+    protected Test $test;
 
-    /** @var IncludeTestsTransformer */
-    protected $transformer;
-
-    /** @var array */
-    protected $fields = [];
-
-    /** @var Test */
-    protected $test;
-
-    public function __construct(IncludeTestsFilter $filter, IncludeTestsTransformer $transformer)
-    {
+    public function __construct(
+        IncludeTestsFilter $filter,
+        IncludeTestsTransformer $transformer
+    ) {
         $this->filter = $filter;
         $this->transformer = $transformer;
     }
 
     /**
-     * @param TestSubject $subject
+     * @param  TestSubject  $subject
      * @return $this
      */
     public function ofSubject(TestSubject $subject): self
@@ -77,29 +72,31 @@ abstract class StoreTestService
         $this->test->tests()->sync($include);
     }
 
-    protected function handleCustomEvaluation(Collection $collection)
+    protected function handleCustomEvaluation(Collection $collection): void
     {
         $this->detachMarkPercents();
         $this->prepareMarkPercents($collection);
         $this->saveMarkPercents($collection);
     }
 
-    protected function detachMarkPercents()
+    protected function detachMarkPercents(): void
     {
         $this->test->marksPercents()->delete();
     }
 
-    protected function prepareMarkPercents(Collection &$collection)
+    protected function prepareMarkPercents(Collection &$collection): void
     {
-        $collection = $collection->sortBy(function($element) {
-            return (int)$element['mark'];
-        });
+        $collection = $collection->sortBy(
+            static function ($element) {
+                return (int)$element['mark'];
+            }
+        );
     }
 
-    protected function saveMarkPercents(Collection $collection)
+    protected function saveMarkPercents(Collection $collection): void
     {
         $this->test->marksPercents()->createMany($collection);
     }
 
-    protected abstract function doHandle(): Test;
+    abstract protected function doHandle(): Test;
 }

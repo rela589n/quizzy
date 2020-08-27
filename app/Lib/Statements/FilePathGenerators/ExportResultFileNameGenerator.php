@@ -8,17 +8,11 @@ use App\Models\Test;
 
 class ExportResultFileNameGenerator extends ResultFileNameGenerator
 {
-    protected $storageDir = 'app/public/exports/';
-    protected $filePrefix = 'Експорт';
+    protected string $storageDir = 'app/public/exports/';
+    protected string $filePrefix = 'Експорт';
 
-    /**
-     * @var Test
-     */
-    protected $test;
+    protected Test $test;
 
-    /**
-     * @param Test $test
-     */
     public function setTest(Test $test): void
     {
         $this->test = $test;

@@ -11,10 +11,11 @@ class AnswersTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        if (env('APP_ENV') === 'production')
+        if (env('APP_ENV') === 'production') {
             return;
+        }
 
         /**
          * @var $askedQuestions AskedQuestion[]
@@ -27,11 +28,13 @@ class AnswersTableSeeder extends Seeder
             foreach ($askedQuestion->question->answerOptions as $answerOption) {
                 $chance = $answerOption->is_right ? 95 : 5;
 
-                Answer::create([
-                    'asked_question_id' => $askedQuestion->id,
-                    'answer_option_id' => $answerOption->id,
-                    'is_chosen' =>  $faker->boolean($chance)
-                ]);
+                Answer::create(
+                    [
+                        'asked_question_id' => $askedQuestion->id,
+                        'answer_option_id'  => $answerOption->id,
+                        'is_chosen'         => $faker->boolean($chance)
+                    ]
+                );
             }
         }
     }

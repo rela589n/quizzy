@@ -6,18 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ChangePasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\View;
 
 class ChangePasswordController extends Controller
 {
-    /**
-     * @var string
-     */
-    protected $guardName;
-
-    /**
-     * @var string
-     */
-    protected $redirectTo;
+    protected string $guardName;
+    protected string $redirectTo;
 
     /**
      * Create a new controller instance.
@@ -38,7 +32,7 @@ class ChangePasswordController extends Controller
         return $request->input('new_password');
     }
 
-    protected function changePassword(ChangePasswordRequest $request)
+    protected function changePassword(ChangePasswordRequest $request): void
     {
         $authUser = $request->getAuthUser();
 
@@ -48,7 +42,7 @@ class ChangePasswordController extends Controller
         $authUser->save();
     }
 
-    public function showInitialPasswordChangeForm(Request $request)
+    public function showInitialPasswordChangeForm(Request $request): View
     {
         return view(sprintf('pages.%s.initial-password-change', $this->guardName));
     }

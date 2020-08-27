@@ -9,32 +9,23 @@ use App\Models\Test;
 
 class GroupResultFileNameGenerator extends ResultFileNameGenerator
 {
-    /**
-     * @var StudentGroup
-     */
-    protected $group;
+    protected StudentGroup $group;
+    protected Test $test;
 
-    /**
-     * @var Test
-     */
-    protected $test;
-
-    /**
-     * @param StudentGroup $group
-     */
     public function setGroup(StudentGroup $group): void
     {
         $this->group = $group;
     }
 
-    public function setTest(Test $test)
+    public function setTest(Test $test): void
     {
         $this->test = $test;
     }
 
     protected function generateFileName(): string
     {
-        return sprintf('%s (%s %s) - %s.docx',
+        return sprintf(
+            '%s (%s %s) - %s.docx',
             $this->filePrefix,
             $this->test->subject->name,
             $this->test->name,

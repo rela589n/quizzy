@@ -13,75 +13,61 @@ use Illuminate\Validation\Rule;
 
 final class FillAnswersRequest extends FormRequest
 {
-    /** @var ValidationGenerator */
-    protected $validationGenerator;
-
-    /** @var array */
-    protected $validatedData;
+    protected ValidationGenerator $validationGenerator;
+    protected ?array $validatedData = null;
 
     protected function &validatedData()
     {
-        return singleVar($this->validatedData, function () {
-            $this->validatedData = $this->validated();
-        });
+        return singleVar(
+            $this->validatedData,
+            function () {
+                $this->validatedData = $this->validated();
+            }
+        );
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @param RequestUrlManager $urlManager
-     * @return bool
-     */
-    public function authorize(Administrator $user, RequestUrlManager $urlManager)
+    public function authorize(Administrator $user, RequestUrlManager $urlManager): bool
     {
         return $user->can('update', $urlManager->getCurrentTest());
     }
 
-    /**
-     * Get custom attributes for validator errors.
-     *
-     * @return array
-     */
-    public function attributes()
+    public function attributes(): array
     {
-        return $this->validationGenerator->buildManyAttributes([
-            'q.new.*.v.*.text|q.modified.*.v.*.text' => trans('validation.attributes.option_text'),
-            'q.new.*.name|q.modified.*.name'         => trans('validation.attributes.questions'),
-            'q.new.*.v|q.modified.*.v'               => trans('validation.attributes.answer_options'),
-        ]);
+        return $this->validationGenerator->buildManyAttributes(
+            [
+                'q.new.*.v.*.text|q.modified.*.v.*.text' => trans('validation.attributes.option_text'),
+                'q.new.*.name|q.modified.*.name'         => trans('validation.attributes.questions'),
+                'q.new.*.v|q.modified.*.v'               => trans('validation.attributes.answer_options'),
+            ]
+        );
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param ValidationGenerator $generator
-     * @return array
-     */
-    public function rules(ValidationGenerator $generator)
+    public function rules(ValidationGenerator $generator): array
     {
         $this->validationGenerator = $generator;
 
-        return $this->validationGenerator->buildManyRules([
-            'q|q.new|q.modified'                             => 'array',
-            'q.new.*.name|q.modified.*.name'                 => 'required|min:3|max:255',
-            'q.new.*.v|q.modified.*.v'                       => [
-                'required',
-                'array',
-                'min:2',
-                new AtLeastOneSelected('is_right')
-            ],
-            'q.new.*.v.*|q.modified.*.v.*'                   => [
-                'required',
-                'array',
-            ],
-            'q.new.*.v.*.is_right|q.modified.*.v.*.is_right' => [
-                'sometimes',
-                Rule::in('0', '1')
-            ],
-            'q.new.*.v.*.text|q.modified.*.v.*.text'         => 'required|min:1|max:255',
-            'q.deleted|v.deleted'                            => 'array|min:1',
-        ]);
+        return $this->validationGenerator->buildManyRules(
+            [
+                'q|q.new|q.modified'                             => 'array',
+                'q.new.*.name|q.modified.*.name'                 => 'required|min:3|max:255',
+                'q.new.*.v|q.modified.*.v'                       => [
+                    'required',
+                    'array',
+                    'min:2',
+                    new AtLeastOneSelected('is_right')
+                ],
+                'q.new.*.v.*|q.modified.*.v.*'                   => [
+                    'required',
+                    'array',
+                ],
+                'q.new.*.v.*.is_right|q.modified.*.v.*.is_right' => [
+                    'sometimes',
+                    Rule::in('0', '1')
+                ],
+                'q.new.*.v.*.text|q.modified.*.v.*.text'         => 'required|min:1|max:255',
+                'q.deleted|v.deleted'                            => 'array|min:1',
+            ]
+        );
     }
 
     public function answerOptionsToDelete(): array
@@ -94,26 +80,24 @@ final class FillAnswersRequest extends FormRequest
         return $this->validatedData()['q']['deleted'] ?? [];
     }
 
-    public function questionsToCreate()
+    public function questionsToCreate(): array
     {
         return $this->transformQuestions($this->validatedData()['q']['new'] ?? []);
     }
 
-    public function questionsToUpdate()
+    public function questionsToUpdate(): array
     {
         return $this->transformQuestions($this->validatedData()['q']['modified'] ?? []);
     }
 
-    protected function transformQuestions($rawQuestions)
+    protected function transformQuestions($rawQuestions): array
     {
         $questions = [];
 
         foreach ($rawQuestions as $questionId => $question) {
-
             $answerOptions = [];
 
             foreach ($question['v'] as $optionId => $option) {
-
                 $option['id'] = $optionId;
                 $answerOptions[] = [
                     'id'       => $optionId,
@@ -132,7 +116,7 @@ final class FillAnswersRequest extends FormRequest
         return $questions;
     }
 
-    protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator): void
     {
         Session::push('messageToUser', trans('validation.custom.some-questions-have-errors'));
 

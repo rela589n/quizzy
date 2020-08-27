@@ -5,24 +5,16 @@ namespace App\Lib\Statements;
 use App\Lib\PHPWord\TemplateProcessor;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Words\WordsManager;
+use PhpOffice\PhpWord\Exception\CopyFileException;
+use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
+use PhpOffice\PhpWord\Exception\Exception;
+use PhpOffice\PhpWord\Settings as PhpWordSettings;
 
 abstract class StatementsGenerator
 {
-    /**
-     * @var WordsManager
-     */
-    protected $wordsManager;
+    protected WordsManager $wordsManager;
+    protected ResultFileNameGenerator $filePathGenerator;
 
-    /**
-     * @var ResultFileNameGenerator
-     */
-    protected $filePathGenerator;
-
-    /**
-     * StatementsGenerator constructor.
-     * @param WordsManager $wordsManager
-     * @param ResultFileNameGenerator $filePathGenerator
-     */
     public function __construct(WordsManager $wordsManager, ResultFileNameGenerator $filePathGenerator)
     {
         $this->wordsManager = $wordsManager;
@@ -31,13 +23,13 @@ abstract class StatementsGenerator
 
     /**
      * @return string path to generated statement file
-     * @throws \PhpOffice\PhpWord\Exception\CopyFileException
-     * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
-     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @throws CopyFileException
+     * @throws CreateTemporaryFileException
+     * @throws Exception
      */
-    public function generate()
+    public function generate(): string
     {
-        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
+        PhpWordSettings::setOutputEscapingEnabled(true);
 
         $templateProcessor = new TemplateProcessor(resource_path($this->templateResourcePath()));
         $this->doGenerate($templateProcessor);
@@ -45,7 +37,7 @@ abstract class StatementsGenerator
         $filePath = $this->filePathGenerator->generate();
         $templateProcessor->saveAs($filePath);
 
-        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(false);
+        PhpWordSettings::setOutputEscapingEnabled(false);
         return $filePath;
     }
 

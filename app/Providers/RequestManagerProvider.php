@@ -13,10 +13,13 @@ class RequestManagerProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->app->singleton(RequestUrlManager::class, function ($app) {
-            return new RequestUrlManager(resolve(Request::class));
-        });
+        $this->app->singleton(
+            RequestUrlManager::class,
+            static function () {
+                return new RequestUrlManager(resolve(Request::class));
+            }
+        );
     }
 }

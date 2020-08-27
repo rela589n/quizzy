@@ -11,7 +11,7 @@ class HelpersServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         require app_path('Includes/debug-helpers.php');
         require app_path('Includes/helpers.php');

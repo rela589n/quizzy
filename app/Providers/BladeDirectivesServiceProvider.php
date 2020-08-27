@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Route;
 
 class BladeDirectivesServiceProvider extends ServiceProvider
 {
@@ -14,10 +15,13 @@ class BladeDirectivesServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        Blade::if('ifroute', function($routeName) {
-            return Str::startsWith(\Route::currentRouteName(), $routeName);
-        });
+        Blade::if(
+            'ifroute',
+            static function ($routeName) {
+                return Str::startsWith(Route::currentRouteName(), $routeName);
+            }
+        );
     }
 }

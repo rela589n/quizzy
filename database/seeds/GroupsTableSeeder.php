@@ -2,11 +2,11 @@
 
 use App\Models\Department;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr as Arr;
+use Illuminate\Support\Arr;
 
 class GroupsTableSeeder extends Seeder
 {
-    protected static $groups = [
+    protected static array $groups = [
         'software-engineering' => [
             [
                 'name'      => 'ПІ-191',
@@ -31,7 +31,7 @@ class GroupsTableSeeder extends Seeder
         ]
     ];
 
-    public static function getGroupsCount()
+    public static function getGroupsCount(): int
     {
         return count(Arr::flatten(self::$groups, 1));
     }
@@ -41,13 +41,14 @@ class GroupsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        if (env('APP_ENV') === 'production')
+        if (env('APP_ENV') === 'production') {
             return;
+        }
 
         foreach (self::$groups as $department => $groups) {
-            $department = Department::whereUriAlias($department)->first();
+            $department = Department::whereUriAlias($department)->firstOrFail();
 
             $department->studentGroups()->createMany($groups);
         }

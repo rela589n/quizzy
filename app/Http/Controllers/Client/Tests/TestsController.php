@@ -6,17 +6,18 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Requests\Tests\Pass\FinishTestRequest;
 use App\Models\AskedQuestion;
 use App\Models\TestResult;
+use Auth;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class TestsController extends ClientController
 {
     /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showSingleTestForm(Request $request)
+    public function showSingleTestForm(): View
     {
         $currentTest = $this->urlManager->getCurrentTest();
         $currentSubject = $currentTest->subject;
@@ -24,7 +25,7 @@ class TestsController extends ClientController
         $this->authorize('pass-test', $currentTest);
 
         $questions = $currentTest->allQuestions();
-        $questions->loadMissing(['answerOptions' => function (Relation $q) {
+        $questions->loadMissing(['answerOptions' => static function (Relation $q) {
             $q->inRandomOrder();
         }]);
 
@@ -37,15 +38,15 @@ class TestsController extends ClientController
 
     /**
      * @param FinishTestRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      */
-    public function finishTest(FinishTestRequest $request)
+    public function finishTest(FinishTestRequest $request): View
     {
         $currentTest = $this->urlManager->getCurrentTest();
 
         $testResult = new TestResult();
         $testResult->test()->associate($currentTest);
-        $testResult->user()->associate(\Auth::guard('client')->user());
+        $testResult->user()->associate(Auth::guard('client')->user());
         $testResult->save();
 
         $validated = $request->validated();

@@ -12,38 +12,31 @@ use Illuminate\Validation\Rule;
 
 final class UpdateStudentRequest extends FormRequest
 {
-    private $student;
+    private ?User $student = null;
 
-    public function student()
+    public function student(): User
     {
-        return singleVar($this->student, function () {
-            return User::findOrFail($this->route('studentId'));
-        });
+        return singleVar(
+            $this->student,
+            function () {
+                return User::findOrFail($this->route('studentId'));
+            }
+        );
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @return bool
-     */
-    public function authorize(Administrator $user)
+    public function authorize(Administrator $user): bool
     {
-        if (!$user->can('update', $this->student()))
+        if (!$user->can('update', $this->student())) {
             return false;
+        }
 
-        if (!is_null($this->input('student_group_id')))
+        if (!is_null($this->input('student_group_id'))) {
             return $user->can('edit-group-of-student');
+        }
 
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param StudentRulesContainer $container
-     * @return array
-     */
     public function rules(StudentRulesContainer $container): array
     {
         $rules = $container->getRules();

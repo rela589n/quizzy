@@ -8,24 +8,12 @@ final class AtLeastOneSelected implements Rule
 {
     private $key;
 
-    /**
-     * Create a new rule instance.
-     *
-     * @param string|int $key
-     */
     public function __construct($key)
     {
         $this->key = $key;
     }
 
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         foreach ($value as $item) {
             if (isset($item[$this->key])) {
@@ -41,7 +29,7 @@ final class AtLeastOneSelected implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return trans('validation.custom.at_least_one_checked');
     }

@@ -12,13 +12,7 @@ interface MarkEvaluator
      */
     public function putMark(float $fullTestScore): int;
 
-    /**
-     * @return int
-     */
     public function minPossibleMark(): int;
 
-    /**
-     * @return int
-     */
     public function maxPossibleMark(): int;
 }

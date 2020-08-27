@@ -4,15 +4,13 @@
 namespace App\Lib\Parsers;
 
 
+use App\Exceptions\FileUnopenableException;
+use Generator;
+
 class TestTxtParser extends TestParser
 {
-    private $fileName;
+    private string $fileName;
 
-    /**
-     * TestTxtParser constructor.
-     * @param TestSanitizer $sanitizer
-     * @param string $fileName
-     */
     public function __construct(TestSanitizer $sanitizer, string $fileName)
     {
         parent::__construct($sanitizer);
@@ -20,9 +18,9 @@ class TestTxtParser extends TestParser
     }
 
     /**
-     * @throws \App\Exceptions\FileUnopenableException
+     * @throws FileUnopenableException
      */
-    protected function getTextLines()
+    protected function getTextLines(): ?Generator
     {
         foreach (next_line($this->fileName) as $item) {
             yield $item;

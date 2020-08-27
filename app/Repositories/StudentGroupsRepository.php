@@ -23,21 +23,25 @@ class StudentGroupsRepository
 
     protected function builderForResultsPage(int $testId)
     {
-        return StudentGroup::withTrashed()->whereHas('students', function (Builder $studentQuery) use ($testId) {
-            /**
-             * @var User|Builder $studentQuery
-             */
-
-            $studentQuery->withTrashed();
-
-            $studentQuery->whereHas('testResults', function (Builder $resultQuery) use ($testId) {
-
+        return StudentGroup::withTrashed()->whereHas(
+            'students',
+            static function (Builder $studentQuery) use ($testId) {
                 /**
-                 * @var TestResult|Builder $resultQuery
+                 * @var User|Builder $studentQuery
                  */
-                $resultQuery->whereTestId($testId);
-            });
 
-        });
+                $studentQuery->withTrashed();
+
+                $studentQuery->whereHas(
+                    'testResults',
+                    static function (Builder $resultQuery) use ($testId) {
+                        /**
+                         * @var TestResult|Builder $resultQuery
+                         */
+                        $resultQuery->whereTestId($testId);
+                    }
+                );
+            }
+        );
     }
 }

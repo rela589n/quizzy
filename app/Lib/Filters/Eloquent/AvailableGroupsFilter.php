@@ -5,33 +5,22 @@ namespace App\Lib\Filters\Eloquent;
 
 
 use App\Models\Administrator;
-use App\Models\StudentGroup;
 
 class AvailableGroupsFilter extends ResultFilter
 {
-    /**
-     * @var Administrator
-     */
-    private $user;
+    private Administrator $user;
 
-    /**
-     * AvailableGroupsFilter constructor.
-     * @param Administrator $user
-     */
     public function __construct(Administrator $user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @param Administrator $user
-     */
     public function setUser(Administrator $user): void
     {
         $this->user = $user;
     }
 
-    protected function filters()
+    protected function filters(): array
     {
         if ($this->user->can('view-groups')) {
             return [];
@@ -40,12 +29,7 @@ class AvailableGroupsFilter extends ResultFilter
         return ['maintainedBy' => $this->user];
     }
 
-    /**
-     * @param StudentGroup $studentGroup
-     * @param Administrator $user
-     * @return bool
-     */
-    protected function maintainedBy($studentGroup, $user)
+    protected function maintainedBy($studentGroup, $user): bool
     {
         return $user->can('view', $studentGroup);
     }

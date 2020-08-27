@@ -9,15 +9,14 @@ use App\Rules\Containers\Users\TeacherRulesContainer;
 
 final class CreateTeacherRequest extends TeacherRequest
 {
-    /** @var TeacherRulesContainer */
-    protected $rulesContainer;
+    protected TeacherRulesContainer $rulesContainer;
 
-    public function authorize(Administrator $user)
+    public function authorize(Administrator $user): bool
     {
         return $user->can('create-administrators');
     }
 
-    public function rules(TeacherRulesContainer $container)
+    public function rules(TeacherRulesContainer $container): array
     {
         $this->rulesContainer = $container;
 

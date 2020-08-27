@@ -6,24 +6,15 @@ namespace App\Lib;
 
 use App\Models\Test;
 use App\Services\TestResults\MarksCollector;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 class MarksCorrelationCreator
 {
-    /**
-     * @var MarksCollector
-     */
-    protected $marksCollector;
+    protected MarksCollector $marksCollector;
+    protected Test $test;
 
-    /**
-     * @var Test
-     */
-    protected $test;
-
-    /**
-     * @var array
-     */
-    protected $markTypes = [
+    protected array $markTypes = [
         'unsatisfactorily',
         'satisfactorily',
         'good',
@@ -68,14 +59,11 @@ class MarksCorrelationCreator
         return $this->markTypes[$block - 1];
     }
 
-    /**
-     * @var array
-     */
-    protected $marks;
+    protected array $marks;
 
     /**
      * @return array
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     public function marksMap(): array
     {
@@ -90,10 +78,6 @@ class MarksCorrelationCreator
         return $marksMap;
     }
 
-    /**
-     * @param Test $test
-     * @return self
-     */
     public function setTest(Test $test): self
     {
         $this->test = $test;
@@ -101,5 +85,4 @@ class MarksCorrelationCreator
 
         return $this;
     }
-
 }

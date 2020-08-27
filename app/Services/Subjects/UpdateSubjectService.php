@@ -9,8 +9,8 @@ use App\Models\TestSubject;
 class UpdateSubjectService extends StoreSubjectService
 {
     /**
-     * @param TestSubject $subject
-     * @return UpdateSubjectService
+     * @param  TestSubject  $subject
+     * @return $this
      */
     public function setSubject(TestSubject $subject): self
     {

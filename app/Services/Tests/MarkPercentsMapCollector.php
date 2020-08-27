@@ -9,29 +9,22 @@ use App\Repositories\MarkPercentsRepository;
 
 class MarkPercentsMapCollector
 {
-    /**
-     * @var MarkPercentsRepository
-     */
-    private $markPercentsRepository;
-    /**
-     * @var MarkPercentsManager
-     */
-    private $markPercentsManager;
+    private MarkPercentsRepository $markPercentsRepository;
+    private MarkPercentsManager $markPercentsManager;
 
-    public function __construct(MarkPercentsRepository $markPercentsRepository, MarkPercentsManager $markPercentsManager)
-    {
+    public function __construct(
+        MarkPercentsRepository $markPercentsRepository,
+        MarkPercentsManager $markPercentsManager
+    ) {
         $this->markPercentsRepository = $markPercentsRepository;
         $this->markPercentsManager = $markPercentsManager;
     }
 
-    /**
-     * @var Test
-     */
-    private $test;
+    private ?Test $test = null;
 
     /**
-     * @param Test $test
-     * @return MarkPercentsMapCollector
+     * @param  Test  $test
+     * @return $this
      */
     public function setTest(Test $test): self
     {
@@ -43,13 +36,15 @@ class MarkPercentsMapCollector
     public function markPercents()
     {
         return $this->markPercentsManager
-            ->setModels(function () {
-                if ($this->test === null) {
-                    return [];
-                }
+            ->setModels(
+                function () {
+                    if ($this->test === null) {
+                        return [];
+                    }
 
-                return $this->markPercentsRepository->mapForTest($this->test);
-            })
+                    return $this->markPercentsRepository->mapForTest($this->test);
+                }
+            )
             ->handle(old('correlation_table'));
     }
 }

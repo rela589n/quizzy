@@ -4,30 +4,21 @@
 namespace App\Services\Questions\Store\Multiple;
 
 
-use App\Models\Test as Test;
+use App\Models\Test;
 use App\Services\Questions\Store\Single\StoreQuestionService;
 
 abstract class StoreQuestionsService
 {
-    /** @var array */
-    protected $fields = [];
+    protected array $fields = [];
+    protected StoreQuestionService $storeQuestionService;
+    protected ?Test $test;
 
-    /** @var StoreQuestionService */
-    protected $storeQuestionService;
-
-    /** @var Test */
-    protected $test;
-
-    /**
-     * StoreQuestionsService constructor.
-     * @param StoreQuestionService $storeQuestionService
-     */
     public function __construct(StoreQuestionService $storeQuestionService)
     {
         $this->storeQuestionService = $storeQuestionService;
     }
 
-    public function ofTest(Test $test)
+    public function ofTest(Test $test): self
     {
         $this->test = $test;
 
@@ -36,7 +27,7 @@ abstract class StoreQuestionsService
         return $this;
     }
 
-    public function handle(array $questionsInfo)
+    public function handle(array $questionsInfo): void
     {
         foreach ($questionsInfo as $questionInfo) {
 

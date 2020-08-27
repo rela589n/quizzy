@@ -13,11 +13,11 @@ class StudentPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param Administrator $user
-     * @param User $model
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  User  $model
+     * @return bool
      */
-    public function view(Administrator $user, User $model)
+    public function view(Administrator $user, User $model): bool
     {
         return $model->isOwnedBy($user) || $user->can('view-students');
     }
@@ -25,11 +25,11 @@ class StudentPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param Administrator $user
-     * @param User $model
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  User  $model
+     * @return bool
      */
-    public function update(Administrator $user, User $model)
+    public function update(Administrator $user, User $model): bool
     {
         return $model->isOwnedBy($user) || $user->can('update-students');
     }
@@ -37,11 +37,11 @@ class StudentPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param Administrator $user
-     * @param User $model
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  User  $model
+     * @return bool
      */
-    public function delete(Administrator $user, User $model)
+    public function delete(Administrator $user, User $model): bool
     {
         return $user->can('delete-students');
     }

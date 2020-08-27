@@ -12,8 +12,11 @@ class StrictScoreEvaluator implements ScoreEvaluatorInterface
     public function evaluateTest(array $evaluatedQuestions): array
     {
         $perQuestion = 1. / count($evaluatedQuestions);
-        return array_map(function ($pair) use (&$perQuestion) {
-            return ($pair[0] == $pair[1]) * $perQuestion;
-        }, $evaluatedQuestions);
+        return array_map(
+            static function ($pair) use (&$perQuestion) {
+                return ($pair[0] == $pair[1]) * $perQuestion;
+            },
+            $evaluatedQuestions
+        );
     }
 }

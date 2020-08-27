@@ -12,7 +12,7 @@ trait OwnerChecks
      * @param Model $model
      * @return bool
      */
-    public function isOwnedBy(Model $model)
+    public function isOwnedBy(Model $model): bool
     {
         return $model->id == $this->created_by;
     }

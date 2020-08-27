@@ -6,17 +6,13 @@ namespace App\Lib\Filters\Eloquent;
 
 use App\Models\Administrator;
 use App\Repositories\Queries\AccessibleDepartments as AccessibleDepartmentQueries;
+use Illuminate\Database\Eloquent\Builder;
 
 class AvailableDepartmentsFilter extends ResultFilter
 {
-    private $user;
-    private $accessibleManager;
+    private Administrator $user;
+    private AccessibleDepartmentQueries $accessibleManager;
 
-    /**
-     * AvailableGroupsFilter constructor.
-     * @param Administrator $user
-     * @param AccessibleDepartmentQueries $departmentQueries
-     */
     public function __construct(Administrator $user, AccessibleDepartmentQueries $departmentQueries)
     {
         $this->user = $user;
@@ -25,7 +21,7 @@ class AvailableDepartmentsFilter extends ResultFilter
         $this->accessibleManager->setUser($this->user);
     }
 
-    protected function queryFilters()
+    protected function queryFilters(): array
     {
         if ($this->user->can('view-departments')) {
             return [];
@@ -35,9 +31,9 @@ class AvailableDepartmentsFilter extends ResultFilter
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  Builder  $query
      */
-    protected function hasGroupAccessibleToUser($query)
+    protected function hasGroupAccessibleToUser($query): void
     {
         $this->accessibleManager->apply($query);
     }

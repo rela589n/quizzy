@@ -15,8 +15,8 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     protected $namespace = 'App\Http\Controllers';
-    protected $adminNamespace = 'App\Http\Controllers\Admin';
-    protected $clientNamespace = 'App\Http\Controllers\Client';
+    protected string $adminNamespace = 'App\Http\Controllers\Admin';
+    protected string $clientNamespace = 'App\Http\Controllers\Client';
 
     /**
      * The path to the "home" route for your application depending on guard.
@@ -45,7 +45,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         Route::pattern('id', '[0-9]+');
         Route::pattern('name', '[a-zA-Z0-9_-]+');
@@ -58,7 +58,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function map()
+    public function map(): void
     {
         $this->mapApiRoutes();
 
@@ -77,11 +77,11 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapWebRoutes()
+    protected function mapWebRoutes(): void
     {
         Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
     }
 
     /**
@@ -91,12 +91,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapApiRoutes()
+    protected function mapApiRoutes(): void
     {
         Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 
     /**
@@ -106,7 +106,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapAdminRoutes()
+    protected function mapAdminRoutes(): void
     {
         Route::prefix('admin')
             ->middleware('web')
@@ -122,7 +122,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapClientRoutes()
+    protected function mapClientRoutes(): void
     {
         Route::middleware('web')
             ->namespace($this->clientNamespace)

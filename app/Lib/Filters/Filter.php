@@ -14,8 +14,7 @@ abstract class Filter
             if (method_exists($this, $filter)) {
                 $methodName = $filter;
                 $methodParam = $value;
-            }
-            elseif (method_exists($this, $value)) {
+            } elseif (method_exists($this, $value)) {
                 $methodName = $value;
                 $methodParam = $filter;
             }
@@ -28,20 +27,18 @@ abstract class Filter
         return true;
     }
 
-    /**
-     * @param Collection $data
-     * @return Collection
-     */
-    public function apply($data)
+    public function apply(Collection $data): Collection
     {
         $filters = $this->filters();
 
-        return $data->filter(function ($element) use(&$filters) {
-            return $this->applyFilters($filters, $element);
-        });
+        return $data->filter(
+            function ($element) use (&$filters) {
+                return $this->applyFilters($filters, $element);
+            }
+        );
     }
 
-    protected function filters()
+    protected function filters(): array
     {
         return [];
     }

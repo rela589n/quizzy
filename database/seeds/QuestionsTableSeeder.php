@@ -12,10 +12,11 @@ class QuestionsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        if (env('APP_ENV') === 'production')
+        if (env('APP_ENV') === 'production') {
             return;
+        }
 
         Question::create([
             'question' => 'Що таке клас?',

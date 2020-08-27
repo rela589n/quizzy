@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\MarkPercent
@@ -12,14 +15,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $percent
  * @property int $test_id
  * @property-read Test $test
- * @method static \Illuminate\Database\Eloquent\Builder|MarkPercent newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|MarkPercent newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|MarkPercent query()
- * @method static \Illuminate\Database\Eloquent\Builder|MarkPercent whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|MarkPercent whereMark($value)
- * @method static \Illuminate\Database\Eloquent\Builder|MarkPercent wherePercent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|MarkPercent whereTestId($value)
- * @mixin \Eloquent
+ * @method static Builder|MarkPercent newModelQuery()
+ * @method static Builder|MarkPercent newQuery()
+ * @method static Builder|MarkPercent query()
+ * @method static Builder|MarkPercent whereId($value)
+ * @method static Builder|MarkPercent whereMark($value)
+ * @method static Builder|MarkPercent wherePercent($value)
+ * @method static Builder|MarkPercent whereTestId($value)
+ * @mixin Eloquent
  */
 class MarkPercent extends Model
 {
@@ -28,7 +31,7 @@ class MarkPercent extends Model
 
     protected $fillable = ['mark', 'percent'];
 
-    public function test()
+    public function test(): BelongsTo
     {
         return $this->belongsTo(Test::class);
     }

@@ -13,10 +13,11 @@ class TestsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        if (env('APP_ENV') === 'production')
+        if (env('APP_ENV') === 'production') {
             return;
+        }
 
         $this->createRequired();
 
@@ -40,7 +41,7 @@ class TestsTableSeeder extends Seeder
         }
     }
 
-    protected function createRequired()
+    protected function createRequired(): void
     {
         /**
          * @var TestSubject $subject

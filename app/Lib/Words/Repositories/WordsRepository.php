@@ -6,10 +6,7 @@ namespace App\Lib\Words\Repositories;
 
 abstract class WordsRepository
 {
-    /**
-     * @var array
-     */
-    protected $wordEndings = [
+    protected array $wordEndings = [
         // 'word' => ['', 's']
     ];
 

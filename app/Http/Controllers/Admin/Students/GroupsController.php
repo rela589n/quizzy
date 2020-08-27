@@ -7,15 +7,19 @@ use App\Http\Requests\Groups\CreateGroupRequest;
 use App\Http\Requests\Groups\UpdateGroupRequest;
 use App\Lib\Filters\Eloquent\AvailableGroupsFilter;
 use App\Repositories\AdministratorsRepository;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class GroupsController extends AdminController
 {
     /**
      * @param AvailableGroupsFilter $filters
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showAll(AvailableGroupsFilter $filters)
+    public function showAll(AvailableGroupsFilter $filters): View
     {
         $department = $this->urlManager->getCurrentDepartment();
         $this->authorize('view', $department);
@@ -31,10 +35,10 @@ class GroupsController extends AdminController
 
     /**
      * @param AdministratorsRepository $adminRepo
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showNewGroupForm(AdministratorsRepository $adminRepo)
+    public function showNewGroupForm(AdministratorsRepository $adminRepo): View
     {
         $this->authorize('create-groups');
 
@@ -46,9 +50,9 @@ class GroupsController extends AdminController
 
     /**
      * @param CreateGroupRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function newGroup(CreateGroupRequest $request)
+    public function newGroup(CreateGroupRequest $request): RedirectResponse
     {
         $department = $this->urlManager->getCurrentDepartment();
 
@@ -60,10 +64,10 @@ class GroupsController extends AdminController
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showSingleGroup()
+    public function showSingleGroup(): View
     {
         $group = $this->urlManager->getCurrentGroup();
         $this->authorize('view', $group);
@@ -76,10 +80,10 @@ class GroupsController extends AdminController
 
     /**
      * @param AdministratorsRepository $adminRepo
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showUpdateGroupForm(AdministratorsRepository $adminRepo)
+    public function showUpdateGroupForm(AdministratorsRepository $adminRepo): View
     {
         $currentGroup = $this->urlManager->getCurrentGroup();
         $this->authorize('update', $currentGroup);
@@ -93,9 +97,9 @@ class GroupsController extends AdminController
 
     /**
      * @param UpdateGroupRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function updateGroup(UpdateGroupRequest $request)
+    public function updateGroup(UpdateGroupRequest $request): RedirectResponse
     {
         $group = $this->urlManager->getCurrentGroup();
         $group->update($request->validated());
@@ -107,16 +111,17 @@ class GroupsController extends AdminController
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     * @throws Exception
      */
-    public function deleteGroup()
+    public function deleteGroup(): RedirectResponse
     {
         $group = $this->urlManager->getCurrentGroup();
         $this->authorize('delete', $group);
 
         $group->delete();
+
         return redirect()->route('admin.students.department', [
             'department' => $this->urlManager->getCurrentDepartment()->uri_alias,
         ]);

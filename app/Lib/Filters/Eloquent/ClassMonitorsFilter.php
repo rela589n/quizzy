@@ -6,28 +6,26 @@ namespace App\Lib\Filters\Eloquent;
 
 use App\Models\Administrator;
 use App\Models\StudentGroup;
+use Illuminate\Database\Eloquent\Builder;
 
 class ClassMonitorsFilter extends ResultFilter
 {
-    /**
-     * @var StudentGroup
-     */
-    protected $group;
+    protected ?StudentGroup $group;
 
     public function setGroup(?StudentGroup $group): void
     {
         $this->group = $group;
     }
 
-    protected function queryFilters()
+    protected function queryFilters(): array
     {
         return ['availableClassMonitors'];
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder|Administrator $query
+     * @param  Builder|Administrator  $query
      */
-    protected function availableClassMonitors($query)
+    protected function availableClassMonitors($query): void
     {
         $query->doesntHave('studentGroup');
 

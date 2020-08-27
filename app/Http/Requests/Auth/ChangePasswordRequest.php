@@ -9,20 +9,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 abstract class ChangePasswordRequest extends FormRequest
 {
-    /** @var BaseUser */
-    protected $authUser;
+    protected BaseUser $authUser;
 
-    /**
-     * @param BaseUser $authUser
-     */
     public function setAuthUser(BaseUser $authUser): void
     {
         $this->authUser = $authUser;
     }
 
-    /**
-     * @return BaseUser
-     */
     public function getAuthUser(): BaseUser
     {
         return $this->authUser;
@@ -33,7 +26,7 @@ abstract class ChangePasswordRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -41,26 +34,28 @@ abstract class ChangePasswordRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @param ValidationGenerator $generator
+     * @param  ValidationGenerator  $generator
      * @return array
      */
-    public function rules(ValidationGenerator $generator)
+    public function rules(ValidationGenerator $generator): array
     {
         log_r($this->authUser->toArray());
         log_r($this->all());
 
-        return $generator->buildManyRules([
-            'new_password|new_password_confirmation' => 'required|string|min:6',
+        return $generator->buildManyRules(
+            [
+                'new_password|new_password_confirmation' => 'required|string|min:6',
 
-            'password'     => [
-                'required',
-                'string',
-                new MatchOldPassword($this->authUser)
-            ],
-            'new_password' => [
-                'confirmed',
-                'different:password'
-            ],
-        ]);
+                'password'     => [
+                    'required',
+                    'string',
+                    new MatchOldPassword($this->authUser)
+                ],
+                'new_password' => [
+                    'confirmed',
+                    'different:password'
+                ],
+            ]
+        );
     }
 }

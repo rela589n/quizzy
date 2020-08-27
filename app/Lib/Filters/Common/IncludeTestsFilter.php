@@ -8,25 +8,17 @@ use App\Lib\Filters\Filter;
 
 class IncludeTestsFilter extends Filter
 {
-    protected function filters()
+    protected function filters(): array
     {
         return ['notEmptyCount', 'isNecessary'];
     }
 
-    /**
-     * @param array $arr
-     * @return bool
-     */
-    public function notEmptyCount($arr)
+    public function notEmptyCount($arr): bool
     {
         return !empty($arr['count']);
     }
 
-    /**
-     * @param array $arr
-     * @return bool
-     */
-    public function isNecessary($arr)
+    public function isNecessary($arr): bool
     {
         return isset($arr['necessary']);
     }

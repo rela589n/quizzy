@@ -8,13 +8,8 @@ use App\Lib\ValidationGenerator;
 
 abstract class UserRulesContainer
 {
-    /** @var ValidationGenerator */
-    protected $validationGenerator;
+    protected ValidationGenerator $validationGenerator;
 
-    /**
-     * GeneralUserRulesContainer constructor.
-     * @param ValidationGenerator $validationGenerator
-     */
     public function __construct(ValidationGenerator $validationGenerator)
     {
         $this->validationGenerator = $validationGenerator;
@@ -22,12 +17,14 @@ abstract class UserRulesContainer
 
     public function getRules(): array
     {
-        return $this->validationGenerator->buildManyRules([
-            "{$this->nameAttr()}|{$this->surnameAttr()}|{$this->patronymicAttr()}" => 'required|min:2|max:255',
+        return $this->validationGenerator->buildManyRules(
+            [
+                "{$this->nameAttr()}|{$this->surnameAttr()}|{$this->patronymicAttr()}" => 'required|min:2|max:255',
 
-            "{$this->usernameAttr()}" => 'required|string|min:5|max:255',
-            "{$this->passwordAttr()}" => 'string'
-        ]);
+                ($this->usernameAttr()) => 'required|string|min:5|max:255',
+                ($this->passwordAttr()) => 'string'
+            ]
+        );
     }
 
     public function nameAttr(): string

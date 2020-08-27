@@ -11,19 +11,24 @@ use App\Lib\Statements\GroupStatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
 use App\Models\TestResult;
 use App\Repositories\StudentGroupsRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
+use PhpOffice\PhpWord\Exception\CopyFileException;
+use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
+use PhpOffice\PhpWord\Exception\Exception as PhpWordException;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class StatementsController extends AdminController
 {
     /**
-     * @param Request $request
-     * @param StudentStatementsGenerator $generator
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
-     * @throws \PhpOffice\PhpWord\Exception\CopyFileException
-     * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
-     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @param  Request  $request
+     * @param  StudentStatementsGenerator  $generator
+     * @return BinaryFileResponse
+     * @throws CopyFileException
+     * @throws CreateTemporaryFileException
+     * @throws PhpWordException
      */
-    public function studentStatement(Request $request, StudentStatementsGenerator $generator)
+    public function studentStatement(Request $request, StudentStatementsGenerator $generator): BinaryFileResponse
     {
         $result = TestResult::findOrFail($request->route('testResultId'));
 
@@ -34,19 +39,20 @@ class StatementsController extends AdminController
     }
 
     /**
-     * @param GroupStatementByFiltersRequest $request
-     * @param GroupStatementsGenerator $generator
-     * @param TestResultFilter $filter
-     * @param StudentGroupsRepository $groupsRepository
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
-     * @throws \PhpOffice\PhpWord\Exception\CopyFileException
-     * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
-     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @param  GroupStatementByFiltersRequest  $request
+     * @param  GroupStatementsGenerator  $generator
+     * @param  TestResultFilter  $filter
+     * @param  StudentGroupsRepository  $groupsRepository
+     * @return BinaryFileResponse
+     * @throws CopyFileException
+     * @throws CreateTemporaryFileException
+     * @throws PhpWordException
+     * @throws BindingResolutionException
      */
     public function groupStatement(GroupStatementByFiltersRequest $request,
                                    GroupStatementsGenerator $generator,
                                    TestResultFilter $filter,
-                                   StudentGroupsRepository $groupsRepository)
+                                   StudentGroupsRepository $groupsRepository): BinaryFileResponse
     {
         $test = $this->urlManager->getCurrentTest(true);
         $group = $groupsRepository->whereHasResultsOf($request->input('groupId'), $test->id);

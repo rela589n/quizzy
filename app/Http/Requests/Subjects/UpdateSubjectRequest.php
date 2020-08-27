@@ -10,26 +10,12 @@ use Illuminate\Validation\Rule;
 
 final class UpdateSubjectRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @param RequestUrlManager $urlManager
-     * @return bool
-     */
-    public function authorize(Administrator $user, RequestUrlManager $urlManager)
+    public function authorize(Administrator $user, RequestUrlManager $urlManager): bool
     {
         return $user->can('update', $urlManager->getCurrentSubject());
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param SubjectRulesContainer $rulesContainer
-     * @param RequestUrlManager $urlManager
-     * @return array
-     */
-    public function rules(SubjectRulesContainer $rulesContainer, RequestUrlManager $urlManager)
+    public function rules(SubjectRulesContainer $rulesContainer, RequestUrlManager $urlManager): array
     {
         $rules = $rulesContainer->getRules();
 

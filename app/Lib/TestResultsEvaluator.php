@@ -9,6 +9,7 @@ use App\Factories\MarkEvaluatorsFactory;
 use App\Lib\TestResults\MarkEvaluator;
 use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Models\TestResult;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
@@ -17,67 +18,69 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class TestResultsEvaluator
 {
-    /**
-     * @var TestResult
-     */
-    protected $testResult;
+    protected TestResult $testResult;
+    protected ScoreEvaluatorInterface $scoreEvaluator;
+    protected MarkEvaluatorsFactory $markEvaluatorsFactory;
+    private ?MarkEvaluator $markEvaluator = null;
 
-    /**
-     * @var ScoreEvaluatorInterface
-     */
-    protected $scoreEvaluator;
-
-    /**
-     * @var MarkEvaluatorsFactory
-     */
-    protected $markEvaluatorsFactory;
-
-    /**
-     * @var MarkEvaluator
-     */
-    private $markEvaluator;
-
-    protected $evaluatedQuestions;
-    protected $questionsScore;
-    protected $testScore;
+    protected ?array $evaluatedQuestions = null;
+    protected ?array $questionsScore = null;
+    protected ?float $testScore = null;
 
     /**
      * TestResultsEvaluator constructor.
-     * @param ScoreEvaluatorInterface $scoreEvaluator
-     * @param MarkEvaluatorsFactory $markEvaluatorsFactory
+     * @param  ScoreEvaluatorInterface  $scoreEvaluator
+     * @param  MarkEvaluatorsFactory  $markEvaluatorsFactory
      */
-    public function __construct(ScoreEvaluatorInterface $scoreEvaluator, MarkEvaluatorsFactory $markEvaluatorsFactory)
-    {
+    public function __construct(
+        ScoreEvaluatorInterface $scoreEvaluator,
+        MarkEvaluatorsFactory $markEvaluatorsFactory
+    ) {
         $this->scoreEvaluator = $scoreEvaluator;
         $this->markEvaluatorsFactory = $markEvaluatorsFactory;
     }
 
     /**
-     * @param TestResult $testResult
+     * @param  TestResult  $testResult
      */
     public function setTestResult(TestResult $testResult): void
     {
         $this->testResult = $testResult;
     }
 
-    protected function markEvaluator()
+    /**
+     * @return MarkEvaluator
+     * @throws BindingResolutionException
+     */
+    protected function markEvaluator(): MarkEvaluator
     {
-        return singleVar($this->markEvaluator, function () {
-            return $this->markEvaluatorsFactory
-                ->setTest($this->testResult->test)
-                ->resolve();
-        });
+        return singleVar(
+            $this->markEvaluator,
+            function () {
+                return $this->markEvaluatorsFactory
+                    ->setTest($this->testResult->test)
+                    ->resolve();
+            }
+        );
     }
 
-    protected function loadDependencies()
+    protected function loadDependencies(): void
     {
-        $this->testResult->askedQuestions->loadMissing(['question' => function (Relation $query) {
-            $query->withTrashed();
-        }]);
+        $this->testResult->askedQuestions->loadMissing(
+            [
+                'question' => static function (Relation $query) {
+                    $query->withTrashed();
+                }
+            ]
+        );
 
-        $this->testResult->askedQuestions->loadMissing(['answers.answerOption' => function (Relation $query) {
-            $query->withTrashed();
-        }]);
+        $this->testResult->askedQuestions->loadMissing(
+            [
+                'answers.answerOption' => static function (Relation $query) {
+                    $query->withTrashed();
+                }
+            ]
+        );
     }
 
     /**
@@ -86,10 +89,12 @@ class TestResultsEvaluator
      * ]
      * @throws NullPointerException
      */
-    public function evaluateEachQuestion()
+    public function evaluateEachQuestion(): array
     {
         if ($this->testResult === null) {
-            throw new NullPointerException("Property testResult must be set before calling " . __FUNCTION__ . '. Try setTestResult().');
+            throw new NullPointerException(
+                "Property testResult must be set before calling ".__FUNCTION__.'. Try setTestResult().'
+            );
         }
 
         if (!is_null($this->evaluatedQuestions)) {
@@ -125,7 +130,7 @@ class TestResultsEvaluator
      *  ]
      * @throws NullPointerException
      */
-    public function getQuestionsScore()
+    public function getQuestionsScore(): array
     {
         if ($this->questionsScore === null) {
             $this->questionsScore = $this->scoreEvaluator->evaluateTest($this->evaluateEachQuestion());
@@ -149,7 +154,7 @@ class TestResultsEvaluator
 
     /**
      * @return int
-     * @throws NullPointerException
+     * @throws NullPointerException|BindingResolutionException
      */
     public function getMark(): int
     {

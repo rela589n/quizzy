@@ -27,7 +27,7 @@ abstract class LoginController extends Controller
      * Name of currently used guard
      * @var string
      */
-    protected $guardName;
+    protected string $guardName;
 
     /**
      * Where to redirect users after login.
@@ -39,7 +39,7 @@ abstract class LoginController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param string $guardName
+     * @param  string  $guardName
      */
     public function __construct($guardName)
     {
@@ -48,7 +48,7 @@ abstract class LoginController extends Controller
         $this->middleware(sprintf('guest:%s', $guardName))
             ->except(['logout']);
 
-        $routeName = $guardName . '.dashboard';
+        $routeName = $guardName.'.dashboard';
         $this->redirectTo = Route::has($routeName) ? route($routeName) : '/';
     }
 
@@ -58,8 +58,8 @@ abstract class LoginController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Authenticatable $user
+     * @param  Request  $request
+     * @param  Authenticatable  $user
      * @return mixed|void
      */
     protected function authenticated(Request $request, $user)

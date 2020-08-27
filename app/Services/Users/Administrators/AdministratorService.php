@@ -9,19 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 abstract class AdministratorService
 {
-    /**
-     * @var array
-     */
-    protected $data;
-
-    /**
-     * @var bool
-     */
-    protected $needPasswordHash = true;
+    protected array $data;
+    protected bool $needPasswordHash = true;
 
     /**
      * @param bool $needPasswordHash
-     * @return self
+     * @return $this
      */
     public function setNeedPasswordHash(bool $needPasswordHash): self
     {
@@ -30,24 +23,27 @@ abstract class AdministratorService
         return $this;
     }
 
-    public function withPasswordHashing()
+    /**
+     * @return $this
+     */
+    public function withPasswordHashing(): self
     {
         $this->setNeedPasswordHash(true);
 
         return $this;
     }
 
-    public function withoutPasswordHashing()
+    /**
+     * @return $this
+     */
+    public function withoutPasswordHashing(): self
     {
         $this->setNeedPasswordHash(false);
 
         return $this;
     }
 
-    /**
-     * @var Administrator
-     */
-    protected $administrator;
+    protected Administrator $administrator;
 
     public function handle(array $data): Administrator
     {
@@ -60,17 +56,17 @@ abstract class AdministratorService
         return $this->administrator;
     }
 
-    protected function prepareData()
+    protected function prepareData(): void
     {
         if ($this->needPasswordHash) {
             $this->data['password'] = Hash::make($this->data['password']);
         }
     }
 
-    protected function syncRoles()
+    protected function syncRoles(): void
     {
         $this->administrator->syncRoles($this->data['role_ids']);
     }
 
-    protected abstract function doHandle(): Administrator;
+    abstract protected function doHandle(): Administrator;
 }

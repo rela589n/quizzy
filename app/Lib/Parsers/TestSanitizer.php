@@ -9,8 +9,8 @@ class TestSanitizer
 {
     private const QUESTION_INDICATORS = ['Питання', 'Запитання'];
 
-    protected $encodingDetector;
-    protected $encoding;
+    protected EncodingDetector $encodingDetector;
+    protected ?string $encoding = null;
 
     public function __construct(EncodingDetector $encodingDetector)
     {
@@ -22,16 +22,15 @@ class TestSanitizer
         return mb_convert_encoding(
             $text,
             'UTF-8',
-            singleVar($this->encoding, function () use ($text) {
-                return $this->encodingDetector->getEncoding($text);
-            })
+            singleVar(
+                $this->encoding,
+                function () use ($text) {
+                    return $this->encodingDetector->getEncoding($text);
+                }
+            )
         );
     }
 
-    /**
-     * @param string $text
-     * @return string
-     */
     public function sanitizeQuestionText(string $text)
     {
         $text = $this->sanitizeMultipleSpaces($text);
@@ -44,10 +43,10 @@ class TestSanitizer
     }
 
     /**
-     * @param string $text
-     * @return array
+     * @param  string  $text
+     * @return array [$result, $isRight]
      */
-    public function sanitizeOptionText(string $text)
+    public function sanitizeOptionText(string $text): array
     {
         $text = $this->sanitizeMultipleSpaces($text);
 
@@ -58,11 +57,7 @@ class TestSanitizer
         return [$result, $isRight];
     }
 
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function sanitizeMultipleSpaces(string $text)
+    public function sanitizeMultipleSpaces(string $text): string
     {
         return html_entity_decode(
             preg_replace('/\s+/', ' ', trim($text)),

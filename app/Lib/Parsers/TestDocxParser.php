@@ -5,50 +5,47 @@ namespace App\Lib\Parsers;
 
 
 use App\Exceptions\NullPointerException;
+use Generator;
+use PhpOffice\PhpWord\Element\AbstractElement;
+use PhpOffice\PhpWord\Element\TextRun;
+use PhpOffice\PhpWord\PhpWord;
 
 class TestDocxParser extends TestParser
 {
-    protected $phpWord;
+    protected ?PhpWord $phpWord;
 
-    public function __construct(TestSanitizer $sanitizer, \PhpOffice\PhpWord\PhpWord $phpWord = null)
+    public function __construct(TestSanitizer $sanitizer, PhpWord $phpWord = null)
     {
         parent::__construct($sanitizer);
         $this->phpWord = $phpWord;
     }
 
-    /**
-     * @param \PhpOffice\PhpWord\PhpWord $phpWord
-     */
-    public function setPhpWord(\PhpOffice\PhpWord\PhpWord $phpWord): void
+    public function setPhpWord(PhpWord $phpWord): void
     {
         $this->phpWord = $phpWord;
     }
 
     /**
-     * @return \Generator
+     * @return Generator|null
      * @throws NullPointerException
      */
-    protected function getTextLines()
+    protected function getTextLines(): ?Generator
     {
         if ($this->phpWord === null) {
             throw new NullPointerException('PhpWord is required to parse docx document.');
         }
 
         foreach ($this->phpWord->getSections() as $section) {
-
             foreach ($section->getElements() as $element) {
-
-                if ($element instanceof \PhpOffice\PhpWord\Element\TextRun) {
-
+                if ($element instanceof TextRun) {
                     yield $this->implodeElements($element->getElements());
-
                 }
             }
         }
     }
 
     /**
-     * @param \PhpOffice\PhpWord\Element\AbstractElement[] $elements
+     * @param  AbstractElement[]  $elements
      * @return string
      */
     protected function implodeElements(array $elements): string
