@@ -12,7 +12,7 @@ class CustomMarkEvaluator implements MarkEvaluator
     public const MARK_EPS = 0.09;
     protected const UNBOUND_MARK = 2;
 
-    protected Test $test;
+    protected ?Test $test = null;
     protected array $markPercentsMap;
 
     private MarkPercentsMapCreator $markPercentsMapCreator;
