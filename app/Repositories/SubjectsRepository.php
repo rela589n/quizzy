@@ -8,13 +8,11 @@ use App\Models\Test;
 use App\Models\TestSubject;
 use App\Repositories\Commands\SubjectsToIncludeCommand;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class SubjectsRepository
 {
-    /**
-     * @var SubjectsToIncludeCommand
-     */
-    private $subjectsToInclude;
+    private SubjectsToIncludeCommand $subjectsToInclude;
 
     public function __construct(SubjectsToIncludeCommand $subjectsToInclude)
     {
@@ -22,8 +20,8 @@ class SubjectsRepository
     }
 
     /**
-     * @param array|null $departmentIds
-     * @return \Illuminate\Database\Eloquent\Collection|TestSubject[]
+     * @param  array|null  $departmentIds
+     * @return Collection|TestSubject[]
      */
     public function subjectsToInclude(array $departmentIds = null)
     {
@@ -34,13 +32,16 @@ class SubjectsRepository
 
     public function subjectsForResults()
     {
-        return TestSubject::whereHas('tests', function (Builder $query) {
-            /**
-             * @var $query Builder|Test
-             */
+        return TestSubject::whereHas(
+            'tests',
+            static function (Builder $query) {
+                /**
+                 * @var $query Builder|Test
+                 */
 
-            $query->withTrashed();
-            $query->has('testResults');
-        })->get();
+                $query->withTrashed();
+                $query->has('testResults');
+            }
+        )->get();
     }
 }

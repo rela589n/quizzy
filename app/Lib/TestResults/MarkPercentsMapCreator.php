@@ -9,22 +9,21 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class MarkPercentsMapCreator
 {
-    /**
-     * @var EloquentCollection|MarkPercent[]
-     */
-    protected $models;
+    protected EloquentCollection $models;
 
-    public function setModels(EloquentCollection $models)
+    public function setModels(EloquentCollection $models): MarkPercentsMapCreator
     {
         $this->models = $models;
 
         return $this;
     }
 
-    public function getMap()
+    public function getMap(): array
     {
-        return $this->models->sortByDesc('mark')->mapWithKeys(function(MarkPercent $model) {
-            return [$model->mark => $model->percent];
-        })->toArray();
+        return $this->models->sortByDesc('mark')->mapWithKeys(
+            static function (MarkPercent $model) {
+                return [$model->mark => $model->percent];
+            }
+        )->toArray();
     }
 }

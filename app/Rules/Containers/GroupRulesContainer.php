@@ -11,15 +11,14 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final class GroupRulesContainer
 {
-    /** @var RequestUrlManager */
-    private $urlManager;
+    private RequestUrlManager $urlManager;
 
     public function __construct(RequestUrlManager $urlManager)
     {
         $this->urlManager = $urlManager;
     }
 
-    public function getRules() : array
+    public function getRules(): array
     {
         $currentYear = date('Y');
 
@@ -46,15 +45,15 @@ final class GroupRulesContainer
             'year'       => [
                 'required',
                 'numeric',
-                'min:' . min($groupYear, $currentYear - 4),
-                'max:' . $currentYear
+                'min:'.min($groupYear, $currentYear - 4),
+                'max:'.$currentYear
             ],
             'created_by' => [
                 'sometimes',
                 'nullable',
                 'integer',
                 'min:1',
-                'exists:' . Administrator::class . ',id'
+                'exists:'.Administrator::class.',id'
             ]
         ];
     }

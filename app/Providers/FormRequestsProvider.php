@@ -16,16 +16,22 @@ class FormRequestsProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->app->extend(AdminChangePasswordRequest::class, function (AdminChangePasswordRequest $service, Application $app) {
-            $service->setAuthUser($app->make(Administrator::class));
-            return $service;
-        });
+        $this->app->extend(
+            AdminChangePasswordRequest::class,
+            static function (AdminChangePasswordRequest $service, Application $app) {
+                $service->setAuthUser($app->make(Administrator::class));
+                return $service;
+            }
+        );
 
-        $this->app->extend(StudentChangePasswordRequest::class, function (StudentChangePasswordRequest $service, Application $app) {
-            $service->setAuthUser($app->make(User::class));
-            return $service;
-        });
+        $this->app->extend(
+            StudentChangePasswordRequest::class,
+            static function (StudentChangePasswordRequest $service, Application $app) {
+                $service->setAuthUser($app->make(User::class));
+                return $service;
+            }
+        );
     }
 }

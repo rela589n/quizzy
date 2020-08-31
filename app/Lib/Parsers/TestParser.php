@@ -4,23 +4,22 @@
 namespace App\Lib\Parsers;
 
 
+use RuntimeException;
+
 abstract class TestParser
 {
     protected const STATUS_QUESTION = 1;
     protected const STATUS_OPTION = 2;
 
-    protected $status = self::STATUS_QUESTION;
-    protected $parsedQuestions = [];
-    protected $sanitizer;
+    protected int $status = self::STATUS_QUESTION;
+    protected array $parsedQuestions = [];
+    protected TestSanitizer $sanitizer;
 
     public function __construct(TestSanitizer $sanitizer)
     {
         $this->sanitizer = $sanitizer;
     }
 
-    /**
-     * @return array
-     */
     public function getParsedQuestions(): array
     {
         return $this->parsedQuestions;
@@ -46,9 +45,6 @@ abstract class TestParser
 
     abstract protected function getTextLines();
 
-    /**
-     * @param string $input
-     */
     protected function handleText(string $input): void
     {
         switch ($this->status) {
@@ -65,11 +61,11 @@ abstract class TestParser
                 break;
 
             default:
-                throw new \RuntimeException("Undefined status!");
+                throw new RuntimeException("Undefined status!");
         }
     }
 
-    protected function identifyStatus(string $line)
+    protected function identifyStatus(string $line): int
     {
         if (preg_match('/^\d+\s?[).]/', $line)) {
             return self::STATUS_OPTION;
@@ -78,7 +74,7 @@ abstract class TestParser
         return self::STATUS_QUESTION;
     }
 
-    protected function appendQuestion($question, $insertOptions)
+    protected function appendQuestion($question, $insertOptions): void
     {
         $this->parsedQuestions[] = [
             'question'       => $question,
@@ -86,7 +82,7 @@ abstract class TestParser
         ];
     }
 
-    protected function appendOption($questionIndex, $text, $isRight)
+    protected function appendOption($questionIndex, $text, $isRight): void
     {
         $this->parsedQuestions[$questionIndex]['insert_options'][] = [
             'text'     => $text,

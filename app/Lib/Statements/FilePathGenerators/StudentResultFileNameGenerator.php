@@ -8,14 +8,8 @@ use App\Models\TestResult;
 
 class StudentResultFileNameGenerator extends ResultFileNameGenerator
 {
-    /**
-     * @var TestResult
-     */
-    protected $result;
+    protected TestResult $result;
 
-    /**
-     * @param TestResult $result
-     */
     public function setResult(TestResult $result): void
     {
         $this->result = $result;
@@ -23,7 +17,8 @@ class StudentResultFileNameGenerator extends ResultFileNameGenerator
 
     protected function generateFileName(): string
     {
-        return sprintf('%s (%s %s) - %s %s %s.docx',
+        return sprintf(
+            '%s (%s %s) - %s %s %s.docx',
             $this->filePrefix,
             $this->result->test->subject->name,
             $this->result->test->name,

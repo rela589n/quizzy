@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Client;
 
 class DocumentationController extends ClientController
 {
-    const FILE_NAME = 'Інструкція.docx';
+    public const FILE_NAME = 'Інструкція.docx';
 
     public function getWordDocument()
     {

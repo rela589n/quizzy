@@ -9,7 +9,11 @@ use Illuminate\Support\Collection;
 
 class UpdateTestService extends StoreTestService
 {
-    public function setTest(Test $test)
+    /**
+     * @param  Test  $test
+     * @return $this
+     */
+    public function setTest(Test $test): self
     {
         $this->test = $test;
 
@@ -28,7 +32,6 @@ class UpdateTestService extends StoreTestService
         $include = parent::applyIncludeTransforming($include);
 
         if (!isset($this->fields['include'][$this->test->id])) {
-
             $include[$this->test->id] = [
                 'questions_quantity' => static::NEW_TEST_INCLUDE_QUANTITY
             ];

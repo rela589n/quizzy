@@ -12,10 +12,11 @@ class UsersTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        if (env('APP_ENV') === 'production')
+        if (env('APP_ENV') === 'production') {
             return;
+        }
 
         $faker = Faker\Factory::create('uk_UA');
 

@@ -9,24 +9,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 final class CreateSubjectRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @return bool
-     */
-    public function authorize(Administrator $user)
+    public function authorize(Administrator $user): bool
     {
         return $user->can('create-subjects');
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param SubjectRulesContainer $rulesContainer
-     * @return array
-     */
-    public function rules(SubjectRulesContainer $rulesContainer)
+    public function rules(SubjectRulesContainer $rulesContainer): array
     {
         $rules = $rulesContainer->getRules();
         $rules['uri_alias'][] = 'unique:test_subjects';

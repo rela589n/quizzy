@@ -10,13 +10,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 class TestsRepository
 {
-    /** @var RequestUrlManager */
-    protected $urlManager;
+    protected RequestUrlManager $urlManager;
 
-    /**
-     * TestsRepository constructor.
-     * @param RequestUrlManager $urlManager
-     */
     public function __construct(RequestUrlManager $urlManager)
     {
         $this->urlManager = $urlManager;
@@ -30,9 +25,7 @@ class TestsRepository
                 ->withTrashed()
                 ->whereHas('testResults'),
             function (Relation $query) {
-
                 $this->applyOrder($query);
-
             }
         )->get();
     }
@@ -43,11 +36,11 @@ class TestsRepository
             $this->urlManager->getCurrentSubject()
                 ->tests()
                 ->withCount('nativeQuestions as questions_count')
-            , function (Relation $query) {
-
-            $this->applyOrder($query);
-
-        })->get();
+            ,
+            function (Relation $query) {
+                $this->applyOrder($query);
+            }
+        )->get();
     }
 
     public function testsForSelectingByUser()
@@ -57,16 +50,17 @@ class TestsRepository
                 ->tests()
                 ->with('testComposites'),
             function (Relation $builder) {
-
                 $this->applyOrder($builder);
-
-            })->get()
-            ->each(function (Test $test) {
-                $test->questions_count = $test->allQuestions()->count();
-            });
+            }
+        )->get()
+            ->each(
+                static function (Test $test) {
+                    $test->questions_count = $test->allQuestions()->count();
+                }
+            );
     }
 
-    protected function applyOrder(Relation $builder)
+    protected function applyOrder(Relation $builder): void
     {
         $builder->orderBy('name');
     }

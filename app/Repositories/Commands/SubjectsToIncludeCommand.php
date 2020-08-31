@@ -16,15 +16,8 @@ class SubjectsToIncludeCommand
      */
     protected $builder;
 
-    /**
-     * @var array
-     */
-    protected $departmentIds;
+    protected ?array $departmentIds;
 
-    /**
-     * @param array $departmentIds
-     * @return SubjectsToIncludeCommand
-     */
     public function setDepartmentIds(array $departmentIds): self
     {
         $this->departmentIds = $departmentIds;
@@ -46,27 +39,36 @@ class SubjectsToIncludeCommand
         return $this->applyFilters($this->builder->get());
     }
 
-    protected function handleDepartments()
+    protected function handleDepartments(): void
     {
         if ($this->departmentIds !== null) {
-            $this->builder->whereHas('departments', function (EloquentBuilder $query) {
-                $query->whereIn('id', $this->departmentIds);
-            });
+            $this->builder->whereHas(
+                'departments',
+                function (EloquentBuilder $query) {
+                    $query->whereIn('id', $this->departmentIds);
+                }
+            );
         }
     }
 
-    protected function loadTests()
+    protected function loadTests(): void
     {
-        $this->builder->with(['tests' => function (Relation $query) {
-            $query->has('nativeQuestions')
-                ->withCount('nativeQuestions as questions_count');
-        }]);
+        $this->builder->with(
+            [
+                'tests' => static function (Relation $query) {
+                    $query->has('nativeQuestions')
+                        ->withCount('nativeQuestions as questions_count');
+                }
+            ]
+        );
     }
 
     protected function applyFilters(EloquentCollection $results): EloquentCollection
     {
-        return $results->filter(function (TestSubject $result) {
-            return count($result->tests);
-        });
+        return $results->filter(
+            static function (TestSubject $result) {
+                return count($result->tests);
+            }
+        );
     }
 }

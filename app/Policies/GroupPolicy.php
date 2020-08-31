@@ -13,11 +13,11 @@ class GroupPolicy
     /**
      * Determine whether the user can view the student group.
      *
-     * @param Administrator $user
-     * @param StudentGroup $group
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  StudentGroup  $group
+     * @return bool
      */
-    public function view(Administrator $user, StudentGroup $group)
+    public function view(Administrator $user, StudentGroup $group): bool
     {
         return $group->isOwnedBy($user) || $user->can('view-groups');
     }
@@ -25,11 +25,11 @@ class GroupPolicy
     /**
      * Determine whether the user can update the student group.
      *
-     * @param Administrator $user
-     * @param StudentGroup $group
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  StudentGroup  $group
+     * @return bool
      */
-    public function update(Administrator $user, StudentGroup $group)
+    public function update(Administrator $user, StudentGroup $group): bool
     {
         return $user->can('update-groups');
     }
@@ -37,11 +37,11 @@ class GroupPolicy
     /**
      * Determine whether the user can delete the student group.
      *
-     * @param Administrator $user
-     * @param StudentGroup $group
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  StudentGroup  $group
+     * @return bool
      */
-    public function delete(Administrator $user, StudentGroup $group)
+    public function delete(Administrator $user, StudentGroup $group): bool
     {
         return $user->can('delete-groups');
     }

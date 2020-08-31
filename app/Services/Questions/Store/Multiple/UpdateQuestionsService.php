@@ -14,7 +14,7 @@ class UpdateQuestionsService extends StoreQuestionsService
         parent::__construct($updateQuestionService);
     }
 
-    public function ofTest(Test $test)
+    public function ofTest(Test $test): self
     {
         $test->loadMissing('nativeQuestions.answerOptions');
 

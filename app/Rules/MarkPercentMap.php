@@ -6,24 +6,13 @@ use Illuminate\Contracts\Validation\Rule;
 
 class MarkPercentMap implements Rule
 {
-    /**
-     * @var string
-     */
-    protected $markAlias;
+    protected string $markAlias;
+    protected string $percentAlias;
 
-    /**
-     * @var string
-     */
-    protected $percentAlias;
-
-    /**
-     * MarkPercentMap constructor.
-     * @param string $markAlias
-     * @param string $percentAlias
-     */
-    public function __construct(string $markAlias = 'mark',
-                                string $percentAlias = 'percent')
-    {
+    public function __construct(
+        string $markAlias = 'mark',
+        string $percentAlias = 'percent'
+    ) {
         $this->markAlias = $markAlias;
         $this->percentAlias = $percentAlias;
     }
@@ -31,17 +20,20 @@ class MarkPercentMap implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param array $markPercentMap
+     * @param  string  $attribute
+     * @param  array  $markPercentMap
      * @return bool
      */
-    public function passes($attribute, $markPercentMap)
+    public function passes($attribute, $markPercentMap): bool
     {
-        usort($markPercentMap, function ($a, $b) {
-            return (int)($a[$this->markAlias]) <=> (int)($b[$this->markAlias]);
-        });
+        usort(
+            $markPercentMap,
+            function ($a, $b) {
+                return (int)($a[$this->markAlias]) <=> (int)($b[$this->markAlias]);
+            }
+        );
 
-        for ($i = 1; $i < count($markPercentMap); ++$i) {
+        for ($i = 1, $iMax = count($markPercentMap); $i < $iMax; ++$i) {
             if ((float)$markPercentMap[$i - 1][$this->percentAlias] >= (float)$markPercentMap[$i][$this->percentAlias]) {
                 return false;
             }
@@ -55,7 +47,7 @@ class MarkPercentMap implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return trans('validation.custom.mark_percent_map');
     }

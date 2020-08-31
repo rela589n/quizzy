@@ -8,42 +8,24 @@ use App\Models\Department;
 use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class RequestUrlManager
 {
-    protected $request;
+    protected Request $request;
+    protected ?TestSubject $currentSubject = null;
+    protected ?Test $currentTest = null;
+    protected ?StudentGroup $currentGroup = null;
+    protected ?Department $currentDepartment = null;
 
-    /**
-     * @var TestSubject
-     */
-    protected $currentSubject = null;
-
-    /**
-     * @var Test
-     */
-    protected $currentTest = null;
-
-    /**
-     * @var StudentGroup
-     */
-    protected $currentGroup = null;
-
-    /**
-     * @var Department
-     */
-    protected $currentDepartment = null;
-
-    /**
-     * RequestUrlManager constructor.
-     * @param Request $request
-     */
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
-    protected function resolveEntity(\Illuminate\Database\Eloquent\Builder $builder, bool $withTrashed = false)
+    protected function resolveEntity(Builder $builder, bool $withTrashed = false)
     {
         if ($withTrashed) {
             $builder->withTrashed();
@@ -54,9 +36,9 @@ class RequestUrlManager
 
     /**
      * @param bool $withTrashed
-     * @return TestSubject|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     * @return TestSubject|Builder|Model
      */
-    public function getCurrentSubject(bool $withTrashed = false)
+    public function getCurrentSubject(bool $withTrashed = false): TestSubject
     {
         return singleVar($this->currentSubject, function () use ($withTrashed) {
             return $this->resolveEntity(
@@ -68,9 +50,9 @@ class RequestUrlManager
 
     /**
      * @param bool $withTrashed
-     * @return Test|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     * @return Test|Builder|Model
      */
-    public function getCurrentTest(bool $withTrashed = false)
+    public function getCurrentTest(bool $withTrashed = false): Test
     {
         return singleVar($this->currentTest, function () use ($withTrashed) {
             return $this->resolveEntity(
@@ -82,7 +64,7 @@ class RequestUrlManager
 
     /**
      * @param bool $withTrashed
-     * @return StudentGroup|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     * @return StudentGroup|Builder|Model
      */
     public function getCurrentGroup(bool $withTrashed = false)
     {
@@ -96,7 +78,7 @@ class RequestUrlManager
 
     /**
      * @param bool $withTrashed
-     * @return Department|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     * @return Department|Builder|Model
      */
     public function getCurrentDepartment(bool $withTrashed = false)
     {

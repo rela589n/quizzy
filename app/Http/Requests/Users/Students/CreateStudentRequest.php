@@ -9,23 +9,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 final class CreateStudentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @return bool
-     */
-    public function authorize(Administrator $user)
+    public function authorize(Administrator $user): bool
     {
         return $user->can('create-students');
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param StudentRulesContainer $container
-     * @return array
-     */
     public function rules(StudentRulesContainer $container): array
     {
         $rules = $container->getRules();

@@ -4,6 +4,7 @@
 namespace App\Lib;
 
 
+use Generator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -13,15 +14,9 @@ class ValidationGenerator
     public const ARRAY_ELEMENTS_DELIMITER = '.';
     public const ATTRIBUTES_DELIMITER = '|';
 
-    /**
-     * @var Request
-     */
-    protected $request;
+    protected Request $request;
 
-    /**
-     * @var array
-     */
-    private $parts;
+    private array $parts;
 
     /**
      * ValidationGenerator constructor.
@@ -40,7 +35,7 @@ class ValidationGenerator
         $this->request = $request;
     }
 
-    protected function buildRecursive(string $base, int $nextPartIndex)
+    protected function buildRecursive(string $base, int $nextPartIndex): ?Generator
     {
         if ($nextPartIndex >= count($this->parts)) {
             yield $base;
@@ -98,7 +93,7 @@ class ValidationGenerator
     protected function flattenBuild(array &$built) : void
     {
         foreach ($built as $key => $value) {
-            if (is_array($value) && count($value) == 1) {
+            if (is_array($value) && count($value) === 1) {
                 $built[$key] = $value[0];
             }
         }
@@ -153,7 +148,7 @@ class ValidationGenerator
      * @param array $attributes
      * @return array
      */
-    public function buildManyAttributes(array $attributes)
+    public function buildManyAttributes(array $attributes): array
     {
         $result = $this->buildManyRules($attributes);
         $this->flattenBuild($result);

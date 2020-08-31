@@ -12,18 +12,21 @@ class TestResultsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        if (env('APP_ENV') === 'production')
+        if (env('APP_ENV') === 'production') {
             return;
+        }
 
         $faker = Faker\Factory::create('uk_UA');
 
         foreach(range(1, self::TEST_RESULTS_LIMIT) as $i) {
-            TestResult::create([
-                'test_id' => $faker->numberBetween(1, TestsTableSeeder::TESTS_LIMIT),
-                'user_id' => $faker->numberBetween(1, UsersTableSeeder::USERS_LIMIT)
-            ]);
+            TestResult::create(
+                [
+                    'test_id' => $faker->numberBetween(1, TestsTableSeeder::TESTS_LIMIT),
+                    'user_id' => $faker->numberBetween(1, UsersTableSeeder::USERS_LIMIT)
+                ]
+            );
         }
     }
 }

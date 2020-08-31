@@ -12,24 +12,27 @@ use App\Services\Questions\DeleteQuestionsService;
 use App\Services\Questions\Store\Multiple\CreateQuestionsService;
 use App\Services\Questions\Store\Multiple\UpdateQuestionsService;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Session;
 
 class QuestionsController extends AdminController
 {
     /**
      * @param Request $request
      * @param QuestionsTransformer $transformer
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      * @throws AuthorizationException
      */
-    public function showCreateOrUpdateForm(Request $request, QuestionsTransformer $transformer)
+    public function showCreateOrUpdateForm(Request $request, QuestionsTransformer $transformer): View
     {
         $currentTest = $this->urlManager->getCurrentTest();
 
         try {
             return $this->showUpdateForm($request, $transformer, $currentTest);
         } catch (AuthorizationException $e) {
-            return $this->showReadOnlyView($request, $currentTest);
+            return $this->showReadOnlyView($currentTest);
         }
     }
 
@@ -37,10 +40,10 @@ class QuestionsController extends AdminController
      * @param Request $request
      * @param QuestionsTransformer $transformer
      * @param Test $currentTest
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      * @throws AuthorizationException
      */
-    public function showUpdateForm(Request $request, QuestionsTransformer $transformer, Test $currentTest)
+    public function showUpdateForm(Request $request, QuestionsTransformer $transformer, Test $currentTest): View
     {
         $this->authorize('update', $currentTest);
 
@@ -50,8 +53,9 @@ class QuestionsController extends AdminController
         $exclude = array_flip(old("q.deleted", []));
 
         $fullQuestions = collect($request->old('q.modified'))
-            ->map(function ($modified, $id) use (&$exclude, $transformer) {
-                $exclude["$id"] = true;
+            ->map(
+                static function ($modified, $id) use (&$exclude, $transformer) {
+                $exclude[(string)$id] = true;
 
                 return $transformer->requestToDto($modified, [
                     'id'   => $id,
@@ -66,10 +70,11 @@ class QuestionsController extends AdminController
          */
         $fullQuestions = $fullQuestions->concat(
             $currentTest->nativeQuestions->reject(
-                function ($item) use ($exclude) {
-                    return isset($exclude["$item->id"]);
+                static function ($item) use ($exclude) {
+                    return isset($exclude[(string)$item->id]);
                 })
-                ->map(function ($item) use ($transformer) {
+                ->map(
+                    static function ($item) use ($transformer) {
                     return $transformer->modelToDto($item, [
                         'type' => 'modified'
                     ]);
@@ -78,7 +83,8 @@ class QuestionsController extends AdminController
 
         $fullQuestions = $fullQuestions->concat(
             collect($request->old('q.new', []))
-                ->map(function ($newQuestion, $id) use ($transformer) {
+                ->map(
+                    static function ($newQuestion, $id) use ($transformer) {
                     return $transformer->requestToDto($newQuestion, [
                         'id'   => $id,
                         'type' => 'new'
@@ -92,18 +98,17 @@ class QuestionsController extends AdminController
             'subject'            => $this->urlManager->getCurrentSubject(),
             'test'               => $currentTest,
             'filteredQuestions'  => $fullQuestions->all(),
-            'messageToUser'      => \Session::pull('messageToUser'),
+            'messageToUser'      => Session::pull('messageToUser'),
             'lastAnswerOptionId' => $lastOptionId
         ]);
     }
 
     /**
-     * @param Request $request
-     * @param Test $currentTest
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param  Test  $currentTest
+     * @return View
      * @throws AuthorizationException
      */
-    public function showReadOnlyView(Request $request, Test $currentTest)
+    public function showReadOnlyView(Test $currentTest): View
     {
         $this->authorize('view', $currentTest);
 
@@ -115,19 +120,11 @@ class QuestionsController extends AdminController
         ]);
     }
 
-    /**
-     * @param FillAnswersRequest $request
-     * @param DeleteQuestionsService $deleteQuestionsService
-     * @param DeleteAnswerOptionsService $deleteAnswerOptionsService
-     * @param CreateQuestionsService $createQuestionsService
-     * @param UpdateQuestionsService $updateQuestionsService
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function createOrUpdate(FillAnswersRequest $request,
                                    DeleteQuestionsService $deleteQuestionsService,
                                    DeleteAnswerOptionsService $deleteAnswerOptionsService,
                                    CreateQuestionsService $createQuestionsService,
-                                   UpdateQuestionsService $updateQuestionsService)
+                                   UpdateQuestionsService $updateQuestionsService): RedirectResponse
     {
         $currentTest = $this->urlManager->getCurrentTest();
 
@@ -140,6 +137,6 @@ class QuestionsController extends AdminController
         $updateQuestionsService->ofTest($currentTest)
             ->handle($request->questionsToUpdate());
 
-        return redirect()->back()->with('message', 'Збережено');
+        return redirect()->back()->with('messageToUser', 'Збережено');
     }
 }

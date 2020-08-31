@@ -10,31 +10,21 @@ use Illuminate\Validation\Rule;
 
 final class UpdateDepartmentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @param RequestUrlManager $urlManager
-     * @return bool
-     */
-    public function authorize(Administrator $user, RequestUrlManager $urlManager)
-    {
+    public function authorize(
+        Administrator $user,
+        RequestUrlManager $urlManager
+    ): bool {
         return $user->can('update', $urlManager->getCurrentDepartment());
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param DepartmentRulesContainer $rules
-     * @param RequestUrlManager $urlManager
-     * @return array
-     */
-    public function rules(DepartmentRulesContainer $rules, RequestUrlManager $urlManager)
-    {
+    public function rules(
+        DepartmentRulesContainer $rules,
+        RequestUrlManager $urlManager
+    ): array {
         $rules = $rules->getRules();
 
         $rules['uri_alias'][] = Rule::unique('departments')
-            ->ignoreModel($urlManager->getCurrentDepartment());;
+            ->ignoreModel($urlManager->getCurrentDepartment());
 
         return $rules;
     }

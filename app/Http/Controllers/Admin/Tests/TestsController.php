@@ -11,10 +11,15 @@ use App\Services\Subjects\IncludeTestsFormManager;
 use App\Services\Tests\CreateTestService;
 use App\Services\Tests\MarkPercentsMapCollector;
 use App\Services\Tests\UpdateTestService;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Session;
 
 class TestsController extends AdminController
 {
-    private $subjectsRepository;
+    private SubjectsRepository $subjectsRepository;
 
     public function __construct(RequestUrlManager $urlManager, SubjectsRepository $subjectsRepository)
     {
@@ -23,13 +28,15 @@ class TestsController extends AdminController
     }
 
     /**
-     * @param IncludeTestsFormManager $includeTestsManager
-     * @param MarkPercentsMapCollector $mapCollector
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @param  IncludeTestsFormManager  $includeTestsManager
+     * @param  MarkPercentsMapCollector  $mapCollector
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showNewTestForm(IncludeTestsFormManager $includeTestsManager, MarkPercentsMapCollector $mapCollector)
-    {
+    public function showNewTestForm(
+        IncludeTestsFormManager $includeTestsManager,
+        MarkPercentsMapCollector $mapCollector
+    ): View {
         $this->authorize('create-tests');
 
         $subject = $this->urlManager->getCurrentSubject();
@@ -40,41 +47,45 @@ class TestsController extends AdminController
 
         $markPercents = $mapCollector->markPercents();
 
-        return view('pages.admin.tests-new', [
-            'subject'               => $subject,
-            'subjectsToIncludeFrom' => $toInclude,
+        return view(
+            'pages.admin.tests-new',
+            [
+                'subject'               => $subject,
+                'subjectsToIncludeFrom' => $toInclude,
 
-            'marksPercentsMap' => $markPercents,
-            'messageToUser'    => \Session::pull('messageToUser'),
-        ]);
+                'marksPercentsMap' => $markPercents,
+                'messageToUser'    => Session::pull('messageToUser'),
+            ]
+        );
     }
 
-    /**
-     * @param CreateTestRequest $request
-     * @param CreateTestService $service
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function newTest(CreateTestRequest $request, CreateTestService $service)
-    {
+    public function newTest(
+        CreateTestRequest $request,
+        CreateTestService $service
+    ): RedirectResponse {
         $currentSubject = $this->urlManager->getCurrentSubject();
 
         $service->ofSubject($currentSubject)
             ->handle($request->validated());
 
-        return redirect()->route('admin.tests.subject', [
-            'subject' => $currentSubject->uri_alias
-        ]);
+        return redirect()->route(
+            'admin.tests.subject',
+            [
+                'subject' => $currentSubject->uri_alias
+            ]
+        );
     }
 
     /**
-     * @param IncludeTestsFormManager $includeTestsManager
-     * @param MarkPercentsMapCollector $mapCollector
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @param  IncludeTestsFormManager  $includeTestsManager
+     * @param  MarkPercentsMapCollector  $mapCollector
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showUpdateTestForm(IncludeTestsFormManager $includeTestsManager,
-                                       MarkPercentsMapCollector $mapCollector)
-    {
+    public function showUpdateTestForm(
+        IncludeTestsFormManager $includeTestsManager,
+        MarkPercentsMapCollector $mapCollector
+    ): View {
         $test = $this->urlManager->getCurrentTest();
         $this->authorize('update', $test);
 
@@ -89,22 +100,23 @@ class TestsController extends AdminController
             ->setTest($test)
             ->markPercents();
 
-        return view('pages.admin.tests-single-settings', [
-            'test'    => $test,
-            'subject' => $subject,
+        return view(
+            'pages.admin.tests-single-settings',
+            [
+                'test'    => $test,
+                'subject' => $subject,
 
-            'subjectsToIncludeFrom' => $toInclude,
-            'marksPercentsMap'      => $markPercents,
-            'messageToUser'         => \Session::pull('messageToUser'),
-        ]);
+                'subjectsToIncludeFrom' => $toInclude,
+                'marksPercentsMap'      => $markPercents,
+                'messageToUser'         => Session::pull('messageToUser'),
+            ]
+        );
     }
 
-    /**
-     * @param UpdateTestRequest $request
-     * @param UpdateTestService $service
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function updateTest(UpdateTestRequest $request, UpdateTestService $service)
+    public function updateTest(
+        UpdateTestRequest $request,
+        UpdateTestService $service
+    ): RedirectResponse
     {
         $currentSubject = $this->urlManager->getCurrentSubject();
         $currentTest = $this->urlManager->getCurrentTest();
@@ -112,26 +124,32 @@ class TestsController extends AdminController
         $service->setTest($currentTest)
             ->handle($request->validated());
 
-        return redirect()->route('admin.tests.subject.test', [
-            'subject' => $currentSubject->uri_alias,
-            'test'    => $currentTest->uri_alias
-        ]);
+        return redirect()->route(
+            'admin.tests.subject.test',
+            [
+                'subject' => $currentSubject->uri_alias,
+                'test'    => $currentTest->uri_alias
+            ]
+        );
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     * @throws Exception
      */
-    public function deleteTest()
+    public function deleteTest(): RedirectResponse
     {
         $currentTest = $this->urlManager->getCurrentTest();
         $this->authorize('delete', $currentTest);
 
         $currentTest->delete();
 
-        return redirect()->route('admin.tests.subject', [
-            'subject' => $this->urlManager->getCurrentSubject()->uri_alias
-        ]);
+        return redirect()->route(
+            'admin.tests.subject',
+            [
+                'subject' => $this->urlManager->getCurrentSubject()->uri_alias
+            ]
+        );
     }
 }

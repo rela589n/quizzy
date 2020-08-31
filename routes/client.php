@@ -12,15 +12,19 @@
 |
 */
 
-Route::namespace('Auth')->group(function () {
-    Route::get('/', 'LoginController@showLoginForm')->name('.login');
-    Route::post('/', 'LoginController@login');
+Route::namespace('Auth')->group(
+    static function () {
+        Route::get('/', 'LoginController@showLoginForm')->name('.login');
+        Route::post('/', 'LoginController@login');
 
-    Route::post('/logout', 'LoginController@logout')->name('.logout');
+        Route::post('/logout', 'LoginController@logout')->name('.logout');
 
-    Route::get('/change-password', 'ChangePasswordController@showInitialPasswordChangeForm')->name('.change-password');
-    Route::post('/change-password', 'ChangePasswordController@initialChangePassword');
-});
+        Route::get('/change-password', 'ChangePasswordController@showInitialPasswordChangeForm')->name(
+            '.change-password'
+        );
+        Route::post('/change-password', 'ChangePasswordController@initialChangePassword');
+    }
+);
 
 Route::get('/dashboard', 'DashboardController@showDashboardPage')->name('.dashboard');
 Route::get('/documentation', 'DocumentationController@getWordDocument')->name('.documentation');
@@ -28,35 +32,37 @@ Route::get('/documentation', 'DocumentationController@getWordDocument')->name('.
 Route::prefix('/tests')
     ->name('.tests')
     ->namespace('Tests')
-    ->group(function () {
+    ->group(
+        static function () {
+            $routePatterns = Route::getPatterns();
 
-        $routePatterns = Route::getPatterns();
+            Route::prefix('/{subject}')
+                ->where(['subject' => $routePatterns['name']])
+                ->name('.subject')
+                ->group(
+                    static function () use (&$routePatterns) {
+                        Route::prefix('/{test}')
+                            ->where(['test' => $routePatterns['name']])
+                            ->name('.test')
+                            ->group(
+                                static function () use (&$routePatterns) {
+                                    Route::get('/', 'TestsController@showSingleTestForm');
+                                    Route::post('/', 'TestsController@finishTest');
+                                }
+                            );
 
-        Route::prefix('/{subject}')
-            ->where(['subject' => $routePatterns['name']])
-            ->name('.subject')
-            ->group(function () use (&$routePatterns) {
+                        /*
+                         * Single subject page with his tests list
+                         * client.tests.subject.test
+                         */
+                        Route::get('/', 'SubjectsController@showSingleSubject');
+                    }
+                );
 
-                Route::prefix('/{test}')
-                    ->where(['test' => $routePatterns['name']])
-                    ->name('.test')
-                    ->group(function () use (&$routePatterns) {
-
-                        Route::get('/', 'TestsController@showSingleTestForm');
-                        Route::post('/', 'TestsController@finishTest');
-                    });
-
-                /*
-                 * Single subject page with his tests list
-                 * client.tests.subject.test
-                 */
-                Route::get('/', 'SubjectsController@showSingleSubject');
-
-            });
-
-        /*
-         *  List of all subjects
-         */
-        Route::get('/', 'SubjectsController@showAll');
-    });
+            /*
+             *  List of all subjects
+             */
+            Route::get('/', 'SubjectsController@showAll');
+        }
+    );
 

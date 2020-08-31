@@ -10,26 +10,12 @@ use Illuminate\Validation\Rule;
 
 final class UpdateTestRequest extends TestRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @param RequestUrlManager $urlManager
-     * @return bool
-     */
-    public function authorize(Administrator $user, RequestUrlManager $urlManager)
+    public function authorize(Administrator $user, RequestUrlManager $urlManager): bool
     {
         return $user->can('update', $urlManager->getCurrentTest());
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param TestRulesContainer $rulesContainer
-     * @param RequestUrlManager $urlManager
-     * @return array
-     */
-    public function rules(TestRulesContainer $rulesContainer, RequestUrlManager $urlManager)
+    public function rules(TestRulesContainer $rulesContainer, RequestUrlManager $urlManager): array
     {
         $rules = $rulesContainer->getRules();
         $rules['uri_alias'][] = Rule::unique('tests')

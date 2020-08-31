@@ -9,10 +9,10 @@ use Illuminate\Foundation\Http\FormRequest;
 
 abstract class TeacherRequest extends FormRequest
 {
-    public function attributes()
+    public function attributes(): array
     {
         return $this->getRulesContainer()->getAttributes();
     }
 
-    protected abstract function getRulesContainer() : TeacherRulesContainer;
+    abstract protected function getRulesContainer(): TeacherRulesContainer;
 }

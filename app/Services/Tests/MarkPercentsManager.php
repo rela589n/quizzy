@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 class MarkPercentsManager
 {
     /**
-     * @var EloquentCollection
+     * @var EloquentCollection|callable
      */
     protected $models;
 
-    protected function models()
+    protected function resolveModels()
     {
         if (is_callable($this->models)) {
             $this->models = ($this->models)();
@@ -23,10 +23,10 @@ class MarkPercentsManager
     }
 
     /**
-     * @param EloquentCollection|callable $models
+     * @param  EloquentCollection|callable  $models
      * @return $this
      */
-    public function setModels($models)
+    public function setModels($models): self
     {
         $this->models = $models;
 
@@ -36,7 +36,7 @@ class MarkPercentsManager
     public function handle(?array $old)
     {
         if ($old === null) {
-            return $this->models();
+            return $this->resolveModels();
         }
 
         $response = [];

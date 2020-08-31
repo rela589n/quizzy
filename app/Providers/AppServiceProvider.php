@@ -8,12 +8,12 @@ use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\StudentResultFileNameGenerator;
 use App\Lib\Statements\GroupStatementsGenerator;
 use App\Lib\Statements\StudentStatementsGenerator;
+use App\Lib\Statements\TestsExportManager;
 use App\Lib\TestResults\CustomMarkEvaluator;
 use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Lib\TestResults\StrictMarkEvaluator;
 use App\Lib\TestResults\StrictScoreEvaluator;
 use App\Lib\TestResultsEvaluator;
-use App\Lib\Statements\TestsExportManager;
 use App\Lib\Words\Decliners\CyrillicWordDecliner;
 use App\Lib\Words\Decliners\WordDeclinerInterface;
 use App\Lib\Words\Repositories\UkrainianWordsRepository;
@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
@@ -42,14 +42,14 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerBindings();
 
         $this->shareViews();
     }
 
-    private function registerBindings()
+    private function registerBindings(): void
     {
         $this->app->when(TestResultsEvaluator::class)
             ->needs(ScoreEvaluatorInterface::class)
@@ -80,25 +80,34 @@ class AppServiceProvider extends ServiceProvider
         $this->registerSingletons();
     }
 
-    private function shareViews()
+    private function shareViews(): void
     {
-        View::composer('*', function ($view) {
-            $view->with('authUser', Auth::user());
-        });
+        View::composer(
+            '*',
+            static function ($view) {
+                $view->with('authUser', Auth::user());
+            }
+        );
     }
 
-    private function bindAuthUsers()
+    private function bindAuthUsers(): void
     {
-        $this->app->bind(Administrator::class, function ($app) {
-            return Auth::guard('admin')->user();
-        });
+        $this->app->bind(
+            Administrator::class,
+            static function () {
+                return Auth::guard('admin')->user();
+            }
+        );
 
-        $this->app->bind(User::class, function ($app) {
-            return Auth::guard('client')->user();
-        });
+        $this->app->bind(
+            User::class,
+            static function () {
+                return Auth::guard('client')->user();
+            }
+        );
     }
 
-    private function registerSingletons()
+    private function registerSingletons(): void
     {
         $this->app->singleton(StrictMarkEvaluator::class);
         $this->app->singleton(CustomMarkEvaluator::class);

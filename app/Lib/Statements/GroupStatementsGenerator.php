@@ -12,40 +12,24 @@ use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Words\WordsManager;
 use App\Models\StudentGroup;
 use App\Models\Test;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
+use PhpOffice\PhpWord\Exception\Exception as PhpWordException;
 
 class GroupStatementsGenerator extends StatementsGenerator
 {
-    /**
-     * @var StudentGroup
-     */
-    protected $group;
+    protected StudentGroup $group;
+    protected Test $test;
+    protected Collection $testResults;
+    protected GroupResultsManager $groupResultsManager;
+    protected MarksCorrelationCreator $marksCorrelationCreator;
 
-    /**
-     * @var Test
-     */
-    protected $test;
-
-    /**
-     * @var Collection
-     */
-    protected $testResults;
-
-    /**
-     * @var GroupResultsManager
-     */
-    protected $groupResultsManager;
-
-    /**
-     * @var MarksCorrelationCreator
-     */
-    protected $marksCorrelationCreator;
-
-    public function __construct(WordsManager $wordsManager,
-                                ResultFileNameGenerator $filePathGenerator,
-                                GroupResultsManager $groupResultsManager,
-                                MarksCorrelationCreator $marksCorrelationCreator)
-    {
+    public function __construct(
+        WordsManager $wordsManager,
+        ResultFileNameGenerator $filePathGenerator,
+        GroupResultsManager $groupResultsManager,
+        MarksCorrelationCreator $marksCorrelationCreator
+    ) {
         parent::__construct($wordsManager, $filePathGenerator);
 
         $this->groupResultsManager = $groupResultsManager;
@@ -53,7 +37,7 @@ class GroupStatementsGenerator extends StatementsGenerator
     }
 
     /**
-     * @param StudentGroup $group
+     * @param  StudentGroup  $group
      */
     public function setGroup(StudentGroup $group): void
     {
@@ -62,8 +46,8 @@ class GroupStatementsGenerator extends StatementsGenerator
     }
 
     /**
-     * @param Test $test
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @param  Test  $test
+     * @throws BindingResolutionException
      */
     public function setTest(Test $test): void
     {
@@ -78,7 +62,7 @@ class GroupStatementsGenerator extends StatementsGenerator
     }
 
     /**
-     * @param Collection $testResults
+     * @param  Collection  $testResults
      */
     public function setTestResults(Collection $testResults): void
     {
@@ -90,8 +74,8 @@ class GroupStatementsGenerator extends StatementsGenerator
     }
 
     /**
-     * @param TemplateProcessor $templateProcessor
-     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @param  TemplateProcessor  $templateProcessor
+     * @throws PhpWordException
      */
     protected function doGenerate(TemplateProcessor $templateProcessor): void
     {
@@ -99,11 +83,13 @@ class GroupStatementsGenerator extends StatementsGenerator
 
         $i = 1;
         foreach ($this->testResults as $result) {
-            $templateProcessor->setValues([
-                "number#$i"          => $i,
-                "studentFullName#$i" => $result->user->full_name,
-                "studentMark#$i"     => $result->mark
-            ]);
+            $templateProcessor->setValues(
+                [
+                    "number#$i"          => $i,
+                    "studentFullName#$i" => $result->user->full_name,
+                    "studentMark#$i"     => $result->mark
+                ]
+            );
 
             ++$i;
         }
@@ -114,24 +100,28 @@ class GroupStatementsGenerator extends StatementsGenerator
         $satisfactorilyCount = $this->groupResultsManager->getSatisfactorilyCount();
         $unsatisfactorilyCount = $this->groupResultsManager->getUnsatisfactorilyCount();
 
-        $templateProcessor->setValues([
-            'course'                   => $this->group->course,
-            'groupName'                => $this->group->name,
-            'averageMark'              => $this->groupResultsManager->getAverageMark(),
-            'perfect'                  => $perfectCount,
-            'perfectDeclined'          => $this->wordsManager->decline($perfectCount, 'студент'),
-            'good'                     => $goodCount,
-            'goodDeclined'             => $this->wordsManager->decline($goodCount, 'студент'),
-            'satisfactorily'           => $satisfactorilyCount,
-            'satisfactorilyDeclined'   => $this->wordsManager->decline($satisfactorilyCount, 'студент'),
-            'unsatisfactorily'         => $unsatisfactorilyCount,
-            'unsatisfactorilyDeclined' => $this->wordsManager->decline($unsatisfactorilyCount, 'студент')
-        ]);
+        $templateProcessor->setValues(
+            [
+                'course'                   => $this->group->course,
+                'groupName'                => $this->group->name,
+                'averageMark'              => $this->groupResultsManager->getAverageMark(),
+                'perfect'                  => $perfectCount,
+                'perfectDeclined'          => $this->wordsManager->decline($perfectCount, 'студент'),
+                'good'                     => $goodCount,
+                'goodDeclined'             => $this->wordsManager->decline($goodCount, 'студент'),
+                'satisfactorily'           => $satisfactorilyCount,
+                'satisfactorilyDeclined'   => $this->wordsManager->decline($satisfactorilyCount, 'студент'),
+                'unsatisfactorily'         => $unsatisfactorilyCount,
+                'unsatisfactorilyDeclined' => $this->wordsManager->decline($unsatisfactorilyCount, 'студент')
+            ]
+        );
 
-        $templateProcessor->setValues([
-            'success' => $this->groupResultsManager->getSuccessPercentage(),
-            'quality' => $this->groupResultsManager->getQualityPercentage()
-        ]);
+        $templateProcessor->setValues(
+            [
+                'success' => $this->groupResultsManager->getSuccessPercentage(),
+                'quality' => $this->groupResultsManager->getQualityPercentage()
+            ]
+        );
     }
 
     protected function templateResourcePath(): string

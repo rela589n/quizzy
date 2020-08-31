@@ -10,28 +10,21 @@ use App\Services\AnswerOptions\Store\StoreAnswerOptionService;
 
 abstract class StoreQuestionService
 {
-    /** @var array */
-    protected $fields = [];
-
-    /** @var StoreAnswerOptionService */
-    protected $answerOptionService;
-
-    /**
-     * @var Question
-     */
-    protected $question;
-
-    /**
-     * @var Test
-     */
-    protected $test;
+    protected array $fields = [];
+    protected StoreAnswerOptionService $answerOptionService;
+    protected Question $question;
+    protected ?Test $test;
 
     public function __construct(StoreAnswerOptionService $answerOptionService)
     {
         $this->answerOptionService = $answerOptionService;
     }
 
-    public function ofTest(Test $test)
+    /**
+     * @param  Test  $test
+     * @return $this
+     */
+    public function ofTest(Test $test): self
     {
         $this->test = $test;
 
@@ -54,9 +47,10 @@ abstract class StoreQuestionService
         return $this->question;
     }
 
-    protected abstract function doHandle(): Question;
-
-    public function clearFields()
+    /**
+     * @return $this
+     */
+    public function clearFields(): self
     {
         $this->test = null;
 
@@ -64,4 +58,6 @@ abstract class StoreQuestionService
 
         return $this;
     }
+
+    abstract protected function doHandle(): Question;
 }

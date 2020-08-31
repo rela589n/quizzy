@@ -11,7 +11,7 @@ class DepartmentPolicy
 {
     use HandlesAuthorization;
 
-    protected $departmentQueries;
+    protected AccessibleDepartmentsQuery $departmentQueries;
 
     public function __construct(AccessibleDepartmentsQuery $accessibleDepartments)
     {
@@ -21,11 +21,11 @@ class DepartmentPolicy
     /**
      * Determine whether the user can view the student group.
      *
-     * @param Administrator $user
-     * @param Department $department
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  Department  $department
+     * @return bool
      */
-    public function view(Administrator $user, Department $department)
+    public function view(Administrator $user, Department $department): bool
     {
         $this->departmentQueries->setUser($user);
 
@@ -36,11 +36,11 @@ class DepartmentPolicy
     /**
      * Determine whether the user can update the student group.
      *
-     * @param Administrator $user
-     * @param Department $department
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  Department  $department
+     * @return bool
      */
-    public function update(Administrator $user, Department $department)
+    public function update(Administrator $user, Department $department): bool
     {
         return $user->can('update-departments');
     }
@@ -48,11 +48,11 @@ class DepartmentPolicy
     /**
      * Determine whether the user can delete the student group.
      *
-     * @param Administrator $user
-     * @param Department $department
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  Department  $department
+     * @return bool
      */
-    public function delete(Administrator $user, Department $department)
+    public function delete(Administrator $user, Department $department): bool
     {
         return $user->can('delete-departments');
     }

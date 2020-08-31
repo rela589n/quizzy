@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\TestSubject;
 use App\Models\Administrator;
+use App\Models\TestSubject;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SubjectPolicy
@@ -13,11 +13,11 @@ class SubjectPolicy
     /**
      * Determine whether the user can view the test subject.
      *
-     * @param Administrator $user
-     * @param TestSubject $testSubject
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  TestSubject  $testSubject
+     * @return bool
      */
-    public function view(Administrator $user, TestSubject $testSubject)
+    public function view(Administrator $user, TestSubject $testSubject): bool
     {
         return $user->can('view-subjects');
     }
@@ -25,11 +25,11 @@ class SubjectPolicy
     /**
      * Determine whether the user can update the test subject.
      *
-     * @param Administrator $user
-     * @param TestSubject $testSubject
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  TestSubject  $testSubject
+     * @return bool
      */
-    public function update(Administrator $user, TestSubject $testSubject)
+    public function update(Administrator $user, TestSubject $testSubject): bool
     {
         return $user->can('update-subjects');
     }
@@ -37,11 +37,11 @@ class SubjectPolicy
     /**
      * Determine whether the user can delete the test subject.
      *
-     * @param Administrator $user
-     * @param TestSubject $testSubject
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  TestSubject  $testSubject
+     * @return bool
      */
-    public function delete(Administrator $user, TestSubject $testSubject)
+    public function delete(Administrator $user, TestSubject $testSubject): bool
     {
         return $user->can('delete-subjects');
     }

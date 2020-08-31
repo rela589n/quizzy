@@ -7,14 +7,21 @@ use App\Http\Requests\Tests\Transfers\ImportTestRequest;
 use App\Lib\Parsers\TestParserFactory;
 use App\Lib\Statements\TestsExportManager;
 use App\Models\Question;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use PhpOffice\PhpWord\Exception\CopyFileException;
+use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
+use PhpOffice\PhpWord\Exception\Exception;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class TestsTransferController extends AdminController
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showImportForm()
+    public function showImportForm(): View
     {
         $test = $this->urlManager->getCurrentTest();
         $this->authorize('update', $test);
@@ -24,13 +31,10 @@ class TestsTransferController extends AdminController
         return view('pages.admin.tests-import', compact('subject', 'test'));
     }
 
-    /**
-     * @param ImportTestRequest $request
-     * @param TestParserFactory $parserFactory
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function import(ImportTestRequest $request, TestParserFactory $parserFactory)
-    {
+    public function import(
+        ImportTestRequest $request,
+        TestParserFactory $parserFactory
+    ): RedirectResponse {
         $test = $this->urlManager->getCurrentTest();
         $file = $request->file('selected-file');
 
@@ -43,28 +47,33 @@ class TestsTransferController extends AdminController
              * @var Question $question
              */
             $question = $test->nativeQuestions()
-                ->create([
-                    'question' => $questionInfo['question']
-                ]);
+                ->create(
+                    [
+                        'question' => $questionInfo['question']
+                    ]
+                );
 
             $question->answerOptions()
                 ->createMany($questionInfo['insert_options']);
         }
 
-        return redirect()->route('admin.tests.subject.test', [
-            'subject' => $test->subject->uri_alias,
-            'test'    => $test->uri_alias,
-        ]);
+        return redirect()->route(
+            'admin.tests.subject.test',
+            [
+                'subject' => $test->subject->uri_alias,
+                'test'    => $test->uri_alias,
+            ]
+        );
     }
 
     /**
-     * @param TestsExportManager $exportManager
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
-     * @throws \PhpOffice\PhpWord\Exception\CopyFileException
-     * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
-     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @param  TestsExportManager  $exportManager
+     * @return BinaryFileResponse
+     * @throws CopyFileException
+     * @throws CreateTemporaryFileException
+     * @throws Exception
      */
-    public function export(TestsExportManager $exportManager)
+    public function export(TestsExportManager $exportManager): BinaryFileResponse
     {
         $exportManager->setTest($this->urlManager->getCurrentTest());
 

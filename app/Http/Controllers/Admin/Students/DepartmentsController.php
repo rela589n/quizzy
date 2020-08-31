@@ -9,14 +9,14 @@ use App\Http\Requests\Departments\CreateDepartmentsRequest;
 use App\Http\Requests\Departments\UpdateDepartmentRequest;
 use App\Lib\Filters\Eloquent\AvailableDepartmentsFilter;
 use App\Models\Department;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class DepartmentsController extends AdminController
 {
-    /**
-     * @param AvailableDepartmentsFilter $filters
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function showAll(AvailableDepartmentsFilter $filters)
+    public function showAll(AvailableDepartmentsFilter $filters): View
     {
         $departments = Department::withCount('studentGroups');
         $departments = $departments->filtered($filters);
@@ -25,10 +25,10 @@ class DepartmentsController extends AdminController
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showNewDepartmentForm()
+    public function showNewDepartmentForm(): View
     {
         $this->authorize('create-departments');
 
@@ -37,9 +37,9 @@ class DepartmentsController extends AdminController
 
     /**
      * @param CreateDepartmentsRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function newDepartment(CreateDepartmentsRequest $request)
+    public function newDepartment(CreateDepartmentsRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         Department::create($validated);
@@ -48,10 +48,10 @@ class DepartmentsController extends AdminController
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showUpdateDepartmentForm()
+    public function showUpdateDepartmentForm(): View
     {
         $department = $this->urlManager->getCurrentDepartment();
         $this->authorize('update', $department);
@@ -61,9 +61,9 @@ class DepartmentsController extends AdminController
 
     /**
      * @param UpdateDepartmentRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function updateDepartment(UpdateDepartmentRequest $request)
+    public function updateDepartment(UpdateDepartmentRequest $request): RedirectResponse
     {
         $department = $this->urlManager->getCurrentDepartment();
         $department->update($request->validated());
@@ -74,11 +74,11 @@ class DepartmentsController extends AdminController
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     * @throws Exception
      */
-    public function deleteDepartment()
+    public function deleteDepartment(): RedirectResponse
     {
         $department = $this->urlManager->getCurrentDepartment();
         $this->authorize('delete', $department);

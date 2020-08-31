@@ -10,7 +10,7 @@ class UpdateAnswerOptionService extends StoreAnswerOptionService
 {
     /**
      * @param AnswerOption $answerOption
-     * @return UpdateAnswerOptionService
+     * @return $this
      */
     public function setAnswerOption(AnswerOption $answerOption): self
     {

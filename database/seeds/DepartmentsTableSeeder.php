@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 
 class DepartmentsTableSeeder extends Seeder
 {
-    protected static $departments = [
+    protected static array $departments = [
         [
             'name'      => 'Програмна Інженерія',
             'uri_alias' => 'software-engineering',
@@ -33,7 +33,7 @@ class DepartmentsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         Department::insert(self::$departments);
     }

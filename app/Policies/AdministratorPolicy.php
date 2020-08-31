@@ -12,11 +12,11 @@ class AdministratorPolicy
     /**
      * Determine whether the user can view the administrator.
      *
-     * @param Administrator $user
-     * @param Administrator $model
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  Administrator  $model
+     * @return bool
      */
-    public function view(Administrator $user, Administrator $model)
+    public function view(Administrator $user, Administrator $model): bool
     {
         return $user->can('view-administrators');
     }
@@ -24,11 +24,11 @@ class AdministratorPolicy
     /**
      * Determine whether the user can update the administrator.
      *
-     * @param Administrator $user
-     * @param Administrator $model
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  Administrator  $model
+     * @return bool
      */
-    public function update(Administrator $user, Administrator $model)
+    public function update(Administrator $user, Administrator $model): bool
     {
         return $user->can('update-administrators');
     }
@@ -36,11 +36,11 @@ class AdministratorPolicy
     /**
      * Determine whether the user can delete the administrator.
      *
-     * @param Administrator $user
-     * @param Administrator $model
-     * @return mixed
+     * @param  Administrator  $user
+     * @param  Administrator  $model
+     * @return bool
      */
-    public function delete(Administrator $user, Administrator $model)
+    public function delete(Administrator $user, Administrator $model): bool
     {
         return $user->can('delete-administrators');
     }

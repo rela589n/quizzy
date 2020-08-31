@@ -9,14 +9,9 @@ use App\Models\Question;
 
 abstract class StoreAnswerOptionService
 {
-    /** @var array */
-    protected $fields = [];
-
-    /** @var AnswerOption */
-    protected $answerOption;
-
-    /** @var Question */
-    protected $question;
+    protected array $fields = [];
+    protected ?AnswerOption $answerOption;
+    protected ?Question $question;
 
     public function ofQuestion(Question $question): self
     {
@@ -36,9 +31,12 @@ abstract class StoreAnswerOptionService
         return $this->answerOption;
     }
 
-    protected abstract function doHandle(): AnswerOption;
+    abstract protected function doHandle(): AnswerOption;
 
-    public function clearFields()
+    /**
+     * @return $this
+     */
+    public function clearFields(): StoreAnswerOptionService
     {
         $this->question = null;
 

@@ -9,33 +9,35 @@ use App\Models\Administrator;
 use App\Models\StudentGroup;
 use App\Models\User;
 use App\Services\Users\Administrators\CreateAdministratorService;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 
 class StudentsController extends AdminController
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      * @throws AuthorizationException
      */
-    public function showNewStudentForm()
+    public function showNewStudentForm(): View
     {
         $this->authorize('create-students');
 
-        return view('pages.admin.student-new', [
-            'department' => $this->urlManager->getCurrentDepartment(),
-            'group'      => $this->urlManager->getCurrentGroup()
-        ]);
+        return view(
+            'pages.admin.student-new',
+            [
+                'department' => $this->urlManager->getCurrentDepartment(),
+                'group'      => $this->urlManager->getCurrentGroup()
+            ]
+        );
     }
 
-    /**
-     * @param CreateStudentRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function newStudent(CreateStudentRequest $request)
+    public function newStudent(CreateStudentRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
@@ -43,54 +45,58 @@ class StudentsController extends AdminController
         $group = $this->urlManager->getCurrentGroup();
         $group->students()->create($validated);
 
-        return redirect()->route('admin.students.department.group', [
-            'department' => $this->urlManager->getCurrentDepartment()->uri_alias,
-            'group'      => $group->uri_alias
-        ]);
+        return redirect()->route(
+            'admin.students.department.group',
+            [
+                'department' => $this->urlManager->getCurrentDepartment()->uri_alias,
+                'group'      => $group->uri_alias
+            ]
+        );
     }
 
     /**
      * @param $departmentAlias
      * @param $groupAlias
      * @param $userId
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return View
      * @throws AuthorizationException
      */
-    public function showUpdateFormOrInfoPage($departmentAlias, $groupAlias, $userId)
+    public function showUpdateFormOrInfoPage($departmentAlias, $groupAlias, $userId): ?View
     {
         $user = User::findOrFail($userId);
 
         try {
             return $this->showUpdateForm($user);
-
         } catch (AuthorizationException $e) {
-
             return $this->showReadOnlyUserPage($user);
         }
     }
 
     /**
-     * @param User $user
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param  User  $user
+     * @return View
      * @throws AuthorizationException
      */
-    public function showUpdateForm(User $user)
+    public function showUpdateForm(User $user): View
     {
         $this->authorize('update', $user);
 
-        return view('pages.admin.student-update', [
-            'user'          => $user,
-            'studentGroups' => StudentGroup::all()->sortByDesc('year'),
-            'messageToUser' => Session::pull('messageToUser'),
-        ]);
+        return view(
+            'pages.admin.student-update',
+            [
+                'user'          => $user,
+                'studentGroups' => StudentGroup::all()->sortByDesc('year'),
+                'messageToUser' => Session::pull('messageToUser'),
+            ]
+        );
     }
 
     /**
-     * @param User $user
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param  User  $user
+     * @return View
      * @throws AuthorizationException
      */
-    public function showReadOnlyUserPage(User $user)
+    public function showReadOnlyUserPage(User $user): View
     {
         $this->authorize('view', $user);
 
@@ -98,10 +104,10 @@ class StudentsController extends AdminController
     }
 
     /**
-     * @param UpdateStudentRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  UpdateStudentRequest  $request
+     * @return RedirectResponse
      */
-    public function updateStudent(UpdateStudentRequest $request)
+    public function updateStudent(UpdateStudentRequest $request): RedirectResponse
     {
         $user = $request->student();
         $validated = array_filter($request->validated());
@@ -112,78 +118,97 @@ class StudentsController extends AdminController
 
         $user->update($validated);
 
-        return redirect()->route('admin.students.department.group', [
-            'department' => $user->studentGroup->department->uri_alias,
-            'group'      => $user->studentGroup->uri_alias
-        ]);
+        return redirect()->route(
+            'admin.students.department.group',
+            [
+                'department' => $user->studentGroup->department->uri_alias,
+                'group'      => $user->studentGroup->uri_alias
+            ]
+        );
     }
 
     /**
      * @param $departmentAlias
      * @param $groupAlias
      * @param $userId
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      * @throws AuthorizationException
-     * @throws \Exception
+     * @throws Exception
      */
-    public function deleteStudent($departmentAlias, $groupAlias, $userId)
+    public function deleteStudent($departmentAlias, $groupAlias, $userId): RedirectResponse
     {
         $user = User::findOrFail($userId);
         $this->authorize('delete', $user);
 
         $user->delete();
 
-        return redirect()->route('admin.students.department.group', [
-            'department' => $departmentAlias,
-            'group'      => $groupAlias
-        ]);
+        return redirect()->route(
+            'admin.students.department.group',
+            [
+                'department' => $departmentAlias,
+                'group'      => $groupAlias
+            ]
+        );
     }
 
     /**
      * @param $departmentAlias
      * @param $groupAlias
      * @param $userId
-     * @param CreateAdministratorService $createAdministratorService
-     * @return \Illuminate\Http\RedirectResponse
+     * @param  CreateAdministratorService  $createAdministratorService
+     * @return RedirectResponse
      * @throws AuthorizationException
      * @throws ValidationException
      */
-    public function makeClassMonitor($departmentAlias, $groupAlias, $userId, CreateAdministratorService $createAdministratorService)
-    {
+    public function makeClassMonitor(
+        $departmentAlias,
+        $groupAlias,
+        $userId,
+        CreateAdministratorService $createAdministratorService
+    ): RedirectResponse {
         $user = User::findOrFail($userId);
         $this->authorize('update', $user);
         $this->authorize('make-student-class-monitor');
 
-        $group = StudentGroup::whereUriAlias($groupAlias)->first();
+        $group = StudentGroup::whereUriAlias($groupAlias)->firstOrFail();
 
         if ($group->classMonitor()->exists()) {
-            throw ValidationException::withMessages([
-                'student_group_id' => 'Група вже має старосту'
-            ]);
+            throw ValidationException::withMessages(
+                [
+                    'student_group_id' => 'Група вже має старосту'
+                ]
+            );
         }
 
         if (Administrator::whereEmail($user->email)->exists()) {
-            throw ValidationException::withMessages([
-                'email' => 'В адмін-панелі вже є користувач з заданим email'
-            ]);
+            throw ValidationException::withMessages(
+                [
+                    'email' => 'В адмін-панелі вже є користувач з заданим email'
+                ]
+            );
         }
 
         $classMonitor = $createAdministratorService
             ->withoutPasswordHashing()
-            ->handle([
-                'name'       => $user->name,
-                'surname'    => $user->surname,
-                'patronymic' => $user->patronymic,
-                'email'      => $user->email,
-                'password'   => $user->password,
-                'role_ids'   => [Role::whereName('class-monitor')->first('id')->id]
-            ]);
+            ->handle(
+                [
+                    'name'       => $user->name,
+                    'surname'    => $user->surname,
+                    'patronymic' => $user->patronymic,
+                    'email'      => $user->email,
+                    'password'   => $user->password,
+                    'role_ids'   => [Role::whereName('class-monitor')->first('id')->id]
+                ]
+            );
 
         $group->created_by = $classMonitor->id;
         $group->save();
 
         return redirect()
             ->back()
-            ->with('messageToUser', 'Успішно створено аккаунт старости в адмін-панелі (логін та пароль такі ж як поточні).');
+            ->with(
+                'messageToUser',
+                'Успішно створено аккаунт старости в адмін-панелі (логін та пароль такі ж як поточні).'
+            );
     }
 }

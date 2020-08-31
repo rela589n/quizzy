@@ -11,14 +11,18 @@ use App\Models\TestSubject;
 use App\Repositories\TestsRepository;
 use App\Services\Subjects\CreateSubjectService;
 use App\Services\Subjects\UpdateSubjectService;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class SubjectsController extends AdminController
 {
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showAll()
+    public function showAll(): View
     {
         $this->authorize('access-subjects');
 
@@ -28,10 +32,10 @@ class SubjectsController extends AdminController
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showNewSubjectForm()
+    public function showNewSubjectForm(): View
     {
         $this->authorize('create-subjects');
 
@@ -41,12 +45,7 @@ class SubjectsController extends AdminController
         ]);
     }
 
-    /**
-     * @param CreateSubjectRequest $request
-     * @param CreateSubjectService $service
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function newSubject(CreateSubjectRequest $request, CreateSubjectService $service)
+    public function newSubject(CreateSubjectRequest $request, CreateSubjectService $service): RedirectResponse
     {
         $subject = $service->handle($request->validated());
 
@@ -55,10 +54,10 @@ class SubjectsController extends AdminController
 
     /**
      * @param TestsRepository $testsRepository
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showSingleSubject(TestsRepository $testsRepository)
+    public function showSingleSubject(TestsRepository $testsRepository): View
     {
         $subject = $this->urlManager->getCurrentSubject();
         $this->authorize('view', $subject);
@@ -70,10 +69,10 @@ class SubjectsController extends AdminController
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showUpdateSubjectForm()
+    public function showUpdateSubjectForm(): View
     {
         $subject = $this->urlManager->getCurrentSubject();
         $this->authorize('update', $subject);
@@ -88,9 +87,9 @@ class SubjectsController extends AdminController
     /**
      * @param UpdateSubjectRequest $request
      * @param UpdateSubjectService $service
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function updateSubject(UpdateSubjectRequest $request, UpdateSubjectService $service)
+    public function updateSubject(UpdateSubjectRequest $request, UpdateSubjectService $service): RedirectResponse
     {
         $subject = $this->urlManager->getCurrentSubject();
 
@@ -103,11 +102,11 @@ class SubjectsController extends AdminController
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     * @throws Exception
      */
-    public function deleteSubject()
+    public function deleteSubject(): RedirectResponse
     {
         $subject = $this->urlManager->getCurrentSubject();
         $this->authorize('delete', $subject);

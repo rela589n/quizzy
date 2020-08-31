@@ -8,24 +8,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 final class CreateDepartmentsRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @return bool
-     */
-    public function authorize(Administrator $user)
+    public function authorize(Administrator $user): bool
     {
         return $user->can('create-departments');
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @param DepartmentRulesContainer $rules
-     * @return array
-     */
-    public function rules(DepartmentRulesContainer $rules)
+    public function rules(DepartmentRulesContainer $rules): array
     {
         $rules = $rules->getRules();
         $rules['uri_alias'][] = 'unique:departments';

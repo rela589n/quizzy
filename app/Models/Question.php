@@ -2,8 +2,14 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Question
@@ -11,22 +17,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  * @property string $question
  * @property int $test_id
- * @property-read \Illuminate\Database\Eloquent\Collection|AnswerOption[] $answerOptions
+ * @property-read Collection|AnswerOption[] $answerOptions
  * @property-read int|null $answer_options_count
  * @property-read Test $test
- * @method static \Illuminate\Database\Eloquent\Builder|Question newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Question newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Question query()
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereQuestion($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereTestId($value)
- * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder|Question random($limit)
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static Builder|Question newModelQuery()
+ * @method static Builder|Question newQuery()
+ * @method static Builder|Question query()
+ * @method static Builder|Question whereId($value)
+ * @method static Builder|Question whereQuestion($value)
+ * @method static Builder|Question whereTestId($value)
+ * @mixin Eloquent
+ * @method static Builder|Question random($limit)
+ * @property Carbon|null $deleted_at
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|Question onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|Question whereDeletedAt($value)
+ * @method static Builder|Question whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Question withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Question withoutTrashed()
  */
@@ -36,12 +42,12 @@ class Question extends Model
     public $timestamps = false;
     public $fillable = ['question', 'test_id'];
 
-    public function test()
+    public function test(): BelongsTo
     {
         return $this->belongsTo(Test::class);
     }
 
-    public function answerOptions()
+    public function answerOptions(): HasMany
     {
         return $this->hasMany(AnswerOption::class);
     }
@@ -49,9 +55,9 @@ class Question extends Model
     /**
      * Scope a query to include random <b>$limit</b> questions.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param int $limit
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeRandom($query, $limit)
     {

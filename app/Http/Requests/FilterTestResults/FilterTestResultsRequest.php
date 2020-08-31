@@ -4,59 +4,57 @@ namespace App\Http\Requests\FilterTestResults;
 
 use App\Lib\ValidationGenerator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Carbon as Carbon;
+use Illuminate\Support\Carbon;
 
 class FilterTestResultsRequest extends FormRequest
 {
-    /**
-     * @var ValidationGenerator
-     */
-    private $validationGenerator;
+    private ValidationGenerator $validationGenerator;
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function attributes()
+    public function attributes(): array
     {
-        return $this->validationGenerator->buildAttribute('resultDateIn.*', trans('validation.attributes.resultDateIn'));
+        return $this->validationGenerator->buildAttribute(
+            'resultDateIn.*',
+            trans('validation.attributes.resultDateIn')
+        );
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         if ($this->has('resultDateIn')) {
-            $this->merge([
+            $this->merge(
+                [
 
-                'resultDateIn' => array_map(
-                    function (string $date) {
-                        return trim($date);
-                    },
-                    explode(',', $this->input('resultDateIn'))
-                )
-            ]);
+                    'resultDateIn' => array_map(
+                        static function (string $date) {
+                            return trim($date);
+                        },
+                        explode(',', $this->input('resultDateIn'))
+                    )
+                ]
+            );
         }
     }
 
-    public function getQueryFilters()
+    public function getQueryFilters(): array
     {
         $queryFilters = $this->only(['resultId', 'groupId', 'name', 'surname', 'patronymic', 'resultDateIn']);
 
-        $queryFilters['resultDateIn'] = array_map(function (string $date) {
-
-            return Carbon::createFromFormat('d.m.Y', trim($date));
-
-        }, $queryFilters['resultDateIn'] ?? []);
+        $queryFilters['resultDateIn'] = array_map(
+            static function (string $date) {
+                return Carbon::createFromFormat('d.m.Y', trim($date));
+            },
+            $queryFilters['resultDateIn'] ?? []
+        );
 
         return $queryFilters;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->only('result', 'mark');
     }
@@ -64,23 +62,25 @@ class FilterTestResultsRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @param ValidationGenerator $generator
+     * @param  ValidationGenerator  $generator
      * @return array
      */
-    public function rules(ValidationGenerator $generator)
+    public function rules(ValidationGenerator $generator): array
     {
         $this->validationGenerator = $generator;
         $generator->setRequest($this);
 
-        return $generator->buildManyRules([
-            'resultId|groupId|surname|name|patronymic|result|mark|resultDateIn' => 'sometimes',
+        return $generator->buildManyRules(
+            [
+                'resultId|groupId|surname|name|patronymic|result|mark|resultDateIn' => 'sometimes',
 
-            'resultId|groupId'        => 'integer|min:1',
-            'surname|name|patronymic' => 'string',
-            'result'                  => 'numeric|between:0,100.0',
-            'mark'                    => 'integer|min:1',
-            'resultDateIn'            => 'array',
-            'resultDateIn.*'          => 'date',
-        ]);
+                'resultId|groupId'        => 'integer|min:1',
+                'surname|name|patronymic' => 'string',
+                'result'                  => 'numeric|between:0,100.0',
+                'mark'                    => 'integer|min:1',
+                'resultDateIn'            => 'array',
+                'resultDateIn.*'          => 'date',
+            ]
+        );
     }
 }

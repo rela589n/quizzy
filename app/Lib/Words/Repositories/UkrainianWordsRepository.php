@@ -6,9 +6,9 @@ namespace App\Lib\Words\Repositories;
 
 class UkrainianWordsRepository extends WordsRepository
 {
-    protected $wordEndings = [
-        'бал' => ['', 'а', 'ів'],
+    protected array $wordEndings = [
+        'бал'     => ['', 'а', 'ів'],
         'студент' => ['', 'а', 'ів'],
-        'відсот' => ['ок', 'ка', 'ків'],
+        'відсот'  => ['ок', 'ка', 'ків'],
     ];
 }

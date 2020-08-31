@@ -8,24 +8,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 final class ImportTestRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @param Administrator $user
-     * @param RequestUrlManager $urlManager
-     * @return bool
-     */
-    public function authorize(Administrator $user, RequestUrlManager $urlManager)
+    public function authorize(Administrator $user, RequestUrlManager $urlManager): bool
     {
         return $user->can('update', $urlManager->getCurrentTest());
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'selected-file' => [

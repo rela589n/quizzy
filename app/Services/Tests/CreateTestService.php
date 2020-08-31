@@ -25,7 +25,7 @@ class CreateTestService extends StoreTestService
         return $include;
     }
 
-    protected function detachMarkPercents()
+    protected function detachMarkPercents(): void
     {
         // do nothing
     }

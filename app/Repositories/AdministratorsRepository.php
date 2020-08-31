@@ -10,7 +10,7 @@ use App\Models\StudentGroup;
 
 class AdministratorsRepository
 {
-    protected $classMonitorFilters;
+    protected ClassMonitorsFilter $classMonitorFilters;
 
     public function __construct(ClassMonitorsFilter $classMonitorFilters)
     {

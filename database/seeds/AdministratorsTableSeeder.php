@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 
 class AdministratorsTableSeeder extends Seeder
 {
-    protected static $administrators = [
+    protected static array $administrators = [
         'super-admin'   => [
             'system' => [
                 'name'       => '',
@@ -38,7 +38,7 @@ class AdministratorsTableSeeder extends Seeder
         ]
     ];
 
-    protected static $productionOnly = ['super-admin'];
+    protected static array $productionOnly = ['super-admin'];
 
     public function __construct()
     {
@@ -56,10 +56,9 @@ class AdministratorsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         foreach (static::$administrators as $roleName => $users) {
-
             foreach ($users as $userName => $info) {
                 $info['email'] = $userName;
                 $info['password'] = Hash::make($info['password']);

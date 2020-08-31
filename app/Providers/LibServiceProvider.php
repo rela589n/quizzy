@@ -14,11 +14,14 @@ class LibServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        $this->app->singleton(ValidationGenerator::class, function ($app) {
-            return new ValidationGenerator(resolve(Request::class));
-        });
+        $this->app->singleton(
+            ValidationGenerator::class,
+            static function () {
+                return new ValidationGenerator(resolve(Request::class));
+            }
+        );
 
         $this->app->singleton(QuestionsTransformer::class);
     }

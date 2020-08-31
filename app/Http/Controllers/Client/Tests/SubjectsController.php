@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Client\Tests;
 use App\Http\Controllers\Client\ClientController;
 use App\Models\TestSubject;
 use App\Repositories\TestsRepository;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SubjectsController extends ClientController
 {
@@ -20,10 +22,10 @@ class SubjectsController extends ClientController
 
     /**
      * @param TestsRepository $testsRepository
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return View
+     * @throws AuthorizationException
      */
-    public function showSingleSubject(TestsRepository $testsRepository)
+    public function showSingleSubject(TestsRepository $testsRepository): View
     {
         $subject = $this->urlManager->getCurrentSubject();
         $this->authorize('pass-tests-of-subject', $subject);

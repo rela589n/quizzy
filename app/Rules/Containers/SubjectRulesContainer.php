@@ -8,7 +8,7 @@ use App\Rules\UriSlug;
 
 final class SubjectRulesContainer
 {
-    public function getRules()
+    public function getRules(): array
     {
         return [
             'name'          => [

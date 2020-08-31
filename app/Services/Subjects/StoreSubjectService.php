@@ -8,11 +8,8 @@ use App\Models\TestSubject;
 
 abstract class StoreSubjectService
 {
-    /** @var array */
-    protected $fields = [];
-
-    /** @var TestSubject */
-    protected $subject;
+    protected array $fields = [];
+    protected TestSubject $subject;
 
     public function handle(array $request): TestSubject
     {
@@ -25,7 +22,7 @@ abstract class StoreSubjectService
         return $this->subject;
     }
 
-    protected abstract function doHandle(): TestSubject;
+    abstract protected function doHandle(): TestSubject;
 
     protected function syncCourses(array $courses): void
     {

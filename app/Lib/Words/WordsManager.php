@@ -9,32 +9,16 @@ use App\Lib\Words\Repositories\WordsRepository;
 
 class WordsManager
 {
-    /**
-     * @var WordDeclinerInterface
-     */
-    private $wordDecliner;
+    private WordDeclinerInterface $wordDecliner;
+    private WordsRepository $wordsRepository;
 
-    /**
-     * @var WordsRepository
-     */
-    private $wordsRepository;
-
-    /**
-     * WordsManager constructor.
-     * @param WordDeclinerInterface $wordDecliner
-     * @param WordsRepository $wordsRepository
-     */
     public function __construct(WordDeclinerInterface $wordDecliner, WordsRepository $wordsRepository)
     {
         $this->wordDecliner = $wordDecliner;
         $this->wordsRepository = $wordsRepository;
     }
 
-    /**
-     * @param float|int $number
-     * @param string $word
-     */
-    public function decline($number, string $word)
+    public function decline($number, string $word): string
     {
         return $this->wordDecliner->decline(
             $number,

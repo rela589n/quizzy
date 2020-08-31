@@ -10,14 +10,11 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class IncludeTestsFormManager
 {
-    /**
-     * @var Test
-     */
-    protected $test;
+    protected Test $test;
 
     /**
-     * @param Test $test
-     * @return IncludeTestsFormManager
+     * @param  Test  $test
+     * @return $this
      */
     public function setTest(Test $test): self
     {
@@ -27,14 +24,11 @@ class IncludeTestsFormManager
         return $this;
     }
 
-    /**
-     * @var TestSubject
-     */
-    protected $subject;
+    protected TestSubject $subject;
 
     /**
-     * @param TestSubject $subject
-     * @return IncludeTestsFormManager
+     * @param  TestSubject  $subject
+     * @return $this
      */
     public function setSubject(TestSubject $subject): self
     {
@@ -43,12 +37,9 @@ class IncludeTestsFormManager
         return $this;
     }
 
-    /**
-     * @var array
-     */
-    protected $pivotsMap;
+    protected array $pivotsMap;
 
-    protected function buildPivotsMap()
+    protected function buildPivotsMap(): void
     {
         $this->pivotsMap = [];
 
@@ -58,14 +49,12 @@ class IncludeTestsFormManager
     }
 
     /**
-     * @param EloquentCollection|TestSubject[] $toInclude
+     * @param  EloquentCollection|TestSubject[]  $toInclude
      */
     public function transform(EloquentCollection $toInclude): void
     {
         foreach ($toInclude as $includeSubject) {
-
             foreach ($includeSubject->tests as $includeTest) {
-
                 $pivot = $this->pivotsMap[$includeTest->id] ?? null;
 
                 $includeTest->isNecessary = (bool)old("include.{$includeTest->id}.necessary", isset($pivot));

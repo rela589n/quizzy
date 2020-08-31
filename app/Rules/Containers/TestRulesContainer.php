@@ -10,7 +10,7 @@ use Illuminate\Validation\Rules\In;
 
 final class TestRulesContainer
 {
-    public function getRules()
+    public function getRules(): array
     {
         return [
             'name'      => [
@@ -37,7 +37,7 @@ final class TestRulesContainer
                 new In(['default', 'custom'])
             ],
 
-            'correlation_table'           => [
+            'correlation_table' => [
                 'required_if:mark_evaluator_type,custom',
                 'array',
                 'min:3',

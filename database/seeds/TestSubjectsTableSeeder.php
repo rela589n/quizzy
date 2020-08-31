@@ -2,11 +2,11 @@
 
 use App\Models\TestSubject;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr as Arr;
+use Illuminate\Support\Arr;
 
 class TestSubjectsTableSeeder extends Seeder
 {
-    protected static $subjects = [
+    protected static array $subjects = [
         [
             'name'             => 'Політологія',
             'uri_alias'        => 'politics',
@@ -33,7 +33,7 @@ class TestSubjectsTableSeeder extends Seeder
         ]
     ];
 
-    public static function getSubjectsCount()
+    public static function getSubjectsCount(): int
     {
         return count(self::$subjects);
     }
@@ -43,10 +43,11 @@ class TestSubjectsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        if (env('APP_ENV') === 'production')
+        if (env('APP_ENV') === 'production') {
             return;
+        }
 
         foreach (self::$subjects as $subjectInfo) {
             $subject = TestSubject::create(Arr::only($subjectInfo, ['name', 'uri_alias']));

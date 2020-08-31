@@ -14,13 +14,14 @@ trait LoadTrashed
 
         $loadArray = [];
         foreach ($relations as $relation) {
-            $loadArray[$relation] = function ($query) {
+            $loadArray[$relation] = static function ($query) {
                 $query->withTrashed();
             };
         }
 
         $method = sprintf('load%s', $loadMissing ? 'Missing' : '');
         $this->$method($loadArray);
+
         return $this;
     }
 }

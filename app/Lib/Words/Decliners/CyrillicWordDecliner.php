@@ -6,8 +6,7 @@ namespace App\Lib\Words\Decliners;
 
 class CyrillicWordDecliner implements WordDeclinerInterface
 {
-
-    public function decline($numberOf, string $wordRoot, array $endings)
+    public function decline($numberOf, string $wordRoot, array $endings): string
     {
         $keys = [2, 0, 1, 1, 1, 2];
 

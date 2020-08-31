@@ -11,19 +11,22 @@ class AskedQuestionsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        if (env('APP_ENV') === 'production')
+        if (env('APP_ENV') === 'production') {
             return;
+        }
 
-        foreach(range(1, TestResultsTableSeeder::TEST_RESULTS_LIMIT) as $resultId) {
+        foreach (range(1, TestResultsTableSeeder::TEST_RESULTS_LIMIT) as $resultId) {
             $testResult = TestResult::find($resultId);
 
             foreach ($testResult->test->allQuestions() as $question) {
-                AskedQuestion::create([
-                    'test_result_id' => $testResult->id,
-                    'question_id' => $question->id
-                ]);
+                AskedQuestion::create(
+                    [
+                        'test_result_id' => $testResult->id,
+                        'question_id'    => $question->id
+                    ]
+                );
             }
         }
     }

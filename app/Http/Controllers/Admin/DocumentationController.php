@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 class DocumentationController extends AdminController
 {
-    const FILE_NAME = 'Інструкція.docx';
+    public const FILE_NAME = 'Інструкція.docx';
 
     public function getWordDocument()
     {

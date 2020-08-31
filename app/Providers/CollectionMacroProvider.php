@@ -15,29 +15,38 @@ class CollectionMacroProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if (!EloquentCollection::hasMacro('paginate')) {
-            EloquentCollection::macro('paginate', function ($perPage = 15, $page = null, $options = []) {
-                $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-                return (new LengthAwarePaginator(
-                    $this->forPage($page, $perPage),
-                    $this->count(),
-                    $perPage,
-                    $page,
-                    $options)
-                )->withPath('');
-            });
+            EloquentCollection::macro(
+                'paginate',
+                function ($perPage = 15, $page = null, $options = []) {
+                    $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+                    return (new LengthAwarePaginator(
+                        $this->forPage($page, $perPage),
+                        $this->count(),
+                        $perPage,
+                        $page,
+                        $options
+                    )
+                    )->withPath('');
+                }
+            );
         }
 
         if (!EloquentCollection::hasMacro('setRelation')) {
-            EloquentCollection::macro('setRelation', function ($relation, $value) {
-                $this->map(function (Model $model) use ($relation, $value) {
-                    $model->setRelation($relation, $value);
-                });
+            EloquentCollection::macro(
+                'setRelation',
+                function ($relation, $value) {
+                    $this->map(
+                        static function (Model $model) use ($relation, $value) {
+                            $model->setRelation($relation, $value);
+                        }
+                    );
 
-                return $this;
-            });
+                    return $this;
+                }
+            );
         }
     }
 }

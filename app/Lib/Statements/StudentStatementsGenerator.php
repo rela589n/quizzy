@@ -4,6 +4,7 @@
 namespace App\Lib\Statements;
 
 
+use App\Exceptions\NullPointerException;
 use App\Lib\PHPWord\TemplateProcessor;
 use App\Lib\TestResultsEvaluator;
 use App\Models\TestResult;
@@ -13,24 +14,10 @@ class StudentStatementsGenerator extends StatementsGenerator
     public const SELECTED_OPTION_LABEL = '*';
     public const EMPTY_WRONG_CHOICES_LABEL = 'відсутні';
 
-    /**
-     * @var TestResult
-     */
-    protected $result;
+    protected TestResult $result;
+    protected TestResultsEvaluator $resultEvaluator;
+    protected ?TemplateProcessor $templateProcessor = null;
 
-    /**
-     * @var TestResultsEvaluator
-     */
-    protected $resultEvaluator;
-
-    /**
-     * @var TemplateProcessor|null
-     */
-    protected $templateProcessor = null;
-
-    /**
-     * @param TestResult $result
-     */
     public function setResult(TestResult $result): void
     {
         $this->result = $result;
@@ -40,7 +27,7 @@ class StudentStatementsGenerator extends StatementsGenerator
 
     /**
      * @param TemplateProcessor $templateProcessor
-     * @throws \App\Exceptions\NullPointerException
+     * @throws NullPointerException
      */
     protected function doGenerate(TemplateProcessor $templateProcessor): void
     {
@@ -87,7 +74,7 @@ class StudentStatementsGenerator extends StatementsGenerator
         $this->setSummary();
     }
 
-    protected function setQuestionInfo(int $index, string $question, string $score, string $selectedNotRight)
+    protected function setQuestionInfo(int $index, string $question, string $score, string $selectedNotRight): void
     {
         $this->templateProcessor->setValues([
             "questionNumber#{$index}"   => $index,
@@ -97,7 +84,7 @@ class StudentStatementsGenerator extends StatementsGenerator
         ]);
     }
 
-    protected function setOptionInfo(int $questionIndex, int $optionIndex, string $optionText, string $selectedMark)
+    protected function setOptionInfo(int $questionIndex, int $optionIndex, string $optionText, string $selectedMark): void
     {
         $this->templateProcessor->setValues([
             "optionNumber#${questionIndex}#${optionIndex}"   => $optionIndex,
@@ -106,7 +93,7 @@ class StudentStatementsGenerator extends StatementsGenerator
         ]);
     }
 
-    protected function setSummary()
+    protected function setSummary(): void
     {
         $this->templateProcessor->setValues([
             'studentFullName'  => $this->result->user->full_name,
@@ -117,7 +104,7 @@ class StudentStatementsGenerator extends StatementsGenerator
         ]);
     }
 
-    protected function buildSkeleton()
+    protected function buildSkeleton(): void
     {
         $this->cloneBlock(
             'questionBlock',
@@ -136,7 +123,7 @@ class StudentStatementsGenerator extends StatementsGenerator
         }
     }
 
-    protected function cloneBlock(string $blockName, int $clones)
+    protected function cloneBlock(string $blockName, int $clones): void
     {
         $this->templateProcessor->cloneBlock(
             $blockName,

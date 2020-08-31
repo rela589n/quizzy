@@ -9,27 +9,22 @@ use App\Models\Test;
 
 class CustomMarkEvaluator implements MarkEvaluator
 {
-    const MARK_EPS = 0.09;
+    public const MARK_EPS = 0.09;
     protected const UNBOUND_MARK = 2;
 
-    /**
-     * @var Test
-     */
-    protected $test;
+    protected Test $test;
+    protected array $markPercentsMap;
 
-    /**
-     * @var array
-     */
-    protected $markPercentsMap;
+    private MarkPercentsMapCreator $markPercentsMapCreator;
 
-    /**
-     * @param Test $test
-     * @return CustomMarkEvaluator
-     */
+    public function __construct(MarkPercentsMapCreator $markPercentsMap)
+    {
+        $this->markPercentsMapCreator = $markPercentsMap;
+    }
+
     public function setTest(Test $test): self
     {
         if ($this->test !== $test) {
-
             $this->markPercentsMap = $this->markPercentsMapCreator
                 ->setModels($test->marksPercents)
                 ->getMap();
@@ -38,16 +33,6 @@ class CustomMarkEvaluator implements MarkEvaluator
         }
 
         return $this;
-    }
-
-    /**
-     * @var MarkPercentsMapCreator
-     */
-    private $markPercentsMapCreator;
-
-    public function __construct(MarkPercentsMapCreator $markPercentsMap)
-    {
-        $this->markPercentsMapCreator = $markPercentsMap;
     }
 
     /**
@@ -63,7 +48,6 @@ class CustomMarkEvaluator implements MarkEvaluator
         }
 
         foreach ($this->markPercentsMap as $mark => $percents) {
-
             if ($fullTestScore >= ($percents - self::MARK_EPS)) {
                 return $mark;
             }
@@ -72,17 +56,11 @@ class CustomMarkEvaluator implements MarkEvaluator
         return self::UNBOUND_MARK;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function minPossibleMark(): int
     {
         return array_key_last($this->markPercentsMap);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function maxPossibleMark(): int
     {
         return array_key_first($this->markPercentsMap);

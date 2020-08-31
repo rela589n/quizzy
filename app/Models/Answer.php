@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Answer
@@ -11,16 +14,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $answer_option_id
  * @property int $asked_question_id
  * @property int $is_chosen
- * @property-read \App\Models\AskedQuestion $askedQuestion
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Answer newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Answer newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Answer query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Answer whereAnswerOptionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Answer whereAskedQuestionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Answer whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Answer whereIsChosen($value)
- * @mixin \Eloquent
- * @property-read \App\Models\AnswerOption $answerOption
+ * @property-read AskedQuestion $askedQuestion
+ * @method static Builder|Answer newModelQuery()
+ * @method static Builder|Answer newQuery()
+ * @method static Builder|Answer query()
+ * @method static Builder|Answer whereAnswerOptionId($value)
+ * @method static Builder|Answer whereAskedQuestionId($value)
+ * @method static Builder|Answer whereId($value)
+ * @method static Builder|Answer whereIsChosen($value)
+ * @mixin Eloquent
+ * @property-read AnswerOption $answerOption
  */
 class Answer extends Model
 {
@@ -28,12 +31,12 @@ class Answer extends Model
 
     protected $fillable = ['is_chosen', 'answer_option_id'];
 
-    public function askedQuestion()
+    public function askedQuestion(): BelongsTo
     {
         return $this->belongsTo(AskedQuestion::class);
     }
 
-    public function answerOption()
+    public function answerOption(): BelongsTo
     {
         return $this->belongsTo(AnswerOption::class);
     }

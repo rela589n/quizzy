@@ -4,14 +4,16 @@
 namespace App\Lib\Traits;
 
 
+use Illuminate\Database\Eloquent\Builder;
+
 trait SlugScope
 {
-    protected $slug = 'uri_alias';
+    protected string $slug = 'uri_alias';
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $slug
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @param  string  $slug
+     * @return Builder
      */
     public function scopeWhereSlug($query, $slug)
     {

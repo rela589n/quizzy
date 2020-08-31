@@ -1,12 +1,11 @@
 <?php
 
 use App\Models\Course;
-use App\Models\TestSubject;
 use Illuminate\Database\Seeder;
 
 class CoursesTableSeeder extends Seeder
 {
-    protected static $courses = [
+    protected static array $courses = [
         [
             'id'          => 1,
             'public_name' => 'перший',
@@ -30,7 +29,7 @@ class CoursesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         Course::insert(self::$courses);
     }

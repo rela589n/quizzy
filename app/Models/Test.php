@@ -4,8 +4,15 @@ namespace App\Models;
 
 use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Test
@@ -15,38 +22,38 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $uri_alias
  * @property int $time
  * @property int $test_subject_id
- * @property-read \Illuminate\Database\Eloquent\Collection|Question[] $nativeQuestions
- * @property-read \Illuminate\Database\Eloquent\Collection|TestComposite[] $testComposites
+ * @property-read Collection|Question[] $nativeQuestions
+ * @property-read Collection|TestComposite[] $testComposites
  * @property-read int|null $native_questions_count
  * @property-read TestSubject $subject
- * @property-read \Illuminate\Database\Eloquent\Collection|Test[] $tests
+ * @property-read Collection|Test[] $tests
  * @property-read int|null $tests_count
- * @method static \Illuminate\Database\Eloquent\Builder|Test newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Test newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Test query()
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereTestSubjectId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereUriAlias($value)
- * @mixin \Eloquent
+ * @method static Builder|Test newModelQuery()
+ * @method static Builder|Test newQuery()
+ * @method static Builder|Test query()
+ * @method static Builder|Test whereId($value)
+ * @method static Builder|Test whereName($value)
+ * @method static Builder|Test whereTestSubjectId($value)
+ * @method static Builder|Test whereTime($value)
+ * @method static Builder|Test whereUriAlias($value)
+ * @mixin Eloquent
  * @property-read int|null $test_composites_count
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $deleted_at
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|Test onlyTrashed()
  * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereDeletedAt($value)
+ * @method static Builder|Test whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Test withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test withoutTrashed()
- * @property-read \Illuminate\Database\Eloquent\Collection|TestResult[] $testResults
+ * @property-read Collection|TestResult[] $testResults
  * @property-read int|null $test_results_count
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereSlug($slug)
+ * @method static Builder|Test whereSlug($slug)
  * @property int|null $created_by
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereCreatedBy($value)
+ * @method static Builder|Test whereCreatedBy($value)
  * @property string $mark_evaluator_type
- * @property-read \Illuminate\Database\Eloquent\Collection|MarkPercent[] $marksPercents
+ * @property-read Collection|MarkPercent[] $marksPercents
  * @property-read int|null $marks_percents_count
- * @method static \Illuminate\Database\Eloquent\Builder|Test whereMarkEvaluatorType($value)
+ * @method static Builder|Test whereMarkEvaluatorType($value)
  */
 class Test extends Model
 {
@@ -58,17 +65,17 @@ class Test extends Model
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time', 'mark_evaluator_type', 'test_subject_id'];
 
-    public function subject()
+    public function subject(): BelongsTo
     {
         return $this->belongsTo(TestSubject::class, 'test_subject_id');
     }
 
-    public function nativeQuestions()
+    public function nativeQuestions(): HasMany
     {
         return $this->hasMany(Question::class);
     }
 
-    public function tests()
+    public function tests(): BelongsToMany
     {
         return $this->belongsToMany(
             self::class,
@@ -79,25 +86,25 @@ class Test extends Model
             ->withPivot(['questions_quantity']);
     }
 
-    public function testComposites()
+    public function testComposites(): HasMany
     {
         return $this->hasMany(TestComposite::class, 'id_test');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection|Question[]
+     * @return Collection|Question[]
      */
     public function allQuestions()
     {
-        return \Illuminate\Database\Eloquent\Collection::make($this->testComposites->pluck('questions')->flatten());
+        return Collection::make($this->testComposites->pluck('questions')->flatten());
     }
 
-    public function testResults()
+    public function testResults(): HasMany
     {
         return $this->hasMany(TestResult::class);
     }
 
-    public function marksPercents()
+    public function marksPercents(): HasMany
     {
         return $this->hasMany(MarkPercent::class);
     }

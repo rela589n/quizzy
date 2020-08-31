@@ -12,9 +12,9 @@ class GroupResultsManager
     /**
      * @var TestResult[] | Collection
      */
-    protected $testResults;
+    protected Collection $testResults;
 
-    protected $marksCorrelation = [
+    protected array $marksCorrelation = [
         5 => 'perfect',
         4 => 'good',
         3 => 'satisfactorily',
@@ -22,25 +22,22 @@ class GroupResultsManager
         1 => 'unsatisfactorily',
     ];
 
-    private $perfect;
-    private $good;
-    private $satisfactorily;
-    private $unsatisfactorily;
+    private $perfect = null;
+    private $good = null;
+    private $satisfactorily = null;
+    private $unsatisfactorily = null;
 
-    private $success;
-    private $quality;
-    private $averageMark;
+    private $success = null;
+    private $quality = null;
+    private $averageMark = null;
 
-    /**
-     * @param Collection $testResults
-     */
-    public function setResults(Collection $testResults)
+    public function setResults(Collection $testResults): void
     {
         $this->testResults = $testResults;
     }
 
     /**
-     * @param array $marksCorrelation
+     * @param  array  $marksCorrelation
      * @return GroupResultsManager
      */
     public function setMarksCorrelation(array $marksCorrelation): self
@@ -50,7 +47,7 @@ class GroupResultsManager
         return $this;
     }
 
-    private function nullifyProperties()
+    private function nullifyProperties(): void
     {
         foreach ($this->marksCorrelation as $propName) {
             $this->$propName = 0;
