@@ -12,7 +12,7 @@ class GroupResultsManager
     /**
      * @var TestResult[] | Collection
      */
-    protected Collection $testResults;
+    protected ?Collection $testResults = null;
 
     protected array $marksCorrelation = [
         5 => 'perfect',

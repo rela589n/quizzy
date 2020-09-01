@@ -14,8 +14,8 @@ use Illuminate\Support\Carbon;
 
 class TestResultFilter extends ResultFilter
 {
-    protected array $queryFilters;
-    protected array $filters;
+    protected array $queryFilters = [];
+    protected array $filters = [];
 
     public function setQueryFilters(array $queryFilters): void
     {

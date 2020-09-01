@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class TestResultsEvaluator
 {
-    protected TestResult $testResult;
+    protected ?TestResult $testResult = null;
     protected ScoreEvaluatorInterface $scoreEvaluator;
     protected MarkEvaluatorsFactory $markEvaluatorsFactory;
     private ?MarkEvaluator $markEvaluator = null;
