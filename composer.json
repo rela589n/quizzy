@@ -20,7 +20,9 @@
         "onnov/detect-encoding": "^1.2",
         "phpoffice/phpword": "^0.17.0",
         "spatie/laravel-permission": "^3.8",
-        "staudenmeir/eloquent-has-many-deep": "^1.11"
+        "staudenmeir/eloquent-has-many-deep": "^1.11",
+        "laravel/nova": "^3.0",
+        "vyuldashev/nova-column-filter": "^1.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",
@@ -73,5 +75,11 @@
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./nova"
+        }
+    ]
 }
