@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\AskedQuestion;
 use App\Models\TestResult;
 use Illuminate\Database\Seeder;
 
@@ -17,17 +16,25 @@ class AskedQuestionsTableSeeder extends Seeder
             return;
         }
 
-        foreach (range(1, TestResultsTableSeeder::TEST_RESULTS_LIMIT) as $resultId) {
-            $testResult = TestResult::find($resultId);
+        $table = \Illuminate\Support\Facades\DB::table('asked_questions');
 
-            foreach ($testResult->test->allQuestions() as $question) {
-                AskedQuestion::create(
-                    [
-                        'test_result_id' => $testResult->id,
-                        'question_id'    => $question->id
-                    ]
-                );
-            }
-        }
+        TestResult::with('test.testComposites.questions')
+            ->chunk(
+                32,
+                function ($results) use ($table) {
+                    $askedQuestionsToInsert = [];
+
+                    foreach ($results as $testResult) {
+                        foreach ($testResult->test->allQuestions() as $question) {
+                            $askedQuestionsToInsert[] = [
+                                'test_result_id' => $testResult->id,
+                                'question_id'    => $question->id
+                            ];
+                        }
+                    }
+
+                    $table->insert($askedQuestionsToInsert);
+                }
+            );
     }
 }

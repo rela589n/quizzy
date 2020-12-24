@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Answer;
 use App\Models\AskedQuestion;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class AnswersTableSeeder extends Seeder
@@ -22,20 +22,29 @@ class AnswersTableSeeder extends Seeder
          */
 
         $faker = Faker\Factory::create('uk_UA');
-        $askedQuestions = AskedQuestion::with('question.answerOptions')->get();
+        $table = \Illuminate\Support\Facades\DB::table('answers');
 
-        foreach ($askedQuestions as $askedQuestion) {
-            foreach ($askedQuestion->question->answerOptions as $answerOption) {
-                $chance = $answerOption->is_right ? 95 : 5;
+        AskedQuestion::with('question.answerOptions')->chunk(
+            64,
+            function ($askedQuestions) use ($faker, $table) {
+                /** @var Collection|AskedQuestion[] $askedQuestions */
 
-                Answer::create(
-                    [
-                        'asked_question_id' => $askedQuestion->id,
-                        'answer_option_id'  => $answerOption->id,
-                        'is_chosen'         => $faker->boolean($chance)
-                    ]
-                );
+                $answersToInsert = [];
+
+                foreach ($askedQuestions as $askedQuestion) {
+                    foreach ($askedQuestion->question->answerOptions as $answerOption) {
+                        $chance = $answerOption->is_right ? 95 : 5;
+
+                        $answersToInsert [] = [
+                            'asked_question_id' => $askedQuestion->id,
+                            'answer_option_id'  => $answerOption->id,
+                            'is_chosen'         => $faker->boolean($chance)
+                        ];
+                    }
+                }
+
+                $table->insert($answersToInsert);
             }
-        }
+        );
     }
 }

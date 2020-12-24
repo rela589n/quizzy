@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TestSubjectsTableSeeder::class);
         $this->call(TestsTableSeeder::class);
 
+        DB::disableQueryLog();
+
         $this->call(QuestionsTableSeeder::class);
         $this->call(AnswerOptionsTableSeeder::class);
 

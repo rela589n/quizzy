@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 
 class TestsTableSeeder extends Seeder
 {
-    public const TESTS_LIMIT = 7;
+    public const TESTS_LIMIT = 200;
 
     /**
      * Run the database seeds.

@@ -1,11 +1,10 @@
 <?php
 
-use App\Models\Question;
 use Illuminate\Database\Seeder;
 
 class QuestionsTableSeeder extends Seeder
 {
-    public const QUESTIONS_LIMIT = 40;
+    public const QUESTIONS_LIMIT = 200 * 40;
 
     /**
      * Run the database seeds.
@@ -18,22 +17,26 @@ class QuestionsTableSeeder extends Seeder
             return;
         }
 
-        Question::create([
-            'question' => 'Що таке клас?',
-            'test_id' => 1
-        ]);
-
-        Question::create([
-            'question' => 'Скільки методів може містити клас?',
-            'test_id'  => 1
-        ]);
+        $toInsert = [
+            [
+                'question' => 'Що таке клас?',
+                'test_id'  => 1
+            ],
+            [
+                'question' => 'Скільки методів може містити клас?',
+                'test_id'  => 1
+            ],
+        ];
 
         $faker = Faker\Factory::create('uk_UA');
-        foreach (range(3, self::QUESTIONS_LIMIT) as $i) {
-            Question::create([
-                'question' => rtrim($faker->realText(60), ' .') . '?',
-                'test_id' => $faker->numberBetween(2, TestsTableSeeder::TESTS_LIMIT)
-            ]);
+
+        for ($i = 3; $i < self::QUESTIONS_LIMIT + 1; ++$i) {
+            $toInsert[] = [
+                'question' => rtrim($faker->realText(60), ' .').'?',
+                'test_id'  => $faker->numberBetween(2, TestsTableSeeder::TESTS_LIMIT)
+            ];
         }
+
+        \Illuminate\Support\Facades\DB::table('questions')->insert($toInsert);
     }
 }

@@ -19,16 +19,23 @@ class UsersTableSeeder extends Seeder
         }
 
         $faker = Faker\Factory::create('uk_UA');
+        $password = Hash::make('1');
 
-        foreach (range(1, self::USERS_LIMIT) as $i) {
-            User::create([
-                'name' => $faker->firstName,
-                'surname' => $faker->lastName,
-                'patronymic' => $faker->lastName,
-                'student_group_id' => $faker->numberBetween(1, GroupsTableSeeder::getGroupsCount()),
-                'email' => $faker->unique()->userName,
-                'password' => Hash::make('1')
-            ]);
+        $table = \Illuminate\Support\Facades\DB::table('users');
+
+        for ($i = 1; $i < self::USERS_LIMIT + 1; ++$i) {
+            $table->insert(
+                [
+                    [
+                        'name' => $faker->firstName,
+                        'surname' => $faker->lastName,
+                        'patronymic' => $faker->lastName,
+                        'student_group_id' => $faker->numberBetween(1, GroupsTableSeeder::getGroupsCount()),
+                        'email' => $faker->unique()->userName,
+                        'password' => $password
+                    ]
+                ]
+            );
         }
     }
 }

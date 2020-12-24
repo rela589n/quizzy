@@ -22,26 +22,38 @@ class AnswerOptionsTableSeeder extends Seeder
 
         $faker = Faker\Factory::create('uk_UA');
 
-        $questions = Question::all();
-        foreach ($questions as $question) {
-            AnswerOption::create(
-                [
-                    'text'        => $faker->realText(40),
-                    'question_id' => $question->id,
-                    'is_right'    => true
-                ]
-            );
 
-            foreach (range(2, $faker->numberBetween(self::PER_QUESTION_MIN, self::PER_QUESTION_MAX)) as $i) {
-                AnswerOption::create(
-                    [
-                        'text'        => $faker->realText(40),
-                        'question_id' => $question->id,
-                        'is_right'    => $faker->boolean()
-                    ]
-                );
-            }
-        }
+        \Illuminate\Support\Facades\DB::table('questions')
+            ->orderBy('id')
+            ->chunk(
+                256,
+                function ($questions) use ($faker) {
+                    $answerOptionsToInsert = [];
+
+                    foreach ($questions as $question) {
+                        $answerOptionsToInsert[] = [
+                            'text'        => $faker->realText(40),
+                            'question_id' => $question->id,
+                            'is_right'    => true
+                        ];
+
+                        foreach (
+                            range(
+                                2,
+                                $faker->numberBetween(self::PER_QUESTION_MIN, self::PER_QUESTION_MAX)
+                            ) as $i
+                        ) {
+                            $answerOptionsToInsert[] = [
+                                'text'        => $faker->realText(40),
+                                'question_id' => $question->id,
+                                'is_right'    => $faker->boolean()
+                            ];
+                        }
+                    }
+
+                    DB::table('answer_options')->insert($answerOptionsToInsert);
+                }
+            );
 
         $question = Question::find(1);
         $question->answerOptions()->delete();
