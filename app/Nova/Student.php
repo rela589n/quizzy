@@ -3,13 +3,20 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Gravatar;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 
-class User extends Resource
+class Student extends Resource
 {
+    public static $group = 'Students';
+
+    public static int $groupPriority = 12;
+
+    protected static bool $redirectToParentOnCreate = true;
+    protected static bool $redirectToParentOnUpdate = true;
+
     /**
      * The model the resource corresponds to.
      *
@@ -24,7 +31,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'full_name';
 
     /**
      * The columns that should be searched.
@@ -32,7 +39,9 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name', 'email',
+        'id',
+        'name',
+        'email',
     ];
 
     /**
@@ -46,9 +55,15 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Gravatar::make()->maxWidth(50),
-
             Text::make('Name')
+                ->sortable()
+                ->rules('required', 'max:255'),
+
+            Text::make('Surname')
+                ->sortable()
+                ->rules('required', 'max:255'),
+
+            Text::make('Patronymic')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
@@ -63,7 +78,7 @@ class User extends Resource
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
 
-//            BelongsTo::make('Student Group'),
+            BelongsTo::make('Student Group', 'studentGroup', StudentGroup::class)->nullable(),
         ];
     }
 

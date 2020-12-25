@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Nova\Department;
+use App\Nova\Resource;
+use App\Nova\Student;
+use App\Nova\StudentGroup;
+use App\Nova\Test;
+use App\Nova\TestSubject;
+use DigitalCreative\CollapsibleResourceManager\CollapsibleResourceManager;
+use DigitalCreative\CollapsibleResourceManager\Resources\TopLevelResource;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Nova;
@@ -27,9 +35,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function routes()
     {
         Nova::routes()
-                ->withAuthenticationRoutes()
-                ->withPasswordResetRoutes()
-                ->register();
+            ->withAuthenticationRoutes()
+            ->withPasswordResetRoutes()
+            ->register();
     }
 
     /**
@@ -41,11 +49,17 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewNova', function ($user) {
-            return in_array($user->email, [
-                //
-            ]);
-        });
+        Gate::define(
+            'viewNova',
+            function ($user) {
+                return in_array(
+                    $user->email,
+                    [
+                        //
+                    ]
+                );
+            }
+        );
     }
 
     /**
@@ -77,7 +91,33 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     public function tools()
     {
-        return [];
+        return [
+            new CollapsibleResourceManager(
+                [
+                    'navigation' => [
+                        TopLevelResource::make(
+                            [
+                                'label'     => 'Students',
+                                'resources' => [
+                                    Department::class,
+                                    StudentGroup::class,
+                                    Student::class,
+                                ]
+                            ]
+                        ),
+                        TopLevelResource::make(
+                            [
+                                'label'     => 'Tests',
+                                'resources' => [
+                                    TestSubject::class,
+                                    Test::class,
+                                ]
+                            ]
+                        ),
+                    ]
+                ]
+            )
+        ];
     }
 
     /**
@@ -85,8 +125,13 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
-        //
+        Nova::sortResourcesBy(
+            function ($resource) {
+                /** @var string|Resource */
+                return $resource::$groupPriority ?? 99999;
+            }
+        );
     }
 }

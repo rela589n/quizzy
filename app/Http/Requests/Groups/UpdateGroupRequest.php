@@ -17,11 +17,6 @@ final class UpdateGroupRequest extends GroupRequest
 
     public function rules(GroupRulesContainer $rulesContainer, RequestUrlManager $urlManager): array
     {
-        $rules = $rulesContainer->getRules();
-
-        $rules['uri_alias'][] = Rule::unique('student_groups')
-            ->ignoreModel($urlManager->getCurrentGroup());
-
-        return $rules;
+        return $rulesContainer->updateRules($urlManager->getCurrentGroup());
     }
 }

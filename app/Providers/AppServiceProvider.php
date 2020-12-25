@@ -20,7 +20,9 @@ use App\Lib\Words\Repositories\UkrainianWordsRepository;
 use App\Lib\Words\Repositories\WordsRepository;
 use App\Lib\Words\WordsManager;
 use App\Models\Administrator;
+use App\Models\Query\CustomBuilder;
 use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -34,7 +36,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
     }
 
     /**
