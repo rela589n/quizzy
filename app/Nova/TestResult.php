@@ -7,6 +7,7 @@ namespace App\Nova;
 use App\Models\TestResult as TestResultModel;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -46,7 +47,11 @@ final class TestResult extends Resource
 
             BelongsTo::make('Test', 'test', Test::class),
 
-            BelongsTo::make('User', 'user', Student::class),
+            BelongsTo::make('User', 'user', Student::class)
+                ->sortable(),
+
+            DateTime::make('Time', 'created_at')
+                ->sortable(),
 
             Number::make('Result', 'mark_readable')
                 ->hideWhenCreating()

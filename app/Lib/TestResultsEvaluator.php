@@ -108,7 +108,7 @@ class TestResultsEvaluator
             $questionId = $askedQuestion->question->id;
 
             if (empty($result[$questionId])) {
-                $result[$questionId] = [0, 0];
+                $result[$questionId] = [0, 0]; // [right, all]
             }
 
             foreach ($askedQuestion->answers as $answer) {

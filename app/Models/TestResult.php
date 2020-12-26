@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Exceptions\NullPointerException;
 use App\Lib\TestResultsEvaluator;
+use App\Lib\Traits\FilteredScope;
 use App\Lib\Words\WordsManager;
 use App\Models\TestResults\TestResultQueryBuilder;
 use Eloquent;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -39,6 +41,7 @@ use Illuminate\Support\Carbon;
  * @method static TestResultQueryBuilder|TestResult whereUserId($value)
  *
  * @mixin Eloquent
+ * @mixin TestResultQueryBuilder
  */
 class TestResult extends Model
 {

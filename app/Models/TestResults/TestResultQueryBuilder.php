@@ -11,25 +11,18 @@ use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-/**
- * @method static Builder|TestResult ofTest($testId)
- * @method static Builder|TestResult recent($count)
- * @method static Builder|TestResult|Collection filtered(ResultFilter $filters)
- */
-final class TestResultQueryBuilder extends Builder
+/** @mixin TestResult */
+class TestResultQueryBuilder extends Builder
 {
-    use FilteredScope;
+    use FilteredScope {
+        scopeFiltered as private;
+    }
 
-    /**
-     * @param  Builder  $query
-     * @param  int | Test  $test
-     * @return Builder|TestResult
-     */
-    public function scopeOfTest($query, $test): Builder
+    public function ofTest($test): self
     {
         $testId = is_numeric($test) ? $test : $test->id;
 
-        return $query->whereHas(
+        return $this->whereHas(
             'test',
             static function (Builder $query) use ($testId) {
                 /**
@@ -42,13 +35,19 @@ final class TestResultQueryBuilder extends Builder
         );
     }
 
-    /**
-     * @param  Builder|TestResult  $query
-     * @param $count
-     * @return Builder
-     */
-    public function scopeRecent($query, $count)
+    public function recent($count): self
     {
-        return $query->latest()->limit($count);
+        return $this->latest()->limit($count);
+    }
+
+    /**
+     * @param  ResultFilter  $filters
+     * @param  callable|null  $callback
+     *
+     * @return Collection|TestResult[]
+     */
+    public function filtered(ResultFilter $filters, callable $callback = null): Collection
+    {
+        return $this->scopeFiltered($this, $filters, $callback);
     }
 }

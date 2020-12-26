@@ -98,6 +98,7 @@ class Test extends Model
         return Collection::make($this->testComposites->pluck('questions')->flatten());
     }
 
+    /** @return HasMany|TestResult */
     public function testResults(): HasMany
     {
         return $this->hasMany(TestResult::class);

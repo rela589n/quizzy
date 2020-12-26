@@ -23,6 +23,7 @@ use App\Models\Administrator;
 use App\Models\Query\CustomBuilder;
 use App\Models\User;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -47,11 +48,15 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->registerBindings();
 
+        Paginator::useBootstrap();
+
         $this->shareViews();
     }
 
     private function registerBindings(): void
     {
+
+
         $this->app->when(TestResultsEvaluator::class)
             ->needs(ScoreEvaluatorInterface::class)
             ->give(StrictScoreEvaluator::class);
