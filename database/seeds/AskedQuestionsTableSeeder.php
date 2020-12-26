@@ -1,7 +1,10 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\TestResult;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class AskedQuestionsTableSeeder extends Seeder
 {
@@ -16,7 +19,7 @@ class AskedQuestionsTableSeeder extends Seeder
             return;
         }
 
-        $table = \Illuminate\Support\Facades\DB::table('asked_questions');
+        $table = DB::table('asked_questions');
 
         TestResult::with('test.testComposites.questions')
             ->chunk(

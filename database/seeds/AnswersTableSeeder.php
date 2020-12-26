@@ -1,8 +1,12 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\AskedQuestion;
+use Faker\Factory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class AnswersTableSeeder extends Seeder
 {
@@ -21,8 +25,8 @@ class AnswersTableSeeder extends Seeder
          * @var $askedQuestions AskedQuestion[]
          */
 
-        $faker = Faker\Factory::create('uk_UA');
-        $table = \Illuminate\Support\Facades\DB::table('answers');
+        $faker = Factory::create('uk_UA');
+        $table = DB::table('answers');
 
         AskedQuestion::with('question.answerOptions')->chunk(
             64,

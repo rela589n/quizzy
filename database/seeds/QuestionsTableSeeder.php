@@ -1,6 +1,10 @@
 <?php
 
+namespace Database\Seeders;
+
+use Faker\Factory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class QuestionsTableSeeder extends Seeder
 {
@@ -28,7 +32,7 @@ class QuestionsTableSeeder extends Seeder
             ],
         ];
 
-        $faker = Faker\Factory::create('uk_UA');
+        $faker = Factory::create('uk_UA');
 
         for ($i = 3; $i < self::QUESTIONS_LIMIT + 1; ++$i) {
             $toInsert[] = [
@@ -37,6 +41,6 @@ class QuestionsTableSeeder extends Seeder
             ];
         }
 
-        \Illuminate\Support\Facades\DB::table('questions')->insert($toInsert);
+        DB::table('questions')->insert($toInsert);
     }
 }

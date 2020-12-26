@@ -1,7 +1,11 @@
 <?php
 
-use App\Models\User;
+namespace Database\Seeders;
+
+use Faker\Factory;
+use Hash;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UsersTableSeeder extends Seeder
 {
@@ -18,10 +22,10 @@ class UsersTableSeeder extends Seeder
             return;
         }
 
-        $faker = Faker\Factory::create('uk_UA');
+        $faker = Factory::create('uk_UA');
         $password = Hash::make('1');
 
-        $table = \Illuminate\Support\Facades\DB::table('users');
+        $table = DB::table('users');
 
         for ($i = 1; $i < self::USERS_LIMIT + 1; ++$i) {
             $table->insert(

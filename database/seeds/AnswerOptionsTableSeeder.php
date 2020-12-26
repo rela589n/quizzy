@@ -1,7 +1,10 @@
 <?php
 
-use App\Models\AnswerOption;
+namespace Database\Seeders;
+
 use App\Models\Question;
+use DB;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class AnswerOptionsTableSeeder extends Seeder
@@ -20,10 +23,9 @@ class AnswerOptionsTableSeeder extends Seeder
             return;
         }
 
-        $faker = Faker\Factory::create('uk_UA');
+        $faker = Factory::create('uk_UA');
 
-
-        \Illuminate\Support\Facades\DB::table('questions')
+        DB::table('questions')
             ->orderBy('id')
             ->chunk(
                 256,

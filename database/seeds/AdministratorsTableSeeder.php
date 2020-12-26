@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Administrator;
 use Illuminate\Database\Seeder;
 
@@ -61,7 +63,7 @@ class AdministratorsTableSeeder extends Seeder
         foreach (static::$administrators as $roleName => $users) {
             foreach ($users as $userName => $info) {
                 $info['email'] = $userName;
-                $info['password'] = Hash::make($info['password']);
+                $info['password'] = \Hash::make($info['password']);
 
                 Administrator::create($info)
                     ->assignRole($roleName);
