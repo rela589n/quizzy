@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Lenses\ReadableTestResults;
 use App\Rules\Containers\TestRulesContainer;
 use Eminiarts\Tabs\Tabs;
 use Illuminate\Http\Request;
@@ -108,6 +109,7 @@ class Test extends Resource
                 'Relationships',
                 [
                     HasMany::make('Questions', 'nativeQuestions', Question::class),
+
                     HasMany::make('Test Results', 'testResults'),
                 ]
             ),
@@ -147,7 +149,8 @@ class Test extends Resource
      */
     public function lenses(Request $request)
     {
-        return [];
+        return [
+        ];
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Nova;
 
 use App\Models\TestResult as TestResultModel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -25,8 +26,8 @@ final class TestResult extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder|TestResultModel  $query
-     * @return \Illuminate\Database\Eloquent\Builder|void
+     * @param  Builder|TestResultModel  $query
+     * @return Builder|void
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
@@ -50,8 +51,16 @@ final class TestResult extends Resource
             BelongsTo::make('User', 'user', Student::class)
                 ->sortable(),
 
+            Fields\BelongsTo::make('Group', 'user.studentGroup', StudentGroup::class)
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+
             DateTime::make('Time', 'created_at')
                 ->sortable(),
+
+            Number::make('Score', 'score_readable')
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
 
             Number::make('Result', 'mark_readable')
                 ->hideWhenCreating()
