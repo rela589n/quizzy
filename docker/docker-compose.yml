@@ -12,6 +12,7 @@ services:
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
+      - ./services/php/php.ini:/usr/local/etc/php/php.ini
       - ../:/var/www
     environment:
       COMPOSER_MEMORY_LIMIT: 2G
