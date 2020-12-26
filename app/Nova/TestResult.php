@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Nova;
 
 use App\Models\TestResult as TestResultModel;
+use App\Nova\Filters\StudentGroupsFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
@@ -16,13 +18,16 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 final class TestResult extends Resource
 {
     public static $model = TestResultModel::class;
-    public static $perPageViaRelationship = 50;
+    public static $perPageViaRelationship = 40;
 
     public static $title = 'id';
 
     public static $search = [
         'id'
     ];
+
+    /** @var TestResultModel */
+    public $resource;
 
     /**
      * @param  NovaRequest  $request
@@ -55,16 +60,16 @@ final class TestResult extends Resource
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
 
+            Number::make('Score, %', 'score_readable')
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+
+            Number::make('Mark', 'mark_readable')
+                ->hideWhenCreating()
+                ->hideWhenUpdating(),
+
             DateTime::make('Time', 'created_at')
                 ->sortable(),
-
-            Number::make('Score', 'score_readable')
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
-
-            Number::make('Result', 'mark_readable')
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
         ];
     }
 
@@ -73,10 +78,19 @@ final class TestResult extends Resource
         return [];
     }
 
-    public function filters(Request $request)
+    public function filters(Request $request): array
     {
         return [
+            new StudentGroupsFilter(
+                function ($query, array $groupIds) {
+                    /** @var Builder|Relation|TestResultModel $query */
 
+                    return $query->whereHas(
+                        'user',
+                        fn($userQuery) => $userQuery->whereIn('student_group_id', $groupIds)
+                    );
+                }
+            )
         ];
     }
 
