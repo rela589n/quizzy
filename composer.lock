@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91b911c7dee8ca5ba74184dec0e1f61a",
+    "content-hash": "2a6c4edca59971cd53fe65daf437f433",
     "packages": [
         {
             "name": "brick/math",
@@ -980,6 +980,47 @@
                 "nova"
             ],
             "time": "2020-11-22T10:40:58+00:00"
+        },
+        {
+            "name": "epartment/nova-dependency-container",
+            "version": "1.2.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/epartment/nova-dependency-container.git",
+                "reference": "b29aa381673a397878652525dea366aebda33455"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/epartment/nova-dependency-container/zipball/b29aa381673a397878652525dea366aebda33455",
+                "reference": "b29aa381673a397878652525dea366aebda33455",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Epartment\\NovaDependencyContainer\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Epartment\\NovaDependencyContainer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field container allowing to depend on other fields values",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2020-05-17T03:35:34+00:00"
         },
         {
             "name": "facade/ignition-contracts",
