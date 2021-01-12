@@ -30,6 +30,11 @@ class MarkPercent extends Model
 
     protected $fillable = ['mark', 'percent'];
 
+    protected $casts = [
+        'mark' => 'integer',
+        'percent' => 'float'
+    ];
+
     public function test(): BelongsTo
     {
         return $this->belongsTo(Test::class);

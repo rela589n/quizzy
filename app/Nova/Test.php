@@ -2,15 +2,20 @@
 
 namespace App\Nova;
 
-use App\Nova\Lenses\ReadableTestResults;
+use App\Models\MarkPercent;
 use App\Rules\Containers\TestRulesContainer;
+use App\Services\Tests\Grading\GradingTableService;
 use Eminiarts\Tabs\Tabs;
+use Epartment\NovaDependencyContainer\NovaDependencyContainer;
+use Fourstacks\NovaRepeatableFields\Repeater;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Line;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Stack;
 use Laravel\Nova\Fields\Text;
@@ -23,6 +28,9 @@ class Test extends Resource
     public static int $groupPriority = 2;
 
     public static $model = \App\Models\Test::class;
+
+    /** @var \App\Models\Test */
+    public $resource;
 
     public static $title = 'name';
 
@@ -55,7 +63,8 @@ class Test extends Resource
     public static function indexQuery(NovaRequest $request, $query)
     {
         return $query->withCount('testResults')
-            ->with('subject');
+            ->with('subject')
+            ->with('marksPercents');
     }
 
     /**
@@ -100,9 +109,68 @@ class Test extends Resource
 
             Number::make('Time (minutes)', 'time')
                 ->placeholder('')
+                ->creationRules([])//todo
                 ->sortable(),
 
+            Select::make('Method of grading', 'mark_evaluator_type')
+                ->options(
+                    [
+                        'default' => 'Default',
+                        'custom'  => 'Custom',
+                    ]
+                )->default('default'),
+
+            NovaDependencyContainer::make(
+                [
+                    Repeater::make('Grade table')
+                        ->initialRows(1)
+                        ->addField(
+                            [
+                                'label'      => 'Mark',
+                                'name'       => 'mark',
+                                'type'       => 'number',
+                                'attributes' => [
+                                    'required' => 'required',
+                                ],
+                            ]
+                        )
+                        ->addField(
+                            [
+                                'label'      => 'Percentage',
+                                'name'       => 'percent',
+                                'type'       => 'number',
+                                'attributes' => [
+                                    'step'     => 0.01,
+                                    'required' => 'required',
+                                ],
+                            ]
+                        )->resolveUsing(
+                            function () {
+                                $marksPercents = optional($this->resource)->marksPercents
+                                    ?? Collection::make();
+
+                                return $marksPercents->toJson();
+                            }
+                        )->fillUsing(
+                            function ($request, $model, $attribute, $requestAttribute) {
+                                $table = collect(json_decode($request->{$requestAttribute}, true));
+
+                                $table = Collection::make(
+                                    $table->map(
+                                        function ($attrs) {
+                                            return new MarkPercent($attrs);
+                                        }
+                                    )
+                                );
+
+                                resolve(GradingTableService::class)->attachForTest($model, $table);
+                            }
+                        ),
+                ]
+            )->dependsOn('mark_evaluator_type', 'custom'),
+
             Number::make('Results Count', 'test_results_count')
+                ->exceptOnForms()
                 ->readonly(),
 
             new Tabs(
