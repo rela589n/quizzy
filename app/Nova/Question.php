@@ -2,7 +2,9 @@
 
 namespace App\Nova;
 
+use Froala\NovaFroalaField\Froala;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -20,6 +22,11 @@ class Question extends Resource
     public static $title = 'question';
 
     public static $preventFormAbandonment = true;
+
+    public function title(): string
+    {
+        return Str::limit(strip_tags(parent::title()), 75);
+    }
 
     /**
      * The columns that should be searched.
@@ -50,11 +57,19 @@ class Question extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            Text::make('Question'),
-//            (new NestedForm('Answer Option', 'answerOptions'))
-//                ->showOnDetail()
-//                ->hideFromIndex()
-//                ->min(2),
+
+            Text::make('Question excerpt')
+                ->resolveUsing(fn() => $this->title())
+                ->onlyOnIndex(),
+
+            Froala::make('Question')
+                ->hideFromIndex()
+                ->withFiles('public'),
+
+            (new NestedForm('Answer Option', 'answerOptions'))
+                ->showOnDetail()
+                ->hideFromIndex()
+                ->min(2),
             HasMany::make('Answer Options', 'answerOptions'),
         ];
     }
