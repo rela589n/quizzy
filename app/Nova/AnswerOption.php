@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class AnswerOption extends Resource
 {
@@ -38,54 +39,29 @@ class AnswerOption extends Resource
     public function fields(Request $request)
     {
         return [
-//            ID::make(__('ID'), 'id')->sortable(),
             Text::make('Text'),
             Boolean::make('Is Right'),
-            BelongsTo::make('Question'),
+            BelongsTo::make('Question', 'question', Question::class),
         ];
     }
 
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function cards(Request $request)
+    public function authorizedToView(Request $request)
     {
-        return [];
+        return false;
     }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function filters(Request $request)
+    public function authorizedToUpdate(Request $request)
     {
-        return [];
+        return false;
     }
 
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function lenses(Request $request)
+    public static function authorizedToCreate(Request $request)
     {
-        return [];
+        return isset($request->viaResource);
     }
 
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function actions(Request $request)
+    public function authorizedToDelete(Request $request)
     {
-        return [];
+        return !isset($request->viaResource);
     }
 }

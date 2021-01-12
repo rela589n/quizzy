@@ -70,7 +70,8 @@ class Question extends Resource
                 ->showOnDetail()
                 ->hideFromIndex()
                 ->min(2),
-            HasMany::make('Answer Options', 'answerOptions'),
+
+            HasMany::make('Answer Options', 'answerOptions', AnswerOption::class),
         ];
     }
 

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Administrator;
 use App\Models\Department;
+use App\Models\Question;
 use App\Models\StudentGroup;
 use App\Models\Test;
 use App\Models\TestSubject;
@@ -11,6 +12,7 @@ use App\Models\User;
 use App\Policies\AdministratorPolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\GroupPolicy;
+use App\Policies\QuestionsPolicy;
 use App\Policies\StudentPolicy;
 use App\Policies\SubjectPolicy;
 use App\Policies\TestPolicy;
@@ -31,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         Administrator::class => AdministratorPolicy::class,
         TestSubject::class   => SubjectPolicy::class,
         Test::class          => TestPolicy::class,
+        Question::class      => QuestionsPolicy::class,
     ];
 
     /**

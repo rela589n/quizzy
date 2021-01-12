@@ -68,6 +68,17 @@ class Test extends Resource
     }
 
     /**
+     * @param  NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder|\App\Models\Test  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function detailQuery(NovaRequest $request, $query)
+    {
+        return $query->withCount('testResults')
+            ->with('subject');
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
