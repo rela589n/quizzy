@@ -5,6 +5,7 @@ namespace App\Nova;
 use Froala\NovaFroalaField\Froala;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -65,6 +66,8 @@ class Question extends Resource
             Froala::make('Question')
                 ->hideFromIndex()
                 ->withFiles('public'),
+
+            BelongsTo::make('Test', 'test', Test::class),
 
             (new NestedForm('Answer Option', 'answerOptions'))
                 ->showOnDetail()
