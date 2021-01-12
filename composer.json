@@ -17,6 +17,7 @@
         "epartment/nova-dependency-container": "^1.2",
         "fideloper/proxy": "^4.0",
         "fourstacks/nova-repeatable-fields": "^1.3",
+        "froala/nova-froala-field": "^3.3",
         "fzaninotto/faker": "^1.9",
         "laravel/framework": "^8.0",
         "laravel/nova": "^3.0",
