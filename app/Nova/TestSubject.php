@@ -10,7 +10,7 @@ use Laravel\Nova\Fields\Line;
 use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Stack;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
+use ZiffMedia\NovaSelectPlus\SelectPlus;
 
 class TestSubject extends Resource
 {
@@ -88,6 +88,13 @@ class TestSubject extends Resource
                 ->updateRules($updateRules['uri_alias'])
                 ->hideFromDetail()
                 ->hideFromIndex(),
+
+            SelectPlus::make('Departments', 'departments', Department::class)
+                ->usingDetailLabel('name'),
+
+            SelectPlus::make('Courses', 'courses', Course::class)
+                ->label('public_name')
+                ->usingDetailLabel('public_name'),
 
             HasMany::make('Tests'),
         ];
