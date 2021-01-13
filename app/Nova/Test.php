@@ -116,7 +116,8 @@ class Test extends Resource
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
-            BelongsTo::make('Test Subject', 'subject'),
+            BelongsTo::make('Test Subject', 'subject')
+                ->sortable(),
 
             Number::make('Time (minutes)', 'time')
                 ->placeholder('')
@@ -129,7 +130,8 @@ class Test extends Resource
                         'default' => 'Default',
                         'custom'  => 'Custom',
                     ]
-                )->default('default'),
+                )->default('default')
+                ->hideFromIndex(),
 
             NovaDependencyContainer::make(
                 [
