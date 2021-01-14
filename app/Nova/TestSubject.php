@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Line;
 use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Stack;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use ZiffMedia\NovaSelectPlus\SelectPlus;
 
 class TestSubject extends Resource
@@ -53,6 +54,16 @@ class TestSubject extends Resource
     }
 
     /**
+     * @param  NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder|\App\Models\TestSubject  $query
+     * @return \Illuminate\Database\Eloquent\Builder|void
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->with(['departments', 'courses']);
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -90,11 +101,13 @@ class TestSubject extends Resource
                 ->hideFromIndex(),
 
             SelectPlus::make('Departments', 'departments', Department::class)
-                ->usingDetailLabel('name'),
+                ->usingDetailLabel('name')
+                ->hideFromIndex(),
 
             SelectPlus::make('Courses', 'courses', Course::class)
                 ->label('public_name')
-                ->usingDetailLabel('public_name'),
+                ->usingDetailLabel('public_name')
+                ->usingIndexLabel('public_name'),
 
             HasMany::make('Tests'),
         ];
