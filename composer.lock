@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6d46043984aaa0a4ce29e34cc22a98a",
+    "content-hash": "c7962eb06ff899953b473f71293b1415",
     "packages": [
         {
             "name": "brick/math",
@@ -5862,6 +5862,62 @@
                 }
             ],
             "time": "2020-12-16T17:02:19+00:00"
+        },
+        {
+            "name": "techouse/select-auto-complete",
+            "version": "v1.3.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/techouse/select-auto-complete.git",
+                "reference": "5364505135a9e6b0729bb81562911a75bcecbf1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/techouse/select-auto-complete/zipball/5364505135a9e6b0729bb81562911a75bcecbf1b",
+                "reference": "5364505135a9e6b0729bb81562911a75bcecbf1b",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.6 || ^6.0 || ^7.0 || ^8.0",
+                "laravel/nova": "*",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Techouse\\SelectAutoComplete\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Techouse\\SelectAutoComplete\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Klemen Tušar",
+                    "email": "techouse@gmail.com"
+                }
+            ],
+            "description": "An auto-completing Laravel Nova search field.",
+            "keywords": [
+                "auto complete",
+                "autocomplete",
+                "drop down",
+                "dropdown",
+                "laravel",
+                "nova",
+                "search",
+                "select",
+                "suggest"
+            ],
+            "time": "2020-11-07T10:33:12+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
