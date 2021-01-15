@@ -3,6 +3,8 @@
 namespace App\Nova;
 
 use App\Models\MarkPercent;
+use App\Models\TestSubject;
+use App\Nova\Actions\AttachTestsQuestionsToTest;
 use App\Rules\Containers\TestRulesContainer;
 use App\Services\Tests\Grading\GradingTableService;
 use Eminiarts\Tabs\Tabs;
@@ -11,6 +13,7 @@ use Fourstacks\NovaRepeatableFields\Repeater;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Line;
@@ -20,6 +23,7 @@ use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Stack;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Http\Requests\ResourceDetailRequest;
 
 class Test extends Resource
 {
@@ -133,6 +137,16 @@ class Test extends Resource
                 )->default('default')
                 ->hideFromIndex(),
 
+            BelongsToMany::make('Additional Questions', 'tests', Test::class)
+                ->fields(
+                    fn() => [
+                        Number::make('Questions', 'questions_quantity')
+                    ]
+                )->showOnDetail(function(ResourceDetailRequest $request){
+                    return $this->resource->mark_evaluator_type ===  'custom'; // todo new field
+                })
+                ->searchable(),
+
             NovaDependencyContainer::make(
                 [
                     Repeater::make('Grade table')
@@ -242,6 +256,8 @@ class Test extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new AttachTestsQuestionsToTest(),
+        ];
     }
 }
