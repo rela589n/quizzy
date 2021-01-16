@@ -51,76 +51,10 @@ class TestResultQueryBuilder extends Builder
         return $this->scopeFiltered($this, $filters, $callback);
     }
 
-    public function withPercentage()
+    public function withResultPercents(): self
     {
-        $this->with(
-            [
-                'test',
-                'askedQuestions.question',
-                'askedQuestions.answers.answerOption',
-                'user.studentGroup',
-            ]
+        return $this->addSelect(
+            $this->raw('test_result_in_percents(test_results.id) as result_percents')
         );
-
-//        $result =
-// result = sum(questions_score)
-// questions_score = [1, 0, 1, 0, 0]
-// score_value = option_ans == option_right
-
-        $sql = <<< SQL
-select test_results.*,
-       (
-           select sum(question_score)
-           from (
-               select 1 * (answers_right / all_answers) as question_score
-               from (
-                    select count(*) as all_answers from answer_options where questions.id = answer_options.question_id
-               ), (
-                  select count(*) as answers_right from answers where questions.id = answers.question_id
-                                                                  and answer_options.is_right = answers.id_selected
-               )
-               where asked_questions.id = questions.id
-           )
-
-        ) as total_score
-from test_results
-where id in(1, 2, 3);
-SQL;
-        $sql = <<< SQL
-
-select test_results.*,
-        (
-            select sum(question_score) from (
-                select asked_questions.*,
-                       asked_questions.id as question_score
-                where asked_questions.test_result_id = test_results.id
-            )
-        ) as total_score
-from test_results
-where id in(1, 2, 3);
-
-select test_results.*,
-       (
-           select sum(question_score)
-           from (
-                    select asked_questions.*,
-                           asked_questions.id as question_score
-                    from asked_questions
-                    where asked_questions.test_result_id = test_results.id
-                ) as question_scores
-       ) as total_score
-from test_results
-where test_results.id in (1, 2, 3);
-
-select answer_options.*,
-       answers.*
-from answer_options
-inner join answers
-on answer_options.id=answers.answer_option_id
-
-
-SQL;
-
-//        $this->withSum()
     }
 }
