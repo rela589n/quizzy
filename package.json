@@ -7,7 +7,13 @@
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "build-date-time-filter": "cd nova-components/DateTimeFilter && npm run dev",
+        "build-date-time-filter-prod": "cd nova-components/DateTimeFilter && npm run prod",
+        "build-DateTimeFilter": "cd nova-components/DateTimeFilter && npm run dev",
+        "build-DateTimeFilter-prod": "cd nova-components/DateTimeFilter && npm run prod",
+        "build-nova-date-time-filter": "cd nova-components/NovaDateTimeFilter && npm run dev",
+        "build-nova-date-time-filter-prod": "cd nova-components/NovaDateTimeFilter && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",
