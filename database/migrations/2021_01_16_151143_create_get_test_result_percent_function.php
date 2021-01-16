@@ -21,7 +21,8 @@ begin
                        inner join answer_options on answer_options.id = answers.answer_option_id
                        inner join asked_questions on asked_questions.id = answers.asked_question_id
               where asked_questions.test_result_id = test_result_id
-              group by answers.asked_question_id
+              group by answers.asked_question_id,
+                       asked_questions.test_result_id
              ) as tmp
         group by test_result_id
     );
