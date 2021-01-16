@@ -2,6 +2,10 @@
 
 namespace App\Nova;
 
+use App\Models\User;
+use App\Nova\Filters\StudentGroupsFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
@@ -101,7 +105,13 @@ class Student extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new StudentGroupsFilter(function ($query, array $groupIds) {
+                /** @var Builder|Relation|User $query */
+
+                $query->whereIn('student_group_id', $groupIds);
+            }),
+        ];
     }
 
     /**
