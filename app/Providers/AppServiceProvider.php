@@ -20,9 +20,10 @@ use App\Lib\Words\Repositories\UkrainianWordsRepository;
 use App\Lib\Words\Repositories\WordsRepository;
 use App\Lib\Words\WordsManager;
 use App\Models\Administrator;
-use App\Models\Query\CustomBuilder;
+use App\Models\Tests\TestQueries;
+use App\Models\Tests\TestQueriesImpl;
+use App\Models\Tests\TestQueriesWeakCacheDecorator;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -55,8 +56,6 @@ class AppServiceProvider extends ServiceProvider
 
     private function registerBindings(): void
     {
-
-
         $this->app->when(TestResultsEvaluator::class)
             ->needs(ScoreEvaluatorInterface::class)
             ->give(StrictScoreEvaluator::class);
@@ -80,6 +79,19 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(TestsExportManager::class)
             ->needs(ResultFileNameGenerator::class)
             ->give(ExportResultFileNameGenerator::class);
+
+        $this->app->bind(TestQueries::class, TestQueriesImpl::class);
+        $this->app->extend(
+            TestQueries::class,
+            function (TestQueries $service) {
+                return resolve(
+                    TestQueriesWeakCacheDecorator::class,
+                    [
+                        'queries' => $service,
+                    ]
+                );
+            }
+        );
 
         $this->bindAuthUsers();
 

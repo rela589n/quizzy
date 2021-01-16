@@ -3,6 +3,7 @@
 namespace App\Nova\Actions;
 
 use App\Models\Test;
+use App\Models\Tests\TestQueries;
 use App\Models\TestSubject;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Bus\Queueable;
@@ -16,6 +17,13 @@ use Laravel\Nova\Fields\Select;
 class AttachTestsQuestionsToTest extends Action
 {
     use InteractsWithQueue, Queueable;
+
+    private TestQueries $queries;
+
+    public function __construct()
+    {
+        $this->queries = resolve(TestQueries::class);
+    }
 
     /**
      * Perform the action on the given models.
@@ -38,11 +46,8 @@ class AttachTestsQuestionsToTest extends Action
      */
     public function fields()
     {
-        // todo move into repository because of large amount of queries
         // todo maybe filter by departments of teacher and available tests
-        $subjects = TestSubject::query()
-            ->with('tests')
-            ->get();
+        $subjects = $this->queries->subjectsWithTestsToAttachQuestions();
 
         return [
             $this->createTestSubjectField($subjects),
