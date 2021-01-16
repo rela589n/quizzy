@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Nova;
 
 use App\Models\TestResult as TestResultModel;
+use App\Models\TestResults\TestResultQueryBuilder;
 use App\Nova\Filters\StudentGroupsFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
@@ -31,7 +33,7 @@ final class TestResult extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  Builder|TestResultModel  $query
+     * @param  TestResultQueryBuilder|TestResultModel  $query
      * @return Builder|void
      */
     public static function indexQuery(NovaRequest $request, $query)
@@ -39,11 +41,9 @@ final class TestResult extends Resource
         return $query->with(
             [
                 'test',
-                'askedQuestions.question',
-                'askedQuestions.answers.answerOption',
                 'user.studentGroup',
             ]
-        );
+        )->withResultPercents();
     }
 
     public function fields(Request $request)
@@ -60,13 +60,15 @@ final class TestResult extends Resource
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
 
-            Number::make('Score, %', 'score_readable')
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+            Number::make('Score, %', 'result_percents')
+                ->sortable(),
 
-            Number::make('Mark', 'mark_readable')
-                ->hideWhenCreating()
-                ->hideWhenUpdating(),
+            Number::make('Mark', 'result_mark'),
+
+
+//            Number::make('Mark', 'mark_readable')
+//                ->hideWhenCreating()
+//                ->hideWhenUpdating(),
 
             DateTime::make('Time', 'created_at')
                 ->sortable(),

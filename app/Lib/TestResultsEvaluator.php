@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 /**
  * Class TestResultsEvaluator
  * @package App\Lib
+ *
+ * @deprecated use stored function instead
  */
 class TestResultsEvaluator
 {

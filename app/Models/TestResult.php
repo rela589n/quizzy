@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Exceptions\NullPointerException;
+use App\Factories\MarkEvaluatorsFactory;
+use App\Lib\TestResults\MarkEvaluator;
 use App\Lib\TestResultsEvaluator;
-use App\Lib\Traits\FilteredScope;
 use App\Lib\Words\WordsManager;
 use App\Models\TestResults\TestResultQueryBuilder;
 use Eloquent;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,6 +28,7 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read string $date_readable
  * @property-read int $mark
+ * @property-read float $result_percents
  * @property-read string $mark_readable
  * @property-read mixed $score
  * @property-read string $score_readable
@@ -50,6 +51,15 @@ class TestResult extends Model
     protected TestResultsEvaluator $resultsEvaluator;
     protected WordsManager $wordsManager;
 
+    protected MarkEvaluatorsFactory $markEvaluatorFactory;
+    protected ?MarkEvaluator $markEvaluator = null;
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        $this->markEvaluatorFactory = app(MarkEvaluatorsFactory::class);
+    }
+
     /**
      * @param  TestResultsEvaluator  $resultsEvaluator
      */
@@ -70,6 +80,14 @@ class TestResult extends Model
     public function setWordsManager(WordsManager $wordsManager): void
     {
         $this->wordsManager = $wordsManager;
+    }
+
+    private function markEvaluator(): MarkEvaluator
+    {
+        return singleVar(
+            $this->markEvaluator,
+            fn() => $this->markEvaluatorFactory->setTest($this->test)->resolve()
+        );
     }
 
     public function test(): BelongsTo
@@ -99,6 +117,16 @@ class TestResult extends Model
     public function getScoreReadableAttribute(): float
     {
         return round(100 * $this->score, 2);
+    }
+
+    public function getResultPercentsAttribute(float $attr): float
+    {
+        return round($attr, 2);
+    }
+
+    public function getResultMarkAttribute(): int
+    {
+        return $this->markEvaluator()->putMark($this->result_percents / 100);
     }
 
     /**
