@@ -34,7 +34,7 @@ final class Course extends Resource
 
     public static function authorizedToCreate(Request $request)
     {
-        return false;
+        return true;
     }
 
     public function authorizedToDelete(Request $request)
