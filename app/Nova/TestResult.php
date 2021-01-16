@@ -6,11 +6,12 @@ namespace App\Nova;
 
 use App\Models\TestResult as TestResultModel;
 use App\Models\TestResults\TestResultQueryBuilder;
+use App\Nova\Filters\FromTimestampFilter;
 use App\Nova\Filters\StudentGroupsFilter;
+use App\Nova\Filters\ToTimestampFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
@@ -65,13 +66,9 @@ final class TestResult extends Resource
 
             Number::make('Mark', 'result_mark'),
 
-
-//            Number::make('Mark', 'mark_readable')
-//                ->hideWhenCreating()
-//                ->hideWhenUpdating(),
-
-            DateTime::make('Time', 'created_at')
-                ->sortable(),
+            DateTime::make('Час проходження', 'created_at')
+                ->sortable()
+                ->format('DD.MM.YYYY HH:mm:ss'),
         ];
     }
 
@@ -92,7 +89,9 @@ final class TestResult extends Resource
                         fn($userQuery) => $userQuery->whereIn('student_group_id', $groupIds)
                     );
                 }
-            )
+            ),
+            new FromTimestampFilter('created_at', 'Дата від'),
+            new ToTimestampFilter('created_at', 'Дата до'),
         ];
     }
 
