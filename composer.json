@@ -25,6 +25,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "onnov/detect-encoding": "^1.2",
+        "optimistdigital/nova-multiselect-filter": "^2.0",
         "phpoffice/phpword": "^0.17.0",
         "rela589n/nova-date-time-filter": "*",
         "spatie/laravel-permission": "^3.8",
