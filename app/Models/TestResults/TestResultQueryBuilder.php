@@ -53,7 +53,7 @@ class TestResultQueryBuilder extends Builder
 
     public function withResultPercents(): self
     {
-        return $this->addSelect(
+        return $this->appendSelect(
             $this->raw('test_result_in_percents(test_results.id) as result_percents')
         );
     }

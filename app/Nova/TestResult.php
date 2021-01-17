@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -35,10 +36,27 @@ final class TestResult extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  TestResultQueryBuilder|TestResultModel  $query
-     * @return Builder|void
+     * @param  TestResultQueryBuilder  $query
+     *
+     * @return Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->with(
+            [
+                'test',
+                'user.studentGroup',
+            ]
+        )->withResultPercents();
+    }
+
+    /**
+     * @param  NovaRequest  $request
+     * @param  TestResultQueryBuilder  $query
+     *
+     * @return Builder
+     */
+    public static function detailQuery(NovaRequest $request, $query)
     {
         return $query->with(
             [
@@ -62,7 +80,7 @@ final class TestResult extends Resource
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
 
-            Number::make('Score, %', 'result_percents')
+            Number::make('Score %', 'result_percents')
                 ->sortable(),
 
             Number::make('Mark', 'result_mark'),
@@ -70,6 +88,8 @@ final class TestResult extends Resource
             DateTime::make('Час проходження', 'created_at')
                 ->sortable()
                 ->format('DD.MM.YYYY HH:mm:ss'),
+
+            HasMany::make('Asked Questions', 'askedQuestions', AskedQuestion::class),
         ];
     }
 

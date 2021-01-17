@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AskedQuestions\AskedQuestionsEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,7 +17,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $question_id
  * @property-read Collection|Answer[] $answers
  * @property-read int|null $answers_count
+ * @property-read int|null right_answers_count
  * @property-read TestResult $testResult
+ *
  * @method static Builder|AskedQuestion newModelQuery()
  * @method static Builder|AskedQuestion newQuery()
  * @method static Builder|AskedQuestion query()
@@ -32,6 +35,10 @@ class AskedQuestion extends Model
 
     protected $fillable = ['question_id'];
 
+    protected $casts = [
+        'right_answers_count' => 'int',
+    ];
+
     public function testResult(): BelongsTo
     {
         return $this->belongsTo(TestResult::class);
@@ -45,5 +52,10 @@ class AskedQuestion extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function newEloquentBuilder($query): AskedQuestionsEloquentBuilder
+    {
+        return new AskedQuestionsEloquentBuilder($query);
     }
 }

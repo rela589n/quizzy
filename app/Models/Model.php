@@ -5,6 +5,7 @@ namespace App\Models;
 
 
 use App\Models\Query\CustomBuilder;
+use App\Models\Query\CustomEloquentBuilder;
 
 abstract class Model extends \Illuminate\Database\Eloquent\Model
 {
@@ -76,5 +77,10 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model
         $processor = $connection->getPostProcessor();
 
         return new CustomBuilder($connection, $grammar, $processor);
+    }
+
+    public function newEloquentBuilder($query)
+    {
+        return new CustomEloquentBuilder($query);
     }
 }
