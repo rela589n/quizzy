@@ -15,7 +15,7 @@ class StudentResultFileNameGenerator extends ResultFileNameGenerator
         $this->result = $result;
     }
 
-    protected function generateFileName(): string
+    public function generateFileName(): string
     {
         return sprintf(
             '%s (%s %s) - %s %s %s.docx',

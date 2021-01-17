@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Models\MarkPercent;
 use App\Models\TestSubject;
 use App\Nova\Actions\AttachTestsQuestionsToTest;
+use App\Nova\Actions\ExportTestIntoFile;
 use App\Rules\Containers\TestRulesContainer;
 use App\Services\Tests\Grading\GradingTableService;
 use Eminiarts\Tabs\Tabs;
@@ -258,6 +259,7 @@ class Test extends Resource
     {
         return [
             new AttachTestsQuestionsToTest(),
+            (new ExportTestIntoFile())->onlyOnTableRow(),
         ];
     }
 }
