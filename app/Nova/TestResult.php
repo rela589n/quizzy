@@ -8,6 +8,7 @@ use App\Models\TestResult as TestResultModel;
 use App\Models\TestResults\TestResultQueryBuilder;
 use App\Nova\Filters\FromTimestampFilter;
 use App\Nova\Filters\StudentGroupsFilter;
+use App\Nova\Filters\TestResultMarksFilter;
 use App\Nova\Filters\ToTimestampFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -92,6 +93,7 @@ final class TestResult extends Resource
             ),
             new FromTimestampFilter('created_at', 'Дата від'),
             new ToTimestampFilter('created_at', 'Дата до'),
+            ...$this->additionalFilters($request),
         ];
     }
 
@@ -103,5 +105,16 @@ final class TestResult extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    private function additionalFilters(Request $request): array
+    {
+        $additional = [];
+
+        if ($request->get('viaResource') === 'tests') {
+            $additional[] = new TestResultMarksFilter((int)$request->get('viaResourceId'));
+        }
+
+        return $additional;
     }
 }
