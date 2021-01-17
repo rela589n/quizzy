@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4c0493b49437e7a5a5f263fd1f2d063",
+    "content-hash": "431cb86dbf070253c67ee1e87aece416",
     "packages": [
         {
             "name": "brick/math",
@@ -2232,6 +2232,47 @@
                 "php"
             ],
             "time": "2020-12-20T10:01:03+00:00"
+        },
+        {
+            "name": "oleksiypetlyuk/nova-range-filter",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oleksiyPetlyuk/nova-range-filter.git",
+                "reference": "243745b451fc24f047392449cd796a2a338ce49e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oleksiyPetlyuk/nova-range-filter/zipball/243745b451fc24f047392449cd796a2a338ce49e",
+                "reference": "243745b451fc24f047392449cd796a2a338ce49e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Oleksiypetlyuk\\NovaRangeFilter\\FilterServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Oleksiypetlyuk\\NovaRangeFilter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova filter.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2020-05-26T15:48:43+00:00"
         },
         {
             "name": "onnov/detect-encoding",
