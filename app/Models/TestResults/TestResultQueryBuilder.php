@@ -57,4 +57,19 @@ class TestResultQueryBuilder extends Builder
             $this->raw('test_result_in_percents(test_results.id) as result_percents')
         );
     }
+
+    public function whereMarkPercentBetween(float $min, float $max): self
+    {
+        return $this->whereRaw("test_result_in_percents(test_results.id) between $min and $max");
+    }
+
+    public function whereMarkPercentAtLeast(float $min): self
+    {
+        return $this->whereRaw("test_result_in_percents(test_results.id) >= $min");
+    }
+
+    public function whereMarkPercentAtMost(float $max): self
+    {
+        return $this->whereRaw("test_result_in_percents(test_results.id) <= $max");
+    }
 }
