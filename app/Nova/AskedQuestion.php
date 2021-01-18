@@ -37,6 +37,17 @@ final class AskedQuestion extends Resource
             ->with('question');
     }
 
+    /**
+     * @param  NovaRequest  $request
+     * @param  AskedQuestionsEloquentBuilder  $query
+     */
+    public static function detailQuery(NovaRequest $request, $query)
+    {
+        return $query->withRightAnswersCount()
+            ->withCount('answers')
+            ->with('question');
+    }
+
     protected static function applyOrderings($query, array $orderings)
     {
         if (!empty($orderings)) {
