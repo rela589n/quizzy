@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Nova;
 
 use App\Models\Answer as AnswerModel;
+use Cdbeaton\BooleanTick\BooleanTick;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 
 final class Answer extends Resource
@@ -23,7 +23,7 @@ final class Answer extends Resource
         return [
             ID::make(),
 
-            Boolean::make(__('Is Chosen'), 'is_chosen'),
+            BooleanTick::make(__('Is Chosen'), 'is_chosen'),
 
             BelongsTo::make(__('Asked Question'), 'askedQuestion', AskedQuestion::class),
 
