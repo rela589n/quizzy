@@ -11,6 +11,7 @@
         "php": "^7.4",
         "ext-json": "*",
         "caouecs/laravel-lang": "~4.0",
+        "cdbeaton/boolean-tick": "dev-master",
         "davejamesmiller/laravel-breadcrumbs": "^5.3",
         "digital-creative/collapsible-resource-manager": "^1.2",
         "doctrine/dbal": "^2.10",

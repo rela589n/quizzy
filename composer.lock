@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "431cb86dbf070253c67ee1e87aece416",
+    "content-hash": "7958c0bd5b8f8f43bee2a7445382f891",
     "packages": [
         {
             "name": "brick/math",
@@ -208,6 +208,47 @@
             ],
             "abandoned": "https://github.com/Laravel-Lang/lang",
             "time": "2020-03-17T15:24:26+00:00"
+        },
+        {
+            "name": "cdbeaton/boolean-tick",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cdbeaton/boolean-tick.git",
+                "reference": "7c6215cc52c01a7cda7f15745725fcc88453489f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cdbeaton/boolean-tick/zipball/7c6215cc52c01a7cda7f15745725fcc88453489f",
+                "reference": "7c6215cc52c01a7cda7f15745725fcc88453489f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Cdbeaton\\BooleanTick\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cdbeaton\\BooleanTick\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "An alternative to the Boolean component in Laravel Nova for colourblind users.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2019-08-14T23:01:02+00:00"
         },
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
@@ -10010,6 +10051,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "cdbeaton/boolean-tick": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": true,
