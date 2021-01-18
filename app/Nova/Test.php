@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use App\Models\MarkPercent;
-use App\Models\TestSubject;
 use App\Nova\Actions\AttachTestsQuestionsToTest;
 use App\Nova\Actions\ExportTestIntoFile;
 use App\Rules\Containers\TestRulesContainer;
@@ -100,6 +99,9 @@ class Test extends Resource
         return [
             ID::make()->sortable(),
 
+            BelongsTo::make('Test Subject', 'subject')
+                ->sortable(),
+
             Stack::make(
                 'Name',
                 [
@@ -121,21 +123,30 @@ class Test extends Resource
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
-            BelongsTo::make('Test Subject', 'subject')
-                ->sortable(),
-
-            Number::make('Time (minutes)', 'time')
-                ->placeholder('')
-                ->creationRules([])//todo
-                ->sortable(),
+            Select::make('Тип теста', 'type')
+                ->displayUsingLabels()
+                ->default(\App\Models\Test::TYPE_STANDALONE)
+                ->options(
+                    array_combine(
+                        \App\Models\Test::TYPES,
+                        array_map(
+                            static fn($t) => __($t),
+                            \App\Models\Test::TYPES
+                        )
+                    )
+                ),
 
             Select::make('Method of grading', 'mark_evaluator_type')
+                ->displayUsingLabels()
                 ->options(
-                    [
-                        'default' => 'Default',
-                        'custom'  => 'Custom',
-                    ]
-                )->default('default')
+                    array_combine(
+                        \App\Models\Test::EVALUATOR_TYPES,
+                        array_map(
+                            static fn($t) => __($t),
+                            \App\Models\Test::EVALUATOR_TYPES
+                        )
+                    )
+                )->default(\App\Models\Test::EVALUATOR_TYPE_DEFAULT)
                 ->hideFromIndex(),
 
             BelongsToMany::make('Additional Questions', 'tests', Test::class)
@@ -143,9 +154,11 @@ class Test extends Resource
                     fn() => [
                         Number::make('Questions', 'questions_quantity')
                     ]
-                )->showOnDetail(function(ResourceDetailRequest $request){
-                    return $this->resource->mark_evaluator_type ===  'custom'; // todo new field
-                })
+                )->showOnDetail(
+                    function (ResourceDetailRequest $request) {
+                        return $this->resource->type === \App\Models\Test::TYPE_COMPOSED;
+                    }
+                )
                 ->searchable(),
 
             NovaDependencyContainer::make(
@@ -196,6 +209,11 @@ class Test extends Resource
                         ),
                 ]
             )->dependsOn('mark_evaluator_type', 'custom'),
+
+            Number::make('Time (minutes)', 'time')
+                ->placeholder('')
+                ->creationRules([])//todo
+                ->sortable(),
 
             Number::make('Results Count', 'test_results_count')
                 ->exceptOnForms()
@@ -258,8 +276,8 @@ class Test extends Resource
     public function actions(Request $request)
     {
         return [
-            new AttachTestsQuestionsToTest(),
-            (new ExportTestIntoFile())->onlyOnTableRow(),
+            (new AttachTestsQuestionsToTest())->onlyOnIndex(),
+            (new ExportTestIntoFile())->onlyOnTableRow()->showOnDetail(),
         ];
     }
 }
