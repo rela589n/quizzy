@@ -62,8 +62,7 @@ final class AskedQuestion extends Resource
         return [
             ID::make(),
 
-
-            BelongsTo::make(__('Question'), 'question', Question::class),
+            BelongsTo::make('Запитання', 'question', Question::class),
 
             Text::make(
                 'Правильно / Всього',
@@ -79,10 +78,20 @@ final class AskedQuestion extends Resource
                 }
             ),
 
-            HasMany::make(__('Answers'), 'answers', Answer::class),
+            HasMany::make('Відповіді', 'answers', Answer::class),
 
-            BelongsTo::make(__('TestResult'), 'testResult', TestResult::class),
+            BelongsTo::make('Проходження', 'testResult', TestResult::class),
         ];
+    }
+
+    public static function label()
+    {
+        return 'Задані питання';
+    }
+
+    public static function singularLabel()
+    {
+        return 'Задане питання';
     }
 
     public static function authorizedToCreate(Request $request)

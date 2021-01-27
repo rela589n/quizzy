@@ -15,29 +15,14 @@ use Laravel\Nova\Fields\Text;
 
 class StudentGroup extends Resource
 {
-    public static $group = 'Students';
+    public static $group = 'Студенти';
 
     public static int $groupPriority = 8;
 
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
     public static $model = \App\Models\StudentGroup::class;
 
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'name';
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'id',
         'name',
@@ -65,76 +50,72 @@ class StudentGroup extends Resource
                 ->sortable(),
 
             Stack::make(
-                'Name',
+                'Назва',
                 [
                     Line::make('Name')->asHeading(),
                     Line::make('Slug', 'uri_alias')->asSmall(),
                 ]
             )->sortable(),
 
-            Number::make('Year')
+            Number::make('Рік вступу', 'year')
                 ->creationRules($creationRules['year'])
                 ->updateRules($updateRules['year'])
                 ->sortable(),
 
-            Text::make('Name')
+            Text::make('Назва', 'name')
                 ->creationRules($creationRules['name'])
                 ->updateRules($updateRules['name'])
                 ->hideFromIndex()
                 ->hideFromDetail(),
 
-            Slug::make('Uri Alias')
+            Slug::make('Uri-псевдонім', 'uri_alias')
                 ->from('name')
                 ->creationRules($creationRules['uri_alias'])
                 ->updateRules($updateRules['uri_alias'])
                 ->hideFromIndex()
                 ->hideFromDetail(),
 
-            HasMany::make('Students', 'students', Student::class),
+            HasMany::make('Студенти', 'students', Student::class),
 
-            BelongsTo::make('Department', 'department', Department::class),
+            BelongsTo::make('Відділення', 'department', Department::class),
         ];
     }
 
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  Request  $request
-     * @return array
-     */
+    public static function label(): string
+    {
+        return 'Групи студентів';
+    }
+
+    public static function singularLabel()
+    {
+        return 'Група';
+    }
+
+    public static function createButtonLabel()
+    {
+        return 'Створити групу';
+    }
+
+    public static function updateButtonLabel()
+    {
+        return 'Редагувати групу';
+    }
+
     public function cards(Request $request): array
     {
         return [];
     }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  Request  $request
-     * @return array
-     */
     public function filters(Request $request): array
     {
         return [];
     }
 
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  Request  $request
-     * @return array
-     */
     public function lenses(Request $request): array
     {
         return [];
     }
 
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  Request  $request
-     * @return array
-     */
     public function actions(Request $request): array
     {
         return [];

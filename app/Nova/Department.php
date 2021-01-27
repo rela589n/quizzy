@@ -15,31 +15,16 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Department extends Resource
 {
-    public static $group = 'Students';
+    public static $group = 'Студенти';
 
     public static int $groupPriority = 4;
 
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
     public static $model = \App\Models\Department::class;
 
     public static $preventFormAbandonment = true;
 
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'name';
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'id',
         'uri_alias',
@@ -66,13 +51,7 @@ class Department extends Resource
         return $query->withCount('studentGroups');
     }
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function fields(Request $request)
+    public function fields(Request $request): array
     {
         $rulesContainer = app(DepartmentRulesContainer::class);
 
@@ -87,73 +66,54 @@ class Department extends Resource
                 ->sortable(),
 
             Stack::make(
-                'Name',
+                'Назва',
                 [
                     Line::make('Name')->asHeading(),
                     Line::make('Slug', 'uri_alias')->asSmall(),
                 ]
             )->sortable(),
 
-            Text::make('Name')
+            Text::make('Назва', 'name')
                 ->creationRules($creationRules['name'])
                 ->updateRules($updateRules['name'])
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
-            Slug::make('Uri Alias')
+            Slug::make('Uri-псевдонім', 'uri_alias')
                 ->from('name')
                 ->creationRules($creationRules['uri_alias'])
                 ->updateRules($updateRules['uri_alias'])
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
-            Number::make('Groups Count', 'student_groups_count')
+            Number::make('Кількість груп', 'student_groups_count')
                 ->hideWhenUpdating()
                 ->hideWhenCreating(),
 
-            HasMany::make('Student Groups', 'studentGroups', StudentGroup::class),
+            HasMany::make('Групи студентів', 'studentGroups', StudentGroup::class),
         ];
     }
 
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
+    public static function label(): string
+    {
+        return 'Відділення';
+    }
+
     public function cards(Request $request)
     {
         return [];
     }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function filters(Request $request)
     {
         return [];
     }
 
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function lenses(Request $request)
     {
         return [];
     }
 
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function actions(Request $request)
     {
         return [];

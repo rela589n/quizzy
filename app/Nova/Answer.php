@@ -23,12 +23,22 @@ final class Answer extends Resource
         return [
             ID::make(),
 
-            BooleanTick::make(__('Is Chosen'), 'is_chosen'),
+            BelongsTo::make('Задане питання', 'askedQuestion', AskedQuestion::class),
 
-            BelongsTo::make(__('Asked Question'), 'askedQuestion', AskedQuestion::class),
+            BelongsTo::make('Варіант відповіді', 'answerOption', AnswerOption::class),
 
-            BelongsTo::make(__('Answer Option'), 'answerOption', AnswerOption::class),
+            BooleanTick::make('Обрано', 'is_chosen'),
         ];
+    }
+
+    public static function label()
+    {
+        return 'Відповіді';
+    }
+
+    public static function singularLabel()
+    {
+        return 'Обрана відповідь';
     }
 
     public function authorizedToDelete(Request $request)

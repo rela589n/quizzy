@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class AnswerOption extends Resource
 {
@@ -18,11 +17,6 @@ class AnswerOption extends Resource
 
     public static $title = 'text';
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'id',
     ];
@@ -30,19 +24,23 @@ class AnswerOption extends Resource
     /** @var \App\Models\AnswerOption */
     public $resource;
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [
-            Text::make('Text'),
-            Boolean::make('Is Right'),
-            BelongsTo::make('Question', 'question', Question::class),
+            Text::make('Текст', 'text'),
+            Boolean::make('Правильний', 'is_right'),
+            BelongsTo::make('Запитання', 'question', Question::class),
         ];
+    }
+
+    public static function label()
+    {
+        return 'Варіанти відповідей';
+    }
+
+    public static function singularLabel()
+    {
+        return 'Варіант відповіді';
     }
 
     public function authorizedToView(Request $request)
@@ -55,13 +53,17 @@ class AnswerOption extends Resource
         return false;
     }
 
-    public static function authorizedToCreate(Request $request)
+    public static function authorizedToCreate(Request $request): bool
     {
-        return isset($request->viaResource);
+        $viaResource = $request->get('viaResource');
+
+        return isset($viaResource);
     }
 
-    public function authorizedToDelete(Request $request)
+    public function authorizedToDelete(Request $request): bool
     {
-        return !isset($request->viaResource);
+        $viaResource = $request->get('viaResource');
+
+        return !isset($viaResource);
     }
 }

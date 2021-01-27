@@ -71,26 +71,51 @@ final class TestResult extends Resource
         return [
             ID::make()->sortable(),
 
-            BelongsTo::make('Test', 'test', Test::class),
+            BelongsTo::make('Тест', 'test', Test::class),
 
-            BelongsTo::make('User', 'user', Student::class)
+            BelongsTo::make('Студент', 'user', Student::class)
                 ->sortable(),
 
-            Fields\BelongsTo::make('Group', 'user.studentGroup', StudentGroup::class)
+            Fields\BelongsTo::make('Група', 'user.studentGroup', StudentGroup::class)
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
 
-            Number::make('Score %', 'result_percents')
+            Number::make('Результат %', 'result_percents')
                 ->sortable(),
 
-            Number::make('Mark', 'result_mark'),
+            Number::make('Оцінка', 'result_mark'),
 
             DateTime::make('Час проходження', 'created_at')
                 ->sortable()
                 ->format('DD.MM.YYYY HH:mm:ss'),
 
-            HasMany::make('Asked Questions', 'askedQuestions', AskedQuestion::class),
+            HasMany::make('Задані питання', 'askedQuestions', AskedQuestion::class),
         ];
+    }
+
+    public static function label()
+    {
+        return 'Результати проходження';
+    }
+
+    public static function singularLabel()
+    {
+        return 'Проходження';
+    }
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToUpdate(Request $request)
+    {
+        return false;
+    }
+
+    public function authorizedToDelete(Request $request)
+    {
+        return false;
     }
 
     public function cards(Request $request)

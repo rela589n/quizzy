@@ -59,23 +59,29 @@ class Question extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
 
-            Text::make('Question excerpt')
+            Text::make('Запитання')
                 ->resolveUsing(fn() => $this->title())
                 ->onlyOnIndex(),
 
-            Froala::make('Question')
+            Froala::make('Запитання', 'question')
                 ->hideFromIndex()
-                ->withFiles('public'),
+                ->withFiles('public')
+                ->rules(['required']),
 
-            BelongsTo::make('Test', 'test', Test::class),
+            BelongsTo::make('Тест', 'test', Test::class),
 
-            (new NestedForm('Answer Option', 'answerOptions'))
+            (new NestedForm('Варіант відповіді', 'answerOptions', AnswerOption::class))
                 ->showOnDetail()
                 ->hideFromIndex()
                 ->min(2),
 
-            HasMany::make('Answer Options', 'answerOptions', AnswerOption::class),
+            HasMany::make('Варіанти відповідей', 'answerOptions', AnswerOption::class),
         ];
+    }
+
+    public static function label()
+    {
+        return 'Запитання';
     }
 
     /**

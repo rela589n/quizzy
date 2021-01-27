@@ -79,4 +79,14 @@ abstract class Resource extends NovaResource
 
         return parent::redirectAfterUpdate($request, $resource);
     }
+
+    public static function createButtonLabel()
+    {
+        return __('Створити :resource', ['resource' => mb_lcfirst(static::singularLabel())]);
+    }
+
+    public static function updateButtonLabel()
+    {
+        return __('Редагувати :resource', ['resource' => mb_lcfirst(static::singularLabel())]);
+    }
 }

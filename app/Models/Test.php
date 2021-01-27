@@ -75,6 +75,11 @@ class Test extends Model
         self::EVALUATOR_TYPE_CUSTOM,
     ];
 
+    public const EVALUATOR_LABELS = [
+        'За замовчуванням',
+        'Власна методика',
+    ];
+
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time', 'mark_evaluator_type', 'test_subject_id'];
 

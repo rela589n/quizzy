@@ -27,7 +27,7 @@ use Laravel\Nova\Http\Requests\ResourceDetailRequest;
 
 class Test extends Resource
 {
-    public static $group = 'Tests';
+    public static $group = 'Тестування';
 
     public static int $groupPriority = 2;
 
@@ -40,11 +40,6 @@ class Test extends Resource
 
     public static $preventFormAbandonment = true;
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'id',
         'name',
@@ -82,12 +77,6 @@ class Test extends Resource
             ->with('subject');
     }
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         $creationRules = $this->rulesContainer->getRules();
@@ -103,20 +92,20 @@ class Test extends Resource
                 ->sortable(),
 
             Stack::make(
-                'Name',
+                'Назва',
                 [
-                    Line::make('Name')->asHeading(),
+                    Line::make('Name', 'name')->asHeading(),
                     Line::make('Slug', 'uri_alias')->asSmall(),
                 ]
             )->sortable(),
 
-            Text::make('Name')
+            Text::make('Назва', 'name')
                 ->creationRules($creationRules['name'])
                 ->updateRules($updateRules['name'])
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
-            Slug::make('Uri Alias')
+            Slug::make('Uri-псевдонім', 'uri_alias')
                 ->from('name')
                 ->creationRules($creationRules['uri_alias'])
                 ->updateRules($updateRules['uri_alias'])
@@ -124,6 +113,7 @@ class Test extends Resource
                 ->hideFromIndex(),
 
             Select::make('Тип теста', 'type')
+                ->hideFromIndex()
                 ->displayUsingLabels()
                 ->default(\App\Models\Test::TYPE_STANDALONE)
                 ->options(
@@ -136,38 +126,37 @@ class Test extends Resource
                     )
                 ),
 
-            Select::make('Method of grading', 'mark_evaluator_type')
+            Select::make('Стратегія оцінювання', 'mark_evaluator_type')
                 ->displayUsingLabels()
                 ->options(
                     array_combine(
                         \App\Models\Test::EVALUATOR_TYPES,
                         array_map(
                             static fn($t) => __($t),
-                            \App\Models\Test::EVALUATOR_TYPES
+                            \App\Models\Test::EVALUATOR_LABELS
                         )
                     )
                 )->default(\App\Models\Test::EVALUATOR_TYPE_DEFAULT)
                 ->hideFromIndex(),
 
-            BelongsToMany::make('Additional Questions', 'tests', Test::class)
+            BelongsToMany::make('Тести для додаткових запитань', 'tests', __CLASS__)
                 ->fields(
                     fn() => [
-                        Number::make('Questions', 'questions_quantity')
+                        Number::make('Запитань', 'questions_quantity')
                     ]
                 )->showOnDetail(
                     function (ResourceDetailRequest $request) {
                         return $this->resource->type === \App\Models\Test::TYPE_COMPOSED;
                     }
-                )
-                ->searchable(),
+                )->searchable(),
 
             NovaDependencyContainer::make(
                 [
-                    Repeater::make('Grade table')
+                    Repeater::make('Таблиця оцінювання')
                         ->initialRows(1)
                         ->addField(
                             [
-                                'label'      => 'Mark',
+                                'label'      => 'Оцінка',
                                 'name'       => 'mark',
                                 'type'       => 'number',
                                 'attributes' => [
@@ -177,7 +166,7 @@ class Test extends Resource
                         )
                         ->addField(
                             [
-                                'label'      => 'Percentage',
+                                'label'      => 'Відсоток',
                                 'name'       => 'percent',
                                 'type'       => 'number',
                                 'attributes' => [
@@ -210,44 +199,42 @@ class Test extends Resource
                 ]
             )->dependsOn('mark_evaluator_type', 'custom'),
 
-            Number::make('Time (minutes)', 'time')
+            Number::make('Час (хвилини)', 'time')
                 ->placeholder('')
                 ->creationRules([])//todo
                 ->sortable(),
 
-            Number::make('Results Count', 'test_results_count')
+            Number::make('К-сть результатів', 'test_results_count')
                 ->exceptOnForms()
                 ->readonly(),
 
             new Tabs(
                 'Relationships',
                 [
-                    HasMany::make('Questions', 'nativeQuestions', Question::class),
+                    HasMany::make('Запитання', 'nativeQuestions', Question::class),
 
-                    HasMany::make('Test Results', 'testResults'),
+                    HasMany::make('Результати проходження', 'testResults', TestResult::class),
                 ]
             ),
 
         ];
     }
 
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
+    public static function label()
+    {
+        return 'Тести';
+    }
+
+    public static function singularLabel()
+    {
+        return 'Тест';
+    }
+
     public function cards(Request $request)
     {
         return [];
     }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function filters(Request $request)
     {
         return [
@@ -255,24 +242,12 @@ class Test extends Resource
         ];
     }
 
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function lenses(Request $request)
     {
         return [
         ];
     }
 
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function actions(Request $request)
     {
         return [

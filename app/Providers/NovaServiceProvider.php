@@ -8,6 +8,7 @@ use App\Nova\Student;
 use App\Nova\StudentGroup;
 use App\Nova\Test;
 use App\Nova\TestSubject;
+use App\Observers\TestObserver;
 use DigitalCreative\CollapsibleResourceManager\CollapsibleResourceManager;
 use DigitalCreative\CollapsibleResourceManager\Resources\TopLevelResource;
 use Illuminate\Support\Facades\Gate;
@@ -25,6 +26,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Nova::serving(function() {
+            \App\Models\Test::observe(TestObserver::class);
+        });
     }
 
     /**
@@ -97,7 +102,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                     'navigation' => [
                         TopLevelResource::make(
                             [
-                                'label'     => 'Students',
+                                'label'     => 'Студенти',
                                 'resources' => [
                                     Department::class,
                                     StudentGroup::class,
@@ -107,7 +112,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         ),
                         TopLevelResource::make(
                             [
-                                'label'     => 'Tests',
+                                'label'     => 'Тестування',
                                 'resources' => [
                                     TestSubject::class,
                                     Test::class,

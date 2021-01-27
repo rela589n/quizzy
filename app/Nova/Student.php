@@ -14,60 +14,39 @@ use Laravel\Nova\Fields\Text;
 
 class Student extends Resource
 {
-    public static $group = 'Students';
+    public static $group = 'Студенти';
 
     public static int $groupPriority = 12;
 
     protected static bool $redirectToParentOnCreate = true;
     protected static bool $redirectToParentOnUpdate = true;
 
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
     public static $model = \App\Models\User::class;
 
     public static $with = ['studentGroup'];
 
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'full_name';
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'id',
         'name',
         'email',
     ];
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [
             ID::make()->sortable(),
 
-            Text::make('Name')
+            Text::make('Ім\'я', 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Surname')
+            Text::make('Фамілія', 'surname')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Patronymic')
+            Text::make('По-батькові', 'patronymic')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
@@ -77,32 +56,40 @@ class Student extends Resource
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
-            Password::make('Password')
+            Password::make('Пароль', 'password')
                 ->onlyOnForms()
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
 
-            BelongsTo::make('Student Group', 'studentGroup', StudentGroup::class)->nullable(),
+            BelongsTo::make('Група', 'studentGroup', StudentGroup::class)->nullable(),
         ];
     }
 
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
+    public static function label(): string
+    {
+        return 'Студенти';
+    }
+
+    public static function singularLabel()
+    {
+        return 'Студент';
+    }
+
+    public static function createButtonLabel()
+    {
+        return 'Зареєструвати студента';
+    }
+
+    public static function updateButtonLabel()
+    {
+        return 'Оновити';
+    }
+
     public function cards(Request $request)
     {
         return [];
     }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function filters(Request $request)
     {
         return [
@@ -114,23 +101,11 @@ class Student extends Resource
         ];
     }
 
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function lenses(Request $request)
     {
         return [];
     }
 
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function actions(Request $request)
     {
         return [];

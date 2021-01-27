@@ -13,7 +13,11 @@
         "build-DateTimeFilter": "cd nova-components/DateTimeFilter && npm run dev",
         "build-DateTimeFilter-prod": "cd nova-components/DateTimeFilter && npm run prod",
         "build-nova-date-time-filter": "cd nova-components/NovaDateTimeFilter && npm run dev",
-        "build-nova-date-time-filter-prod": "cd nova-components/NovaDateTimeFilter && npm run prod"
+        "build-nova-date-time-filter-prod": "cd nova-components/NovaDateTimeFilter && npm run prod",
+        "build-stripe-inspector": "cd nova-components/StripeInspector && npm run dev",
+        "build-stripe-inspector-prod": "cd nova-components/StripeInspector && npm run prod",
+        "build-customization": "cd nova-components/Customization && npm run dev",
+        "build-customization-prod": "cd nova-components/Customization && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.19",
