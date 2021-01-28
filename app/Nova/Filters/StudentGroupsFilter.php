@@ -9,6 +9,8 @@ use Laravel\Nova\Filters\BooleanFilter;
 
 class StudentGroupsFilter extends BooleanFilter
 {
+    public $name = 'Фільтр Груп';
+
     private \Closure $queryBuilder;
 
     public function __construct(\Closure $queryBuilder)

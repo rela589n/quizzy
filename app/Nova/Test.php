@@ -140,9 +140,11 @@ class Test extends Resource
                 ->hideFromIndex(),
 
             BelongsToMany::make('Тести для додаткових запитань', 'tests', __CLASS__)
+                ->singularLabel('Тест для додаткових запитань')
                 ->fields(
                     fn() => [
-                        Number::make('Запитань', 'questions_quantity')
+                        Number::make('К-сть Запитань', 'questions_quantity')
+                            ->placeholder('')
                     ]
                 )->showOnDetail(
                     function (ResourceDetailRequest $request) {
@@ -213,7 +215,8 @@ class Test extends Resource
                 [
                     HasMany::make('Запитання', 'nativeQuestions', Question::class),
 
-                    HasMany::make('Результати проходження', 'testResults', TestResult::class),
+                    HasMany::make('Результати проходження', 'testResults', TestResult::class)
+                        ->singularLabel('проходження'),
                 ]
             ),
 
