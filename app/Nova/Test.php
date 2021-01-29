@@ -2,28 +2,25 @@
 
 namespace App\Nova;
 
-use App\Models\MarkPercent;
 use App\Nova\Actions\AttachTestsQuestionsToTest;
 use App\Nova\Actions\ExportTestIntoFile;
+use App\Nova\Fields\Custom\Test\AdditionalQuestionsRelationField;
+use App\Nova\Fields\Custom\Test\GradingStrategyField;
+use App\Nova\Fields\Custom\Test\GradingTableField;
+use App\Nova\Fields\Custom\Test\NameField;
+use App\Nova\Fields\Custom\Test\NameStackReadOnly;
+use App\Nova\Fields\Custom\Test\PassTimeField;
+use App\Nova\Fields\Custom\Test\ResultsCountReadOnly;
+use App\Nova\Fields\Custom\Test\TestSubjectField;
+use App\Nova\Fields\Custom\Test\TestTypeField;
+use App\Nova\Fields\Custom\Test\UriAliasField;
 use App\Rules\Containers\TestRulesContainer;
-use App\Services\Tests\Grading\GradingTableService;
 use Eminiarts\Tabs\Tabs;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
-use Fourstacks\NovaRepeatableFields\Repeater;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Line;
-use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Slug;
-use Laravel\Nova\Fields\Stack;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Http\Requests\ResourceDetailRequest;
 
 class Test extends Resource
 {
@@ -88,127 +85,26 @@ class Test extends Resource
         return [
             ID::make()->sortable(),
 
-            BelongsTo::make('Test Subject', 'subject')
-                ->sortable(),
+            TestSubjectField::make(),
 
-            Stack::make(
-                'Назва',
-                [
-                    Line::make('Name', 'name')->asHeading(),
-                    Line::make('Slug', 'uri_alias')->asSmall(),
-                ]
-            )->sortable(),
+            NameStackReadOnly::make(),
 
-            Text::make('Назва', 'name')
-                ->creationRules($creationRules['name'])
-                ->updateRules($updateRules['name'])
-                ->hideFromDetail()
-                ->hideFromIndex(),
+            NameField::make(),
 
-            Slug::make('Uri-псевдонім', 'uri_alias')
-                ->from('name')
-                ->creationRules($creationRules['uri_alias'])
-                ->updateRules($updateRules['uri_alias'])
-                ->hideFromDetail()
-                ->hideFromIndex(),
+            UriAliasField::make(),
 
-            Select::make('Тип теста', 'type')
-                ->hideFromIndex()
-                ->displayUsingLabels()
-                ->default(\App\Models\Test::TYPE_STANDALONE)
-                ->options(
-                    array_combine(
-                        \App\Models\Test::TYPES,
-                        array_map(
-                            static fn($t) => __($t),
-                            \App\Models\Test::TYPES
-                        )
-                    )
-                ),
+            TestTypeField::make(),
 
-            Select::make('Стратегія оцінювання', 'mark_evaluator_type')
-                ->displayUsingLabels()
-                ->options(
-                    array_combine(
-                        \App\Models\Test::EVALUATOR_TYPES,
-                        array_map(
-                            static fn($t) => __($t),
-                            \App\Models\Test::EVALUATOR_LABELS
-                        )
-                    )
-                )->default(\App\Models\Test::EVALUATOR_TYPE_DEFAULT)
-                ->hideFromIndex(),
+            GradingStrategyField::make(),
 
-            BelongsToMany::make('Тести для додаткових запитань', 'tests', __CLASS__)
-                ->singularLabel('Тест для додаткових запитань')
-                ->fields(
-                    fn() => [
-                        Number::make('К-сть Запитань', 'questions_quantity')
-                            ->placeholder('')
-                    ]
-                )->showOnDetail(
-                    function (ResourceDetailRequest $request) {
-                        return $this->resource->type === \App\Models\Test::TYPE_COMPOSED;
-                    }
-                )->searchable(),
+            AdditionalQuestionsRelationField::make(),
 
-            NovaDependencyContainer::make(
-                [
-                    Repeater::make('Таблиця оцінювання')
-                        ->initialRows(1)
-                        ->addField(
-                            [
-                                'label'      => 'Оцінка',
-                                'name'       => 'mark',
-                                'type'       => 'number',
-                                'attributes' => [
-                                    'required' => 'required',
-                                ],
-                            ]
-                        )
-                        ->addField(
-                            [
-                                'label'      => 'Відсоток',
-                                'name'       => 'percent',
-                                'type'       => 'number',
-                                'attributes' => [
-                                    'step'     => 0.01,
-                                    'required' => 'required',
-                                ],
-                            ]
-                        )->resolveUsing(
-                            function () {
-                                $marksPercents = optional($this->resource)->marksPercents
-                                    ?? Collection::make();
+            NovaDependencyContainer::make([GradingTableField::make()])
+                ->dependsOn('mark_evaluator_type', 'custom'),
 
-                                return $marksPercents->toJson();
-                            }
-                        )->fillUsing(
-                            function ($request, $model, $attribute, $requestAttribute) {
-                                $table = collect(json_decode($request->{$requestAttribute}, true));
+            PassTimeField::make(),
 
-                                $table = Collection::make(
-                                    $table->map(
-                                        function ($attrs) {
-                                            return new MarkPercent($attrs);
-                                        }
-                                    )
-                                );
-
-                                resolve(GradingTableService::class)->attachForTest($model, $table);
-                            }
-                        ),
-                ]
-            )->dependsOn('mark_evaluator_type', 'custom'),
-
-            Number::make('Час (хвилини)', 'time')
-                ->placeholder('')
-                ->creationRules([])//todo
-                ->sortable(),
-
-            Number::make('К-сть результатів', 'test_results_count')
-                ->exceptOnForms()
-                ->readonly(),
+            ResultsCountReadOnly::make(),
 
             new Tabs(
                 'Relationships',
