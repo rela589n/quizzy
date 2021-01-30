@@ -5,18 +5,15 @@ declare(strict_types=1);
 
 namespace App\Nova\Fields\Custom\Test;
 
+use App\Rules\Containers\Test\TestNameRules;
 use Laravel\Nova\Fields\Text;
 
 final class NameField
 {
     public static function make()
     {
-        $creationRules = ['name' => []];
-        $updateRules = ['name' => []];
-
         return Text::make('Назва', 'name')
-            ->creationRules($creationRules['name'])
-            ->updateRules($updateRules['name'])
+            ->rules(app()->make(TestNameRules::class)->build())
             ->hideFromDetail()
             ->hideFromIndex();
     }

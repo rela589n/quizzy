@@ -20,10 +20,12 @@ final class AdditionalQuestionsRelationField
                 fn() => [
                     Number::make('К-сть Запитань', 'questions_quantity')
                         ->placeholder('')
+                        ->min(1)
+                        ->max(999)
                 ]
             )->showOnDetail(
-                function (ResourceDetailRequest $request) {
-                    return $this->resource->type === \App\Models\Test::TYPE_COMPOSED;
+                function (ResourceDetailRequest $request, \App\Models\Test $resource) {
+                    return $resource->type === \App\Models\Test::TYPE_COMPOSED;
                 }
             )->searchable();
     }

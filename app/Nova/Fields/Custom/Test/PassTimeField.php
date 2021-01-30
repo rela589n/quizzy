@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Fields\Custom\Test;
 
+use App\Rules\Containers\Test\TestPassTimeRules;
 use Laravel\Nova\Fields\Number;
 
 final class PassTimeField
@@ -13,7 +14,7 @@ final class PassTimeField
     {
         return Number::make('Час (хвилини)', 'time')
             ->placeholder('')
-            ->creationRules([])//todo
+            ->rules((new TestPassTimeRules)->build())
             ->sortable();
     }
 }

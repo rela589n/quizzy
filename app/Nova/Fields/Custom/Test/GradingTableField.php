@@ -7,6 +7,7 @@ namespace App\Nova\Fields\Custom\Test;
 
 use App\Models\MarkPercent;
 use App\Models\Test;
+use App\Rules\Containers\Test\TestGradingTableRules;
 use App\Services\Tests\Grading\GradingTableService;
 use Fourstacks\NovaRepeatableFields\Repeater;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,7 +16,8 @@ final class GradingTableField
 {
     public static function make()
     {
-        return Repeater::make('Таблиця оцінювання')
+        return Repeater::make('Таблиця оцінювання', 'correlation_table')
+            ->rules((new TestGradingTableRules())->usingJson()->build())
             ->initialRows(1)
             ->addField(
                 [
@@ -39,8 +41,7 @@ final class GradingTableField
                 ]
             )->resolveUsing(
                 function ($value, Test $resource, $attribute) {
-                    $marksPercents = $resource->marksPercents
-                        ?? Collection::make();
+                    $marksPercents = $resource->marksPercents ?? collect();
 
                     return $marksPercents->toJson();
                 }

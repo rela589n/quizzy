@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Nova\Fields\Custom\Test;
 
+use App\Models\Test;
+use App\Rules\Containers\Test\TestTypeRules;
 use Laravel\Nova\Fields\Select;
 
 final class TestTypeField
@@ -14,15 +16,15 @@ final class TestTypeField
         return Select::make('Тип теста', 'type')
             ->hideFromIndex()
             ->displayUsingLabels()
-            ->default(\App\Models\Test::TYPE_STANDALONE)
             ->options(
                 array_combine(
-                    \App\Models\Test::TYPES,
+                    Test::TYPES,
                     array_map(
                         static fn($t) => __($t),
-                        \App\Models\Test::TYPES
+                        Test::TYPES
                     )
                 )
-            );
+            )->default(Test::TYPE_STANDALONE)
+            ->rules((new TestTypeRules)->build());
     }
 }

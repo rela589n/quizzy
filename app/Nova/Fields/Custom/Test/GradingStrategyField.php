@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Nova\Fields\Custom\Test;
 
+use App\Rules\Containers\Test\TestMarkEvaluatorTypeRules;
 use Laravel\Nova\Fields\Select;
 
 final class GradingStrategyField
@@ -22,6 +23,7 @@ final class GradingStrategyField
                     )
                 )
             )->default(\App\Models\Test::EVALUATOR_TYPE_DEFAULT)
+            ->rules((new TestMarkEvaluatorTypeRules())->build())
             ->hideFromIndex();
     }
 }
