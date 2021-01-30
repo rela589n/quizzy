@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property string $mark_evaluator_type
  * @property string $type
+ * @property string $display_strategy
  * @property-read Collection|\App\Models\MarkPercent[] $marksPercents
  * @property-read int|null $marks_percents_count
  * @property-read Collection|\App\Models\Question[] $nativeQuestions
@@ -47,6 +48,7 @@ use Illuminate\Support\Carbon;
  * @method static \App\Models\Query\CustomEloquentBuilder|Test whereTime($value)
  * @method static \App\Models\Query\CustomEloquentBuilder|Test whereType($value)
  * @method static \App\Models\Query\CustomEloquentBuilder|Test whereUriAlias($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereDisplayStrategy($value)
  * @method static \Illuminate\Database\Query\Builder|Test withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test withoutTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test onlyTrashed()
@@ -65,6 +67,14 @@ class Test extends Model
     public const TYPES = [
         self::TYPE_STANDALONE,
         self::TYPE_COMPOSED,
+    ];
+
+    public const DISPLAY_ALL = 'all';
+    public const DISPLAY_ONE_BY_ONE = 'one by one';
+
+    public const DISPLAY_STRATEGIES = [
+        self::DISPLAY_ALL,
+        self::DISPLAY_ONE_BY_ONE,
     ];
 
     public const EVALUATOR_TYPE_DEFAULT = 'default';

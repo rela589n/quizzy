@@ -15,7 +15,6 @@ use App\Nova\Fields\Custom\Test\ResultsCountReadOnly;
 use App\Nova\Fields\Custom\Test\TestSubjectField;
 use App\Nova\Fields\Custom\Test\TestTypeField;
 use App\Nova\Fields\Custom\Test\UriAliasField;
-use App\Rules\Containers\TestRulesContainer;
 use Eminiarts\Tabs\Tabs;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Http\Request;
@@ -43,15 +42,6 @@ class Test extends Resource
         'name',
     ];
 
-    private TestRulesContainer $rulesContainer;
-
-    public function __construct($resource)
-    {
-        parent::__construct($resource);
-
-        $this->rulesContainer = app(TestRulesContainer::class);
-    }
-
     /**
      * @param  NovaRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder|\App\Models\Test  $query
@@ -77,12 +67,6 @@ class Test extends Resource
 
     public function fields(Request $request)
     {
-        $creationRules = $this->rulesContainer->getRules();
-        $updateRules = $this->rulesContainer->getRules();
-
-        $creationRules['uri_alias'][] = 'unique:tests,uri_alias';
-        $updateRules['uri_alias'][] = 'unique:tests,uri_alias,{{resourceId}}';
-
         return [
             ID::make()->sortable(),
 
