@@ -13,7 +13,7 @@ final class NameField
     public static function make()
     {
         return Text::make('Назва', 'name')
-            ->rules(app()->make(TestNameRules::class)->build())
+            ->rules(new TestNameRules())
             ->hideFromDetail()
             ->hideFromIndex();
     }

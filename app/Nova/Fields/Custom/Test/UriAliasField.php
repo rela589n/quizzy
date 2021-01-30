@@ -14,8 +14,8 @@ final class UriAliasField
     {
         return Slug::make('Uri-псевдонім', 'uri_alias')
             ->from('name')
-            ->creationRules(TestUriSlugRules::forCreate()->build())
-            ->updateRules(TestUriSlugRules::forUpdate()->build())
+            ->creationRules(TestUriSlugRules::forCreate())
+            ->updateRules(TestUriSlugRules::forUpdate())
             ->hideFromDetail()
             ->hideFromIndex();
     }

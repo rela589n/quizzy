@@ -17,7 +17,7 @@ final class GradingTableField
     public static function make()
     {
         return Repeater::make('Таблиця оцінювання', 'correlation_table')
-            ->rules((new TestGradingTableRules())->usingJson()->build())
+            ->rules((new TestGradingTableRules())->usingJson())
             ->initialRows(1)
             ->addField(
                 [

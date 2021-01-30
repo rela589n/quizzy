@@ -48,7 +48,7 @@ class ImportTestFromFile extends Action
     {
         return [
             File::make('Файл з питаннями', 'file')
-                ->rules((new TestImportFileRules())->build()),
+                ->rules(new TestImportFileRules()),
         ];
     }
 }

@@ -23,7 +23,7 @@ final class GradingStrategyField
                     )
                 )
             )->default(\App\Models\Test::EVALUATOR_TYPE_DEFAULT)
-            ->rules((new TestMarkEvaluatorTypeRules())->build())
+            ->rules(new TestMarkEvaluatorTypeRules())
             ->hideFromIndex();
     }
 }

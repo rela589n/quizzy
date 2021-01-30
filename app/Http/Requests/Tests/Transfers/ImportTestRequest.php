@@ -17,7 +17,7 @@ final class ImportTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'selected-file' => (new TestImportFileRules())->build()
+            'selected-file' => new TestImportFileRules(),
         ];
     }
 }

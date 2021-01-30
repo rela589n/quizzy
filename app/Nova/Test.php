@@ -12,6 +12,7 @@ use App\Nova\Fields\Custom\Test\NameField;
 use App\Nova\Fields\Custom\Test\NameStackReadOnly;
 use App\Nova\Fields\Custom\Test\PassTimeField;
 use App\Nova\Fields\Custom\Test\ResultsCountReadOnly;
+use App\Nova\Fields\Custom\Test\TestDisplayStrategyField;
 use App\Nova\Fields\Custom\Test\TestSubjectField;
 use App\Nova\Fields\Custom\Test\TestTypeField;
 use App\Nova\Fields\Custom\Test\UriAliasField;
@@ -88,6 +89,8 @@ class Test extends Resource
                 ->dependsOn('mark_evaluator_type', 'custom'),
 
             PassTimeField::make(),
+
+            TestDisplayStrategyField::make(),
 
             ResultsCountReadOnly::make(),
 

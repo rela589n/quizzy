@@ -38,6 +38,11 @@ abstract class RulesContainer
 
     public function build(): array
     {
+        return $this();
+    }
+
+    public function __invoke(): array
+    {
         return $this->rules;
     }
 

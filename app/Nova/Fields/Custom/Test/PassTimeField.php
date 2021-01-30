@@ -14,7 +14,7 @@ final class PassTimeField
     {
         return Number::make('Час (хвилини)', 'time')
             ->placeholder('')
-            ->rules((new TestPassTimeRules)->build())
+            ->rules(new TestPassTimeRules())
             ->sortable();
     }
 }

@@ -25,6 +25,6 @@ final class TestTypeField
                     )
                 )
             )->default(Test::TYPE_STANDALONE)
-            ->rules((new TestTypeRules)->build());
+            ->rules(new TestTypeRules());
     }
 }
