@@ -2,13 +2,15 @@
 
 namespace App\Nova\Actions;
 
-use App\Lib\Statements\TestsExportManager;
+use App\Lib\Tests\TestImportService;
+use App\Rules\Containers\Test\TestImportFileRules;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\Fields\File;
 
 class ImportTestFromFile extends Action
 {
@@ -16,12 +18,13 @@ class ImportTestFromFile extends Action
 
     public $name = 'Імпорт';
 
-    private TestsExportManager $exportManager;
+    private TestImportService $importer;
 
     public function __construct()
     {
-        $this->exportManager = resolve(TestsExportManager::class);
+        $this->importer = resolve(TestImportService::class);
     }
+
     /**
      * Perform the action on the given models.
      *
@@ -31,7 +34,9 @@ class ImportTestFromFile extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        //
+        /** @var UploadedFile $file */
+        $file = $fields->get('file');
+        $this->importer->importFile($file);
     }
 
     /**
@@ -41,6 +46,9 @@ class ImportTestFromFile extends Action
      */
     public function fields()
     {
-        return [];
+        return [
+            File::make('Файл з питаннями', 'file')
+                ->rules((new TestImportFileRules())->build()),
+        ];
     }
 }

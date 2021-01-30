@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Nova\Actions\AttachTestsQuestionsToTest;
 use App\Nova\Actions\ExportTestIntoFile;
+use App\Nova\Actions\ImportTestFromFile;
 use App\Nova\Fields\Custom\Test\AdditionalQuestionsRelationField;
 use App\Nova\Fields\Custom\Test\GradingStrategyField;
 use App\Nova\Fields\Custom\Test\GradingTableField;
@@ -152,6 +153,7 @@ class Test extends Resource
         return [
             (new AttachTestsQuestionsToTest())->onlyOnIndex(),
             (new ExportTestIntoFile())->onlyOnTableRow()->showOnDetail(),
+            (new ImportTestFromFile())->onlyOnDetail(),
         ];
     }
 }
