@@ -15,7 +15,7 @@ class ExportTestIntoFile extends Action
 {
     use InteractsWithQueue, Queueable;
 
-    public $name = 'Завантажити';
+    public $name = 'Експорт';
 
     private TestsExportManager $exportManager;
 

@@ -55,15 +55,15 @@ class AnswerOption extends Resource
 
     public static function authorizedToCreate(Request $request): bool
     {
-        $viaResource = $request->get('viaResource');
+        $editing = $request->get('editing', 'false');
 
-        return isset($viaResource);
+        return 'true' === $editing;
     }
 
     public function authorizedToDelete(Request $request): bool
     {
-        $viaResource = $request->get('viaResource');
+        $editing = $request->get('editing', 'false');
 
-        return !isset($viaResource);
+        return 'true' === $editing;
     }
 }

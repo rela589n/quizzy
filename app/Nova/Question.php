@@ -68,7 +68,8 @@ class Question extends Resource
                 ->withFiles('public')
                 ->rules(['required']),
 
-            BelongsTo::make('Тест', 'test', Test::class),
+            BelongsTo::make('Тест', 'test', Test::class)
+                ->exceptOnForms(),
 
             (new NestedForm('Варіант відповіді', 'answerOptions', AnswerOption::class))
                 ->showOnDetail()
