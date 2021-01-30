@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Requests\Tests\Transfers\ImportTestRequest;
 use App\Lib\Parsers\TestParserFactory;
 use App\Lib\Statements\TestsExportManager;
+use App\Lib\Tests\TestImportService;
 use App\Models\Question;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -38,24 +39,8 @@ class TestsTransferController extends AdminController
         $test = $this->urlManager->getCurrentTest();
         $file = $request->file('selected-file');
 
-        $parser = $parserFactory->getTextParser($file);
-        $parser->parse();
-
-        $parsed = $parser->getParsedQuestions();
-        foreach ($parsed as $questionInfo) {
-            /**
-             * @var Question $question
-             */
-            $question = $test->nativeQuestions()
-                ->create(
-                    [
-                        'question' => $questionInfo['question']
-                    ]
-                );
-
-            $question->answerOptions()
-                ->createMany($questionInfo['insert_options']);
-        }
+        $service = new TestImportService($test);
+        $service->import($parserFactory->getTextParser($file));
 
         return redirect()->route(
             'admin.tests.subject.test',
