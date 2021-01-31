@@ -38,9 +38,11 @@ class CustomMarkEvaluator implements MarkEvaluator
      * @inheritDoc
      * @throws NullPointerException
      */
-    public function putMark(float $fullTestScore): int
+    public function putMark(?float $fullTestScore): ?int
     {
-        $fullTestScore *= 100;
+        if (null === $fullTestScore) {
+            return null;
+        }
 
         if ($this->test === null) {
             throw new NullPointerException('To evaluate test mark, respectively need test to be set.');

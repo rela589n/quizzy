@@ -19,9 +19,11 @@ class StrictMarkEvaluator implements MarkEvaluator
     /**
      * @inheritDoc
      */
-    public function putMark(float $fullTestScore): int
+    public function putMark(?float $fullTestScore): ?int
     {
-        $fullTestScore *= 100;
+        if (null === $fullTestScore) {
+            return null;
+        }
 
         if ($fullTestScore + self::MARK_EPS < 60) {
             return self::MIN_MARK;

@@ -158,8 +158,8 @@ class TestResultsEvaluator
      * @return int
      * @throws NullPointerException|BindingResolutionException
      */
-    public function getMark(): int
+    public function getMark(): ?int
     {
-        return $this->markEvaluator()->putMark($this->getTestScore());
+        return $this->markEvaluator()->putMark($this->getTestScore() * 100);
     }
 }

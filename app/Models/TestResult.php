@@ -28,7 +28,8 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read string $date_readable
  * @property-read int $mark
- * @property-read float $result_percents
+ * @property-read ?float $result_percents
+ * @property-read ?int $result_mark
  * @property-read string $mark_readable
  * @property-read mixed $score
  * @property-read string $score_readable
@@ -119,14 +120,14 @@ class TestResult extends Model
         return round(100 * $this->score, 2);
     }
 
-    public function getResultPercentsAttribute(float $attr): float
+    public function getResultPercentsAttribute(?float $attr): ?float
     {
-        return round($attr, 2);
+        return optional($attr, static fn() => round($attr, 2));
     }
 
-    public function getResultMarkAttribute(): int
+    public function getResultMarkAttribute(): ?int
     {
-        return $this->markEvaluator()->putMark($this->result_percents / 100);
+        return $this->markEvaluator()->putMark($this->result_percents);
     }
 
     /**
@@ -134,7 +135,7 @@ class TestResult extends Model
      * @throws NullPointerException
      * @throws BindingResolutionException
      */
-    public function getMarkAttribute(): int
+    public function getMarkAttribute(): ?int
     {
         return $this->resultsEvaluator->getMark();
     }
@@ -142,6 +143,11 @@ class TestResult extends Model
     public function getMarkReadableAttribute(): string
     {
         $mark = $this->mark;
+
+        if (null === $mark) {
+            return '';
+        }
+
         return $mark.$this->wordsManager->decline($mark, ' бал');
     }
 
