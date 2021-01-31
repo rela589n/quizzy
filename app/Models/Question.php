@@ -30,7 +30,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|Question onlyTrashed()
- * @method static bool|null restore()
  * @method static Builder|Question whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Question withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Question withoutTrashed()
@@ -46,6 +45,7 @@ class Question extends Model
         return $this->belongsTo(Test::class);
     }
 
+    /** @return HasMany|AnswerOption */
     public function answerOptions(): HasMany
     {
         return $this->hasMany(AnswerOption::class);

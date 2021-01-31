@@ -185,6 +185,7 @@ return [
         App\Providers\FormRequestsProvider::class,
         App\Providers\CollectionMacroProvider::class,
         App\Providers\ModelObserversProvider::class,
+        App\Providers\ObserversServiceProvider::class,
     ],
 
     /*

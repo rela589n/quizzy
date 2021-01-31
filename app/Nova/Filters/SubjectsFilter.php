@@ -10,6 +10,8 @@ use Laravel\Nova\Filters\Filter;
 
 class SubjectsFilter extends Filter
 {
+    public $name = 'Фільтр по Предметам';
+
     private string $field;
 
     public function __construct(string $field)

@@ -1,15 +1,18 @@
 $(function () {
+    window.closeWhenSwitchedTabsConfigOnClose = window.closeWhenSwitchedTabsConfigOnClose || function () {
+    };
+
     /** build config **/
     let config = {
-        onClose: window.closeWhenSwitchedTabsConfigOnClose ||
-            function () {
-            }
+        handleClose: function () {
+            window.closeWhenSwitchedTabsConfigOnClose()
+                .then(() => history.back());
+        }
     };
 
     setTimeout(function () {
         $(window).blur(function (e) {
-            history.back();
-            config.onClose();
+            config.handleClose();
         });
     }, 1000);
 });

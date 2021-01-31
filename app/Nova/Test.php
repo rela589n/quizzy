@@ -38,6 +38,8 @@ class Test extends Resource
 
     public static $preventFormAbandonment = true;
 
+    public static $perPageViaRelationship = 25;
+
     public static $search = [
         'id',
         'name',
@@ -52,7 +54,8 @@ class Test extends Resource
     {
         return $query->withCount('testResults')
             ->with('subject')
-            ->with('marksPercents');
+            ->with('marksPercents')
+            ->with('nativeQuestions.answerOptions');
     }
 
     /**

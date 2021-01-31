@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\Question;
 use App\Models\StudentGroup;
 use App\Models\Test;
+use App\Models\TestResult;
 use App\Models\TestSubject;
 use App\Models\User;
 use App\Policies\AdministratorPolicy;
@@ -16,6 +17,7 @@ use App\Policies\QuestionsPolicy;
 use App\Policies\StudentPolicy;
 use App\Policies\SubjectPolicy;
 use App\Policies\TestPolicy;
+use App\Policies\TestResultPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -34,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         TestSubject::class   => SubjectPolicy::class,
         Test::class          => TestPolicy::class,
         Question::class      => QuestionsPolicy::class,
+        TestResult::class    => TestResultPolicy::class,
     ];
 
     /**

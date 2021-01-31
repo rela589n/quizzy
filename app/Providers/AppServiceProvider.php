@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Requests\RequestUrlManager;
 use App\Lib\Statements\FilePathGenerators\ExportResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\GroupResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
@@ -14,6 +15,7 @@ use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Lib\TestResults\StrictMarkEvaluator;
 use App\Lib\TestResults\StrictScoreEvaluator;
 use App\Lib\TestResultsEvaluator;
+use App\Lib\Tests\Pass\PassTestService;
 use App\Lib\Words\Decliners\CyrillicWordDecliner;
 use App\Lib\Words\Decliners\WordDeclinerInterface;
 use App\Lib\Words\Repositories\UkrainianWordsRepository;
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->registerBindings();
     }
 
     /**
@@ -47,8 +50,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerBindings();
-
         Paginator::useBootstrap();
 
         $this->shareViews();

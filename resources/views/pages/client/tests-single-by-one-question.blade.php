@@ -1,4 +1,10 @@
-@extends('layouts.tests-single', ['baseLayout' => 'layouts.root.client', 'contentColumns' => 8])
+@extends('layouts.tests-single',
+    [
+        'baseLayout' => 'layouts.root.client',
+        'contentColumns' => 8,
+        'passTestAction' => action([\App\Http\Controllers\Client\Tests\TestsController::class, 'storeQuestionResponse'], ['subject' => $subject->uri_alias, 'test' => $test->uri_alias])
+    ]
+)
 
 @section('title')
     {{ $subject->name }} - {{ $test->name }}
@@ -12,24 +18,18 @@
 @endsection
 
 @section('save-button')
-    @if(count($allQuestions))
-        <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Завершити тест</button>
-    @else
-        <a href="{{ route('client.tests.subject', ['subject' => $subject->uri_alias]) }}"
-           class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Завершити тест</a>
-    @endif
+    {{--    @if(count($allQuestions))--}}
+    <button type="submit" class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Далі</button>
+    {{--    @else--}}
+    {{--    <a href="{{ route('client.tests.subject', ['subject' => $subject->uri_alias]) }}"--}}
+    {{--       class="btn btn-primary btn-block finish-test-btn mt-5 mb-5">Завершити тест</a>--}}
+    {{--    @endif--}}
 @endsection
 
 @section('test-questions')
-    @forelse($allQuestions as $question)
-        @include('blocks.client.question-single', [
-            'questionIndex' => $loop->index,
-        ])
-    @empty
-        @component('layouts.blocks.empty-list-message')
-            Немає доступних для проходження питань.
-        @endcomponent
-    @endforelse
+    @include('blocks.client.question-single', [
+        'questionIndex' => $questionIndex,
+    ])
 @endsection
 
 @section('additions')
@@ -51,6 +51,11 @@
 
 @section('bottom-scripts')
     @parent
+
+    @if(0 === $questionIndex)
+        <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
+    @endif
+
     <script defer src="{{ asset('js/stopwatch.js') }}"></script>
     <script type="text/javascript">
         window.passTestCountDownSeconds = +{{ $remainingTime }};
@@ -58,6 +63,5 @@
         window.currentTest = JSON.parse('{!! json_encode($test->only(['id', 'uri_alias'])) !!}');
     </script>
     <script defer src="{{ asset('js/test-countdown.js') }}"></script>
-    <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
     <script defer src="{{ asset('js/close-when-switched-tab.js') }}"></script>
 @endsection

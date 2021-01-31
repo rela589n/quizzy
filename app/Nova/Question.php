@@ -24,16 +24,13 @@ class Question extends Resource
 
     public static $preventFormAbandonment = true;
 
+    public static $perPageViaRelationship = 100;
+
     public function title(): string
     {
         return Str::limit(strip_tags(parent::title()), 75);
     }
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'id',
     ];
@@ -43,10 +40,10 @@ class Question extends Resource
      * @param  \Illuminate\Database\Eloquent\Builder|\App\Models\Question  $query
      * @return \Illuminate\Database\Eloquent\Builder|void
      */
-//    public static function indexQuery(NovaRequest $request, $query)
-//    {
-//        return $query->with('answerOptions');
-//    }
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->with('test');
+    }
 
     /**
      * Get the fields displayed by the resource.
@@ -71,13 +68,25 @@ class Question extends Resource
             BelongsTo::make('Тест', 'test', Test::class)
                 ->exceptOnForms(),
 
+            HasMany::make('Варіанти відповідей', 'answerOptions', AnswerOption::class),
+        ];
+    }
+
+    public function fieldsForCreate($request)
+    {
+        return [
+            ...$this->fields($request),
+
             (new NestedForm('Варіант відповіді', 'answerOptions', AnswerOption::class))
                 ->showOnDetail()
                 ->hideFromIndex()
                 ->min(2),
-
-            HasMany::make('Варіанти відповідей', 'answerOptions', AnswerOption::class),
         ];
+    }
+
+    public function fieldsForUpdate($request)
+    {
+        return $this->fieldsForCreate($request);
     }
 
     public static function label()

@@ -47,7 +47,12 @@ final class GradingTableField
                 }
             )->fillUsing(
                 function ($request, $model, $attribute, $requestAttribute) {
-                    $table = collect(json_decode($request->{$requestAttribute}, true));
+                    $table = collect(
+                        optional(
+                            $request->{$requestAttribute},
+                            static fn($json) => json_decode($json, true)
+                        ) ?? []
+                    );
 
                     $table = Collection::make(
                         $table->map(

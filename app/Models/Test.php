@@ -137,4 +137,19 @@ class Test extends Model
     {
         return $this->hasMany(MarkPercent::class);
     }
+
+    public function isComposite(): bool
+    {
+        return self::TYPE_COMPOSED === $this->type;
+    }
+
+    public function shouldDisplayAllQuestions(): bool
+    {
+        return self::DISPLAY_ALL === $this->display_strategy;
+    }
+
+    public function shouldDisplayOneByOneQuestions(): bool
+    {
+        return self::DISPLAY_ONE_BY_ONE === $this->display_strategy;
+    }
 }

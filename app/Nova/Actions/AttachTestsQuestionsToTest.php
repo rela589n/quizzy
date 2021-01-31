@@ -18,6 +18,8 @@ class AttachTestsQuestionsToTest extends Action
 {
     use InteractsWithQueue, Queueable;
 
+    public $name = 'Прикріпити питання до іншого';
+
     private TestQueries $queries;
 
     public function __construct()
@@ -34,6 +36,7 @@ class AttachTestsQuestionsToTest extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
+        abort(500);
         // todo
         dump($fields);
         dd($models);
@@ -58,7 +61,7 @@ class AttachTestsQuestionsToTest extends Action
 
     private function createTestSubjectField(EloquentCollection $subjects): Select
     {
-        return Select::make('Test Subject', 'test_subject')
+        return Select::make('Предмет', 'test_subject')
             ->options(
                 $subjects->mapWithKeys(
                     fn(TestSubject $subject) => [$subject->id => "({$subject->id}) {$subject->name}"]
@@ -70,12 +73,18 @@ class AttachTestsQuestionsToTest extends Action
 
     private function createTestDependentFields(EloquentCollection $subjects)
     {
-        $testsBySubjects = $subjects->mapWithKeys(fn(TestSubject $subject) => [$subject->id => $subject->tests]);
+        $testsBySubjects = $subjects->mapWithKeys(
+            fn(TestSubject $subject) => [
+                $subject->id => $subject->tests->filter(
+                    static fn(Test $test) => $test->isComposite()
+                )
+            ]
+        );
 
         return $testsBySubjects->map(
             fn(Collection $tests, int $subjectId) => NovaDependencyContainer::make(
                 [
-                    Select::make('Test', 'test')
+                    Select::make('Тест', 'test')
                         ->options(
                             $tests->mapWithKeys(
                                 fn(Test $test) => [$test->id => "({$test->id}) {$test->name}"]
