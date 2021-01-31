@@ -6,6 +6,7 @@ use App\Nova\Actions\AttachTestsQuestionsToTest;
 use App\Nova\Actions\ExportTestIntoFile;
 use App\Nova\Actions\ImportTestFromFile;
 use App\Nova\Fields\Custom\Test\AdditionalQuestionsRelationField;
+use App\Nova\Fields\Custom\Test\AttemptsPerUserField;
 use App\Nova\Fields\Custom\Test\GradingStrategyField;
 use App\Nova\Fields\Custom\Test\GradingTableField;
 use App\Nova\Fields\Custom\Test\NameField;
@@ -94,6 +95,8 @@ class Test extends Resource
             PassTimeField::make(),
 
             TestDisplayStrategyField::make(),
+
+            AttemptsPerUserField::make(),
 
             ResultsCountReadOnly::make(),
 

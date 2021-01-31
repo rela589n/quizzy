@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property string $mark_evaluator_type
  * @property string $type
  * @property string $display_strategy
+ * @property ?int $attempts_per_user
  * @property-read Collection|\App\Models\MarkPercent[] $marksPercents
  * @property-read int|null $marks_percents_count
  * @property-read Collection|\App\Models\Question[] $nativeQuestions
