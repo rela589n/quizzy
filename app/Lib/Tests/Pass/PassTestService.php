@@ -92,37 +92,42 @@ final class PassTestService
 
     public function finishTest(TestResultDto $dto): TestResult
     {
-        return $this->connection->transaction(
-            function () use ($dto) {
-                $testResult = new TestResult();
-                $testResult->test()->associate($this->test);
-                $testResult->user()->associate($this->user);
-                $testResult->save();
+        $testResult = $this->connection->transaction(fn() => $this->persistTestResult($dto));
 
-                $askedQuestionsCollection = $dto->getAskedQuestions()->map(
-                    function (AskedQuestionDto $askedQuestionDto) use ($testResult) {
-                        $askedQuestion = $askedQuestionDto->mapToModel();
-                        $testResult->askedQuestions()->save($askedQuestion);
+        $this->storage->flush();
 
-                        $answersCollection = $askedQuestionDto->getAnswers()->map(
-                            function (AnswerDto $dto) use ($askedQuestion) {
-                                $answer = $dto->mapToModel();
-                                $askedQuestion->answers()->save($answer);
+        return $testResult;
+    }
 
-                                return $answer;
-                            }
-                        );
+    private function persistTestResult(TestResultDto $dto): TestResult
+    {
+        $testResult = new TestResult();
+        $testResult->test()->associate($this->test);
+        $testResult->user()->associate($this->user);
+        $testResult->save();
 
-                        $askedQuestion->setRelation('answers', Collection::make($answersCollection));
+        $askedQuestionsCollection = $dto->getAskedQuestions()->map(
+            function (AskedQuestionDto $askedQuestionDto) use ($testResult) {
+                $askedQuestion = $askedQuestionDto->mapToModel();
+                $testResult->askedQuestions()->save($askedQuestion);
 
-                        return $askedQuestion;
+                $answersCollection = $askedQuestionDto->getAnswers()->map(
+                    function (AnswerDto $dto) use ($askedQuestion) {
+                        $answer = $dto->mapToModel();
+                        $askedQuestion->answers()->save($answer);
+
+                        return $answer;
                     }
                 );
 
-                $testResult->setRelation('askedQuestions', Collection::make($askedQuestionsCollection));
+                $askedQuestion->setRelation('answers', Collection::make($answersCollection));
 
-                return $testResult;
+                return $askedQuestion;
             }
         );
+
+        $testResult->setRelation('askedQuestions', Collection::make($askedQuestionsCollection));
+
+        return $testResult;
     }
 }
