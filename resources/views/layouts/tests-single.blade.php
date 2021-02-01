@@ -3,6 +3,11 @@
     'contentColumns' => 10
 ])
 
+@section('head_styles')
+    <link href="{{ asset('css/vendor/froala_styles.min.css') }}" rel="stylesheet" type="text/css" />
+    @parent
+@endsection
+
 @section('category-main-content')
     <form method="post" action="{{ $passTestAction ?? '' }}" class="edit-test-form mt-5">
         @csrf

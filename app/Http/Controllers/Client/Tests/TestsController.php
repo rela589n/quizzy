@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client\Tests;
 
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Requests\Tests\Pass\PassTestRequest;
+use App\Lib\Tests\Pass\Exceptions\PassTestSessionDoesntExists;
 use App\Lib\Tests\Pass\Exceptions\QuestionsRanOutException;
 use App\Lib\Tests\Pass\PassTestService;
 use App\Lib\Tests\Pass\TestResultDto;
@@ -35,7 +36,7 @@ class TestsController extends ClientController
         $user = Auth::guard('client')->user();
         $test = $this->urlManager->getCurrentTest();
         $subject = $test->subject;
-        $service = new PassTestService($user, $test);
+        $service = PassTestService::startPassage($user, $test);
 
         $allQuestions = $service->getAllQuestions();
         $remainingTime = $service->remainingTime();
@@ -52,8 +53,8 @@ class TestsController extends ClientController
         $user = Auth::guard('client')->user();
         $currentTest = $this->urlManager->getCurrentTest();
 
-        $service = new PassTestService($user, $currentTest);
-        $service->cancelPassage();
+        $service = PassTestService::continuePassage($user, $currentTest);
+        $service->endSession();
 
         return response()->json();
     }
@@ -64,8 +65,20 @@ class TestsController extends ClientController
         $user = Auth::guard('client')->user();
         $currentTest = $this->urlManager->getCurrentTest();
 
-        $service = new PassTestService($user, $currentTest);
-        $testResult = $service->finishTest(TestResultDto::createFromRequest($request));
+        $service = PassTestService::continueStrict($user, $currentTest);
+        try {
+            $testResult = $service->finishTest(TestResultDto::createFromRequest($request));
+        } catch (PassTestSessionDoesntExists $e) {
+            $testResult = $e->getTest()
+                ->testResults()
+                ->where('user_id', $e->getUser()->id)
+                ->latest()
+                ->first();
+
+            if (null === $testResult) {
+                throw $e;
+            }
+        }
 
         return redirect()->action(
             [self::class, 'showResultPage'],
@@ -103,7 +116,7 @@ class TestsController extends ClientController
         $user = Auth::guard('client')->user();
         $test = $this->urlManager->getCurrentTest();
 
-        $service = new PassTestService($user, $test);
+        $service = PassTestService::continuePassage($user, $test);
 
         $askedQuestions = TestResultDto::createFromRequest($request)->getAskedQuestions();
         Assert::count($askedQuestions, 1);
@@ -120,7 +133,7 @@ class TestsController extends ClientController
     {
         $subject = $test->subject;
 
-        $service = new PassTestService($user, $test);
+        $service = PassTestService::continuePassage($user, $test);
         $question = $service->currentQuestion();
         $remainingTime = $service->remainingTime();
         $questionIndex = $service->currentQuestionIndex();

@@ -14,6 +14,7 @@ final class NameStackReadOnly
     {
         return Stack::make(
             'Назва',
+            'name',
             [
                 Line::make('Name', 'name')->asHeading(),
                 Line::make('Slug', 'uri_alias')->asSmall(),

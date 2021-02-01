@@ -5,13 +5,13 @@ declare(strict_types=1);
 
 namespace App\Lib\Tests\Pass;
 
+use App\Lib\Tests\Pass\Exceptions\PassTestSessionDoesntExists;
 use App\Lib\Tests\Pass\Exceptions\QuestionsRanOutException;
 use App\Models\Question;
 use App\Models\Test;
 use App\Models\TestResult;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Access\Gate;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\ConnectionInterface as Connection;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -31,6 +31,42 @@ final class PassTestService
         app()->make(Gate::class)
             ->forUser($user)
             ->authorize('pass-test', $test);
+    }
+
+    public static function startPassage(User $user, Test $test): self
+    {
+        $service = new self($user, $test);
+        $service->startSession();
+        return $service;
+    }
+
+    public static function continuePassage(User $user, Test $test): self
+    {
+        $service = new self($user, $test);
+        $service->startSessionIfNotExists();
+        return $service;
+    }
+
+    public static function continueStrict(User $user, Test $currentTest): self
+    {
+        return new self($user, $currentTest);
+    }
+
+    private function startSession(): void
+    {
+        $this->storage->initiateSession();
+    }
+
+    private function startSessionIfNotExists(): void
+    {
+        if (!$this->storage->sessionExists()){
+            $this->storage->initiateSession();
+        }
+    }
+
+    public function endSession(): void
+    {
+        $this->storage->flush();
     }
 
     public function remainingTime(): int
@@ -62,7 +98,7 @@ final class PassTestService
         if (!$questions->offsetExists($offset)) {
             $testResult = $this->finishTest($this->storage->testResult());
 
-            $this->storage->flush();
+            $this->endSession();
 
             throw new QuestionsRanOutException($testResult);
         }
@@ -73,11 +109,6 @@ final class PassTestService
     public function currentQuestionIndex(): int
     {
         return $this->storage->currentOffset();
-    }
-
-    public function cancelPassage(): void
-    {
-        $this->storage->flush();
     }
 
     public function addQuestionResponse(AskedQuestionDto $dto): void
@@ -92,11 +123,21 @@ final class PassTestService
 
     public function finishTest(TestResultDto $dto): TestResult
     {
+        $this->makeSureSessionValid();
+
         $testResult = $this->connection->transaction(fn() => $this->persistTestResult($dto));
 
-        $this->storage->flush();
+        $this->endSession();;
 
         return $testResult;
+    }
+
+    private function makeSureSessionValid(): void
+    {
+        throw_if(
+            !$this->storage->sessionExists(),
+            new PassTestSessionDoesntExists($this->test, $this->user)
+        );
     }
 
     private function persistTestResult(TestResultDto $dto): TestResult
