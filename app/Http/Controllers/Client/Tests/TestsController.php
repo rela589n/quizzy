@@ -6,6 +6,7 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Requests\Tests\Pass\PassTestRequest;
 use App\Lib\Tests\Pass\Exceptions\PassTestSessionDoesntExists;
 use App\Lib\Tests\Pass\Exceptions\QuestionsRanOutException;
+use App\Lib\Tests\Pass\Exceptions\TimeIsUpException;
 use App\Lib\Tests\Pass\PassTestService;
 use App\Lib\Tests\Pass\TestResultDto;
 use App\Models\Test;
@@ -47,16 +48,57 @@ class TestsController extends ClientController
         );
     }
 
-    public function cancelPassage()
+    private function displayCurrentQuestionOrRedirectToResult()
     {
         /** @var User $user */
         $user = Auth::guard('client')->user();
-        $currentTest = $this->urlManager->getCurrentTest();
+        $test = $this->urlManager->getCurrentTest();
 
-        $service = PassTestService::continuePassage($user, $currentTest);
-        $service->endSession();
+        try {
+            return $this->displayCurrentQuestion($user, $test);
+        } catch (QuestionsRanOutException | TimeIsUpException $e) {
+            return redirect()->action(
+                [self::class, 'showResultPage'],
+                [
+                    'subject' => $test->subject->uri_alias,
+                    'test'    => $test->uri_alias,
+                    'result'  => $e->getTestResult()->id,
+                ]
+            );
+        }
+    }
 
-        return response()->json();
+    private function displayCurrentQuestion(User $user, Test $test)
+    {
+        $subject = $test->subject;
+
+        $service = PassTestService::continuePassage($user, $test);
+        $question = $service->currentQuestion();
+        $remainingTime = $service->remainingTime();
+        $questionIndex = $service->currentQuestionIndex();
+
+        return view(
+            'pages.client.tests-single-by-one-question',
+            compact('subject', 'test', 'questionIndex', 'question', 'remainingTime'),
+        );
+    }
+
+    public function storeQuestionResponse(PassTestRequest $request)
+    {
+        /** @var User $user */
+        $user = Auth::guard('client')->user();
+        $test = $this->urlManager->getCurrentTest();
+
+        $service = PassTestService::continuePassage($user, $test);
+
+        $askedQuestions = TestResultDto::createFromRequest($request)->getAskedQuestions();
+        Assert::count($askedQuestions, 1);
+        $service->addQuestionResponse($askedQuestions->first());
+
+        return redirect()->action(
+            [self::class, 'showSingleTestForm'],
+            ['subject' => $test->subject->uri_alias, 'test' => $test->uri_alias],
+        );
     }
 
     public function finishTest(PassTestRequest $request)
@@ -67,7 +109,8 @@ class TestsController extends ClientController
 
         $service = PassTestService::continueStrict($user, $currentTest);
         try {
-            $testResult = $service->finishTest(TestResultDto::createFromRequest($request));
+            $service->persistTemporaryResult(TestResultDto::createFromRequest($request));
+            $testResult = $service->finishTest();
         } catch (PassTestSessionDoesntExists $e) {
             $testResult = $e->getTest()
                 ->testResults()
@@ -90,58 +133,16 @@ class TestsController extends ClientController
         );
     }
 
-    private function displayCurrentQuestionOrRedirectToResult()
+    public function cancelPassage()
     {
         /** @var User $user */
         $user = Auth::guard('client')->user();
-        $test = $this->urlManager->getCurrentTest();
+        $currentTest = $this->urlManager->getCurrentTest();
 
-        try {
-            return $this->displayCurrentQuestion($user, $test);
-        } catch (QuestionsRanOutException $e) {
-            return redirect()->action(
-                [self::class, 'showResultPage'],
-                [
-                    'subject' => $test->subject->uri_alias,
-                    'test'    => $test->uri_alias,
-                    'result'  => $e->getTestResult()->id,
-                ]
-            );
-        }
-    }
+        $service = PassTestService::continuePassage($user, $currentTest);
+        $service->endSession();
 
-    public function storeQuestionResponse(PassTestRequest $request)
-    {
-        /** @var User $user */
-        $user = Auth::guard('client')->user();
-        $test = $this->urlManager->getCurrentTest();
-
-        $service = PassTestService::continuePassage($user, $test);
-
-        $askedQuestions = TestResultDto::createFromRequest($request)->getAskedQuestions();
-        Assert::count($askedQuestions, 1);
-        $service->addQuestionResponse($askedQuestions->first());
-        $service->shiftOffset();
-
-        return redirect()->action(
-            [self::class, 'showSingleTestForm'],
-            ['subject' => $test->subject->uri_alias, 'test' => $test->uri_alias],
-        );
-    }
-
-    private function displayCurrentQuestion(User $user, Test $test)
-    {
-        $subject = $test->subject;
-
-        $service = PassTestService::continuePassage($user, $test);
-        $question = $service->currentQuestion();
-        $remainingTime = $service->remainingTime();
-        $questionIndex = $service->currentQuestionIndex();
-
-        return view(
-            'pages.client.tests-single-by-one-question',
-            compact('subject', 'test', 'questionIndex', 'question', 'remainingTime'),
-        );
+        return response()->json();
     }
 
     public function showResultPage()
@@ -149,6 +150,10 @@ class TestsController extends ClientController
         $currentTest = $this->urlManager->getCurrentTest();
         $testResult = $this->urlManager->getCurrentTestResult();
         $this->authorize('view', $testResult);
+
+        $testResult->score_readable;
+        $testResult->mark;
+        $testResult->mark_readable;
 
         return view(
             'pages.client.pass-test-single-result',

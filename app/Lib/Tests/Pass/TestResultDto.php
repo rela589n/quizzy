@@ -18,6 +18,7 @@ final class TestResultDto
         $this->askedQuestions = $askedQuestions->map(static fn(AskedQuestionDto $dto) => $dto);
     }
 
+    /** @return Collection|AskedQuestionDto */
     public function getAskedQuestions(): Collection
     {
         return $this->askedQuestions;

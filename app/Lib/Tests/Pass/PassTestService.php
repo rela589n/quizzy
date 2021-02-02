@@ -7,13 +7,16 @@ namespace App\Lib\Tests\Pass;
 
 use App\Lib\Tests\Pass\Exceptions\PassTestSessionDoesntExists;
 use App\Lib\Tests\Pass\Exceptions\QuestionsRanOutException;
+use App\Lib\Tests\Pass\Exceptions\TimeIsUpException;
+use App\Models\AnswerOption;
 use App\Models\Question;
 use App\Models\Test;
 use App\Models\TestResult;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Database\ConnectionInterface as Connection;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection;
 
 final class PassTestService
 {
@@ -59,7 +62,7 @@ final class PassTestService
 
     private function startSessionIfNotExists(): void
     {
-        if (!$this->storage->sessionExists()){
+        if (!$this->storage->sessionExists()) {
             $this->storage->initiateSession();
         }
     }
@@ -79,8 +82,8 @@ final class PassTestService
         return $this->storage->passageStartedAt()->diffInSeconds(now());
     }
 
-    /** @return Collection|Question[] */
-    public function getAllQuestions(): Collection
+    /** @return EloquentCollection|Question[] */
+    public function getAllQuestions(): EloquentCollection
     {
         return $this->storage->questions();
     }
@@ -96,11 +99,15 @@ final class PassTestService
         $offset = $this->currentQuestionIndex();
 
         if (!$questions->offsetExists($offset)) {
-            $testResult = $this->finishTest($this->storage->testResult());
-
-            $this->endSession();
+            $testResult = $this->finishTest();
 
             throw new QuestionsRanOutException($testResult);
+        }
+
+        if ($this->timeIsUp()) {
+            $testResult = $this->finishTest();
+
+            throw new TimeIsUpException($testResult);
         }
 
         return $questions->offsetGet($offset);
@@ -119,15 +126,27 @@ final class PassTestService
         $askedQuestions->push($dto);
 
         $this->storage->rewriteTestResult(TestResultDto::create($askedQuestions));
+
+        $this->shiftOffset();
     }
 
-    public function finishTest(TestResultDto $dto): TestResult
+    public function persistTemporaryResult(TestResultDto $dto): void
+    {
+        $this->makeSureSessionValid();
+        $this->storage->rewriteTestResult($dto);
+    }
+
+    public function finishTest(): TestResult
     {
         $this->makeSureSessionValid();
 
+        $this->pushEmptyRemainingAnswers();
+
+        $dto = $this->storage->testResult();
+
         $testResult = $this->connection->transaction(fn() => $this->persistTestResult($dto));
 
-        $this->endSession();;
+        $this->endSession();
 
         return $testResult;
     }
@@ -161,14 +180,56 @@ final class PassTestService
                     }
                 );
 
-                $askedQuestion->setRelation('answers', Collection::make($answersCollection));
+                $askedQuestion->setRelation('answers', EloquentCollection::make($answersCollection));
 
                 return $askedQuestion;
             }
         );
 
-        $testResult->setRelation('askedQuestions', Collection::make($askedQuestionsCollection));
+        $testResult->setRelation('askedQuestions', EloquentCollection::make($askedQuestionsCollection));
 
         return $testResult;
+    }
+
+    private function timeIsUp(): bool
+    {
+        return $this->remainingTime() < 3;
+    }
+
+    private function pushEmptyRemainingAnswers(): void
+    {
+        $notAsked = $this->getNotAskedQuestions();
+
+        $emptyResponses = $notAsked->map(fn(Question $q) => $this->createEmptyAskedQuestionResponse($q));
+
+        $emptyResponses->map(fn(AskedQuestionDto $dto) => $this->addQuestionResponse($dto));
+    }
+
+    /** @return EloquentCollection|Question[] */
+    private function getNotAskedQuestions(): EloquentCollection
+    {
+        $dto = $this->storage->testResult();
+
+        $askedIds = $dto->getAskedQuestions()
+            ->map(static fn(AskedQuestionDto $a) => $a->getQuestionId())
+            ->flip();
+
+        return $this->getAllQuestions()
+            ->filter(static fn(Question $question) => !$askedIds->offsetExists($question->id));
+    }
+
+    private function createEmptyAskedQuestionResponse(Question $question): AskedQuestionDto
+    {
+        return AskedQuestionDto::create(
+            $question->id,
+            $this->createEmptyAnswersDtoCollection($question)
+        );
+    }
+
+    private function createEmptyAnswersDtoCollection(Question $question): Collection
+    {
+        return $question->answerOptions->map(
+            static fn(AnswerOption $option) => AnswerDto::create($option->id, false)
+        );
     }
 }
