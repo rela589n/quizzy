@@ -5,6 +5,7 @@ namespace App\Models;
 
 
 use App\Lib\Traits\FilteredScope;
+use App\Models\Administrators\AdministratorsEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -62,6 +63,11 @@ class Administrator extends BaseUser
     use HasRoles;
     use FilteredScope;
 
+    public const ROLES_FOR_TEACHER = [
+        'teacher',
+        'class-monitor',
+    ];
+
     public function guardName(): string
     {
         return 'admin';
@@ -93,5 +99,10 @@ class Administrator extends BaseUser
                 $q->whereName($roleName);
             }
         );
+    }
+
+    public function newEloquentBuilder($query)
+    {
+        return new AdministratorsEloquentBuilder($query);
     }
 }

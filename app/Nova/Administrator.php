@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Nova;
 
 use App\Models\Administrator as AdministratorModel;
+use App\Models\Administrators\AdministratorsEloquentBuilder;
 use App\Nova\Fields\Custom\Administrator\RoleField;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -30,12 +30,12 @@ final class Administrator extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  Builder|\App\Models\Administrator  $query
-     * @return Builder
+     * @param  AdministratorsEloquentBuilder  $query
      */
-    public static function indexQuery(NovaRequest $request, $query): Builder
+    public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->where('surname', '!=', 'system');
+        return $query->where('surname', '!=', 'system')
+            ->availableToViewBy($request->user());
     }
 
     public function fields(Request $request)
