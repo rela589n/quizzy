@@ -12,7 +12,13 @@ $(function () {
 
     setTimeout(function () {
         $(window).blur(function (e) {
-            config.handleClose();
+            setTimeout(function() {
+                if (document.hasFocus()) {
+                    return;
+                }
+
+                config.handleClose();
+            }, 1000);
         });
     }, 1000);
 });
