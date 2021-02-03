@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Lib\Traits\SlugScope;
+use App\Models\Tests\TestEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -53,6 +54,7 @@ class TestSubject extends Model
         return $this->courses->pluck('id')->toArray();
     }
 
+    /** @return HasMany|TestEloquentBuilder */
     public function tests(): HasMany
     {
         return $this->hasMany(Test::class);

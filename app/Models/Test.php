@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
+use App\Models\Tests\TestEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,6 +25,8 @@ use Illuminate\Support\Carbon;
  * @property string $type
  * @property string $display_strategy
  * @property ?int $attempts_per_user
+ * @property ?int questions_count
+ * @property string|null remainingAttemptsMessage
  * @property-read Collection|\App\Models\MarkPercent[] $marksPercents
  * @property-read int|null $marks_percents_count
  * @property-read Collection|\App\Models\Question[] $nativeQuestions
@@ -33,6 +36,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $test_composites_count
  * @property-read Collection|\App\Models\TestResult[] $testResults
  * @property-read int|null $test_results_count
+ * @property-read int|null $user_results_count
  * @property-read Collection|Test[] $tests
  * @property-read int|null $tests_count
  *
@@ -152,5 +156,10 @@ class Test extends Model
     public function shouldDisplayOneByOneQuestions(): bool
     {
         return self::DISPLAY_ONE_BY_ONE === $this->display_strategy;
+    }
+
+    public function newEloquentBuilder($query): TestEloquentBuilder
+    {
+        return new TestEloquentBuilder($query);
     }
 }

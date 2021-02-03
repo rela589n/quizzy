@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Client\Tests;
 
 use App\Http\Controllers\Client\ClientController;
+use App\Lib\Words\Decliners\WordDeclinerInterface;
+use App\Lib\Words\WordsManager;
 use App\Models\TestSubject;
 use App\Repositories\TestsRepository;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class SubjectsController extends ClientController
 {
@@ -20,19 +21,14 @@ class SubjectsController extends ClientController
         ]);
     }
 
-    /**
-     * @param TestsRepository $testsRepository
-     * @return View
-     * @throws AuthorizationException
-     */
-    public function showSingleSubject(TestsRepository $testsRepository): View
+    public function showSingleSubject(TestsRepository $testsRepository)
     {
         $subject = $this->urlManager->getCurrentSubject();
         $this->authorize('pass-tests-of-subject', $subject);
 
         return view('pages.client.subjects-single', [
             'subject'        => $subject,
-            'availableTests' => $testsRepository->testsForSelectingByUser()
+            'availableTests' => $testsRepository->testsForSelectingByUser(Auth::guard('client')->user()),
         ]);
     }
 }
