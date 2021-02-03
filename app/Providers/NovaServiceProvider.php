@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Nova\Administrator;
 use App\Nova\Department;
 use App\Nova\Resource;
 use App\Nova\Student;
@@ -13,6 +14,7 @@ use DigitalCreative\CollapsibleResourceManager\CollapsibleResourceManager;
 use DigitalCreative\CollapsibleResourceManager\Resources\TopLevelResource;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Cards\Help;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 
@@ -27,9 +29,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         parent::boot();
 
-        Nova::serving(function() {
-            \App\Models\Test::observe(TestObserver::class);
-        });
+        Nova::serving(
+            function () {
+                \App\Models\Test::observe(TestObserver::class);
+            }
+        );
     }
 
     /**
@@ -107,8 +111,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                                     Department::class,
                                     StudentGroup::class,
                                     Student::class,
-                                ]
-                            ]
+                                ],
+                            ],
                         ),
                         TopLevelResource::make(
                             [
@@ -116,9 +120,17 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                                 'resources' => [
                                     TestSubject::class,
                                     Test::class,
-                                ]
-                            ]
+                                ],
+                            ],
                         ),
+                        TopLevelResource::make(
+                            [
+                                'label'     => 'Адміністратори',
+                                'resources' => [
+                                    Administrator::class,
+                                ],
+                            ],
+                        )->canSee(fn(NovaRequest $request) => $request->user()->hasRole('super-admin')),
                     ]
                 ]
             )

@@ -27,6 +27,7 @@
         "laravel/ui": "^3.0",
         "oleksiypetlyuk/nova-range-filter": "^0.0.2",
         "onnov/detect-encoding": "^1.2",
+        "optimistdigital/nova-multiselect-field": "^2.0",
         "optimistdigital/nova-multiselect-filter": "^2.0",
         "phpoffice/phpword": "^0.17.0",
         "rela589n/nova-date-time-filter": "*",

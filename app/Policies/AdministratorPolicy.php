@@ -18,7 +18,8 @@ class AdministratorPolicy
      */
     public function view(Administrator $user, Administrator $model): bool
     {
-        return $user->can('view-administrators');
+        return $user->can('view-administrators')
+            && $this->isNotSystem($model);
     }
 
     /**
@@ -30,7 +31,8 @@ class AdministratorPolicy
      */
     public function update(Administrator $user, Administrator $model): bool
     {
-        return $user->can('update-administrators');
+        return $user->can('update-administrators')
+            && $this->isNotSystem($model);
     }
 
     /**
@@ -42,7 +44,12 @@ class AdministratorPolicy
      */
     public function delete(Administrator $user, Administrator $model): bool
     {
-        return $user->can('delete-administrators');
+        return $user->can('delete-administrators')
+            && $this->isNotSystem($model);
     }
 
+    public function isNotSystem(Administrator $administrator): bool
+    {
+        return $administrator->surname !== 'system';
+    }
 }
