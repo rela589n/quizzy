@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.4",
         "ext-json": "*",
+        "benjacho/belongs-to-many-field": "^1.8",
         "caouecs/laravel-lang": "~4.0",
         "cdbeaton/boolean-tick": "dev-master",
         "davejamesmiller/laravel-breadcrumbs": "^5.3",
