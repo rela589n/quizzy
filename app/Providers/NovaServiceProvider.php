@@ -17,6 +17,7 @@ use Laravel\Nova\Cards\Help;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Mastani\NovaPasswordReset\NovaPasswordReset;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -133,7 +134,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                         )->canSee(fn(NovaRequest $request) => $request->user()->hasRole('super-admin')),
                     ]
                 ]
-            )
+            ),
+            (new NovaPasswordReset()),
         ];
     }
 

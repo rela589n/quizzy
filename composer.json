@@ -25,6 +25,7 @@
         "laravel/nova": "^3.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
+        "mastani/nova-password-reset": "^1.1",
         "oleksiypetlyuk/nova-range-filter": "^0.0.2",
         "onnov/detect-encoding": "^1.2",
         "optimistdigital/nova-multiselect-field": "^2.0",

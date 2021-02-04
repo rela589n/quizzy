@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "673244483cce5a4898341e7ae7a027a2",
+    "content-hash": "c36ec4e9cefa86b86da2b6c4650c5fc9",
     "packages": [
         {
             "name": "brick/math",
@@ -1989,6 +1989,47 @@
                 }
             ],
             "time": "2020-10-18T11:50:25+00:00"
+        },
+        {
+            "name": "mastani/nova-password-reset",
+            "version": "v1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mastani/nova-password-reset.git",
+                "reference": "115a31d60bcec927b52092a1c357ed5acc09fa6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mastani/nova-password-reset/zipball/115a31d60bcec927b52092a1c357ed5acc09fa6b",
+                "reference": "115a31d60bcec927b52092a1c357ed5acc09fa6b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mastani\\NovaPasswordReset\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mastani\\NovaPasswordReset\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Reset your nova password easily from top navigation.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "time": "2020-12-16T22:33:39+00:00"
         },
         {
             "name": "monolog/monolog",
