@@ -11,6 +11,6 @@ return [
     |
     */
 
-    'min_password_size' => 5,
+    'min_password_size' => 8,
 
 ];
