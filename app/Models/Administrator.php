@@ -9,6 +9,7 @@ use App\Models\Administrators\AdministratorsEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -99,6 +100,11 @@ class Administrator extends BaseUser
                 $q->whereName($roleName);
             }
         );
+    }
+
+    public function departments(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class, 'administrator_department');
     }
 
     public function newEloquentBuilder($query)

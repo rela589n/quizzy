@@ -11,7 +11,7 @@ final class ResultsCountReadOnly
 {
     public static function make()
     {
-        return Number::make('К-сть результатів', 'test_results_count')
+        return Number::make('К-сть проходжень', 'test_results_count')
             ->exceptOnForms()
             ->readonly();
     }

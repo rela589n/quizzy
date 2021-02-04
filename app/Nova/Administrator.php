@@ -7,6 +7,7 @@ namespace App\Nova;
 use App\Models\Administrator as AdministratorModel;
 use App\Models\Administrators\AdministratorsEloquentBuilder;
 use App\Nova\Fields\Custom\Administrator\RoleField;
+use Benjacho\BelongsToManyField\BelongsToManyField;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -61,6 +62,8 @@ final class Administrator extends Resource
                 ->updateRules('nullable', 'string', 'min:8'),
 
             RoleField::make(),
+
+            BelongsToManyField::make('Відділення', 'departments', Department::class),
 
             Number::make('Змінено пароль', 'password_changed')
                 ->exceptOnForms(),
