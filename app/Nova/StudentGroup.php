@@ -77,7 +77,8 @@ class StudentGroup extends Resource
 
             HasMany::make('Студенти', 'students', Student::class),
 
-            BelongsTo::make('Відділення', 'department', Department::class),
+            BelongsTo::make('Відділення', 'department', Department::class)
+                ->required(),
         ];
     }
 
