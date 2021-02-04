@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Models\Departments\DepartmentEloquentBuilder;
 use App\Rules\Containers\DepartmentRulesContainer;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
@@ -33,12 +34,13 @@ class Department extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder|\App\Models\Department  $query
+     * @param  DepartmentEloquentBuilder  $query
      * @return \Illuminate\Database\Eloquent\Builder|void
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->withCount('studentGroups');
+        return $query->withCount('studentGroups')
+            ->availableForAdmin($request->user());
     }
 
     /**

@@ -18,6 +18,11 @@ class DepartmentPolicy
         $this->departmentQueries = $accessibleDepartments;
     }
 
+    public function viewAny(Administrator $user): bool
+    {
+        return $user->can('view-departments');
+    }
+
     /**
      * Determine whether the user can view the student group.
      *
