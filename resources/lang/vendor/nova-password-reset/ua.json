@@ -1,0 +1,14 @@
+{
+    "Reset My Password": "Змінити пароль",
+    "Current password": "Поточний пароль",
+    "New password": "Новий пароль",
+    "Confirm password": "Підтвердіть пароль",
+    "Save Password": "Зберегти",
+    "Please correct the following error(s):": "Будь ласка, виправте наступні помилки:",
+    "novaPasswordReset.oldPasswordRequired": "Заповніть поточний пароль.",
+    "novaPasswordReset.newPasswordRequired": "Заповніть новий пароль.",
+    "novaPasswordReset.newPasswordSize": "Новий пароль повинен бути не менше :minpass символів.",
+    "novaPasswordReset.confirmPasswordRequired": "Підтвердіть будь ласка новий пароль.",
+    "novaPasswordReset.confirmPasswordSize": "Підтвердження паролю має бути не менше :minpass символів.",
+    "novaPasswordReset.success": "Пароль успішно оновлено."
+}
