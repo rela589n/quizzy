@@ -2,7 +2,9 @@
 
 namespace App\Nova;
 
+use App\Models\StudentGroups\StudentGroupEloquentBuilder;
 use App\Rules\Containers\GroupRulesContainer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
@@ -12,6 +14,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Stack;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class StudentGroup extends Resource
 {
@@ -36,6 +39,16 @@ class StudentGroup extends Resource
         parent::__construct($resource);
 
         $this->rulesContainer = app(GroupRulesContainer::class);
+    }
+
+    /**
+     * @param  NovaRequest  $request
+     * @param  StudentGroupEloquentBuilder  $query
+     * @return Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->availableForAdmin($request->user());
     }
 
     public function fields(Request $request)

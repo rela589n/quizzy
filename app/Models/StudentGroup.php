@@ -6,6 +6,7 @@ use App\Lib\Filters\Eloquent\ResultFilter;
 use App\Lib\Traits\FilteredScope;
 use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
+use App\Models\StudentGroups\StudentGroupEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -128,5 +129,10 @@ class StudentGroup extends Model
         return (new Builder(DB::query()))
             ->setModel(TestResult::newModelInstance())
             ->setQuery($query);
+    }
+
+    public function newEloquentBuilder($query): StudentGroupEloquentBuilder
+    {
+        return new StudentGroupEloquentBuilder($query);
     }
 }

@@ -10,6 +10,11 @@ class GroupPolicy
 {
     use HandlesAuthorization;
 
+    public function viewAny(Administrator $user): bool
+    {
+        return $user->can('view-groups');
+    }
+
     /**
      * Determine whether the user can view the student group.
      *
