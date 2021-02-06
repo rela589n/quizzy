@@ -89,7 +89,7 @@ class StudentGroup extends Model
      */
     public function classMonitor()
     {
-        return $this->administrator()->ofRole('class-monitor');
+        return $this->administrator()->ofRoles('class-monitor');
     }
 
     /**

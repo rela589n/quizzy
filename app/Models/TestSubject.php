@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read mixed $courses_numeric
  * @property-read Collection|Department[] $departments
  * @property-read int|null $departments_count
+ * @property-read Collection|Administrator[] $administrators
+ * @property-read int|null $administrators_count
  * @property-read mixed $department_ids
  *
  * @method static Builder|TestSubject newModelQuery()
@@ -63,6 +65,11 @@ class TestSubject extends Model
         return $this->belongsToMany(Department::class);
     }
 
+    public function administrators(): BelongsToMany
+    {
+        return $this->belongsToMany(Administrator::class, 'administrator_test_subject');
+    }
+
     public function getDepartmentIdsAttribute(): array
     {
         return $this->departments->pluck('id')->toArray();
@@ -75,6 +82,6 @@ class TestSubject extends Model
 
     public function isAvailableToAdmin(Administrator $administrator): bool
     {
-        return true;
+        return $this->administrators->find($administrator->id) !== null;
     }
 }

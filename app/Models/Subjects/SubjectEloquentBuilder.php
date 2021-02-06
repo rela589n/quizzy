@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Models\Subjects;
 
 use App\Models\Administrator;
+use App\Models\Administrators\AdministratorsEloquentBuilder;
 use App\Models\Query\CustomEloquentBuilder;
 use App\Models\TestSubject;
 use App\Models\User;
@@ -51,6 +52,9 @@ final class SubjectEloquentBuilder extends CustomEloquentBuilder
             return $this;
         }
 
-        return $this; /// todo
+        return $this->whereHas(
+            'administrators',
+            static fn(AdministratorsEloquentBuilder $builder) => $builder->where('id', $administrator->id),
+        );
     }
 }

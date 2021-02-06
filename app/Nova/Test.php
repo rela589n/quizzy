@@ -20,6 +20,7 @@ use App\Nova\Fields\Custom\Test\TestTypeField;
 use App\Nova\Fields\Custom\Test\UriAliasField;
 use Eminiarts\Tabs\Tabs;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -50,7 +51,7 @@ class Test extends Resource
     /**
      * @param  NovaRequest  $request
      * @param  TestEloquentBuilder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
@@ -63,10 +64,10 @@ class Test extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder|\App\Models\Test  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  TestEloquentBuilder  $query
+     * @return Builder
      */
-    public static function detailQuery(NovaRequest $request, $query)
+    public static function detailQuery(NovaRequest $request, $query): Builder
     {
         return $query->withCount('testResults')
             ->with('subject');

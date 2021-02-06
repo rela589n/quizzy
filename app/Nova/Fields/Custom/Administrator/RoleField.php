@@ -12,9 +12,12 @@ use Spatie\Permission\Models\Role;
 
 final class RoleField
 {
+    private static $rolesCache = null;
+
     public static function make()
     {
-        $roles = Role::query()->get(['name', 'public_name']);
+        $roles = self::$rolesCache
+            ?? (self::$rolesCache = Role::query()->get(['name', 'public_name']));
 
         return Multiselect::make('Роль', 'role')
             ->options(

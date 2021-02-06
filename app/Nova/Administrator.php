@@ -36,6 +36,9 @@ final class Administrator extends Resource
     public static function indexQuery(NovaRequest $request, $query)
     {
         return $query->where('surname', '!=', 'system')
+            ->with('roles')
+            ->with('departments')
+            ->with('testSubjects')
             ->availableToViewBy($request->user());
     }
 
@@ -64,6 +67,8 @@ final class Administrator extends Resource
             RoleField::make(),
 
             BelongsToManyField::make('Відділення', 'departments', Department::class),
+
+            BelongsToManyField::make('Предмети', 'testSubjects', TestSubject::class),
 
             Number::make('Змінено пароль', 'password_changed')
                 ->exceptOnForms(),

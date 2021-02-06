@@ -21,7 +21,7 @@ class AdministratorsRepository
     {
         $this->classMonitorFilters->setGroup($group);
 
-        $classMonitors = Administrator::ofRole('class-monitor');
+        $classMonitors = Administrator::ofRoles('class-monitor');
         $classMonitors = $classMonitors->filtered($this->classMonitorFilters);
 
         return $classMonitors;
