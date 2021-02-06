@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Models\Tests\TestEloquentBuilder;
 use App\Nova\Actions\AttachTestsQuestionsToTest;
 use App\Nova\Actions\ExportTestIntoFile;
 use App\Nova\Actions\ImportTestFromFile;
@@ -48,7 +49,7 @@ class Test extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder|\App\Models\Test  $query
+     * @param  TestEloquentBuilder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function indexQuery(NovaRequest $request, $query)
@@ -56,7 +57,8 @@ class Test extends Resource
         return $query->withCount('testResults')
             ->with('subject')
             ->with('marksPercents')
-            ->with('nativeQuestions.answerOptions');
+            ->with('nativeQuestions.answerOptions')
+            ->availableForAdmin($request->user());
     }
 
     /**

@@ -2,7 +2,9 @@
 
 namespace App\Nova;
 
+use App\Models\Subjects\SubjectEloquentBuilder;
 use App\Rules\Containers\SubjectRulesContainer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -38,9 +40,16 @@ class TestSubject extends Resource
         $this->rulesContainer = app(SubjectRulesContainer::class);
     }
 
-    public static function indexQuery(NovaRequest $request, $query)
+    /**
+     * @param  NovaRequest  $request
+     * @param  SubjectEloquentBuilder  $query
+     *
+     * @return Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query): Builder
     {
-        return $query->with(['departments', 'courses']);
+        return $query->with(['departments', 'courses'])
+            ->availableForAdmin($request->user());
     }
 
     public function fields(Request $request)

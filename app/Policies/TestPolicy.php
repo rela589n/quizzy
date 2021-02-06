@@ -10,39 +10,39 @@ class TestPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view the test.
-     *
-     * @param  Administrator  $user
-     * @param  Test  $test
-     * @return bool
-     */
+    public function create(Administrator $administrator): bool
+    {
+        return $administrator->can('create-tests');
+    }
+
+    public function viewAny(Administrator $administrator): bool
+    {
+        return $administrator->can('view-tests');
+    }
+
+    public function viewAll(Administrator $administrator): bool
+    {
+        return $administrator->can('view-all-tests');
+    }
+
     public function view(Administrator $user, Test $test): bool
     {
-        return $test->isOwnedBy($user) || $user->can('view-tests');
+        return $this->viewAll($user)
+            || ($user->can('view-tests')
+                && $test->isAvailableToAdmin($user));
     }
 
-    /**
-     * Determine whether the user can update the test.
-     *
-     * @param  Administrator  $user
-     * @param  Test  $test
-     * @return bool
-     */
     public function update(Administrator $user, Test $test): bool
     {
-        return $test->isOwnedBy($user) || $user->can('update-tests');
+        return $user->can('update-all-tests')
+            || ($user->can('update-tests')
+                && $test->isAvailableToAdmin($user));
     }
 
-    /**
-     * Determine whether the user can delete the test.
-     *
-     * @param  Administrator  $user
-     * @param  Test  $test
-     * @return bool
-     */
     public function delete(Administrator $user, Test $test): bool
     {
-        return $test->isOwnedBy($user) || $user->can('delete-tests');
+        return $user->can('delete-all-tests')
+            || ($user->can('delete-tests')
+                && $test->isAvailableToAdmin($user));
     }
 }

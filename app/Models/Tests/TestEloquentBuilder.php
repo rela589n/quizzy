@@ -5,7 +5,9 @@ declare(strict_types=1);
 
 namespace App\Models\Tests;
 
+use App\Models\Administrator;
 use App\Models\Query\CustomEloquentBuilder;
+use App\Models\Subjects\SubjectEloquentBuilder;
 use App\Models\Test;
 use App\Models\TestResult;
 use App\Models\User;
@@ -13,7 +15,7 @@ use App\Models\User;
 /** @mixin Test */
 final class TestEloquentBuilder extends CustomEloquentBuilder
 {
-    public function withUserResultsCount(User $user)
+    public function withUserResultsCount(User $user): self
     {
         return $this->withCount(
             [
@@ -23,5 +25,17 @@ final class TestEloquentBuilder extends CustomEloquentBuilder
                 }
             ]
         );
+    }
+
+    public function availableForAdmin(Administrator $administrator): self
+    {
+        if ($administrator->can('viewAll', Test::class)) {
+            return $this;
+        }
+
+        return $this->whereHas(
+            'subject',
+            static fn(SubjectEloquentBuilder $builder) => $builder->availableForAdmin($administrator)
+        )->where('created_by', $administrator->id);
     }
 }

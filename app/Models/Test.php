@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
 use App\Models\Tests\TestEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -64,7 +64,6 @@ class Test extends Model
 {
     use SoftDeletes;
     use SlugScope;
-    use OwnerChecks;
 
     public const TYPE_STANDALONE = 'standalone';
     public const TYPE_COMPOSED = 'composed';
@@ -156,6 +155,11 @@ class Test extends Model
     public function shouldDisplayOneByOneQuestions(): bool
     {
         return self::DISPLAY_ONE_BY_ONE === $this->display_strategy;
+    }
+
+    public function isAvailableToAdmin(Administrator $model): bool
+    {
+        return $model->id === $this->created_by;
     }
 
     public function newEloquentBuilder($query): TestEloquentBuilder
