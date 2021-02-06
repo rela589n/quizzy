@@ -15,13 +15,13 @@ final class DepartmentEloquentBuilder extends CustomEloquentBuilder
 {
     public function availableForAdmin(Administrator $administrator)
     {
-        if ($administrator->can('viewAny', Department::class)) {
-            return  $this;
+        if ($administrator->can('viewAll', Department::class)) {
+            return $this;
         }
 
         return $this->whereHas(
             'administrators',
-            fn(AdministratorsEloquentBuilder $query) => $query->where('id', $administrator)
-        )->dump();
+            fn(AdministratorsEloquentBuilder $query) => $query->where('id', $administrator->id)
+        );
     }
 }

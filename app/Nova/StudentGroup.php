@@ -46,9 +46,11 @@ class StudentGroup extends Resource
      * @param  StudentGroupEloquentBuilder  $query
      * @return Builder
      */
-    public static function indexQuery(NovaRequest $request, $query)
+    public static function indexQuery(NovaRequest $request, $query): Builder
     {
-        return $query->availableForAdmin($request->user());
+        return $query
+            ->with('department')
+            ->availableForAdmin($request->user());
     }
 
     public function fields(Request $request)

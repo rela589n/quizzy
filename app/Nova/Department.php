@@ -39,7 +39,9 @@ class Department extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->withCount('studentGroups')
+        return $query
+            ->with('studentGroups')
+            ->withCount('studentGroups')
             ->availableForAdmin($request->user());
     }
 

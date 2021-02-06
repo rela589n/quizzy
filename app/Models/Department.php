@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Lib\Filters\Eloquent\ResultFilter;
 use App\Lib\Traits\FilteredScope;
 use App\Models\Departments\DepartmentEloquentBuilder;
+use App\Repositories\Queries\AccessibleDepartments as AccessibleDepartmentsQuery;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -62,7 +63,13 @@ class Department extends Model
         return $this->hasMany(StudentGroup::class);
     }
 
-    public function newEloquentBuilder($query)
+    public function isAvailableForAdmin(Administrator $administrator): bool
+    {
+        return $administrator->departments->find($this->id) !== null
+            || app()->make(AccessibleDepartmentsQuery::class)->setUser($administrator)->isCreatedBy($this);
+    }
+
+    public function newEloquentBuilder($query): DepartmentEloquentBuilder
     {
         return new DepartmentEloquentBuilder($query);
     }

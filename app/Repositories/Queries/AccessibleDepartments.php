@@ -13,9 +13,11 @@ class AccessibleDepartments
 {
     protected BaseUser $user;
 
-    public function setUser(BaseUser $user): void
+    public function setUser(BaseUser $user): self
     {
         $this->user = $user;
+
+        return $this;
     }
 
     /**
@@ -31,7 +33,7 @@ class AccessibleDepartments
         );
     }
 
-    public function isAccessible(Department $department): bool
+    public function isCreatedBy(Department $department): bool
     {
         if ($department->relationLoaded('studentGroups')) {
             return $this->groupsLoadedSelector($department)

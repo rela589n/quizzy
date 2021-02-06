@@ -15,6 +15,16 @@ class GroupPolicy
         return $user->can('view-groups');
     }
 
+    public function viewAll(Administrator $user): bool
+    {
+        return $user->can('view-all-groups');
+    }
+
+    public function create(Administrator $user): bool
+    {
+        return $user->can('create-groups');
+    }
+
     /**
      * Determine whether the user can view the student group.
      *
@@ -24,7 +34,8 @@ class GroupPolicy
      */
     public function view(Administrator $user, StudentGroup $group): bool
     {
-        return $group->isOwnedBy($user) || $user->can('view-groups');
+        return $this->viewAll($user)
+            || $group->isAvailableForAdmin($user);
     }
 
     /**
@@ -36,7 +47,9 @@ class GroupPolicy
      */
     public function update(Administrator $user, StudentGroup $group): bool
     {
-        return $user->can('update-groups');
+        return $user->can('update-all-groups')
+            || ($user->can('update-groups')
+                && $group->isAvailableForAdmin($user));
     }
 
     /**
@@ -48,6 +61,8 @@ class GroupPolicy
      */
     public function delete(Administrator $user, StudentGroup $group): bool
     {
-        return $user->can('delete-groups');
+        return $user->can('delete-all-groups')
+            || ($user->can('delete-groups')
+                && $group->isAvailableForAdmin($user));
     }
 }

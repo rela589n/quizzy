@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Models\Students\StudentEloquentBuilder;
 use App\Models\User;
 use App\Nova\Filters\StudentGroupsFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,6 +12,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Student extends Resource
 {
@@ -32,6 +34,17 @@ class Student extends Resource
         'name',
         'email',
     ];
+
+    /**
+     * @param  NovaRequest  $request
+     * @param  StudentEloquentBuilder  $query
+     * @return Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->with('studentGroup.department')
+            ->availableForAdmin($request->user());
+    }
 
     public function fields(Request $request)
     {
@@ -93,11 +106,13 @@ class Student extends Resource
     public function filters(Request $request)
     {
         return [
-            new StudentGroupsFilter(function ($query, array $groupIds) {
-                /** @var Builder|Relation|User $query */
+            new StudentGroupsFilter(
+                function ($query, array $groupIds) {
+                    /** @var Builder|Relation|User $query */
 
-                $query->whereIn('student_group_id', $groupIds);
-            }),
+                    $query->whereIn('student_group_id', $groupIds);
+                }
+            ),
         ];
     }
 

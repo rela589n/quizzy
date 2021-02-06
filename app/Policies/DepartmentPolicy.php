@@ -23,6 +23,11 @@ class DepartmentPolicy
         return $user->can('view-departments');
     }
 
+    public function viewAll(Administrator $user): bool
+    {
+        return $user->can('view-all-departments');
+    }
+
     /**
      * Determine whether the user can view the student group.
      *
@@ -34,8 +39,9 @@ class DepartmentPolicy
     {
         $this->departmentQueries->setUser($user);
 
-        return $user->can('view-departments') ||
-            $this->departmentQueries->isAccessible($department);
+        return $this->viewAll($user)
+            || ($user->can('view-departments')
+                && $department->isAvailableForAdmin($user));
     }
 
     /**
@@ -47,7 +53,9 @@ class DepartmentPolicy
      */
     public function update(Administrator $user, Department $department): bool
     {
-        return $user->can('update-departments');
+        return $user->can('update-all-departments')
+            || ($user->can('update-departments')
+                && $department->isAvailableForAdmin($user));
     }
 
     /**
@@ -59,6 +67,8 @@ class DepartmentPolicy
      */
     public function delete(Administrator $user, Department $department): bool
     {
-        return $user->can('delete-departments');
+        return $user->can('delete-all-departments')
+            || ($user->can('delete-departments')
+                && $department->isAvailableForAdmin($user));
     }
 }

@@ -50,6 +50,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static Builder|Administrator whereSurname($value)
  * @method static Builder|Administrator whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read Collection|Department[] $departments
+ * @property-read int|null $departments_count
  * @property-read Collection|Permission[] $permissions
  * @property-read int|null $permissions_count
  * @property-read string|null $roles_readable
@@ -110,5 +112,14 @@ class Administrator extends BaseUser
     public function newEloquentBuilder($query)
     {
         return new AdministratorsEloquentBuilder($query);
+    }
+
+    public function canAccessGroup(StudentGroup $group): bool
+    {
+        if ($this->hasRole('class-monitor')) {
+            return $group->created_by === $this->id;
+        }
+
+        return $group->department->isAvailableForAdmin($this);
     }
 }

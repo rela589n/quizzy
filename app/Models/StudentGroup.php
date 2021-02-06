@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Lib\Filters\Eloquent\ResultFilter;
 use App\Lib\Traits\FilteredScope;
-use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
 use App\Models\StudentGroups\StudentGroupEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -57,8 +57,6 @@ class StudentGroup extends Model
     use SlugScope;
     use FilteredScope;
 
-    use OwnerChecks;
-
     public $timestamps = false;
 
     protected $fillable = ['name', 'uri_alias', 'year', 'created_by'];
@@ -102,17 +100,19 @@ class StudentGroup extends Model
     public function getCourseAttribute(): int
     {
         $started = Carbon::parse(
-            sprintf('%s-%s-%s',
+            sprintf(
+                '%s-%s-%s',
                 $this->year,
                 $this->studyStartMonth,
-                $this->studyStartDay)
+                $this->studyStartDay
+            )
         );
 
         return Carbon::now()->diffInYears($started) + 1;
     }
 
     /**
-     * @param Test $test
+     * @param  Test  $test
      * @return TestResult|Builder
      */
     public function lastResults(Test $test)
@@ -129,6 +129,16 @@ class StudentGroup extends Model
         return (new Builder(DB::query()))
             ->setModel(TestResult::newModelInstance())
             ->setQuery($query);
+    }
+
+    public function isOwnedBy(Administrator $model): bool
+    {
+        return $model->id === $this->created_by;
+    }
+
+    public function isAvailableForAdmin(Administrator $administrator): bool
+    {
+        return $administrator->canAccessGroup($this);
     }
 
     public function newEloquentBuilder($query): StudentGroupEloquentBuilder

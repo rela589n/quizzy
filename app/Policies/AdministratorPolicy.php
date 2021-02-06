@@ -48,7 +48,7 @@ class AdministratorPolicy
             && $this->isNotSystem($model);
     }
 
-    public function isNotSystem(Administrator $administrator): bool
+    private function isNotSystem(Administrator $administrator): bool
     {
         return $administrator->surname !== 'system';
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Students\StudentEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -93,5 +94,16 @@ class User extends BaseUser
     public function isOwnedBy(Model $model): bool
     {
         return $this->studentGroup->isOwnedBy($model);
+    }
+
+    public function isAvailableForAdmin(Administrator $administrator): bool
+    {
+        return $this->isOwnedBy($administrator)
+            || $this->studentGroup->isAvailableForAdmin($administrator);
+    }
+
+    public function newEloquentBuilder($query): StudentEloquentBuilder
+    {
+        return new StudentEloquentBuilder($query);
     }
 }
