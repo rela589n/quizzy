@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RedirectIfPasswordNotChanged;
 use Laravel\Nova\Actions\ActionResource;
 use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Http\Middleware\Authorize;

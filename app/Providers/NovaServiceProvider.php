@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Nova\Administrator;
+use App\Nova\Customization\LoginController;
 use App\Nova\Department;
 use App\Nova\Resource;
 use App\Nova\Student;
@@ -152,5 +153,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                 return $resource::$groupPriority ?? 99999;
             }
         );
+
+        $this->app->bind(\Laravel\Nova\Http\Controllers\LoginController::class, LoginController::class);
     }
 }
