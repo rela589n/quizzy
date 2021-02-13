@@ -50,7 +50,18 @@ class StudentGroup extends Resource
     {
         return $query
             ->with('department')
+            ->withCount('students')
             ->availableForAdmin($request->user());
+    }
+
+    /**
+     * @param  NovaRequest  $request
+     * @param  StudentGroupEloquentBuilder  $query
+     * @return Builder
+     */
+    public static function detailQuery(NovaRequest $request, $query)
+    {
+        return $query->withCount('students');
     }
 
     public function fields(Request $request)

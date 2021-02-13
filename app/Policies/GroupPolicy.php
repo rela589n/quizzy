@@ -35,7 +35,8 @@ class GroupPolicy
     public function view(Administrator $user, StudentGroup $group): bool
     {
         return $this->viewAll($user)
-            || $group->isAvailableForAdmin($user);
+            || ($user->can('view-groups')
+                && $group->isAvailableForAdmin($user));
     }
 
     /**
@@ -63,6 +64,7 @@ class GroupPolicy
     {
         return $user->can('delete-all-groups')
             || ($user->can('delete-groups')
-                && $group->isAvailableForAdmin($user));
+                && $group->isAvailableForAdmin($user)
+                && 0 === $group->students_count);
     }
 }
