@@ -14,10 +14,10 @@ final class RoleField
 {
     private static $rolesCache = null;
 
-    public static function make()
+    public static function make(Administrator $user)
     {
         $roles = self::$rolesCache
-            ?? (self::$rolesCache = Role::query()->get(['name', 'public_name']));
+            ?? (self::$rolesCache = $user->availableRolesQuery()->get(['name', 'public_name']));
 
         return Multiselect::make('Роль', 'role')
             ->options(

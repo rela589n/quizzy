@@ -97,6 +97,17 @@ class TestSubject extends Resource
         ];
     }
 
+    /**
+     * @param  NovaRequest  $request
+     * @param  Builder  $query
+     * @return Builder
+     */
+    public static function relatableQuery(NovaRequest $request, $query)
+    {
+        return parent::relatableQuery($request, $query)
+            ->availableForAdmin($request->user());
+    }
+
     public static function label()
     {
         return 'Предмети тестування';

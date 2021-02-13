@@ -117,4 +117,24 @@ class Administrator extends BaseUser
 
         return $group->department->isAvailableForAdmin($this);
     }
+
+    public function isAvailableForAdmin(Administrator $user): bool
+    {
+        return !$this->password_changed
+            && ($user->hasRole('teacher')
+            && $this->hasAnyRole(self::ROLES_FOR_TEACHER));
+    }
+
+    public function availableRolesQuery()
+    {
+        if ($this->hasRole('super-admin')) {
+            return Role::query();
+        }
+
+        if ($this->hasRole('teacher')) {
+            return Role::query()->whereIn('name', self::ROLES_FOR_TEACHER);
+        }
+
+        return Role::query()->whereRaw('0=1');
+    }
 }

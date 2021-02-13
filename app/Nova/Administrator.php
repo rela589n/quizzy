@@ -9,6 +9,7 @@ use App\Models\Administrators\AdministratorsEloquentBuilder;
 use App\Nova\Fields\Custom\Administrator\RoleField;
 use Benjacho\BelongsToManyField\BelongsToManyField;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Password;
@@ -64,17 +65,16 @@ final class Administrator extends Resource
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
 
-            RoleField::make(),
+            RoleField::make($request->user()),
 
             BelongsToManyField::make('Відділення', 'departments', Department::class),
 
             BelongsToManyField::make('Предмети', 'testSubjects', TestSubject::class),
 
-            Number::make('Змінено пароль', 'password_changed')
+            Boolean::make('Змінено пароль', 'password_changed')
                 ->exceptOnForms(),
         ];
     }
-
 
     public static function createButtonLabel()
     {

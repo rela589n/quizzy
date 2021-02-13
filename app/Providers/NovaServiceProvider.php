@@ -132,7 +132,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                                     Administrator::class,
                                 ],
                             ],
-                        )->canSee(fn(NovaRequest $request) => $request->user()->hasRole('super-admin')),
+                        ),
                     ]
                 ]
             ),

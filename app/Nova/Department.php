@@ -98,6 +98,17 @@ class Department extends Resource
         ];
     }
 
+    /**
+     * @param  NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function relatableQuery(NovaRequest $request, $query)
+    {
+        return parent::relatableQuery($request, $query)
+            ->availableForAdmin($request->user());
+    }
+
     public static function label(): string
     {
         return 'Відділення';
