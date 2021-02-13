@@ -49,6 +49,7 @@ class TestSubject extends Resource
     public static function indexQuery(NovaRequest $request, $query): Builder
     {
         return $query->with(['departments', 'courses', 'administrators'])
+            ->withCount('tests')
             ->availableForAdmin($request->user());
     }
 

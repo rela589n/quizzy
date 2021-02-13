@@ -67,6 +67,10 @@ class Administrator extends BaseUser
     use HasRoles;
     use FilteredScope;
 
+    protected $casts = [
+        'password_changed' => 'bool',
+    ];
+
     public const ROLES_FOR_TEACHER = [
         'teacher',
         'class-monitor',

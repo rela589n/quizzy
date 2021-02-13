@@ -18,7 +18,7 @@ final class LoginController extends \Laravel\Nova\Http\Controllers\LoginControll
      */
     public function redirectPath(): string
     {
-        if (!Auth::guard(config('nova.guard'))->user()->password_changed) {
+        if (false === optional($this->guard()->user())->password_changed) {
             return RouteServiceProvider::novaChangePasswordUrl();
         }
 

@@ -42,7 +42,9 @@ class SubjectPolicy
     public function delete(Administrator $user, TestSubject $testSubject): bool
     {
         return $user->can('delete-all-subjects')
-            || ($user->can('delete-subjects')
-                && $testSubject->isAvailableToAdmin($user));
+            || ($testSubject->isAvailableToAdmin($user)
+                && ($user->can('delete-subjects')
+                    || 0 === $testSubject->tests_count)
+            );
     }
 }

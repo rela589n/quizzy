@@ -82,4 +82,13 @@ class TestSubject extends Model
     {
         return $this->administrators->find($administrator->id) !== null;
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function (self $model) {
+
+            $model->administrators()->attach(request()->user()->id);
+        });
+    }
 }
