@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Nova\Administrator;
 use App\Nova\Customization\LoginController;
+use App\Nova\Customization\PasswordResetController;
 use App\Nova\Department;
 use App\Nova\Resource;
 use App\Nova\Student;
@@ -15,7 +16,6 @@ use DigitalCreative\CollapsibleResourceManager\CollapsibleResourceManager;
 use DigitalCreative\CollapsibleResourceManager\Resources\TopLevelResource;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Cards\Help;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 use Mastani\NovaPasswordReset\NovaPasswordReset;
@@ -155,5 +155,9 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         );
 
         $this->app->bind(\Laravel\Nova\Http\Controllers\LoginController::class, LoginController::class);
+        $this->app->bind(
+            \Mastani\NovaPasswordReset\Http\Controllers\PasswordResetController::class,
+            PasswordResetController::class
+        );
     }
 }
