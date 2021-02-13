@@ -11,10 +11,7 @@ use App\Services\Subjects\IncludeTestsFormManager;
 use App\Services\Tests\CreateTestService;
 use App\Services\Tests\MarkPercentsMapCollector;
 use App\Services\Tests\UpdateTestService;
-use Exception;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use Session;
 
 class TestsController extends AdminController
@@ -27,16 +24,10 @@ class TestsController extends AdminController
         $this->subjectsRepository = $subjectsRepository;
     }
 
-    /**
-     * @param  IncludeTestsFormManager  $includeTestsManager
-     * @param  MarkPercentsMapCollector  $mapCollector
-     * @return View
-     * @throws AuthorizationException
-     */
     public function showNewTestForm(
         IncludeTestsFormManager $includeTestsManager,
         MarkPercentsMapCollector $mapCollector
-    ): View {
+    ) {
         $this->authorize('create-tests');
 
         $subject = $this->urlManager->getCurrentSubject();
@@ -76,16 +67,10 @@ class TestsController extends AdminController
         );
     }
 
-    /**
-     * @param  IncludeTestsFormManager  $includeTestsManager
-     * @param  MarkPercentsMapCollector  $mapCollector
-     * @return View
-     * @throws AuthorizationException
-     */
     public function showUpdateTestForm(
         IncludeTestsFormManager $includeTestsManager,
         MarkPercentsMapCollector $mapCollector
-    ): View {
+    ) {
         $test = $this->urlManager->getCurrentTest();
         $this->authorize('update', $test);
 
@@ -133,11 +118,6 @@ class TestsController extends AdminController
         );
     }
 
-    /**
-     * @return RedirectResponse
-     * @throws AuthorizationException
-     * @throws Exception
-     */
     public function deleteTest(): RedirectResponse
     {
         $currentTest = $this->urlManager->getCurrentTest();

@@ -126,25 +126,25 @@ class Test extends Resource
         return 'Тест';
     }
 
-    public function cards(Request $request)
+    public function cards(Request $request): array
     {
         return [];
     }
 
-    public function filters(Request $request)
+    public function filters(Request $request): array
     {
         return [
             new Filters\SubjectsFilter('test_subject_id'),
         ];
     }
 
-    public function lenses(Request $request)
+    public function lenses(Request $request): array
     {
         return [
         ];
     }
 
-    public function actions(Request $request)
+    public function actions(Request $request): array
     {
         return [
             (new AttachTestsQuestionsToTest())->onlyOnIndex(),
