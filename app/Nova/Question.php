@@ -2,6 +2,8 @@
 
 namespace App\Nova;
 
+use App\Rules\AnswerOptionsRule;
+use App\Rules\AtLeastOneSelected;
 use Froala\NovaFroalaField\Froala;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -78,6 +80,7 @@ class Question extends Resource
             ...$this->fields($request),
 
             (new NestedForm('Варіант відповіді', 'answerOptions', AnswerOption::class))
+                ->rules([new AtLeastOneSelected('is_right')])
                 ->showOnDetail()
                 ->hideFromIndex()
                 ->min(2),
