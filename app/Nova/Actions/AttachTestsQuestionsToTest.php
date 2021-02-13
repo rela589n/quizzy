@@ -2,6 +2,7 @@
 
 namespace App\Nova\Actions;
 
+use App\Models\Administrator;
 use App\Models\Test;
 use App\Models\Tests\TestQueries;
 use App\Models\TestSubject;
@@ -10,6 +11,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
@@ -47,10 +49,12 @@ class AttachTestsQuestionsToTest extends Action
      *
      * @return array
      */
-    public function fields()
+    public function fields(): array
     {
-        // todo maybe filter by departments of teacher and available tests
-        $subjects = $this->queries->subjectsWithTestsToAttachQuestions();
+        /** @var Administrator $administrator */
+        $administrator = Auth::user();
+
+        $subjects = $this->queries->subjectsWithTestsToAttachQuestions($administrator);
 
         return [
             $this->createTestSubjectField($subjects),

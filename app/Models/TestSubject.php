@@ -5,8 +5,6 @@ namespace App\Models;
 use App\Lib\Traits\SlugScope;
 use App\Models\Subjects\SubjectEloquentBuilder;
 use App\Models\Tests\TestEloquentBuilder;
-use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -26,16 +24,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $administrators_count
  * @property-read mixed $department_ids
  *
- * @method static Builder|TestSubject newModelQuery()
- * @method static Builder|TestSubject newQuery()
- * @method static Builder|TestSubject query()
- * @method static Builder|TestSubject whereCourse($value)
- * @method static Builder|TestSubject whereId($value)
- * @method static Builder|TestSubject whereName($value)
- * @method static Builder|TestSubject whereUriAlias($value)
- * @method static Builder|TestSubject whereSlug($slug)
+ * @method static SubjectEloquentBuilder newModelQuery()
+ * @method static SubjectEloquentBuilder newQuery()
+ * @method static SubjectEloquentBuilder query()
+ * @method static SubjectEloquentBuilder whereCourse($value)
+ * @method static SubjectEloquentBuilder whereId($value)
+ * @method static SubjectEloquentBuilder whereName($value)
+ * @method static SubjectEloquentBuilder whereUriAlias($value)
+ * @method static SubjectEloquentBuilder whereSlug($slug)
  *
- * @mixin Eloquent
+ * @mixin SubjectEloquentBuilder
  */
 class TestSubject extends Model
 {

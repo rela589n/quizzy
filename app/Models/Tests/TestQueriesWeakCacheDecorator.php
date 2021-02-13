@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Models\Tests;
 
+use App\Models\Administrator;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -19,13 +20,13 @@ final class TestQueriesWeakCacheDecorator implements TestQueries
         $this->cache = $cache;
     }
 
-    public function subjectsWithTestsToAttachQuestions(): Collection
+    public function subjectsWithTestsToAttachQuestions(Administrator $administrator): Collection
     {
         return $this->cache->remember(
-            __METHOD__,
+            __METHOD__.$administrator->id,
             10,
-            function () {
-                return $this->queries->subjectsWithTestsToAttachQuestions();
+            function () use ($administrator) {
+                return $this->queries->subjectsWithTestsToAttachQuestions($administrator);
             }
         );
     }
