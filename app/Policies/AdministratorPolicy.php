@@ -51,6 +51,12 @@ class AdministratorPolicy
             && $user->id !== $model->id;
     }
 
+    public function forceDelete(Administrator $user, Administrator $model): bool
+    {
+        return $user->can('delete-all-administrators')
+            && $this->isNotSystem($model);
+    }
+
     private function isNotSystem(Administrator $administrator): bool
     {
         return $administrator->surname !== 'system';
