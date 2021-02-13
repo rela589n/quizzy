@@ -10,6 +10,7 @@ use App\Models\Test;
 use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\JoinClause;
 
 /** @mixin TestResult */
 class TestResultQueryBuilder extends Builder
@@ -71,5 +72,22 @@ class TestResultQueryBuilder extends Builder
     public function whereMarkPercentAtMost(float $max): self
     {
         return $this->whereRaw("test_result_in_percents(test_results.id) <= $max");
+    }
+
+    public function lastResultsByEachUser(): self
+    {
+        $innerQuery = (clone $this)
+            ->reorder()
+            ->select('user_id')
+            ->selectRaw('max(created_at) as last_passage_at')
+            ->groupBy('user_id');
+
+        return $this
+            ->joinSub(
+                $innerQuery,
+                'recent_passage',
+                fn(JoinClause $join) => $join->on('test_results.user_id', '=', 'recent_passage.user_id')
+                    ->on('test_results.created_at', '=', 'recent_passage.last_passage_at')
+            );
     }
 }
