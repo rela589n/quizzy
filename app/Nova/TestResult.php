@@ -9,6 +9,7 @@ use App\Models\StudentGroups\StudentGroupEloquentBuilder;
 use App\Models\Students\StudentEloquentBuilder;
 use App\Models\TestResult as TestResultModel;
 use App\Models\TestResults\TestResultQueryBuilder;
+use App\Nova\Actions\DownloadTestResultReport;
 use App\Nova\Filters\FromTimestampFilter;
 use App\Nova\Filters\StudentGroupsFilter;
 use App\Nova\Filters\TestResultMarksFilter;
@@ -169,7 +170,9 @@ final class TestResult extends Resource
 
     public function actions(Request $request)
     {
-        return [];
+        return [
+            (new DownloadTestResultReport())->canRun(static fn() => true),
+        ];
     }
 
     private function additionalFilters(Request $request): array
