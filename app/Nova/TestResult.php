@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Nova;
 
+use App\Models\StudentGroup as StudentGroupModel;
+use App\Models\StudentGroups\StudentGroupEloquentBuilder;
+use App\Models\Students\StudentEloquentBuilder;
 use App\Models\TestResult as TestResultModel;
 use App\Models\TestResults\TestResultQueryBuilder;
 use App\Nova\Filters\FromTimestampFilter;
@@ -134,7 +137,24 @@ final class TestResult extends Resource
                         'user',
                         fn($userQuery) => $userQuery->whereIn('student_group_id', $groupIds)
                     );
-                }
+                },
+                StudentGroupModel::query()
+                    ->when(
+                        'tests' === $request->get('viaResource'),
+                        fn(StudentGroupEloquentBuilder $query) => $query->whereHas(
+                            'students',
+                            function ($studentQuery) use ($request) {
+                                /** @var StudentEloquentBuilder $studentQuery */
+                                return $studentQuery->whereHas(
+                                    'testResults',
+                                    function ($testResultsQuery) use ($request) {
+                                        /** @var TestResultQueryBuilder $testResultsQuery */
+                                        $testResultsQuery->where('test_id', $request->get('viaResourceId'));
+                                    },
+                                );
+                            },
+                        ),
+                    ),
             ),
             new FromTimestampFilter('created_at', 'Дата від'),
             new ToTimestampFilter('created_at', 'Дата до'),

@@ -13,9 +13,12 @@ class StudentGroupsFilter extends BooleanFilter
 
     private \Closure $queryBuilder;
 
-    public function __construct(\Closure $queryBuilder)
+    private $initialQuery;
+
+    public function __construct(\Closure $queryBuilder, $initialQuery = null)
     {
         $this->queryBuilder = $queryBuilder;
+        $this->initialQuery = $initialQuery ?? StudentGroup::query();
     }
 
     /**
@@ -43,7 +46,7 @@ class StudentGroupsFilter extends BooleanFilter
      */
     public function options(Request $request): array
     {
-        return StudentGroup::query()
+        return $this->initialQuery
             ->availableForAdmin($request->user())
             ->orderByDesc('name')
             ->get(['name', 'id'])
