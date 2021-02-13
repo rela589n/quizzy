@@ -64,7 +64,7 @@ abstract class Resource extends NovaResource
 
     public static function redirectAfterCreate(NovaRequest $request, $resource): string
     {
-        if (static::$redirectToParentOnCreate && $request->has('viaResource')) {
+        if (static::$redirectToParentOnCreate && $request->viaRelationship()) {
             return "/resources/{$request->get('viaResource')}/{$request->get('viaResourceId')}";
         }
 
@@ -73,7 +73,7 @@ abstract class Resource extends NovaResource
 
     public static function redirectAfterUpdate(NovaRequest $request, $resource): string
     {
-        if (static::$redirectToParentOnUpdate && $request->has('viaResource')) {
+        if (static::$redirectToParentOnUpdate && $request->viaRelationship()) {
             return "/resources/{$request->get('viaResource')}/{$request->get('viaResourceId')}";
         }
 
