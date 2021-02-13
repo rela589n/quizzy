@@ -45,10 +45,6 @@ class GroupStatementsGenerator extends StatementsGenerator
         $this->filePathGenerator->setGroup($group);
     }
 
-    /**
-     * @param  Test  $test
-     * @throws BindingResolutionException
-     */
     public function setTest(Test $test): void
     {
         $this->test = $test;
