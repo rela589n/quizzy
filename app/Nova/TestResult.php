@@ -10,6 +10,7 @@ use App\Models\Students\StudentEloquentBuilder;
 use App\Models\TestResult as TestResultModel;
 use App\Models\TestResults\TestResultQueryBuilder;
 use App\Nova\Actions\DownloadTestResultReport;
+use App\Nova\Actions\DownloadTestResultsGroupReport;
 use App\Nova\Filters\FromTimestampFilter;
 use App\Nova\Filters\StudentGroupsFilter;
 use App\Nova\Filters\TestResultMarksFilter;
@@ -172,6 +173,7 @@ final class TestResult extends Resource
     {
         return [
             (new DownloadTestResultReport())->canRun(static fn() => true),
+            (new DownloadTestResultsGroupReport())->canRun(static fn() => true),
         ];
     }
 
