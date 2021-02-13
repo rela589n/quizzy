@@ -15,6 +15,8 @@ class TestResultMarksFilter extends NovaRangeFilter
 {
     private MarkEvaluator $markEvaluator;
 
+    public $name = 'Оцінки';
+
     public function __construct(int $testId)
     {
         $this->markEvaluator = app(MarkEvaluatorsFactory::class)
