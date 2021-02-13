@@ -44,6 +44,7 @@ class StudentGroupsFilter extends BooleanFilter
     public function options(Request $request): array
     {
         return StudentGroup::query()
+            ->availableForAdmin($request->user())
             ->orderByDesc('name')
             ->get(['name', 'id'])
             ->flatMap(

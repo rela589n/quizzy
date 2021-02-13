@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\DB;
  * @method static Builder|StudentGroup whereYear($value)
  * @method static \Illuminate\Database\Query\Builder|StudentGroup withTrashed()
  * @method static \Illuminate\Database\Query\Builder|StudentGroup withoutTrashed()
- * @mixin Eloquent
+ * @mixin StudentGroupEloquentBuilder
  * @property-read int $course
  * @property int|null $created_by
  * @method static Builder|StudentGroup whereCreatedBy($value)

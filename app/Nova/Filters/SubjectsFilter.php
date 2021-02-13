@@ -40,7 +40,8 @@ class SubjectsFilter extends Filter
      */
     public function options(Request $request)
     {
-        return TestSubject::query()->availableForAdmin($request->user())
+        return TestSubject::query()
+            ->availableForAdmin($request->user())
             ->get(['name', 'id'])
             ->mapWithKeys(fn(TestSubject $subject) => [$subject->name => $subject->id])
             ->toArray();
