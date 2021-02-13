@@ -11,7 +11,6 @@ use Benjacho\BelongsToManyField\BelongsToManyField;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -45,6 +44,8 @@ final class Administrator extends Resource
 
     public function fields(Request $request)
     {
+        $showcallback = fn() => $request->user()->id !== $this->resource->id;
+
         return [
             ID::make(),
 
@@ -63,13 +64,17 @@ final class Administrator extends Resource
             Password::make('Пароль', 'password')
                 ->onlyOnForms()
                 ->creationRules('required', 'string', 'min:8')
-                ->updateRules('nullable', 'string', 'min:8'),
+                ->updateRules('nullable', 'string', 'min:8')
+                ->showOnUpdating($showcallback),
 
-            RoleField::make($request->user()),
+            RoleField::make($request->user())
+                ->showOnUpdating($showcallback),
 
-            BelongsToManyField::make('Відділення', 'departments', Department::class),
+            BelongsToManyField::make('Відділення', 'departments', Department::class)
+                ->showOnUpdating($showcallback),
 
-            BelongsToManyField::make('Предмети', 'testSubjects', TestSubject::class),
+            BelongsToManyField::make('Предмети', 'testSubjects', TestSubject::class)
+                ->showOnUpdating($showcallback),
 
             Boolean::make('Змінено пароль', 'password_changed')
                 ->exceptOnForms(),

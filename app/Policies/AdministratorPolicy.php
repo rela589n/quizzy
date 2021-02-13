@@ -26,18 +26,20 @@ class AdministratorPolicy
 
     public function view(Administrator $user, Administrator $model): bool
     {
-        return ($this->viewAll($user)
-                || ($user->can('view-administrators')
-                    && $model->isAvailableForAdmin($user)))
-            && $this->isNotSystem($model);
+        return (($this->viewAll($user)
+                    || ($user->can('view-administrators')
+                        && $model->isAvailableForAdmin($user)))
+                && $this->isNotSystem($model))
+            || $user->id === $model->id;
     }
 
     public function update(Administrator $user, Administrator $model): bool
     {
-        return ($user->can('update-all-administrators')
-                || ($user->can('update-administrators')
-                    && $model->isAvailableForAdmin($user)))
-            && $this->isNotSystem($model);
+        return (($user->can('update-all-administrators')
+                    || ($user->can('update-administrators')
+                        && $model->isAvailableForAdmin($user)))
+                && $this->isNotSystem($model))
+            || $user->id === $model->id;
     }
 
     public function delete(Administrator $user, Administrator $model): bool
@@ -45,7 +47,8 @@ class AdministratorPolicy
         return ($user->can('delete-all-administrators')
                 || ($user->can('delete-administrators')
                     && $model->isAvailableForAdmin($user)))
-            && $this->isNotSystem($model);
+            && $this->isNotSystem($model)
+            && $user->id !== $model->id;
     }
 
     private function isNotSystem(Administrator $administrator): bool
