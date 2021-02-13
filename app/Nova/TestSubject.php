@@ -53,6 +53,17 @@ class TestSubject extends Resource
             ->availableForAdmin($request->user());
     }
 
+    /**
+     * @param  NovaRequest  $request
+     * @param  SubjectEloquentBuilder  $query
+     *
+     * @return Builder
+     */
+    public static function detailQuery(NovaRequest $request, $query)
+    {
+        return $query->withCount('tests');
+    }
+
     public function fields(Request $request)
     {
         $creationRules = $this->rulesContainer->getRules();
