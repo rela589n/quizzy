@@ -10,6 +10,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /** @mixin \Illuminate\Database\Eloquent\Builder */
 final class CustomBuilder extends Builder
@@ -130,7 +131,7 @@ final class CustomBuilder extends Builder
     }
 
     /**
-     * @param  \Closure|\Illuminate\Database\Query\Builder|string  $query
+     * @param  \Closure|Builder|string  $query
      * @param  string  $as
      *
      * @return $this
@@ -142,5 +143,49 @@ final class CustomBuilder extends Builder
         }
 
         return $this->selectSub($query, $as);
+    }
+
+    public function toDumpSql()
+    {
+        $query = str_replace(['?'], ['\'%s\''], $this->toSql());
+        $query = vsprintf($query, $this->getBindings());
+
+        return  $query;
+    }
+
+    public function dumpSql(): void
+    {
+        dump($this->toDumpSql());
+    }
+
+    /**
+     * @param  string|null  $as
+     *
+     * @return self
+     */
+    public function wrapOut(string $as = null)
+    {
+        $as = $as ?? Str::random(12);
+
+        $inner = clone $this;
+        $this->resetPropertiesToDefault();
+
+        return $this->fromSub($inner, $as);
+    }
+
+    private function resetPropertiesToDefault()
+    {
+        $blankInstance = $this->newQuery();
+        $reflBlankInstance = new \ReflectionClass($blankInstance);
+        foreach ($reflBlankInstance->getProperties() as $prop) {
+
+            if ($prop->isStatic()) {
+                continue;
+            }
+
+            $prop->setAccessible(true);
+
+            $this->{$prop->name} = $prop->getValue($blankInstance);
+        }
     }
 }
