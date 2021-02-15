@@ -18,6 +18,8 @@ class DownloadTestResultsGroupReport extends Action
 
     public $standalone = true;
 
+    public $onlyOnIndex = true;
+
     public $name = 'Звіт по групі згідно фільтрів';
 
     private ActionRequest $request;
