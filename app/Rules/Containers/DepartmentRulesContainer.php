@@ -4,24 +4,16 @@
 namespace App\Rules\Containers;
 
 
-use App\Rules\UriSlug;
+use App\Rules\Containers\Department\DepartmentNameRules;
+use App\Rules\Containers\Department\DepartmentUriSlugRules;
 
 final class DepartmentRulesContainer
 {
     public function getRules(): array
     {
         return [
-            'name'      => [
-                'required',
-                'min:4',
-                'max:128'
-            ],
-            'uri_alias' => [
-                'required',
-                'min:4',
-                'max:64',
-                new UriSlug()
-            ],
+            'name'      => new DepartmentNameRules(),
+            'uri_alias' => new DepartmentUriSlugRules(),
         ];
     }
 }

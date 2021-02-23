@@ -26,6 +26,9 @@ final class UpdateDepartmentRequest extends FormRequest
         $rules['uri_alias'][] = Rule::unique('departments')
             ->ignoreModel($urlManager->getCurrentDepartment());
 
+        $rules['name'][] = Rule::unique('departments')
+            ->ignoreModel($urlManager->getCurrentDepartment());
+
         return $rules;
     }
 }

@@ -3,7 +3,10 @@
 namespace App\Nova;
 
 use App\Models\Departments\DepartmentEloquentBuilder;
+use App\Rules\Containers\Department\DepartmentNameRules;
+use App\Rules\Containers\Department\DepartmentUriSlugRules;
 use App\Rules\Containers\DepartmentRulesContainer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -35,7 +38,7 @@ class Department extends Resource
     /**
      * @param  NovaRequest  $request
      * @param  DepartmentEloquentBuilder  $query
-     * @return \Illuminate\Database\Eloquent\Builder|void
+     * @return Builder|void
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
@@ -47,8 +50,8 @@ class Department extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder|\App\Models\Department  $query
-     * @return \Illuminate\Database\Eloquent\Builder|void
+     * @param  Builder|\App\Models\Department  $query
+     * @return Builder|void
      */
     public static function detailQuery(NovaRequest $request, $query)
     {
@@ -57,14 +60,6 @@ class Department extends Resource
 
     public function fields(Request $request): array
     {
-        $rulesContainer = app(DepartmentRulesContainer::class);
-
-        $creationRules = $rulesContainer->getRules();
-        $updateRules = $rulesContainer->getRules();
-
-        $creationRules['uri_alias'][] = 'unique:departments,uri_alias';
-        $updateRules['uri_alias'][] = 'unique:departments,uri_alias,{{resourceId}}';
-
         return [
             ID::make(__('ID'), 'id')
                 ->sortable(),
@@ -78,15 +73,15 @@ class Department extends Resource
             )->sortable(),
 
             Text::make('Назва', 'name')
-                ->creationRules($creationRules['name'])
-                ->updateRules($updateRules['name'])
+                ->creationRules(DepartmentNameRules::forCreate())
+                ->updateRules(DepartmentNameRules::forUpdate())
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
             Slug::make('Uri-псевдонім', 'uri_alias')
                 ->from('name')
-                ->creationRules($creationRules['uri_alias'])
-                ->updateRules($updateRules['uri_alias'])
+                ->creationRules(DepartmentUriSlugRules::forCreate())
+                ->updateRules(DepartmentUriSlugRules::forUpdate())
                 ->hideFromDetail()
                 ->hideFromIndex(),
 
@@ -100,8 +95,8 @@ class Department extends Resource
 
     /**
      * @param  NovaRequest  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public static function relatableQuery(NovaRequest $request, $query)
     {
