@@ -66,4 +66,10 @@ class StudentPolicy
             || ($user->can('delete-students')
                 && $model->isAvailableForAdmin($user));
     }
+
+    public function promoteToClassMonitor(Administrator $user, User $model): bool
+    {
+        return $user->can('make-student-class-monitor')
+            && $user->can('update', $model);
+    }
 }
