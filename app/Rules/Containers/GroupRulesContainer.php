@@ -35,6 +35,7 @@ final class GroupRulesContainer
 
         $rules['year'][] = 'min:'.min(date('Y') - 4, $group->year);
         $rules['uri_alias']['uniqueness']->ignoreModel($group);
+        $rules['name']['uniqueness']->ignoreModel($group);
 
         return $rules;
     }
@@ -53,7 +54,7 @@ final class GroupRulesContainer
                 'required',
                 'min:4',
                 'max:32',
-                'unique:'.StudentGroup::class,
+                'uniqueness' => new Unique('student_groups'),
             ],
             'created_by' => [
                 'sometimes',
