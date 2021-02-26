@@ -3,7 +3,9 @@
 namespace App\Nova;
 
 use App\Models\StudentGroups\StudentGroupEloquentBuilder;
-use App\Rules\Containers\GroupRulesContainer;
+use App\Rules\Containers\Group\GroupNameRules;
+use App\Rules\Containers\Group\GroupUriSlugRules;
+use App\Rules\Containers\Group\GroupYearRules;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -31,15 +33,6 @@ class StudentGroup extends Resource
         'name',
         'uri_alias',
     ];
-
-    private GroupRulesContainer $rulesContainer;
-
-    public function __construct($resource)
-    {
-        parent::__construct($resource);
-
-        $this->rulesContainer = app(GroupRulesContainer::class);
-    }
 
     /**
      * @param  NovaRequest  $request
@@ -76,11 +69,6 @@ class StudentGroup extends Resource
 
     public function fields(Request $request)
     {
-        $creationRules = $this->rulesContainer->creationRules();
-        $updateRules = $this->rulesContainer->creationRules();///todo
-
-        $updateRules['uri_alias'][] = 'unique:student_groups,uri_alias,{{resourceId}}';
-
         return [
             ID::make(__('ID'), 'id')
                 ->sortable(),
@@ -94,20 +82,20 @@ class StudentGroup extends Resource
             )->sortable(),
 
             Number::make('Рік вступу', 'year')
-                ->creationRules($creationRules['year'])
-                ->updateRules($updateRules['year'])
+                ->creationRules(GroupYearRules::forCreate())
+                ->updateRules(GroupYearRules::forUpdate())
                 ->sortable(),
 
             Text::make('Назва', 'name')
-                ->creationRules($creationRules['name'])
-                ->updateRules($updateRules['name'])
+                ->creationRules(GroupNameRules::forCreate())
+                ->updateRules(GroupNameRules::forUpdate())
                 ->hideFromIndex()
                 ->hideFromDetail(),
 
             Slug::make('Uri-псевдонім', 'uri_alias')
                 ->from('name')
-                ->creationRules($creationRules['uri_alias'])
-                ->updateRules($updateRules['uri_alias'])
+                ->creationRules(GroupUriSlugRules::forCreate())
+                ->updateRules(GroupUriSlugRules::forUpdate())
                 ->hideFromIndex()
                 ->hideFromDetail(),
 

@@ -7,9 +7,11 @@ namespace App\Rules\Containers;
 use App\Http\Requests\RequestUrlManager;
 use App\Models\Administrator;
 use App\Models\StudentGroup;
+use App\Rules\Containers\Group\GroupNameRules;
+use App\Rules\Containers\Group\GroupUriSlugRules;
+use App\Rules\Containers\Group\GroupYearRules;
 use App\Rules\UriSlug;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Validation\Rules\Unique;
 
 final class GroupRulesContainer
 {
@@ -24,7 +26,7 @@ final class GroupRulesContainer
     {
         $rules = $this->commonRules();
 
-        $rules['year'][] = 'min:'.(date('Y') - 4);
+        $rules['year'][] = GroupYearRules::forCreate();
 
         return $rules;
     }
@@ -43,19 +45,8 @@ final class GroupRulesContainer
     public function commonRules(): array
     {
         return [
-            'uri_alias'  => [
-                'required',
-                'min:4',
-                'max:32',
-                new UriSlug(),
-                'uniqueness' => new Unique('student_groups'),
-            ],
-            'name'       => [
-                'required',
-                'min:4',
-                'max:32',
-                'uniqueness' => new Unique('student_groups'),
-            ],
+            'uri_alias'  => (GroupUriSlugRules::forCreate())->build(),
+            'name'       => (GroupNameRules::forCreate())->build(),
             'created_by' => [
                 'sometimes',
                 'nullable',
@@ -63,11 +54,7 @@ final class GroupRulesContainer
                 'min:1',
                 "exists:".Administrator::class.",id",
             ],
-            'year'       => [
-                'required',
-                'numeric',
-                'max:'.date('Y'),
-            ],
+            'year'       => (new GroupYearRules())->build(),
         ];
     }
 
