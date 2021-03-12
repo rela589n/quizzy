@@ -14,8 +14,8 @@ final class AdditionalQuestionsRelationField
 {
     public static function make()
     {
-        return BelongsToMany::make('Тести для додаткових запитань', 'tests', Test::class)
-            ->singularLabel('Тест для додаткових запитань')
+        return BelongsToMany::make('Вибірка запитань', 'tests', Test::class)
+            ->singularLabel('Вибірку запитань')
             ->fields(
                 fn() => [
                     Number::make('К-сть Запитань', 'questions_quantity')

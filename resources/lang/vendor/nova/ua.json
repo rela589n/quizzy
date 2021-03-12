@@ -38,7 +38,7 @@
     "Are you sure you want to force delete the selected resources?": "Ви впевнені, що хочете примусово видалити вибрані ресурси?",
     "Are you sure you want to restore this resource?": "Ви впевнені, що хочете відновити цей ресурс?",
     "Are you sure you want to restore the selected resources?": "Ви впевнені, що хочете відновити вибрані ресурси?",
-    "No :resource matched the given criteria.": "Немає :resource, що відповідає заданим критеріям.",
+    "No :resource matched the given criteria.": "Немає записів, що відповідають заданим критеріям.",
     "Another user has updated this resource since this page was loaded. Please refresh the page and try again.": "Інший користувач оновив цей ресурс, відколи ця сторінка була завантажена. Будь ласка, поновіть сторінку і спробуйте знову.",
     "Are you sure you want to delete this file?": "Ви впевнені, що хочете видалити цей файл?",
     "Are you sure you want to run this action?": "Ви впевнені, що хочете виконати цю дію?",
