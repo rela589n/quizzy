@@ -15,6 +15,9 @@ use App\Nova\Filters\FromTimestampFilter;
 use App\Nova\Filters\StudentGroupsFilter;
 use App\Nova\Filters\TestResultMarksFilter;
 use App\Nova\Filters\ToTimestampFilter;
+use App\Nova\Metrics\AverageMark;
+use App\Nova\Metrics\LastMark;
+use App\Nova\Metrics\MarkTrend;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -125,7 +128,11 @@ final class TestResult extends Resource
 
     public function cards(Request $request)
     {
-        return [];
+        return [
+            new MarkTrend(),
+            new AverageMark(),
+            new LastMark(),
+        ];
     }
 
     public function filters(Request $request): array

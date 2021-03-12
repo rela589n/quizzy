@@ -36,6 +36,13 @@ class TestResultQueryBuilder extends Builder
         );
     }
 
+    public function ofUser($user): self
+    {
+        $userId = is_numeric($user) ? $user : $user->id;
+
+        return $this->where('user_id', $userId);
+    }
+
     public function recent($count): self
     {
         return $this->latest()->limit($count);

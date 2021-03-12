@@ -2,15 +2,16 @@
 
 namespace App\Nova\Metrics;
 
-use App\Models\User;
+use App\Models\TestResult;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 use Laravel\Nova\Metrics\ValueResult;
 
-class UsersCount extends Value
+class AverageMark extends Value
 {
-    public $width = '1/4';
-    public $name = 'Кількість студентів';
+    public $name = 'Середня оцінка';
+
+    public $onlyOnDetail = true;
 
     /**
      * Calculate the value of the metric.
@@ -18,9 +19,15 @@ class UsersCount extends Value
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
-    public function calculate(NovaRequest $request)
+    public function calculate(NovaRequest $request, TestResult $result)
     {
-        return new ValueResult(User::query()->count());
+        $results = TestResult::query()
+            ->ofTest($result->test_id)
+            ->ofUser($result->user_id)
+            ->withResultPercents()
+            ->get();
+
+        return new ValueResult($results->average(static fn(TestResult $r) => $r->result_mark));
     }
 
     /**
@@ -31,15 +38,5 @@ class UsersCount extends Value
     public function cacheFor()
     {
         // return now()->addMinutes(5);
-    }
-
-    /**
-     * Get the URI key for the metric.
-     *
-     * @return string
-     */
-    public function uriKey()
-    {
-        return 'users-count';
     }
 }

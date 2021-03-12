@@ -6,6 +6,8 @@ use App\Nova\Administrator;
 use App\Nova\Customization\LoginController;
 use App\Nova\Customization\PasswordResetController;
 use App\Nova\Department;
+use App\Nova\Metrics\AverageMark;
+use App\Nova\Metrics\TestsCount;
 use App\Nova\Metrics\UsersCount;
 use App\Nova\Resource;
 use App\Nova\Student;
@@ -82,7 +84,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     protected function cards()
     {
         return [
-            new UsersCount()
+            new UsersCount(),
+            new TestsCount(),
 //            new Help,
         ];
     }

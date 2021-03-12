@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace App\Nova\Metrics;
 
-use App\Models\User;
+use App\Models\Test;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Metrics\Value;
 use Laravel\Nova\Metrics\ValueResult;
 
-class UsersCount extends Value
+final class TestsCount extends Value
 {
     public $width = '1/4';
-    public $name = 'Кількість студентів';
+    public $name = 'Кількість тестів';
 
     /**
      * Calculate the value of the metric.
@@ -20,7 +23,7 @@ class UsersCount extends Value
      */
     public function calculate(NovaRequest $request)
     {
-        return new ValueResult(User::query()->count());
+        return new ValueResult(Test::query()->count());
     }
 
     /**
@@ -40,6 +43,6 @@ class UsersCount extends Value
      */
     public function uriKey()
     {
-        return 'users-count';
+        return 'tests-count';
     }
 }
