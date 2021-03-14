@@ -11,19 +11,13 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\File;
+use Webmozart\Assert\Assert;
 
 class ImportTestFromFile extends Action
 {
     use InteractsWithQueue, Queueable;
 
     public $name = 'Імпорт';
-
-    private TestImportService $importer;
-
-    public function __construct()
-    {
-        $this->importer = resolve(TestImportService::class);
-    }
 
     /**
      * Perform the action on the given models.
@@ -34,9 +28,14 @@ class ImportTestFromFile extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
+        Assert::count($models, 1);
+
         /** @var UploadedFile $file */
         $file = $fields->get('file');
-        $this->importer->importFile($file);
+
+        $importer = new TestImportService($models->first());
+
+        $importer->importFile($file);
     }
 
     /**
