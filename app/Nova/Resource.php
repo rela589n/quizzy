@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource as NovaResource;
@@ -12,7 +13,7 @@ abstract class Resource extends NovaResource
     protected static bool $redirectToParentOnCreate = false;
     protected static bool $redirectToParentOnUpdate = false;
 
-    protected static array $defaultOrder = [];
+    protected static array $defaultOrderings = [];
 
     /**
      * Build an "index" query for the given resource.
@@ -92,10 +93,15 @@ abstract class Resource extends NovaResource
         return __('Редагувати :resource', ['resource' => mb_lcfirst(static::singularLabel())]);
     }
 
-    protected static function applyOrderings($query, array $orderings): Builder
+    /**
+     * @param  Builder|Relation|mixed  $query
+     * @param  array  $orderings
+     * @return Builder|Relation|mixed
+     */
+    protected static function applyOrderings($query, array $orderings)
     {
-        if (empty($orderings) && !empty(static::$defaultOrder)) {
-            $orderings = static::$defaultOrder;
+        if (empty($orderings) && !empty(static::$defaultOrderings)) {
+            $orderings = static::$defaultOrderings;
         }
 
         return parent::applyOrderings($query, $orderings);

@@ -37,7 +37,7 @@ class Student extends Resource
         'email',
     ];
 
-    protected static array $defaultOrder = [
+    protected static array $defaultOrderings = [
         'surname'    => 'asc',
         'name'       => 'asc',
         'patronymic' => 'asc',
