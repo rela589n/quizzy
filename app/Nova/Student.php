@@ -37,6 +37,12 @@ class Student extends Resource
         'email',
     ];
 
+    protected static array $defaultOrder = [
+        'surname'    => 'asc',
+        'name'       => 'asc',
+        'patronymic' => 'asc',
+    ];
+
     /**
      * @param  NovaRequest  $request
      * @param  StudentEloquentBuilder  $query
@@ -53,11 +59,11 @@ class Student extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Ім\'я', 'name')
+            Text::make('Фамілія', 'surname')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Фамілія', 'surname')
+            Text::make('Ім\'я', 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 

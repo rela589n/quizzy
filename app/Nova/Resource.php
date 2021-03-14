@@ -12,6 +12,8 @@ abstract class Resource extends NovaResource
     protected static bool $redirectToParentOnCreate = false;
     protected static bool $redirectToParentOnUpdate = false;
 
+    protected static array $defaultOrder = [];
+
     /**
      * Build an "index" query for the given resource.
      *
@@ -88,5 +90,14 @@ abstract class Resource extends NovaResource
     public static function updateButtonLabel()
     {
         return __('Редагувати :resource', ['resource' => mb_lcfirst(static::singularLabel())]);
+    }
+
+    protected static function applyOrderings($query, array $orderings): Builder
+    {
+        if (empty($orderings) && !empty(static::$defaultOrder)) {
+            $orderings = static::$defaultOrder;
+        }
+
+        return parent::applyOrderings($query, $orderings);
     }
 }
