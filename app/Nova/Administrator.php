@@ -59,7 +59,9 @@ final class Administrator extends Resource
                 ->rules('required'),
 
             Text::make(__('Email'), 'email')
-                ->rules('required', 'email', 'max:254'),
+                ->rules('required', 'email', 'max:254')
+                ->creationRules('unique:administrators,email')
+                ->updateRules('unique:administrators,email,{{resourceId}}'),
 
             Password::make('Пароль', 'password')
                 ->onlyOnForms()
