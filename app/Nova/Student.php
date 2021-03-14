@@ -4,10 +4,13 @@ namespace App\Nova;
 
 use App\Models\Students\StudentEloquentBuilder;
 use App\Models\User;
+use App\Nova\Actions\PromoteStudentToClassMonitor;
 use App\Nova\Filters\StudentGroupsFilter;
+use App\Repositories\StudentGroupsRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
@@ -25,7 +28,10 @@ class Student extends Resource
 
     public static $perPageViaRelationship = 40;
 
-    public static $model = \App\Models\User::class;
+    public static $model = User::class;
+
+    /** @var User */
+    public $resource;
 
     public static $with = ['studentGroup'];
 
@@ -131,6 +137,20 @@ class Student extends Resource
 
     public function actions(Request $request)
     {
+        /** @var NovaRequest $request */
+
+        if (($request->viaRelationship() &&
+                $request->viaResource() === StudentGroup::class)
+            || Str::of($request->header('referer'))
+                ->contains('student-groups')) {
+            return [
+                new PromoteStudentToClassMonitor(
+                    app()->make(StudentGroupsRepository::class)
+                        ->findById((int)$request->get('viaResourceId'))
+                ),
+            ];
+        }
+
         return [];
     }
 }

@@ -26,6 +26,7 @@ use App\Models\Tests\TestQueries;
 use App\Models\Tests\TestQueriesImpl;
 use App\Models\Tests\TestQueriesWeakCacheDecorator;
 use App\Models\User;
+use App\Repositories\StudentGroupsRepository;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -93,6 +94,8 @@ class AppServiceProvider extends ServiceProvider
                 );
             }
         );
+
+        $this->app->singleton(StudentGroupsRepository::class);
 
         $this->bindAuthUsers();
 

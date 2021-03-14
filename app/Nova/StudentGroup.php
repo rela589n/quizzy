@@ -26,6 +26,9 @@ class StudentGroup extends Resource
 
     public static $model = \App\Models\StudentGroup::class;
 
+    /** @var \App\Models\StudentGroup */
+    public $resource;
+
     public static $title = 'name';
 
     public static $search = [
@@ -54,7 +57,8 @@ class StudentGroup extends Resource
      */
     public static function detailQuery(NovaRequest $request, $query)
     {
-        return $query->withCount('students');
+        return $query->withCount('students')
+            ->with('classMonitor');
     }
 
     /**
@@ -99,10 +103,14 @@ class StudentGroup extends Resource
                 ->hideFromIndex()
                 ->hideFromDetail(),
 
-            HasMany::make('Студенти', 'students', Student::class),
-
             BelongsTo::make('Відділення', 'department', Department::class)
                 ->required(),
+
+            Text::make('Староста', 'classMonitor')
+                ->resolveUsing([$this, 'resolveClassMonitor'])
+                ->onlyOnDetail(),
+
+            HasMany::make('Студенти', 'students', Student::class),
         ];
     }
 
@@ -144,5 +152,14 @@ class StudentGroup extends Resource
     public function actions(Request $request): array
     {
         return [];
+    }
+
+    public function resolveClassMonitor(): ?string
+    {
+        if (null === $this->resource->classMonitor) {
+            return  null;
+        }
+
+        return "{$this->resource->classMonitor->full_name} ({$this->resource->classMonitor->id})";
     }
 }
