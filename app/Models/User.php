@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\OverridesQueryBuilder;
 use App\Models\Students\StudentEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,6 +55,8 @@ use Illuminate\Support\Carbon;
  */
 class User extends BaseUser
 {
+    use OverridesQueryBuilder;
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

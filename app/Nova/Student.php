@@ -23,6 +23,8 @@ class Student extends Resource
     protected static bool $redirectToParentOnCreate = true;
     protected static bool $redirectToParentOnUpdate = true;
 
+    public static $perPageViaRelationship = 40;
+
     public static $model = \App\Models\User::class;
 
     public static $with = ['studentGroup'];

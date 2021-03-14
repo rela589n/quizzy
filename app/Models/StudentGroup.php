@@ -68,7 +68,7 @@ class StudentGroup extends Model
      */
     public function students()
     {
-        return $this->hasMany(User::class)->orderBy('surname')->orderBy('name');
+        return $this->hasMany(User::class);
     }
 
     public function department(): BelongsTo
@@ -117,7 +117,7 @@ class StudentGroup extends Model
      */
     public function lastResults(Test $test)
     {
-        $students = $this->students()->withTrashed()->get();
+        $students = $this->students()->orderBy('surname')->orderBy('name')->withTrashed()->get();
         $builder = clone $students[0]->lastResultOf($test);
 
         for ($i = 1; $i < $students->count(); ++$i) {

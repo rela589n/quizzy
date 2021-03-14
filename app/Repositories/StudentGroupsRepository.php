@@ -29,7 +29,7 @@ class StudentGroupsRepository
                 /**
                  * @var User|Builder $studentQuery
                  */
-
+                $studentQuery->orderBy('surname')->orderBy('name');
                 $studentQuery->withTrashed();
 
                 $studentQuery->whereHas(
