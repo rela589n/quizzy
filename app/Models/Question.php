@@ -33,6 +33,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Question whereDeletedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Question withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Question withoutTrashed()
+ * @property string $type
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question whereType($value)
  */
 class Question extends Model
 {

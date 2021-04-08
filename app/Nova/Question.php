@@ -2,15 +2,19 @@
 
 namespace App\Nova;
 
+use App\Models\Questions\QuestionType;
 use App\Rules\AnswerOptionsRule;
 use App\Rules\AtLeastOneSelected;
+use App\Rules\ExactlyOneSelected;
 use Froala\NovaFroalaField\Froala;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\CreateResourceRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Yassi\NestedForm\NestedForm;
 
@@ -21,6 +25,9 @@ class Question extends Resource
     public static $displayInNavigation = false;
 
     public static $model = \App\Models\Question::class;
+
+    /** @var \App\Models\Question */
+    public $resource;
 
     public static $title = 'question';
 
@@ -56,11 +63,16 @@ class Question extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make(__('ID'), 'id')->sortable(),
+            ID::make(__('ID'), 'id')
+                ->sortable(),
 
             Text::make('Запитання')
                 ->resolveUsing(fn() => $this->title())
                 ->onlyOnIndex(),
+
+            Select::make('Тип', 'type')
+                ->options(trans('tests.questions.types'))
+                ->displayUsingLabels(),
 
             Froala::make('Запитання', 'question')
                 ->hideFromIndex()
@@ -74,13 +86,24 @@ class Question extends Resource
         ];
     }
 
+    /**
+     * @param CreateResourceRequest $request
+     * @return array
+     */
     public function fieldsForCreate($request)
     {
         return [
             ...$this->fields($request),
 
             (new NestedForm('Варіант відповіді', 'answerOptions', AnswerOption::class))
-                ->rules([new AtLeastOneSelected('is_right')])
+                ->rules(
+                    [
+                        QuestionType::RADIO()
+                            ->equalsTo($request->get('type'))
+                            ? new ExactlyOneSelected('is_right')
+                            : new AtLeastOneSelected('is_right')
+                    ]
+                )
                 ->showOnDetail()
                 ->hideFromIndex()
                 ->min(2),
