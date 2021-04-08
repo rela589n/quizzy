@@ -6,8 +6,6 @@ namespace App\Lib\TestResults;
 
 class StrictMarkEvaluator implements MarkEvaluator
 {
-    private const MARK_EPS = 0.09;
-
     public const MIN_MARK = 2;
     public const MAX_MARK = 5;
 
