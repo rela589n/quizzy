@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
+use App\Models\Tests\TestEloquentBuilder;
 use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,52 +14,85 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
- * App\Models\Test
- *
  * @property int $id
+ * @property int|null $created_by
  * @property string $name
  * @property string $uri_alias
  * @property int $time
  * @property int $test_subject_id
- * @property-read Collection|Question[] $nativeQuestions
- * @property-read Collection|TestComposite[] $testComposites
+ * @property Carbon|null $deleted_at
+ * @property string $mark_evaluator_type
+ * @property string $type
+ * @property string $display_strategy
+ * @property ?int $attempts_per_user
+ * @property ?int questions_count
+ * @property string|null remainingAttemptsMessage
+ * @property-read Collection|\App\Models\MarkPercent[] $marksPercents
+ * @property-read int|null $marks_percents_count
+ * @property-read Collection|\App\Models\Question[] $nativeQuestions
  * @property-read int|null $native_questions_count
- * @property-read TestSubject $subject
+ * @property-read \App\Models\TestSubject $subject
+ * @property-read Collection|\App\Models\TestComposite[] $testComposites
+ * @property-read int|null $test_composites_count
+ * @property-read Collection|\App\Models\TestResult[] $testResults
+ * @property-read int|null $test_results_count
+ * @property-read int|null $user_results_count
  * @property-read Collection|Test[] $tests
  * @property-read int|null $tests_count
- * @method static Builder|Test newModelQuery()
- * @method static Builder|Test newQuery()
- * @method static Builder|Test query()
- * @method static Builder|Test whereId($value)
- * @method static Builder|Test whereName($value)
- * @method static Builder|Test whereTestSubjectId($value)
- * @method static Builder|Test whereTime($value)
- * @method static Builder|Test whereUriAlias($value)
- * @mixin Eloquent
- * @property-read int|null $test_composites_count
- * @property Carbon|null $deleted_at
- * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|Test onlyTrashed()
- * @method static bool|null restore()
- * @method static Builder|Test whereDeletedAt($value)
+ *
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test newModelQuery()
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test newQuery()
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test query()
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereCreatedBy($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereDeletedAt($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereId($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereMarkEvaluatorType($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereName($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereSlug($slug)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereTestSubjectId($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereTime($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereType($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereUriAlias($value)
+ * @method static \App\Models\Query\CustomEloquentBuilder|Test whereDisplayStrategy($value)
  * @method static \Illuminate\Database\Query\Builder|Test withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test withoutTrashed()
- * @property-read Collection|TestResult[] $testResults
- * @property-read int|null $test_results_count
- * @method static Builder|Test whereSlug($slug)
- * @property int|null $created_by
- * @method static Builder|Test whereCreatedBy($value)
- * @property string $mark_evaluator_type
- * @property-read Collection|MarkPercent[] $marksPercents
- * @property-read int|null $marks_percents_count
- * @method static Builder|Test whereMarkEvaluatorType($value)
+ * @method static \Illuminate\Database\Query\Builder|Test onlyTrashed()
+ *
+ * @mixin Eloquent
  */
 class Test extends Model
 {
     use SoftDeletes;
     use SlugScope;
 
-    use OwnerChecks;
+    public const TYPE_STANDALONE = 'standalone';
+    public const TYPE_COMPOSED = 'composed';
+
+    public const TYPES = [
+        self::TYPE_STANDALONE,
+        self::TYPE_COMPOSED,
+    ];
+
+    public const DISPLAY_ALL = 'all';
+    public const DISPLAY_ONE_BY_ONE = 'one by one';
+
+    public const DISPLAY_STRATEGIES = [
+        self::DISPLAY_ALL,
+        self::DISPLAY_ONE_BY_ONE,
+    ];
+
+    public const EVALUATOR_TYPE_DEFAULT = 'default';
+    public const EVALUATOR_TYPE_CUSTOM = 'custom';
+
+    public const EVALUATOR_TYPES = [
+        self::EVALUATOR_TYPE_DEFAULT,
+        self::EVALUATOR_TYPE_CUSTOM,
+    ];
+
+    public const EVALUATOR_LABELS = [
+        'За замовчуванням',
+        'Власна методика',
+    ];
 
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time', 'mark_evaluator_type', 'test_subject_id'];
@@ -99,6 +131,7 @@ class Test extends Model
         return Collection::make($this->testComposites->pluck('questions')->flatten());
     }
 
+    /** @return HasMany|TestResult */
     public function testResults(): HasMany
     {
         return $this->hasMany(TestResult::class);
@@ -107,5 +140,30 @@ class Test extends Model
     public function marksPercents(): HasMany
     {
         return $this->hasMany(MarkPercent::class);
+    }
+
+    public function isComposite(): bool
+    {
+        return self::TYPE_COMPOSED === $this->type;
+    }
+
+    public function shouldDisplayAllQuestions(): bool
+    {
+        return self::DISPLAY_ALL === $this->display_strategy;
+    }
+
+    public function shouldDisplayOneByOneQuestions(): bool
+    {
+        return self::DISPLAY_ONE_BY_ONE === $this->display_strategy;
+    }
+
+    public function isAvailableToAdmin(Administrator $model): bool
+    {
+        return $model->id === $this->created_by;
+    }
+
+    public function newEloquentBuilder($query): TestEloquentBuilder
+    {
+        return new TestEloquentBuilder($query);
     }
 }

@@ -17,6 +17,7 @@ final class CreateDepartmentsRequest extends FormRequest
     {
         $rules = $rules->getRules();
         $rules['uri_alias'][] = 'unique:departments';
+        $rules['name'][] = 'unique:departments';
 
         return $rules;
     }

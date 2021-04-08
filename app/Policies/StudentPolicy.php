@@ -10,6 +10,21 @@ class StudentPolicy
 {
     use HandlesAuthorization;
 
+    public function create(Administrator $administrator): bool
+    {
+        return $administrator->can('create-students');
+    }
+
+    public function viewAny(Administrator $administrator): bool
+    {
+        return $administrator->can('view-students');
+    }
+
+    public function viewAll(Administrator $administrator): bool
+    {
+        return $administrator->can('view-all-students');
+    }
+
     /**
      * Determine whether the user can view the model.
      *
@@ -19,7 +34,9 @@ class StudentPolicy
      */
     public function view(Administrator $user, User $model): bool
     {
-        return $model->isOwnedBy($user) || $user->can('view-students');
+        return $this->viewAll($user)
+            || ($user->can('view-students')
+                && $model->isAvailableForAdmin($user));
     }
 
     /**
@@ -31,7 +48,9 @@ class StudentPolicy
      */
     public function update(Administrator $user, User $model): bool
     {
-        return $model->isOwnedBy($user) || $user->can('update-students');
+        return $user->can('update-all-students')
+            || ($user->can('update-students')
+                && $model->isAvailableForAdmin($user));
     }
 
     /**
@@ -43,6 +62,14 @@ class StudentPolicy
      */
     public function delete(Administrator $user, User $model): bool
     {
-        return $user->can('delete-students');
+        return $user->can('delete-all-students')
+            || ($user->can('delete-students')
+                && $model->isAvailableForAdmin($user));
+    }
+
+    public function promoteToClassMonitor(Administrator $user, User $model): bool
+    {
+        return $user->can('make-student-class-monitor')
+            && $user->can('update', $model);
     }
 }

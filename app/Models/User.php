@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\OverridesQueryBuilder;
+use App\Models\Students\StudentEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -53,6 +55,8 @@ use Illuminate\Support\Carbon;
  */
 class User extends BaseUser
 {
+    use OverridesQueryBuilder;
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -93,5 +97,16 @@ class User extends BaseUser
     public function isOwnedBy(Model $model): bool
     {
         return $this->studentGroup->isOwnedBy($model);
+    }
+
+    public function isAvailableForAdmin(Administrator $administrator): bool
+    {
+        return $this->isOwnedBy($administrator)
+            || $this->studentGroup->isAvailableForAdmin($administrator);
+    }
+
+    public function newEloquentBuilder($query): StudentEloquentBuilder
+    {
+        return new StudentEloquentBuilder($query);
     }
 }

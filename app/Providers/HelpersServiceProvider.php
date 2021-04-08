@@ -15,5 +15,6 @@ class HelpersServiceProvider extends ServiceProvider
     {
         require app_path('Includes/debug-helpers.php');
         require app_path('Includes/helpers.php');
+        require app_path('Includes/laravel-helpers.php');
     }
 }

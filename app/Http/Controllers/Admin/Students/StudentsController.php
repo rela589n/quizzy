@@ -9,6 +9,7 @@ use App\Models\Administrator;
 use App\Models\StudentGroup;
 use App\Models\User;
 use App\Services\Users\Administrators\CreateAdministratorService;
+use App\Services\Users\ChangeGroupClassMonitor;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -155,54 +156,21 @@ class StudentsController extends AdminController
      * @param $departmentAlias
      * @param $groupAlias
      * @param $userId
-     * @param  CreateAdministratorService  $createAdministratorService
+     * @param  ChangeGroupClassMonitor  $changeGroupClassMonitor
      * @return RedirectResponse
      * @throws AuthorizationException
-     * @throws ValidationException
      */
     public function makeClassMonitor(
         $departmentAlias,
         $groupAlias,
         $userId,
-        CreateAdministratorService $createAdministratorService
+        ChangeGroupClassMonitor $changeGroupClassMonitor
     ): RedirectResponse {
         $user = User::findOrFail($userId);
-        $this->authorize('update', $user);
-        $this->authorize('make-student-class-monitor');
 
         $group = StudentGroup::whereUriAlias($groupAlias)->firstOrFail();
 
-        if ($group->classMonitor()->exists()) {
-            throw ValidationException::withMessages(
-                [
-                    'student_group_id' => 'Група вже має старосту'
-                ]
-            );
-        }
-
-        if (Administrator::whereEmail($user->email)->exists()) {
-            throw ValidationException::withMessages(
-                [
-                    'email' => 'В адмін-панелі вже є користувач з заданим email'
-                ]
-            );
-        }
-
-        $classMonitor = $createAdministratorService
-            ->withoutPasswordHashing()
-            ->handle(
-                [
-                    'name'       => $user->name,
-                    'surname'    => $user->surname,
-                    'patronymic' => $user->patronymic,
-                    'email'      => $user->email,
-                    'password'   => $user->password,
-                    'role_ids'   => [Role::whereName('class-monitor')->first('id')->id]
-                ]
-            );
-
-        $group->created_by = $classMonitor->id;
-        $group->save();
+        $changeGroupClassMonitor($group, $user);
 
         return redirect()
             ->back()

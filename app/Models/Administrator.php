@@ -5,9 +5,11 @@ namespace App\Models;
 
 
 use App\Lib\Traits\FilteredScope;
+use App\Models\Administrators\AdministratorsEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -33,34 +35,46 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read mixed $full_name
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @method static Builder|Administrator newModelQuery()
- * @method static Builder|Administrator newQuery()
- * @method static Builder|Administrator query()
- * @method static Builder|Administrator whereCreatedAt($value)
- * @method static Builder|Administrator whereEmail($value)
- * @method static Builder|Administrator whereEmailVerifiedAt($value)
- * @method static Builder|Administrator whereId($value)
- * @method static Builder|Administrator whereName($value)
- * @method static Builder|Administrator wherePassword($value)
- * @method static Builder|Administrator wherePasswordChanged($value)
- * @method static Builder|Administrator wherePatronymic($value)
- * @method static Builder|Administrator whereRememberToken($value)
- * @method static Builder|Administrator whereSurname($value)
- * @method static Builder|Administrator whereUpdatedAt($value)
+ * @method static AdministratorsEloquentBuilder|Administrator newModelQuery()
+ * @method static AdministratorsEloquentBuilder|Administrator newQuery()
+ * @method static AdministratorsEloquentBuilder|Administrator query()
+ * @method static AdministratorsEloquentBuilder|Administrator whereCreatedAt($value)
+ * @method static AdministratorsEloquentBuilder|Administrator whereEmail($value)
+ * @method static AdministratorsEloquentBuilder|Administrator whereEmailVerifiedAt($value)
+ * @method static AdministratorsEloquentBuilder|Administrator whereId($value)
+ * @method static AdministratorsEloquentBuilder|Administrator whereName($value)
+ * @method static AdministratorsEloquentBuilder|Administrator wherePassword($value)
+ * @method static AdministratorsEloquentBuilder|Administrator wherePasswordChanged($value)
+ * @method static AdministratorsEloquentBuilder|Administrator wherePatronymic($value)
+ * @method static AdministratorsEloquentBuilder|Administrator whereRememberToken($value)
+ * @method static AdministratorsEloquentBuilder|Administrator whereSurname($value)
+ * @method static AdministratorsEloquentBuilder|Administrator whereUpdatedAt($value)
+ * @method static AdministratorsEloquentBuilder|Administrator permission($permissions)
+ * @method static AdministratorsEloquentBuilder|Administrator role($roles, $guard = null)
  * @mixin Eloquent
+ * @property-read Collection|Department[] $departments
+ * @property-read int|null $departments_count
+ * @property-read Collection|Department[] $testSubjects
+ * @property-read int|null $test_subjects_count
  * @property-read Collection|Permission[] $permissions
  * @property-read int|null $permissions_count
  * @property-read string|null $roles_readable
  * @property-read Collection|Role[] $roles
  * @property-read int|null $roles_count
- * @method static Builder|Administrator ofRole($roleName)
- * @method static Builder|Administrator permission($permissions)
- * @method static Builder|Administrator role($roles, $guard = null)
  */
 class Administrator extends BaseUser
 {
     use HasRoles;
     use FilteredScope;
+
+    protected $casts = [
+        'password_changed' => 'bool',
+    ];
+
+    public const ROLES_FOR_TEACHER = [
+        'teacher',
+        'class-monitor',
+    ];
 
     public function guardName(): string
     {
@@ -80,18 +94,47 @@ class Administrator extends BaseUser
         return implode(', ', $roles->toArray());
     }
 
-    /**
-     * @param  Builder  $query
-     * @param  string  $roleName
-     * @return Builder
-     */
-    public function scopeOfRole($query, string $roleName): Builder
+    public function departments(): BelongsToMany
     {
-        return $query->whereHas(
-            'roles',
-            static function ($q) use ($roleName) {
-                $q->whereName($roleName);
-            }
-        );
+        return $this->belongsToMany(Department::class, 'administrator_department');
+    }
+
+    public function testSubjects(): BelongsToMany
+    {
+        return $this->belongsToMany(TestSubject::class, 'administrator_test_subject');
+    }
+
+    public function newEloquentBuilder($query)
+    {
+        return new AdministratorsEloquentBuilder($query);
+    }
+
+    public function canAccessGroup(StudentGroup $group): bool
+    {
+        if ($this->hasRole('class-monitor')) {
+            return $group->created_by === $this->id;
+        }
+
+        return $group->department->isAvailableForAdmin($this);
+    }
+
+    public function isAvailableForAdmin(Administrator $user): bool
+    {
+        return !$this->password_changed
+            && ($user->hasRole('teacher')
+            && $this->hasAnyRole(self::ROLES_FOR_TEACHER));
+    }
+
+    public function availableRolesQuery()
+    {
+        if ($this->hasRole('super-admin')) {
+            return Role::query();
+        }
+
+        if ($this->hasRole('teacher')) {
+            return Role::query()->whereIn('name', self::ROLES_FOR_TEACHER);
+        }
+
+        return Role::query()->whereRaw('0=1');
     }
 }

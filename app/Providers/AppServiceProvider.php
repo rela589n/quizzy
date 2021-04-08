@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Requests\RequestUrlManager;
 use App\Lib\Statements\FilePathGenerators\ExportResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\GroupResultFileNameGenerator;
 use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
@@ -14,13 +15,19 @@ use App\Lib\TestResults\ScoreEvaluatorInterface;
 use App\Lib\TestResults\StrictMarkEvaluator;
 use App\Lib\TestResults\StrictScoreEvaluator;
 use App\Lib\TestResultsEvaluator;
+use App\Lib\Tests\Pass\PassTestService;
 use App\Lib\Words\Decliners\CyrillicWordDecliner;
 use App\Lib\Words\Decliners\WordDeclinerInterface;
 use App\Lib\Words\Repositories\UkrainianWordsRepository;
 use App\Lib\Words\Repositories\WordsRepository;
 use App\Lib\Words\WordsManager;
 use App\Models\Administrator;
+use App\Models\Tests\TestQueries;
+use App\Models\Tests\TestQueriesImpl;
+use App\Models\Tests\TestQueriesWeakCacheDecorator;
 use App\Models\User;
+use App\Repositories\StudentGroupsRepository;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -34,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->registerBindings();
     }
 
     /**
@@ -44,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerBindings();
+        Paginator::useBootstrap();
 
         $this->shareViews();
     }
@@ -74,6 +81,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(TestsExportManager::class)
             ->needs(ResultFileNameGenerator::class)
             ->give(ExportResultFileNameGenerator::class);
+
+        $this->app->bind(TestQueries::class, TestQueriesImpl::class);
+        $this->app->extend(
+            TestQueries::class,
+            function (TestQueries $service) {
+                return resolve(
+                    TestQueriesWeakCacheDecorator::class,
+                    [
+                        'queries' => $service,
+                    ]
+                );
+            }
+        );
+
+        $this->app->singleton(StudentGroupsRepository::class);
 
         $this->bindAuthUsers();
 

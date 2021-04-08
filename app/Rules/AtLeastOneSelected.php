@@ -16,7 +16,9 @@ final class AtLeastOneSelected implements Rule
     public function passes($attribute, $value): bool
     {
         foreach ($value as $item) {
-            if (isset($item[$this->key])) {
+            if (isset($item[$this->key])
+                && filter_var($item[$this->key],FILTER_VALIDATE_BOOLEAN))
+            {
                 return true;
             }
         }

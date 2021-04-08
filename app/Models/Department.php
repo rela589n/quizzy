@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Lib\Filters\Eloquent\ResultFilter;
 use App\Lib\Traits\FilteredScope;
+use App\Models\Departments\DepartmentEloquentBuilder;
+use App\Repositories\Queries\AccessibleDepartments as AccessibleDepartmentsQuery;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,8 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property-read int|null $student_groups_count
  * @property-read Collection|TestSubject[] $testSubjects
  * @property-read int|null $test_subjects_count
+ * @property-read Collection|Administrator[] $administrators
+ * @property-read int|null $administrators_count
  * @method static Builder|Department filtered(ResultFilter $filters)
  * @method static QueryBuilder|Department onlyTrashed()
  * @method static QueryBuilder|Department withTrashed()
@@ -50,8 +53,24 @@ class Department extends Model
         return $this->belongsToMany(TestSubject::class);
     }
 
+    public function administrators(): BelongsToMany
+    {
+        return $this->belongsToMany(Administrator::class, 'administrator_department');
+    }
+
     public function studentGroups(): HasMany
     {
         return $this->hasMany(StudentGroup::class);
+    }
+
+    public function isAvailableForAdmin(Administrator $administrator): bool
+    {
+        return $administrator->departments->find($this->id) !== null
+            || app()->make(AccessibleDepartmentsQuery::class)->setUser($administrator)->isCreatedBy($this);
+    }
+
+    public function newEloquentBuilder($query): DepartmentEloquentBuilder
+    {
+        return new DepartmentEloquentBuilder($query);
     }
 }

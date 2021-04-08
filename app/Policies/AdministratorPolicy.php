@@ -9,40 +9,56 @@ class AdministratorPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view the administrator.
-     *
-     * @param  Administrator  $user
-     * @param  Administrator  $model
-     * @return bool
-     */
-    public function view(Administrator $user, Administrator $model): bool
+    public function viewAny(Administrator $user): bool
     {
         return $user->can('view-administrators');
     }
 
-    /**
-     * Determine whether the user can update the administrator.
-     *
-     * @param  Administrator  $user
-     * @param  Administrator  $model
-     * @return bool
-     */
+    public function viewAll(Administrator $user): bool
+    {
+        return $user->can('view-all-administrators');
+    }
+
+    public function create(Administrator $administrator): bool
+    {
+        return $administrator->can('create-administrators');
+    }
+
+    public function view(Administrator $user, Administrator $model): bool
+    {
+        return (($this->viewAll($user)
+                    || ($user->can('view-administrators')
+                        && $model->isAvailableForAdmin($user)))
+                && $this->isNotSystem($model))
+            || $user->id === $model->id;
+    }
+
     public function update(Administrator $user, Administrator $model): bool
     {
-        return $user->can('update-administrators');
+        return (($user->can('update-all-administrators')
+                    || ($user->can('update-administrators')
+                        && $model->isAvailableForAdmin($user)))
+                && $this->isNotSystem($model))
+            || $user->id === $model->id;
     }
 
-    /**
-     * Determine whether the user can delete the administrator.
-     *
-     * @param  Administrator  $user
-     * @param  Administrator  $model
-     * @return bool
-     */
     public function delete(Administrator $user, Administrator $model): bool
     {
-        return $user->can('delete-administrators');
+        return ($user->can('delete-all-administrators')
+                || ($user->can('delete-administrators')
+                    && $model->isAvailableForAdmin($user)))
+            && $this->isNotSystem($model)
+            && $user->id !== $model->id;
     }
 
+    public function forceDelete(Administrator $user, Administrator $model): bool
+    {
+        return $user->can('delete-all-administrators')
+            && $this->isNotSystem($model);
+    }
+
+    private function isNotSystem(Administrator $administrator): bool
+    {
+        return $administrator->surname !== 'system';
+    }
 }

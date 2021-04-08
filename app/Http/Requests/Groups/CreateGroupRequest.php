@@ -15,9 +15,6 @@ final class CreateGroupRequest extends GroupRequest
 
     public function rules(GroupRulesContainer $rulesContainer): array
     {
-        $rules = $rulesContainer->getRules();
-        $rules['uri_alias'][] = 'unique:student_groups';
-
-        return $rules;
+        return $rulesContainer->creationRules();
     }
 }

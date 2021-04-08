@@ -1,12 +1,16 @@
 <?php
 
+namespace Database\Seeders;
+
+use App\Models\Test;
 use App\Models\TestComposite;
 use App\Models\TestSubject;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class TestsTableSeeder extends Seeder
 {
-    public const TESTS_LIMIT = 7;
+    public const TESTS_LIMIT = 200;
 
     /**
      * Run the database seeds.
@@ -23,10 +27,10 @@ class TestsTableSeeder extends Seeder
 
         $subjectsCount = TestSubjectsTableSeeder::getSubjectsCount();
 
-        $faker = Faker\Factory::create('uk_UA');
+        $faker = Factory::create('uk_UA');
 
         foreach (range(2, self::TESTS_LIMIT) as $i) {
-            \App\Models\Test::create([
+            Test::create([
                 'name' => $faker->realText(15),
                 'uri_alias' => $faker->unique()->slug(2),
                 'time' => $faker->numberBetween(10, 30),
@@ -49,7 +53,7 @@ class TestsTableSeeder extends Seeder
         $subject = TestSubject::where('uri_alias', 'oop')->first();
 
         /**
-         * @var \App\Models\Test $test
+         * @var Test $test
          */
         $test = $subject->tests()->create([
             'name' => 'Інкапсуляція',

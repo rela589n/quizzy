@@ -23,6 +23,7 @@ abstract class StoreTestService
         IncludeTestsFilter $filter,
         IncludeTestsTransformer $transformer
     ) {
+        // todo use GradingTableService
         $this->filter = $filter;
         $this->transformer = $transformer;
     }

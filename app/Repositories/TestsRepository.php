@@ -5,16 +5,21 @@ namespace App\Repositories;
 
 
 use App\Http\Requests\RequestUrlManager;
+use App\Lib\Words\WordsManager;
 use App\Models\Test;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 class TestsRepository
 {
     protected RequestUrlManager $urlManager;
 
-    public function __construct(RequestUrlManager $urlManager)
+    private WordsManager $wordsManager;
+
+    public function __construct(RequestUrlManager $urlManager, WordsManager $wordsManager)
     {
         $this->urlManager = $urlManager;
+        $this->wordsManager = $wordsManager;
     }
 
     public function testsForResultPage()
@@ -43,12 +48,14 @@ class TestsRepository
         )->get();
     }
 
-    public function testsForSelectingByUser()
+    public function testsForSelectingByUser(User $user)
     {
         return tap(
             $this->urlManager->getCurrentSubject()
                 ->tests()
-                ->with('testComposites'),
+                ->with('testComposites.questions')
+                ->withCount('testResults')
+                ->withUserResultsCount($user),
             function (Relation $builder) {
                 $this->applyOrder($builder);
             }
@@ -56,6 +63,22 @@ class TestsRepository
             ->each(
                 static function (Test $test) {
                     $test->questions_count = $test->allQuestions()->count();
+                }
+            )
+            ->filter(
+                static fn(Test $test) => optional(
+                        $test->attempts_per_user,
+                        static fn() => $test->attempts_per_user - $test->user_results_count > 0
+                    ) ?? true
+            )
+            ->each(
+                function (Test $test) {
+                    if (null === $test->attempts_per_user) {
+                        return;
+                    }
+
+                    $attempts = $test->attempts_per_user - $test->user_results_count;
+                    $test->remainingAttemptsMessage = "{$attempts} {$this->wordsManager->decline($attempts, 'спроб')}";
                 }
             );
     }

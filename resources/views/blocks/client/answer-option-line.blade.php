@@ -1,4 +1,4 @@
-<label for="ans[{{ $questionId }}][{{ $option->id }}][is_chosen]" class="d-block">
+<label for="ans[{{ $questionId }}][{{ $option->id }}][is_chosen]" class="d-block no-select">
     <input type="hidden" name="ans[{{ $questionId }}][{{ $option->id }}][answer_option_id]" value="{{ $option->id }}">
 
     <input type="checkbox"

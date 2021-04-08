@@ -23,9 +23,6 @@ abstract class StatementsGenerator
 
     /**
      * @return string path to generated statement file
-     * @throws CopyFileException
-     * @throws CreateTemporaryFileException
-     * @throws Exception
      */
     public function generate(): string
     {
@@ -39,6 +36,11 @@ abstract class StatementsGenerator
 
         PhpWordSettings::setOutputEscapingEnabled(false);
         return $filePath;
+    }
+
+    public function getFilePathGenerator(): ResultFileNameGenerator
+    {
+        return $this->filePathGenerator;
     }
 
     abstract protected function doGenerate(TemplateProcessor $templateProcessor) : void;

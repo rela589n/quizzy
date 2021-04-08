@@ -1,7 +1,10 @@
 <?php
 
-use App\Models\AnswerOption;
+namespace Database\Seeders;
+
 use App\Models\Question;
+use DB;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class AnswerOptionsTableSeeder extends Seeder
@@ -20,28 +23,39 @@ class AnswerOptionsTableSeeder extends Seeder
             return;
         }
 
-        $faker = Faker\Factory::create('uk_UA');
+        $faker = Factory::create('uk_UA');
 
-        $questions = Question::all();
-        foreach ($questions as $question) {
-            AnswerOption::create(
-                [
-                    'text'        => $faker->realText(40),
-                    'question_id' => $question->id,
-                    'is_right'    => true
-                ]
+        DB::table('questions')
+            ->orderBy('id')
+            ->chunk(
+                256,
+                function ($questions) use ($faker) {
+                    $answerOptionsToInsert = [];
+
+                    foreach ($questions as $question) {
+                        $answerOptionsToInsert[] = [
+                            'text'        => $faker->realText(40),
+                            'question_id' => $question->id,
+                            'is_right'    => true
+                        ];
+
+                        foreach (
+                            range(
+                                2,
+                                $faker->numberBetween(self::PER_QUESTION_MIN, self::PER_QUESTION_MAX)
+                            ) as $i
+                        ) {
+                            $answerOptionsToInsert[] = [
+                                'text'        => $faker->realText(40),
+                                'question_id' => $question->id,
+                                'is_right'    => $faker->boolean()
+                            ];
+                        }
+                    }
+
+                    DB::table('answer_options')->insert($answerOptionsToInsert);
+                }
             );
-
-            foreach (range(2, $faker->numberBetween(self::PER_QUESTION_MIN, self::PER_QUESTION_MAX)) as $i) {
-                AnswerOption::create(
-                    [
-                        'text'        => $faker->realText(40),
-                        'question_id' => $question->id,
-                        'is_right'    => $faker->boolean()
-                    ]
-                );
-            }
-        }
 
         $question = Question::find(1);
         $question->answerOptions()->delete();

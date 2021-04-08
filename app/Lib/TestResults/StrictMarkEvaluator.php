@@ -11,23 +11,31 @@ class StrictMarkEvaluator implements MarkEvaluator
     public const MIN_MARK = 2;
     public const MAX_MARK = 5;
 
+    private const LEAST_PERCENTS = [
+        self::MIN_MARK => 0,
+        3              => 60,
+        4              => 75,
+        self::MAX_MARK => 95,
+    ];
+
     /**
      * @inheritDoc
      */
-    public function putMark(float $fullTestScore): int
+    public function putMark(?float $fullTestScore): ?int
     {
-        $fullTestScore *= 100;
-        $fullTestScore += self::MARK_EPS;
+        if (null === $fullTestScore) {
+            return null;
+        }
 
-        if ($fullTestScore < 60) {
+        if ($fullTestScore + self::MARK_EPS < 60) {
             return self::MIN_MARK;
         }
 
-        if ($fullTestScore < 75) {
+        if ($fullTestScore + self::MARK_EPS < 75) {
             return 3;
         }
 
-        if ($fullTestScore < 95) {
+        if ($fullTestScore + self::MARK_EPS < 95) {
             return 4;
         }
 
@@ -42,5 +50,10 @@ class StrictMarkEvaluator implements MarkEvaluator
     public function maxPossibleMark(): int
     {
         return self::MAX_MARK;
+    }
+
+    public function leastPercentForMark(int $mark): float
+    {
+        return self::LEAST_PERCENTS[$mark];
     }
 }

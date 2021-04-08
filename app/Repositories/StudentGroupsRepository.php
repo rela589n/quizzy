@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Builder;
 
 class StudentGroupsRepository
 {
+    public function findById(int $id)
+    {
+        return StudentGroup::findOrFail($id);
+    }
+
     public function whereHasResultsOf(int $groupId, int $testId)
     {
         return $this->builderForResultsPage($testId)->findOrFail($groupId);
@@ -29,7 +34,7 @@ class StudentGroupsRepository
                 /**
                  * @var User|Builder $studentQuery
                  */
-
+                $studentQuery->orderBy('surname')->orderBy('name');
                 $studentQuery->withTrashed();
 
                 $studentQuery->whereHas(

@@ -7,7 +7,7 @@ use App\Http\Requests\RequestUrlManager;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class FinishTestRequest extends FormRequest
+final class PassTestRequest extends FormRequest
 {
     public function authorize(User $user, RequestUrlManager $urlManager): bool
     {

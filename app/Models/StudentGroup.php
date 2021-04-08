@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Lib\Filters\Eloquent\ResultFilter;
 use App\Lib\Traits\FilteredScope;
-use App\Lib\Traits\OwnerChecks;
 use App\Lib\Traits\SlugScope;
+use App\Models\StudentGroups\StudentGroupEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\DB;
  * @method static Builder|StudentGroup whereYear($value)
  * @method static \Illuminate\Database\Query\Builder|StudentGroup withTrashed()
  * @method static \Illuminate\Database\Query\Builder|StudentGroup withoutTrashed()
- * @mixin Eloquent
+ * @mixin StudentGroupEloquentBuilder
  * @property-read int $course
  * @property int|null $created_by
  * @method static Builder|StudentGroup whereCreatedBy($value)
@@ -57,8 +57,6 @@ class StudentGroup extends Model
     use SlugScope;
     use FilteredScope;
 
-    use OwnerChecks;
-
     public $timestamps = false;
 
     protected $fillable = ['name', 'uri_alias', 'year', 'created_by'];
@@ -70,7 +68,7 @@ class StudentGroup extends Model
      */
     public function students()
     {
-        return $this->hasMany(User::class)->orderBy('surname')->orderBy('name');
+        return $this->hasMany(User::class);
     }
 
     public function department(): BelongsTo
@@ -91,7 +89,7 @@ class StudentGroup extends Model
      */
     public function classMonitor()
     {
-        return $this->administrator()->ofRole('class-monitor');
+        return $this->administrator()->ofRoles('class-monitor');
     }
 
     /**
@@ -102,22 +100,24 @@ class StudentGroup extends Model
     public function getCourseAttribute(): int
     {
         $started = Carbon::parse(
-            sprintf('%s-%s-%s',
+            sprintf(
+                '%s-%s-%s',
                 $this->year,
                 $this->studyStartMonth,
-                $this->studyStartDay)
+                $this->studyStartDay
+            )
         );
 
         return Carbon::now()->diffInYears($started) + 1;
     }
 
     /**
-     * @param Test $test
+     * @param  Test  $test
      * @return TestResult|Builder
      */
     public function lastResults(Test $test)
     {
-        $students = $this->students()->withTrashed()->get();
+        $students = $this->students()->orderBy('surname')->orderBy('name')->withTrashed()->get();
         $builder = clone $students[0]->lastResultOf($test);
 
         for ($i = 1; $i < $students->count(); ++$i) {
@@ -129,5 +129,20 @@ class StudentGroup extends Model
         return (new Builder(DB::query()))
             ->setModel(TestResult::newModelInstance())
             ->setQuery($query);
+    }
+
+    public function isOwnedBy(Administrator $model): bool
+    {
+        return $model->id === $this->created_by;
+    }
+
+    public function isAvailableForAdmin(Administrator $administrator): bool
+    {
+        return $administrator->canAccessGroup($this);
+    }
+
+    public function newEloquentBuilder($query): StudentGroupEloquentBuilder
+    {
+        return new StudentGroupEloquentBuilder($query);
     }
 }

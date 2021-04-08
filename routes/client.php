@@ -46,6 +46,11 @@ Route::prefix('/tests')
                             ->name('.test')
                             ->group(
                                 static function () use (&$routePatterns) {
+                                    Route::post('/cancel', 'TestsController@cancelPassage');
+                                    Route::post('/store-question', 'TestsController@storeQuestionResponse');
+
+                                    Route::get('/results/{result}', 'TestsController@showResultPage');
+
                                     Route::get('/', 'TestsController@showSingleTestForm');
                                     Route::post('/', 'TestsController@finishTest');
                                 }

@@ -1,15 +1,6 @@
 $(function () {
     let $form = $('.test-questions form');
-    let testTime = window.passTestCountDownMinutes || 10;
-    let testId = window.passTestId || 1;
-
-    if (!(window.performance && performance.navigation.type === 1)) {
-        // This page is not reloaded (first load)
-        clearTime(); // user start test from scratch
-    }
-
-    testTime *= 60; // convert into seconds
-    testTime = window.localStorage.getItem(`test-time-left-${testId}`) || testTime;
+    let testTime = window.passTestCountDownSeconds || 10 * 60;
 
     let stopwatch = new Stopwatch({
         'element': $('#test-countdown'),    // DOM element
@@ -29,32 +20,23 @@ $(function () {
                 m = ('0' + Math.floor(t % 3600000 / 60000)).slice(-2),
                 s = ('0' + Math.floor(t % 60000 / 1000)).slice(-2);
 
-            // save to local storage each second
-            saveTime(t / 1000 - 3); // minus 3 second to reload page
-
             let formattedTime = (+h * 60 + +m) + ':' + s;
             $(this.element).text(formattedTime);
         }
     });
 
-    $form.submit(function (e) {
-        // remove from local storage
-        clearTime();
-    });
-
     stopwatch.element.show();
 
     // when switch tab, need delete time from storage
-    window.closeWhenSwitchedTabsConfigOnClose = function () {
-        clearTime();
+    window.closeWhenSwitchedTabsConfigOnClose = async function () {
+        console.log('closeWhenSwitchedTabsConfigOnClose');
+
+        await $.post(`/tests/${currentSubject.uri_alias}/${currentTest.uri_alias}/cancel`,
+            {
+                _token: $form.find('[name=_token]').val(),
+            }
+        );
+
+        $form.trigger('reset');
     };
-
-    // used functions
-    function saveTime(time) {
-        window.localStorage.setItem(`test-time-left-${testId}`, time.toString());
-    }
-
-    function clearTime() {
-        window.localStorage.removeItem(`test-time-left-${testId}`);
-    }
 });

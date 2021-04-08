@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -30,6 +29,11 @@ class MarkPercent extends Model
     protected $table = 'marks_percents_map';
 
     protected $fillable = ['mark', 'percent'];
+
+    protected $casts = [
+        'mark' => 'integer',
+        'percent' => 'float'
+    ];
 
     public function test(): BelongsTo
     {

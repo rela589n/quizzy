@@ -23,7 +23,7 @@
 @section('test-questions')
     @forelse($allQuestions as $question)
         @include('blocks.client.question-single', [
-            'questionIndex' => $loop->iteration,
+            'questionIndex' => $loop->index,
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
@@ -51,12 +51,13 @@
 
 @section('bottom-scripts')
     @parent
-    <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
     <script defer src="{{ asset('js/stopwatch.js') }}"></script>
     <script type="text/javascript">
-        window.passTestCountDownMinutes = {{ $test->time }};
-        window.passTestId = {{ $test->id }};
+        window.passTestCountDownSeconds = +{{ $remainingTime }};
+        window.currentSubject = JSON.parse('{!! json_encode($subject->only(['id', 'uri_alias'])) !!}');
+        window.currentTest = JSON.parse('{!! json_encode($test->only(['id', 'uri_alias'])) !!}');
     </script>
     <script defer src="{{ asset('js/test-countdown.js') }}"></script>
+    <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
     <script defer src="{{ asset('js/close-when-switched-tab.js') }}"></script>
 @endsection

@@ -1,11 +1,14 @@
 <?php
 
-use App\Models\TestResult;
+namespace Database\Seeders;
+
+use Faker\Factory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class TestResultsTableSeeder extends Seeder
 {
-    public const TEST_RESULTS_LIMIT = 300;
+    public const TEST_RESULTS_LIMIT = 50_000;
 
     /**
      * Run the database seeds.
@@ -18,13 +21,16 @@ class TestResultsTableSeeder extends Seeder
             return;
         }
 
-        $faker = Faker\Factory::create('uk_UA');
+        $faker = Factory::create('uk_UA');
 
-        foreach(range(1, self::TEST_RESULTS_LIMIT) as $i) {
-            TestResult::create(
+        $table = DB::table('test_results');
+        for ($i = 1; $i < self::TEST_RESULTS_LIMIT + 1; ++$i) {
+            $table->insert(
                 [
-                    'test_id' => $faker->numberBetween(1, TestsTableSeeder::TESTS_LIMIT),
-                    'user_id' => $faker->numberBetween(1, UsersTableSeeder::USERS_LIMIT)
+                    [
+                        'test_id' => $faker->numberBetween(1, TestsTableSeeder::TESTS_LIMIT),
+                        'user_id' => $faker->numberBetween(1, UsersTableSeeder::USERS_LIMIT)
+                    ],
                 ]
             );
         }

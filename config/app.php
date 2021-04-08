@@ -175,6 +175,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\BladeDirectivesServiceProvider::class,
 
@@ -184,6 +185,7 @@ return [
         App\Providers\FormRequestsProvider::class,
         App\Providers\CollectionMacroProvider::class,
         App\Providers\ModelObserversProvider::class,
+        App\Providers\ObserversServiceProvider::class,
     ],
 
     /*
@@ -211,7 +213,7 @@ return [
         'Cookie' => Illuminate\Support\Facades\Cookie::class,
         'Crypt' => Illuminate\Support\Facades\Crypt::class,
         'DB' => Illuminate\Support\Facades\DB::class,
-        'Eloquent' => Illuminate\Database\Eloquent\Model::class,
+        'Eloquent' => App\Models\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,

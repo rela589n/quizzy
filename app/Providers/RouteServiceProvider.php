@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Laravel\Nova\Nova;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,11 @@ class RouteServiceProvider extends ServiceProvider
     public static function getChangePasswordUrl(?string $guardName)
     {
         return route("$guardName.change-password");
+    }
+
+    public static function novaChangePasswordUrl(): string
+    {
+        return Nova::path().'/nova-password-reset';
     }
 
     /**

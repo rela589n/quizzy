@@ -4,6 +4,9 @@
 namespace App\Lib\Statements\FilePathGenerators;
 
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 abstract class ResultFileNameGenerator
 {
     protected string $storageDir = 'app/public/statements/';
@@ -20,5 +23,11 @@ abstract class ResultFileNameGenerator
         );
     }
 
-    abstract protected function generateFileName(): string;
+    public function url(string $filePath): string
+    {
+        return Storage::disk('public')
+            ->url(Str::after($filePath, app('path.storage').'/app/public'));
+    }
+
+    abstract function generateFileName(): string;
 }

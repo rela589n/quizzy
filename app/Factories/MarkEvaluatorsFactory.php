@@ -37,8 +37,8 @@ class MarkEvaluatorsFactory
 
     /**
      * @param  string|null  $type
+     *
      * @return MarkEvaluator
-     * @throws BindingResolutionException
      */
     public function resolve(string $type = null): MarkEvaluator
     {

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -27,9 +26,7 @@ use Illuminate\Support\Carbon;
  * @method static EloquentBuilder|AnswerOption whereText($value)
  * @mixin Eloquent
  * @property Carbon|null $deleted_at
- * @method static bool|null forceDelete()
  * @method static QueryBuilder|AnswerOption onlyTrashed()
- * @method static bool|null restore()
  * @method static EloquentBuilder|AnswerOption whereDeletedAt($value)
  * @method static QueryBuilder|AnswerOption withTrashed()
  * @method static QueryBuilder|AnswerOption withoutTrashed()
@@ -37,6 +34,7 @@ use Illuminate\Support\Carbon;
 class AnswerOption extends Model
 {
     use SoftDeletes;
+
     public $timestamps = false;
 
     protected $fillable = ['text', 'question_id', 'is_right'];

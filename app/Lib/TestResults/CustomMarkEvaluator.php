@@ -9,7 +9,6 @@ use App\Models\Test;
 
 class CustomMarkEvaluator implements MarkEvaluator
 {
-    public const MARK_EPS = 0.09;
     protected const UNBOUND_MARK = 2;
 
     protected ?Test $test = null;
@@ -39,9 +38,11 @@ class CustomMarkEvaluator implements MarkEvaluator
      * @inheritDoc
      * @throws NullPointerException
      */
-    public function putMark(float $fullTestScore): int
+    public function putMark(?float $fullTestScore): ?int
     {
-        $fullTestScore *= 100;
+        if (null === $fullTestScore) {
+            return null;
+        }
 
         if ($this->test === null) {
             throw new NullPointerException('To evaluate test mark, respectively need test to be set.');
@@ -64,5 +65,18 @@ class CustomMarkEvaluator implements MarkEvaluator
     public function maxPossibleMark(): int
     {
         return array_key_first($this->markPercentsMap);
+    }
+
+    public function leastPercentForMark(int $mark): float
+    {
+        foreach ($this->markPercentsMap as $possibleMark => $requiredPercents) {
+            if ($possibleMark >= $mark) {
+                return $requiredPercents;
+            }
+        }
+
+        throw new \InvalidArgumentException(
+            "Invalid mark: $mark. It must be between {$this->minPossibleMark()} and {$this->maxPossibleMark()}"
+        );
     }
 }

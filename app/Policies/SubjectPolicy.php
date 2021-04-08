@@ -10,39 +10,41 @@ class SubjectPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view the test subject.
-     *
-     * @param  Administrator  $user
-     * @param  TestSubject  $testSubject
-     * @return bool
-     */
+    public function create(Administrator $administrator): bool
+    {
+        return $administrator->can('create-subjects');
+    }
+
+    public function viewAny(Administrator $administrator): bool
+    {
+        return $administrator->can('view-subjects');
+    }
+
+    public function viewAll(Administrator $administrator): bool
+    {
+        return $administrator->can('view-all-subjects');
+    }
+
     public function view(Administrator $user, TestSubject $testSubject): bool
     {
-        return $user->can('view-subjects');
+        return $this->viewAll($user)
+            || ($user->can('view-subjects')
+                && $testSubject->isAvailableToAdmin($user));
     }
 
-    /**
-     * Determine whether the user can update the test subject.
-     *
-     * @param  Administrator  $user
-     * @param  TestSubject  $testSubject
-     * @return bool
-     */
     public function update(Administrator $user, TestSubject $testSubject): bool
     {
-        return $user->can('update-subjects');
+        return $user->can('update-all-subjects')
+            || ($user->can('update-subjects')
+                && $testSubject->isAvailableToAdmin($user));
     }
 
-    /**
-     * Determine whether the user can delete the test subject.
-     *
-     * @param  Administrator  $user
-     * @param  TestSubject  $testSubject
-     * @return bool
-     */
     public function delete(Administrator $user, TestSubject $testSubject): bool
     {
-        return $user->can('delete-subjects');
+        return $user->can('delete-all-subjects')
+            || ($testSubject->isAvailableToAdmin($user)
+                && ($user->can('delete-subjects')
+                    || 0 === $testSubject->tests_count)
+            );
     }
 }

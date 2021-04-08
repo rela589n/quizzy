@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 /**
  * Class TestResultsEvaluator
  * @package App\Lib
+ *
+ * @deprecated use stored function instead
  */
 class TestResultsEvaluator
 {
@@ -108,7 +110,7 @@ class TestResultsEvaluator
             $questionId = $askedQuestion->question->id;
 
             if (empty($result[$questionId])) {
-                $result[$questionId] = [0, 0];
+                $result[$questionId] = [0, 0]; // [right, all]
             }
 
             foreach ($askedQuestion->answers as $answer) {
@@ -156,8 +158,8 @@ class TestResultsEvaluator
      * @return int
      * @throws NullPointerException|BindingResolutionException
      */
-    public function getMark(): int
+    public function getMark(): ?int
     {
-        return $this->markEvaluator()->putMark($this->getTestScore());
+        return $this->markEvaluator()->putMark($this->getTestScore() * 100);
     }
 }

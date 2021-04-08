@@ -10,5 +10,6 @@ class UkrainianWordsRepository extends WordsRepository
         'бал'     => ['', 'а', 'ів'],
         'студент' => ['', 'а', 'ів'],
         'відсот'  => ['ок', 'ка', 'ків'],
+        'спроб'   => ['а', 'и', '', ''],
     ];
 }

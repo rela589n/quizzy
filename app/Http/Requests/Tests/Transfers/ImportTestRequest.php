@@ -4,6 +4,7 @@ namespace App\Http\Requests\Tests\Transfers;
 
 use App\Http\Requests\RequestUrlManager;
 use App\Models\Administrator;
+use App\Rules\Containers\Test\TestImportFileRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class ImportTestRequest extends FormRequest
@@ -16,12 +17,7 @@ final class ImportTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'selected-file' => [
-                'required',
-                'file',
-                'max:2048',
-                'mimes:docx,txt'
-            ]
+            'selected-file' => new TestImportFileRules(),
         ];
     }
 }
