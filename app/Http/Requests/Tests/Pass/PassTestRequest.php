@@ -23,13 +23,20 @@ final class PassTestRequest extends FormRequest
 
             'ans.*.*.answer_option_id' => [
                 'required',
-                'numeric'
+                'numeric',
             ],
 
             'ans.*.*.is_chosen' => [
                 'sometimes',
                 'required',
-                'numeric'
+                'numeric',
+            ],
+
+            'ans_radio' => 'array',
+            'ans_radio.*' => 'array',
+            'ans_radio.*.answer_option_id' => [
+                'required',
+                'numeric',
             ],
 
             'asked'   => 'array|required',

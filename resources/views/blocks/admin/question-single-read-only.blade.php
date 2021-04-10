@@ -5,7 +5,7 @@
         @include('blocks.client.answer-option-line', [
             'optionIndex' => $loop->iteration,
             'questionId' => $question->id,
-            'checkboxAdditions' => sprintf(
+            'inputAdditions' => sprintf(
               '%s %s',
               'data-read-only',
               $option->is_right ? 'checked="checked"' : ''
