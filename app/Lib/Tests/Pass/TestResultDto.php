@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Lib\Tests\Pass;
 
 use App\Http\Requests\Tests\Pass\PassTestRequest;
+use App\Models\Questions\QuestionType;
 use Illuminate\Support\Collection;
 
 final class TestResultDto
@@ -33,16 +34,39 @@ final class TestResultDto
     {
         $validated = $request->validated();
 
-        $collection = AskedQuestionDto::createCollection(
-            array_map(
-                static function (array $item) use ($validated) {
-                    $item['answers'] = $validated['ans'][(int)$item['question_id']];
-
+        $validated['ans_radio'] = collect($validated['ans_radio'] ?? [])
+            ->map(
+                static function ($item) {
+                    $item['is_chosen'] = '1';
                     return $item;
-                },
-                $validated['asked']
+                }
             )
-        );
+            ->toArray();
+
+        $checkboxed = collect($validated['asked'])
+            ->map(
+                static function (array $askedQuestion) use ($validated): array {
+                    if (QuestionType::CHECKBOXES()
+                        ->equalsTo($askedQuestion['question_type'])
+                    ) {
+                        $askedQuestion['answers'] = $validated['ans'][(int)$askedQuestion['question_id']];
+                        return $askedQuestion;
+                    }
+
+                    if (QuestionType::RADIO()
+                        ->equalsTo($askedQuestion['question_type'])
+                    ) {
+                        $askedQuestion['answers'] = [
+                            $validated['ans_radio'][(int)$askedQuestion['question_id']],
+                        ];
+
+                        return $askedQuestion;
+                    }
+                }
+            )
+            ->toArray();
+
+        $collection = AskedQuestionDto::createCollection($checkboxed);
 
         return new self($collection);
     }
