@@ -6,6 +6,8 @@ namespace App\Lib\Statements;
 use App\Exceptions\NullPointerException;
 use App\Lib\PHPWord\TemplateProcessor;
 use App\Lib\TestResultsEvaluator;
+use App\Lib\Tests\Presenter\QuestionPresenter;
+use App\Models\Question;
 use App\Models\Questions\QuestionType;
 use App\Models\TestResult;
 
@@ -62,7 +64,7 @@ class StudentStatementsGenerator extends StatementsGenerator
 
             $this->setQuestionInfo(
                 $i,
-                $question->question,
+                $question,
                 round($score, 2).' %',
                 empty($selectedNotRight) ? self::EMPTY_WRONG_CHOICES_LABEL : implode(', ', $selectedNotRight)
             );
@@ -73,12 +75,14 @@ class StudentStatementsGenerator extends StatementsGenerator
         $this->setSummary();
     }
 
-    protected function setQuestionInfo(int $index, string $question, string $score, string $selectedNotRight): void
+    protected function setQuestionInfo(int $index, Question $question, string $score, string $selectedNotRight): void
     {
+        $presenter = new QuestionPresenter($question);
+
         $this->templateProcessor->setValues(
             [
                 "questionNumber#{$index}" => $index,
-                "question#{$index}" => $question,
+                "question#{$index}" => $presenter->plainText(),
                 "questionScore#{$index}" => $score,
                 "selectedNotRight#{$index}" => $selectedNotRight
             ]
