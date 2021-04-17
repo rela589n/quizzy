@@ -5,13 +5,16 @@ namespace App\Lib\Statements;
 
 
 use App\Lib\PHPWord\TemplateProcessor;
+use App\Models\AnswerOption;
 use App\Models\Question;
+use App\Models\Questions\QuestionType;
 use App\Models\Test;
 use Illuminate\Database\Eloquent\Collection;
 
 class TestsExportManager extends StatementsGenerator
 {
     public const SELECTED_OPTION_LABEL = '*';
+    public const SELECTED_RADIO_LABEL = '&';
 
     protected Test $test;
 
@@ -26,7 +29,9 @@ class TestsExportManager extends StatementsGenerator
         /**
          * @var $questions Question[]|Collection
          */
-        $questions = $this->test->nativeQuestions()->with('answerOptions')->get();
+        $questions = $this->test->nativeQuestions()
+            ->with('answerOptions')
+            ->get();
 
         $processor->cloneBlock(
             'questionBlock',
@@ -40,7 +45,7 @@ class TestsExportManager extends StatementsGenerator
             $processor->setValues(
                 [
                     "questionNumber#$i" => $i,
-                    "question#$i"       => $question->question,
+                    "question#$i" => $question->question,
                 ]
             );
 
@@ -55,9 +60,9 @@ class TestsExportManager extends StatementsGenerator
             foreach ($question->answerOptions as $answerOption) {
                 $processor->setValues(
                     [
-                        "optionNumber#$i#$j"   => $j,
-                        "optionText#$i#$j"     => $answerOption->text,
-                        "optionSelected#$i#$j" => ($answerOption->is_right) ? self::SELECTED_OPTION_LABEL : ''
+                        "optionNumber#$i#$j" => $j,
+                        "optionText#$i#$j" => $answerOption->text,
+                        "optionSelected#$i#$j" => $this->optionLabel($question, $answerOption),
                     ]
                 );
 
@@ -66,6 +71,25 @@ class TestsExportManager extends StatementsGenerator
 
             ++$i;
         }
+    }
+
+    private function optionLabel(Question $question, AnswerOption $option): string
+    {
+        if (!$option->is_right) {
+            return '';
+        }
+
+        if (QuestionType::CHECKBOXES()
+            ->equalsTo($question->type)) {
+            return self::SELECTED_OPTION_LABEL;
+        }
+
+        if (QuestionType::RADIO()
+            ->equalsTo($question->type)) {
+            return self::SELECTED_RADIO_LABEL;
+        }
+
+        return '';
     }
 
     protected function templateResourcePath(): string

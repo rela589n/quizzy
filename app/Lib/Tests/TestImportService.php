@@ -31,20 +31,13 @@ final class TestImportService
     {
         $parser->parse();
 
-        $parsed = $parser->getParsedQuestions();
-        foreach ($parsed as $questionInfo) {
-            /**
-             * @var Question $question
-             */
+        foreach ($parser->getParsedQuestions() as $block) {
+            /** @var Question $question */
             $question = $this->test->nativeQuestions()
-                ->create(
-                    [
-                        'question' => $questionInfo['question']
-                    ]
-                );
+                ->create($block->getQuestion());
 
             $question->answerOptions()
-                ->createMany($questionInfo['insert_options']);
+                ->createMany($block->getAnswerOptions());
         }
 
         $this->test->unsetRelation('nativeQuestions');
