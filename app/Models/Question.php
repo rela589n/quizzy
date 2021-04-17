@@ -40,7 +40,7 @@ class Question extends Model
 {
     use SoftDeletes;
     public $timestamps = false;
-    public $fillable = ['question', 'test_id'];
+    public $fillable = ['question', 'type', 'test_id'];
 
     public function test(): BelongsTo
     {

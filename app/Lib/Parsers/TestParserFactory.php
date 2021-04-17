@@ -22,8 +22,13 @@ class TestParserFactory
     public function getTextParser(UploadedFile $file): TestParser
     {
         $filePath = $file->path();
+        $extension = $file->extension();
 
-        switch ($file->extension()) {
+        if ('bin' === $extension) {
+            $extension = $file->getClientOriginalExtension();
+        }
+
+        switch ($extension) {
             case 'docx':
                 return $this->app->makeWith(
                     TestDocxParser::class,
@@ -41,7 +46,7 @@ class TestParserFactory
                 );
 
             default:
-                throw new RuntimeException("Unknown test file type: {$file->extension()}");
+                throw new RuntimeException("Unknown test file type: {$extension}");
         }
     }
 }

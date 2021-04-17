@@ -99,3 +99,11 @@ if (!function_exists('mb_lcfirst')) {
         return mb_strtolower($firstChar, $encoding).$then;
     }
 }
+
+if (!function_exists('array_first')) {
+    function array_first(array $haystack) {
+        foreach ($haystack as $needle) {
+            return $needle;
+        }
+    }
+}

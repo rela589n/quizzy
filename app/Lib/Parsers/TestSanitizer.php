@@ -3,11 +3,16 @@
 
 namespace App\Lib\Parsers;
 
+use App\Lib\Parsers\Block\ParsedQuestionBlock;
 use Onnov\DetectEncoding\EncodingDetector;
+
+use function preg_match;
 
 class TestSanitizer
 {
     private const QUESTION_INDICATORS = ['Питання', 'Запитання'];
+    private const PATTERN_CHECKBOX = '/\s*\*$/';
+    private const PATTERN_RADIO = '/\s*&$/';
 
     protected EncodingDetector $encodingDetector;
     protected ?string $encoding = null;
@@ -51,10 +56,21 @@ class TestSanitizer
         $text = $this->sanitizeMultipleSpaces($text);
 
         $text = preg_replace('/^\d+[\s.)]*/', '', $text);
-        $result = preg_replace('/\s*\*$/', '', $text);
+        $result = preg_replace(self::PATTERN_CHECKBOX, '', $text);
+        $result = preg_replace(self::PATTERN_RADIO, '', $result);
 
         $isRight = $result !== $text;
-        return [$result, $isRight];
+
+        $reason = null;
+        if ($isRight) {
+            if (preg_match(self::PATTERN_CHECKBOX, $text)) {
+                $reason = ParsedQuestionBlock::CORRECT_CHECKBOXED;
+            } elseif (preg_match(self::PATTERN_RADIO, $text)) {
+                $reason = ParsedQuestionBlock::CORRECT_RADIO;
+            }
+        }
+
+        return [$result, $isRight, $reason];
     }
 
     public function sanitizeMultipleSpaces(string $text): string

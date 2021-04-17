@@ -4,6 +4,7 @@
 namespace App\Lib\Parsers;
 
 
+use App\Lib\Parsers\Block\ParsedQuestionBlock;
 use RuntimeException;
 
 abstract class TestParser
@@ -12,6 +13,8 @@ abstract class TestParser
     protected const STATUS_OPTION = 2;
 
     protected int $status = self::STATUS_QUESTION;
+
+    /** @var ParsedQuestionBlock[] */
     protected array $parsedQuestions = [];
     protected TestSanitizer $sanitizer;
 
@@ -50,13 +53,13 @@ abstract class TestParser
         switch ($this->status) {
             case self::STATUS_QUESTION:
                 $question = $this->sanitizer->sanitizeQuestionText($input);
-                $this->appendQuestion($question, []);
+                $this->appendQuestion($question);
 
                 break;
 
             case self::STATUS_OPTION:
-                [$option, $isRight] = $this->sanitizer->sanitizeOptionText($input);
-                $this->appendOption(count($this->parsedQuestions) - 1, $option, $isRight);
+                [$option, $isRight, $reason] = $this->sanitizer->sanitizeOptionText($input);
+                $this->appendOption($option, $isRight, $reason);
 
                 break;
 
@@ -74,19 +77,14 @@ abstract class TestParser
         return self::STATUS_QUESTION;
     }
 
-    protected function appendQuestion($question, $insertOptions): void
+    protected function appendQuestion($question): void
     {
-        $this->parsedQuestions[] = [
-            'question'       => $question,
-            'insert_options' => $insertOptions,
-        ];
+        $this->parsedQuestions[] = ParsedQuestionBlock::make()->withQuestionText($question);
     }
 
-    protected function appendOption($questionIndex, $text, $isRight): void
+    protected function appendOption(string $text, bool $isRight, $correctnessReason): void
     {
-        $this->parsedQuestions[$questionIndex]['insert_options'][] = [
-            'text'     => $text,
-            'is_right' => $isRight,
-        ];
+        $this->parsedQuestions[count($this->parsedQuestions) - 1]
+            ->withAnswerOption($text, $isRight, $correctnessReason);
     }
 }

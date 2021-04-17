@@ -15,7 +15,7 @@ final class TestImportFileRules extends RulesContainer
             'required',
             'file',
             'max:2048',
-            'mimes:docx,txt',
+            'mimes:doc,docx,txt,bin,pdf,zip',
         ];
     }
 }
