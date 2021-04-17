@@ -3,9 +3,7 @@
 
 namespace App\Lib\Statements;
 
-
 use App\Lib\PHPWord\TemplateProcessor;
-use App\Models\AnswerOption;
 use App\Models\Question;
 use App\Models\Questions\QuestionType;
 use App\Models\Test;
@@ -13,9 +11,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TestsExportManager extends StatementsGenerator
 {
-    public const SELECTED_OPTION_LABEL = '*';
-    public const SELECTED_RADIO_LABEL = '&';
-
     protected Test $test;
 
     public function setTest(Test $test): void
@@ -42,6 +37,8 @@ class TestsExportManager extends StatementsGenerator
 
         $i = 1;
         foreach ($questions as $question) {
+            $answerOptionPresenter =  new SelectedAnswerPresenter(QuestionType::fromQuestion($question));
+
             $processor->setValues(
                 [
                     "questionNumber#$i" => $i,
@@ -62,7 +59,7 @@ class TestsExportManager extends StatementsGenerator
                     [
                         "optionNumber#$i#$j" => $j,
                         "optionText#$i#$j" => $answerOption->text,
-                        "optionSelected#$i#$j" => $this->optionLabel($question, $answerOption),
+                        "optionSelected#$i#$j" => $answerOptionPresenter->labelFor($answerOption),
                     ]
                 );
 
@@ -71,25 +68,6 @@ class TestsExportManager extends StatementsGenerator
 
             ++$i;
         }
-    }
-
-    private function optionLabel(Question $question, AnswerOption $option): string
-    {
-        if (!$option->is_right) {
-            return '';
-        }
-
-        if (QuestionType::CHECKBOXES()
-            ->equalsTo($question->type)) {
-            return self::SELECTED_OPTION_LABEL;
-        }
-
-        if (QuestionType::RADIO()
-            ->equalsTo($question->type)) {
-            return self::SELECTED_RADIO_LABEL;
-        }
-
-        return '';
     }
 
     protected function templateResourcePath(): string

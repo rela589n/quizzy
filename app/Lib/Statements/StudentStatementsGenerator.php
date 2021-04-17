@@ -3,15 +3,14 @@
 
 namespace App\Lib\Statements;
 
-
 use App\Exceptions\NullPointerException;
 use App\Lib\PHPWord\TemplateProcessor;
 use App\Lib\TestResultsEvaluator;
+use App\Models\Questions\QuestionType;
 use App\Models\TestResult;
 
 class StudentStatementsGenerator extends StatementsGenerator
 {
-    public const SELECTED_OPTION_LABEL = '*';
     public const EMPTY_WRONG_CHOICES_LABEL = 'відсутні';
 
     protected TestResult $result;
@@ -26,7 +25,7 @@ class StudentStatementsGenerator extends StatementsGenerator
     }
 
     /**
-     * @param TemplateProcessor $templateProcessor
+     * @param  TemplateProcessor  $templateProcessor
      * @throws NullPointerException
      */
     protected function doGenerate(TemplateProcessor $templateProcessor): void
@@ -39,8 +38,8 @@ class StudentStatementsGenerator extends StatementsGenerator
 
         $i = 1;
         foreach ($this->result->askedQuestions as $askedQuestion) {
-
             $question = $askedQuestion->question;
+            $selectedAnswerPresenter = new SelectedAnswerPresenter(QuestionType::fromQuestion($question));
             $score = $questionsScore[$question->id] * 100; // score in percents
 
             $selectedNotRight = [];
@@ -51,7 +50,7 @@ class StudentStatementsGenerator extends StatementsGenerator
                     $i,
                     $j,
                     $answer->answerOption->text,
-                    ($answer->is_chosen) ? self::SELECTED_OPTION_LABEL : ''
+                    $selectedAnswerPresenter->labelForAnswer($answer),
                 );
 
                 if ($answer->is_chosen !== $answer->answerOption->is_right) {
@@ -64,7 +63,7 @@ class StudentStatementsGenerator extends StatementsGenerator
             $this->setQuestionInfo(
                 $i,
                 $question->question,
-                round($score, 2) . ' %',
+                round($score, 2).' %',
                 empty($selectedNotRight) ? self::EMPTY_WRONG_CHOICES_LABEL : implode(', ', $selectedNotRight)
             );
 
@@ -76,32 +75,38 @@ class StudentStatementsGenerator extends StatementsGenerator
 
     protected function setQuestionInfo(int $index, string $question, string $score, string $selectedNotRight): void
     {
-        $this->templateProcessor->setValues([
-            "questionNumber#{$index}"   => $index,
-            "question#{$index}"         => $question,
-            "questionScore#{$index}"    => $score,
-            "selectedNotRight#{$index}" => $selectedNotRight
-        ]);
+        $this->templateProcessor->setValues(
+            [
+                "questionNumber#{$index}" => $index,
+                "question#{$index}" => $question,
+                "questionScore#{$index}" => $score,
+                "selectedNotRight#{$index}" => $selectedNotRight
+            ]
+        );
     }
 
     protected function setOptionInfo(int $questionIndex, int $optionIndex, string $optionText, string $selectedMark): void
     {
-        $this->templateProcessor->setValues([
-            "optionNumber#${questionIndex}#${optionIndex}"   => $optionIndex,
-            "optionText#${questionIndex}#${optionIndex}"     => $optionText,
-            "optionSelected#${questionIndex}#${optionIndex}" => $selectedMark,
-        ]);
+        $this->templateProcessor->setValues(
+            [
+                "optionNumber#${questionIndex}#${optionIndex}" => $optionIndex,
+                "optionText#${questionIndex}#${optionIndex}" => $optionText,
+                "optionSelected#${questionIndex}#${optionIndex}" => $selectedMark,
+            ]
+        );
     }
 
     protected function setSummary(): void
     {
-        $this->templateProcessor->setValues([
-            'studentFullName'  => $this->result->user->full_name,
-            'subjectName'      => $this->result->test->subject->name,
-            'testName'         => $this->result->test->name,
-            'resultInPercents' => $this->result->score_readable,
-            'resultMark'       => $this->result->mark_readable
-        ]);
+        $this->templateProcessor->setValues(
+            [
+                'studentFullName' => $this->result->user->full_name,
+                'subjectName' => $this->result->test->subject->name,
+                'testName' => $this->result->test->name,
+                'resultInPercents' => $this->result->score_readable,
+                'resultMark' => $this->result->mark_readable
+            ]
+        );
     }
 
     protected function buildSkeleton(): void
@@ -113,7 +118,6 @@ class StudentStatementsGenerator extends StatementsGenerator
 
         $i = 1;
         foreach ($this->result->askedQuestions as $askedQuestion) {
-
             $this->cloneBlock(
                 "optionBlock#$i",
                 $askedQuestion->answers->count()

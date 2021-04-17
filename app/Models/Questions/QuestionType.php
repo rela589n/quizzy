@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models\Questions;
 
+use App\Models\Question;
+
 final class QuestionType
 {
     private string $type;
@@ -39,6 +41,11 @@ final class QuestionType
         }
 
         return $this->equalsTo(new self($other));
+    }
+
+    public static function fromQuestion(Question $question): self
+    {
+        return new self($question->type);
     }
 
     public function __toString(): string
