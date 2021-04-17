@@ -78,3 +78,12 @@ Route::prefix('/tests')
         }
     );
 
+Route::prefix('results')
+    ->name('.results')
+    ->namespace('Results')
+    ->group(
+        function () {
+            Route::get('/', 'ResultsController@index')
+                ->name('.index');
+        }
+    );
