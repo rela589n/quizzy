@@ -14,9 +14,9 @@ interface MarkEvaluator
      */
     public function putMark(?float $fullTestScore): ?int;
 
-    public function minPossibleMark(): int;
+    public function minPossibleMark(): ?int;
 
-    public function maxPossibleMark(): int;
+    public function maxPossibleMark(): ?int;
 
     public function leastPercentForMark(int $mark): float;
 }
