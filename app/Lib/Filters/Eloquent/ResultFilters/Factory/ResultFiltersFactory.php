@@ -50,7 +50,7 @@ final class ResultFiltersFactory
     {
         switch (true) {
             case 'resultId' === $name:
-                return new ResultIdFilter($value);
+                return new ResultIdFilter((int)$value);
             case 'subjectName' === $name:
                 return new SubjectNameFilter($value);
             case 'testName' === $name:
