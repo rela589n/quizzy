@@ -151,17 +151,13 @@ class TestsController extends ClientController
         $testResult = $this->urlManager->getCurrentTestResult();
         $this->authorize('view', $testResult);
 
-        $testResult->score_readable;
-        $testResult->mark;
-        $testResult->mark_readable;
-
         return view(
             'pages.client.pass-test-single-result',
             [
                 'subject'        => $currentTest->subject,
                 'test'           => $currentTest,
                 'resultPercents' => $testResult->score_readable,
-                'resultMark'     => $testResult->mark_readable
+                'resultMark'     => $testResult->mark_readable_old,
             ]
         );
     }
