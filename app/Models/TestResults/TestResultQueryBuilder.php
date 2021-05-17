@@ -5,6 +5,7 @@ namespace App\Models\TestResults;
 
 
 use App\Lib\Filters\Eloquent\ResultFilter;
+use App\Lib\Filters\Eloquent\ResultFilters\QueryFilter;
 use App\Lib\Traits\FilteredScope;
 use App\Models\Test;
 use App\Models\TestResult;
@@ -96,5 +97,12 @@ class TestResultQueryBuilder extends Builder
                 fn(JoinClause $join) => $join->on('test_results.user_id', '=', 'recent_passage.user_id')
                     ->on('test_results.created_at', '=', 'recent_passage.last_passage_at')
             );
+    }
+
+    public function applyQueryFilter(QueryFilter $filter): self
+    {
+        $filter->apply($this);
+
+        return $this;
     }
 }
