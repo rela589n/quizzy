@@ -21,8 +21,7 @@ class TestResultMarksFilter extends NovaRangeFilter
     public function __construct(int $testId)
     {
         $this->markEvaluator = app(MarkEvaluatorsFactory::class)
-            ->setTest(Test::findOrFail($testId))
-            ->resolve();
+            ->resolve(Test::findOrFail($testId));
 
         $this->min = ($this->markEvaluator->minPossibleMark());
         $this->max = ($this->markEvaluator->maxPossibleMark());
