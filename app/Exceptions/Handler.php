@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -45,6 +46,15 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof EmptyTestResultsException) {
             throw new NotFoundHttpException();
+        }
+
+        if ($exception instanceof IncompatibleMarkEvaluationStrategies) {
+            return $this->render(
+                $request,
+                ValidationException::withMessages(
+                    ['mark' => 'На разі немає змоги відфільтрувати по оцінці, адже ви проходили тести з несумісними стратегіями оцінювання.']
+                )
+            );
         }
 
         return parent::render($request, $exception);
