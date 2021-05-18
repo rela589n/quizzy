@@ -32,6 +32,7 @@ Route::get('/documentation', 'DocumentationController@getWordDocument')->name('.
 Route::prefix('/tests')
     ->name('.tests')
     ->namespace('Tests')
+    ->middleware('auth:client')
     ->group(
         static function () {
             $routePatterns = Route::getPatterns();
