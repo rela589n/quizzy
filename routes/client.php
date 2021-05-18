@@ -84,6 +84,7 @@ Route::prefix('results')
     ->group(
         function () {
             Route::get('/', 'ResultsController@index')
-                ->name('.index');
+                 ->name('.index')
+                 ->middleware('auth:client');
         }
     );
