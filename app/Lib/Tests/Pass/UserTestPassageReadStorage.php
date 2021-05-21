@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Lib\Tests\Pass;
 
-use App\Lib\Tests\Pass\Query\QuestionsGate;
+use App\Lib\Tests\Pass\Query\QuestionsRepository;
 use App\Models\Question;
 use App\Models\Test;
 use App\Models\User;
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Collection;
 final class UserTestPassageReadStorage
 {
     private Cache $cache;
-    private QuestionsGate $questionsGate;
+    private QuestionsRepository $questionsGate;
 
     private Test $test;
     private User $user;
@@ -26,7 +26,7 @@ final class UserTestPassageReadStorage
         $this->test = $test;
         $this->user = $user;
         $this->cache = app()->make(Cache::class);
-        $this->questionsGate = new QuestionsGate();
+        $this->questionsGate = new QuestionsRepository();
     }
 
     public function sessionExists(): bool
@@ -55,7 +55,7 @@ final class UserTestPassageReadStorage
     {
         $this->cache->set(
             "questions:{$this->test->id}:{$this->user->id}",
-            $this->questionsGate->read($this->test),
+            $this->questionsGate->readTestQuestions($this->test),
             $this->timeToLive(),
         );
     }
