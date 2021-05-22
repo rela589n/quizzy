@@ -76,6 +76,7 @@ final class Administrator extends Resource
                 ->showOnUpdating($showcallback),
 
             BelongsToManyField::make('Предмети', 'testSubjects', TestSubject::class)
+                ->hideFromIndex()
                 ->showOnUpdating($showcallback),
 
             Boolean::make('Змінено пароль', 'password_changed')
