@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.4",
         "ext-json": "*",
+        "ext-zip": "*",
         "benjacho/belongs-to-many-field": "^1.8",
         "laravel-lang/lang": "^10.0",
         "cdbeaton/boolean-tick": "dev-master",
