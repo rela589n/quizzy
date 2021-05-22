@@ -13,6 +13,7 @@ use App\Nova\Fields\Custom\Test\GradingTableField;
 use App\Nova\Fields\Custom\Test\NameField;
 use App\Nova\Fields\Custom\Test\NameStackReadOnly;
 use App\Nova\Fields\Custom\Test\PassTimeField;
+use App\Nova\Fields\Custom\Test\QuestionsOrderField;
 use App\Nova\Fields\Custom\Test\ResultsCountReadOnly;
 use App\Nova\Fields\Custom\Test\TestDisplayStrategyField;
 use App\Nova\Fields\Custom\Test\TestSubjectField;
@@ -98,6 +99,8 @@ class Test extends Resource
             PassTimeField::make(),
 
             TestDisplayStrategyField::make(),
+
+            QuestionsOrderField::make(),
 
             AttemptsPerUserField::make(),
 

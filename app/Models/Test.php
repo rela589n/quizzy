@@ -89,6 +89,14 @@ class Test extends Model
         self::EVALUATOR_TYPE_CUSTOM,
     ];
 
+    public const QUESTION_ORDER_RANDOM = 'random';
+    public const QUESTION_ORDER_SERIATIM = 'seriatim';
+
+    public const QUESTION_ORDERS = [
+        self::QUESTION_ORDER_RANDOM,
+        self::QUESTION_ORDER_SERIATIM,
+    ];
+
     public const EVALUATOR_LABELS = [
         'За замовчуванням',
         'Власна методика',
