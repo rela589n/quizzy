@@ -131,14 +131,6 @@ class Test extends Model
         return $this->hasMany(TestComposite::class, 'id_test');
     }
 
-    /**
-     * @return Collection|Question[]
-     */
-    public function allQuestions()
-    {
-        return Collection::make($this->testComposites->pluck('questions')->flatten());
-    }
-
     /** @return HasMany|TestResult */
     public function testResults(): HasMany
     {

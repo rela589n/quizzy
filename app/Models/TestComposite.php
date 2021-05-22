@@ -49,12 +49,10 @@ class TestComposite extends Pivot
 
     public function questions()
     {
-        $builder = $this->hasManyDeepFromRelations(
+        return $this->hasManyDeepFromRelations(
             $this->includeTest(),
             (new Test)->nativeQuestions()
         );
-
-        return $this->applySort($builder);
     }
 
     /**
