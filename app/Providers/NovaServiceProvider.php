@@ -63,7 +63,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         Gate::define(
             'viewNova',
-            fn($user) => $user instanceof Administrator
+            fn($user) => $user instanceof \App\Models\Administrator
         );
     }
 
