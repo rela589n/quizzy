@@ -14,7 +14,7 @@ final class AddTypeToQuestionsTable extends Migration
             'questions',
             function (Blueprint $table) {
                 $table->string('type')
-                    ->default('c');
+                    ->default('checkboxes');
             }
         );
     }
