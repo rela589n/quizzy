@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4166f1a6e020c1a54b448f4553ee5e4",
+    "content-hash": "fdac04b414a73beb6ea04c67f8c772c1",
     "packages": [
         {
             "name": "benjacho/belongs-to-many-field",
@@ -3670,10 +3670,16 @@
         {
             "name": "rela589n/nova-date-time-filter",
             "version": "1.0.0",
-            "dist": {
-                "type": "path",
-                "url": "./nova-components/NovaDateTimeFilter",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rela589n/nova-date-time-filter.git",
                 "reference": "ccf8485e04c0a97feb7e33665043d1827291e39a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rela589n/nova-date-time-filter/zipball/ccf8485e04c0a97feb7e33665043d1827291e39a",
+                "reference": "ccf8485e04c0a97feb7e33665043d1827291e39a",
+                "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8"
@@ -3704,10 +3710,7 @@
             "keywords": [
                 "laravel",
                 "nova"
-            ],
-            "transport-options": {
-                "relative": true
-            }
+            ]
         },
         {
             "name": "saintsystems/nova-linkable-metrics",
