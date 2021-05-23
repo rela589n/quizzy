@@ -64,6 +64,8 @@ use Illuminate\Support\Carbon;
  * @method static TestEloquentBuilder|Test whereAttemptsPerUser($value)
  * @method static TestEloquentBuilder|Test whereQuestionsOrder($value)
  * @method static TestEloquentBuilder|Test withUserResultsCount(\App\Models\User $user)
+ * @property string $answer_options_order
+ * @method static TestEloquentBuilder|Test whereAnswerOptionsOrder($value)
  */
 class Test extends Model
 {
@@ -100,6 +102,14 @@ class Test extends Model
     public const QUESTION_ORDERS = [
         self::QUESTION_ORDER_RANDOM,
         self::QUESTION_ORDER_SERIATIM,
+    ];
+
+    public const ANSWER_OPTION_ORDER_RANDOM = 'random';
+    public const ANSWER_OPTION_ORDER_SERIATIM = 'seriatim';
+
+    public const ANSWER_OPTION_ORDERS = [
+        self::ANSWER_OPTION_ORDER_RANDOM,
+        self::ANSWER_OPTION_ORDER_SERIATIM,
     ];
 
     public const EVALUATOR_LABELS = [
