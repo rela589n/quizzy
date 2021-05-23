@@ -24,6 +24,7 @@ use Eminiarts\Tabs\Tabs;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -104,6 +105,8 @@ class Test extends Resource
             QuestionsOrderField::make(),
 
             AnswerOptionsOrderField::make(),
+
+            Boolean::make('Обмеження сторонньої активності', 'restrict_extraneous_activity'),
 
             AttemptsPerUserField::make(),
 
