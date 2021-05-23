@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 
 /**
  * App\Models\Question
@@ -35,9 +37,19 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|Question withoutTrashed()
  * @property string $type
  * @method static \App\Models\Query\CustomEloquentBuilder|Question whereType($value)
+ * @property int $sort_order
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question ordered(string $direction = 'asc')
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question whereSortOrder($value)
  */
-class Question extends Model
+class Question extends Model implements Sortable
 {
+    use SortableTrait;
+
+    public array $sortable = [
+        'order_column_name' => 'sort_order',
+        'sort_on_has_many' => true,
+    ];
+
     use SoftDeletes;
     public $timestamps = false;
     public $fillable = ['question', 'type', 'test_id'];

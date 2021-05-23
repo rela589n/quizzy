@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use App\Models\Questions\QuestionType;
-use App\Rules\AnswerOptionsRule;
 use App\Rules\AtLeastOneSelected;
 use App\Rules\ExactlyOneSelected;
 use Froala\NovaFroalaField\Froala;
@@ -16,10 +15,15 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\CreateResourceRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use OptimistDigital\NovaSortable\Traits\HasSortableRows;
 use Yassi\NestedForm\NestedForm;
 
 class Question extends Resource
 {
+    use HasSortableRows {
+        indexQuery as private sortableIndexQuery;
+    }
+
     public static $group = 'Tests';
 
     public static $displayInNavigation = false;
@@ -51,7 +55,10 @@ class Question extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->with('test');
+        return self::sortableIndexQuery(
+            $request,
+            $query->with('test'),
+        );
     }
 
     /**
@@ -64,30 +71,30 @@ class Question extends Resource
     {
         return [
             ID::make(__('ID'), 'id')
-                ->sortable(),
+              ->sortable(),
 
             Text::make('Запитання')
                 ->resolveUsing(fn() => $this->title())
                 ->onlyOnIndex(),
 
             Select::make('Тип', 'type')
-                ->options(trans('tests.questions.types'))
-                ->displayUsingLabels(),
+                  ->options(trans('tests.questions.types'))
+                  ->displayUsingLabels(),
 
             Froala::make('Запитання', 'question')
-                ->hideFromIndex()
-                ->withFiles('public')
-                ->rules(['required']),
+                  ->hideFromIndex()
+                  ->withFiles('public')
+                  ->rules(['required']),
 
             BelongsTo::make('Тест', 'test', Test::class)
-                ->exceptOnForms(),
+                     ->exceptOnForms(),
 
             HasMany::make('Варіанти відповідей', 'answerOptions', AnswerOption::class),
         ];
     }
 
     /**
-     * @param CreateResourceRequest $request
+     * @param  CreateResourceRequest  $request
      * @return array
      */
     public function fieldsForCreate($request)
@@ -99,7 +106,7 @@ class Question extends Resource
                 ->rules(
                     [
                         QuestionType::RADIO()
-                            ->equalsTo($request->get('type'))
+                                    ->equalsTo($request->get('type'))
                             ? new ExactlyOneSelected('is_right')
                             : new AtLeastOneSelected('is_right')
                     ]

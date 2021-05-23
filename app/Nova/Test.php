@@ -7,12 +7,14 @@ use App\Nova\Actions\AttachTestsQuestionsToTest;
 use App\Nova\Actions\ExportTestIntoFile;
 use App\Nova\Actions\ImportTestFromFile;
 use App\Nova\Fields\Custom\Test\AdditionalQuestionsRelationField;
+use App\Nova\Fields\Custom\Test\AnswerOptionsOrderField;
 use App\Nova\Fields\Custom\Test\AttemptsPerUserField;
 use App\Nova\Fields\Custom\Test\GradingStrategyField;
 use App\Nova\Fields\Custom\Test\GradingTableField;
 use App\Nova\Fields\Custom\Test\NameField;
 use App\Nova\Fields\Custom\Test\NameStackReadOnly;
 use App\Nova\Fields\Custom\Test\PassTimeField;
+use App\Nova\Fields\Custom\Test\QuestionsOrderField;
 use App\Nova\Fields\Custom\Test\ResultsCountReadOnly;
 use App\Nova\Fields\Custom\Test\TestDisplayStrategyField;
 use App\Nova\Fields\Custom\Test\TestSubjectField;
@@ -98,6 +100,10 @@ class Test extends Resource
             PassTimeField::make(),
 
             TestDisplayStrategyField::make(),
+
+            QuestionsOrderField::make(),
+
+            AnswerOptionsOrderField::make(),
 
             AttemptsPerUserField::make(),
 

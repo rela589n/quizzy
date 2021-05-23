@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
+ * App\Models\Test
+ *
  * @property int $id
  * @property int|null $created_by
  * @property string $name
@@ -39,7 +41,6 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $user_results_count
  * @property-read Collection|Test[] $tests
  * @property-read int|null $tests_count
- *
  * @method static \App\Models\Query\CustomEloquentBuilder|Test newModelQuery()
  * @method static \App\Models\Query\CustomEloquentBuilder|Test newQuery()
  * @method static \App\Models\Query\CustomEloquentBuilder|Test query()
@@ -57,8 +58,14 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|Test withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test withoutTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test onlyTrashed()
- *
  * @mixin Eloquent
+ * @property string $questions_order
+ * @method static TestEloquentBuilder|Test availableForAdmin(\App\Models\Administrator $administrator)
+ * @method static TestEloquentBuilder|Test whereAttemptsPerUser($value)
+ * @method static TestEloquentBuilder|Test whereQuestionsOrder($value)
+ * @method static TestEloquentBuilder|Test withUserResultsCount(\App\Models\User $user)
+ * @property string $answer_options_order
+ * @method static TestEloquentBuilder|Test whereAnswerOptionsOrder($value)
  */
 class Test extends Model
 {
@@ -87,6 +94,22 @@ class Test extends Model
     public const EVALUATOR_TYPES = [
         self::EVALUATOR_TYPE_DEFAULT,
         self::EVALUATOR_TYPE_CUSTOM,
+    ];
+
+    public const QUESTION_ORDER_RANDOM = 'random';
+    public const QUESTION_ORDER_SERIATIM = 'seriatim';
+
+    public const QUESTION_ORDERS = [
+        self::QUESTION_ORDER_RANDOM,
+        self::QUESTION_ORDER_SERIATIM,
+    ];
+
+    public const ANSWER_OPTION_ORDER_RANDOM = 'random';
+    public const ANSWER_OPTION_ORDER_SERIATIM = 'seriatim';
+
+    public const ANSWER_OPTION_ORDERS = [
+        self::ANSWER_OPTION_ORDER_RANDOM,
+        self::ANSWER_OPTION_ORDER_SERIATIM,
     ];
 
     public const EVALUATOR_LABELS = [
@@ -121,14 +144,6 @@ class Test extends Model
     public function testComposites(): HasMany
     {
         return $this->hasMany(TestComposite::class, 'id_test');
-    }
-
-    /**
-     * @return Collection|Question[]
-     */
-    public function allQuestions()
-    {
-        return Collection::make($this->testComposites->pluck('questions')->flatten());
     }
 
     /** @return HasMany|TestResult */

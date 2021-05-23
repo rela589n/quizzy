@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Http\Requests\RequestUrlManager;
+use App\Lib\Tests\Pass\Query\QuestionsRepository;
 use App\Lib\Words\WordsManager;
 use App\Models\Test;
 use App\Models\User;
@@ -53,7 +54,7 @@ class TestsRepository
         return tap(
             $this->urlManager->getCurrentSubject()
                 ->tests()
-                ->with('testComposites.questions')
+                ->with('testComposites')
                 ->withCount('testResults')
                 ->withUserResultsCount($user),
             function (Relation $builder) {
@@ -62,7 +63,9 @@ class TestsRepository
         )->get()
             ->each(
                 static function (Test $test) {
-                    $test->questions_count = $test->allQuestions()->count();
+                    $gate = new QuestionsRepository();
+
+                    $test->questions_count = $gate->readTestQuestionsCount($test);
                 }
             )
             ->filter(
