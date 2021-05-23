@@ -28,6 +28,7 @@
     @forelse($allQuestions as $question)
         @include('blocks.client.question-single', [
             'questionIndex' => $loop->index,
+            'restrictTextSelect' => $test->restrict_text_selection,
         ])
     @empty
         @component('layouts.blocks.empty-list-message')

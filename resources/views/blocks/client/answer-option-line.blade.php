@@ -1,4 +1,4 @@
-<label class="d-block no-select">
+<label class="d-block @if($restrictTextSelect) no-select @endif ">
 
     @if (\App\Models\Questions\QuestionType::CHECKBOXES()->equalsTo($type))
         <input type="hidden" name="ans[{{ $questionId }}][{{ $option->id }}][answer_option_id]" value="{{ $option->id }}">

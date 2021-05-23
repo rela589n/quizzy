@@ -33,6 +33,7 @@
 @section('test-questions')
     @include('blocks.client.question-single', [
         'questionIndex' => $questionIndex,
+        'restrictTextSelect' => $test->restrict_text_selection,
     ])
 @endsection
 
