@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
+ * App\Models\Test
+ *
  * @property int $id
  * @property int|null $created_by
  * @property string $name
@@ -39,7 +41,6 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $user_results_count
  * @property-read Collection|Test[] $tests
  * @property-read int|null $tests_count
- *
  * @method static \App\Models\Query\CustomEloquentBuilder|Test newModelQuery()
  * @method static \App\Models\Query\CustomEloquentBuilder|Test newQuery()
  * @method static \App\Models\Query\CustomEloquentBuilder|Test query()
@@ -57,8 +58,12 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|Test withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test withoutTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test onlyTrashed()
- *
  * @mixin Eloquent
+ * @property string $questions_order
+ * @method static TestEloquentBuilder|Test availableForAdmin(\App\Models\Administrator $administrator)
+ * @method static TestEloquentBuilder|Test whereAttemptsPerUser($value)
+ * @method static TestEloquentBuilder|Test whereQuestionsOrder($value)
+ * @method static TestEloquentBuilder|Test withUserResultsCount(\App\Models\User $user)
  */
 class Test extends Model
 {

@@ -10,6 +10,7 @@ use App\Models\TestComposite;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use JetBrains\PhpStorm\Immutable;
+use RuntimeException;
 
 #[Immutable]
 final class QuestionsRepository
@@ -26,8 +27,6 @@ final class QuestionsRepository
 
     private function questionsWithoutanswers(Test $test)
     {
-        /** @var Collection|Question[] $questions */
-
         return Collection::make(
             $test->testComposites->map(
                 fn(TestComposite $composite) => $this->retrieveCompositeQuestions($test, $composite)
@@ -52,6 +51,17 @@ final class QuestionsRepository
 
     private function retrieveCompositeQuestions(Test $test, TestComposite $composite)
     {
-        return $composite->questions()->inRandomOrder()->limit($composite->questions_quantity)->get();
+        /** @var \Illuminate\Database\Eloquent\Builder|Question $builder */
+        $builder = $composite->questions();
+
+        if (Test::QUESTION_ORDER_RANDOM === $test->questions_order) {
+            $builder->inRandomOrder();
+        } elseif (Test::QUESTION_ORDER_SERIATIM === $test->questions_order) {
+            $builder->ordered();
+        } else {
+            throw new RuntimeException('Unknown question sort order');
+        }
+
+        return $builder->limit($composite->questions_quantity)->get();
     }
 }

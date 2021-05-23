@@ -37,6 +37,9 @@ use Spatie\EloquentSortable\SortableTrait;
  * @method static \Illuminate\Database\Query\Builder|Question withoutTrashed()
  * @property string $type
  * @method static \App\Models\Query\CustomEloquentBuilder|Question whereType($value)
+ * @property int $sort_order
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question ordered(string $direction = 'asc')
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question whereSortOrder($value)
  */
 class Question extends Model implements Sortable
 {
