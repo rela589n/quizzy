@@ -66,6 +66,10 @@ use Illuminate\Support\Carbon;
  * @method static TestEloquentBuilder|Test withUserResultsCount(\App\Models\User $user)
  * @property string $answer_options_order
  * @method static TestEloquentBuilder|Test whereAnswerOptionsOrder($value)
+ * @property int $restrict_extraneous_activity
+ * @method static TestEloquentBuilder|Test whereRestrictExtraneousActivity($value)
+ * @property int $restrict_text_selection
+ * @method static TestEloquentBuilder|Test whereRestrictTextSelection($value)
  */
 class Test extends Model
 {
@@ -119,6 +123,11 @@ class Test extends Model
 
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time', 'mark_evaluator_type', 'test_subject_id'];
+
+    protected $casts = [
+        'restrict_extraneous_activity' => 'bool',
+        'restrict_text_selection' => 'bool',
+    ];
 
     public function subject(): BelongsTo
     {
