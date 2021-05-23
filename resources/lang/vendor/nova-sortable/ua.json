@@ -1,0 +1,11 @@
+{
+    "novaSortable.reorderingDisabledTooltip.activeSort": "Сортировка отключена при других опциях сортировки.",
+    "novaSortable.reorderingDisabledTooltip.notAllowed": "Перевпорядкування цього ресурсу не є можливе.",
+    "novaSortable.moveToStart": "Перемістити на початок",
+    "novaSortable.moveToEnd": "Перемістити в кінець",
+    "novaSortable.reorderSuccessful": "Ресурси успішно перевпорядковані.",
+    "novaSortable.moveToStartSuccessful": "Ресурс успішно переміщений на першу позицію.",
+    "novaSortable.moveToEndSuccessful": "Ресурс успішно переміщено на останню позицію.",
+    "novaSortable.reorderError": "Під час спроби змінити порядок ресурсу сталася помилка.",
+    "novaSortable.reorderNotAllowedFor": "Перевпорядкування ресурсу з ідентифікатором :id, не дозволяється."
+}
