@@ -40,8 +40,16 @@ final class QuestionsRepository
 
         $questions->load(
             [
-                'answerOptions' => static function (Relation $q) {
-                    $q->inRandomOrder();
+                'answerOptions' => static function (Relation $q) use ($test) {
+                    if (Test::ANSWER_OPTION_ORDER_RANDOM === $test->answer_options_order) {
+                        $q->inRandomOrder();
+                    } elseif (Test::ANSWER_OPTION_ORDER_SERIATIM === $test->answer_options_order) {
+                        $q->orderBy('id');
+                    } else {
+                        throw new RuntimeException(
+                            "Unknown answer_options_order: $test->answer_options_order for test $test->id"
+                        );
+                    }
                 }
             ]
         );
@@ -59,7 +67,7 @@ final class QuestionsRepository
         } elseif (Test::QUESTION_ORDER_SERIATIM === $test->questions_order) {
             $builder->ordered();
         } else {
-            throw new RuntimeException('Unknown question sort order');
+            throw new RuntimeException("Unknown questions_order: $test->questions_order");
         }
 
         return $builder->limit($composite->questions_quantity)->get();
