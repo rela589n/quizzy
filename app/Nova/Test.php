@@ -108,6 +108,8 @@ class Test extends Resource
 
             Boolean::make('Обмеження сторонньої активності', 'restrict_extraneous_activity'),
 
+            Boolean::make('Обмеження виділення тексту', 'restrict_text_selection'),
+
             AttemptsPerUserField::make(),
 
             ResultsCountReadOnly::make(),
