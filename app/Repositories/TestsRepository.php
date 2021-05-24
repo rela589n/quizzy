@@ -54,6 +54,7 @@ class TestsRepository
         return tap(
             $this->urlManager->getCurrentSubject()
                 ->tests()
+                ->whereIsPublished(true)
                 ->with('testComposites')
                 ->withCount('testResults')
                 ->withUserResultsCount($user),

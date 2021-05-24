@@ -38,4 +38,9 @@ final class TestEloquentBuilder extends CustomEloquentBuilder
             static fn(SubjectEloquentBuilder $builder) => $builder->availableForAdmin($administrator)
         )->where('created_by', $administrator->id);
     }
+
+    public function availableToPassBy(User $user): self
+    {
+        return $this->whereIsPublished(true);
+    }
 }
