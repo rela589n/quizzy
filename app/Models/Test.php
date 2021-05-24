@@ -129,6 +129,7 @@ class Test extends Model
     protected $casts = [
         'restrict_extraneous_activity' => 'bool',
         'restrict_text_selection' => 'bool',
+        'is_published' => 'bool',
     ];
 
     public function subject(): BelongsTo

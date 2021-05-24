@@ -59,10 +59,10 @@ class Test extends Resource
     public static function indexQuery(NovaRequest $request, $query)
     {
         return $query->withCount('testResults')
-                     ->with('subject')
-                     ->with('marksPercents')
-                     ->with('nativeQuestions.answerOptions')
-                     ->availableForAdmin($request->user());
+            ->with('subject')
+            ->with('marksPercents')
+            ->with('nativeQuestions.answerOptions')
+            ->availableForAdmin($request->user());
     }
 
     /**
@@ -73,7 +73,7 @@ class Test extends Resource
     public static function detailQuery(NovaRequest $request, $query): Builder
     {
         return $query->withCount('testResults')
-                     ->with('subject');
+            ->with('subject');
     }
 
     public function fields(Request $request)
@@ -88,7 +88,8 @@ class Test extends Resource
             NameField::make(),
 
             Boolean::make('Доступний для проходження', 'is_published')
-                   ->hideFromIndex(),
+                ->withMeta(['value' => $this->resource->is_published ?? true])
+                ->hideFromIndex(),
 
             UriAliasField::make(),
 
@@ -99,7 +100,7 @@ class Test extends Resource
             AdditionalQuestionsRelationField::make(),
 
             NovaDependencyContainer::make([GradingTableField::make()])
-                                   ->dependsOn('mark_evaluator_type', 'custom'),
+                ->dependsOn('mark_evaluator_type', 'custom'),
 
             PassTimeField::make(),
 
@@ -110,10 +111,10 @@ class Test extends Resource
             AnswerOptionsOrderField::make(),
 
             Boolean::make('Обмеження сторонньої активності', 'restrict_extraneous_activity')
-                   ->hideFromIndex(),
+                ->hideFromIndex(),
 
             Boolean::make('Обмеження виділення тексту', 'restrict_text_selection')
-                   ->hideFromIndex(),
+                ->hideFromIndex(),
 
             AttemptsPerUserField::make(),
 
@@ -125,7 +126,7 @@ class Test extends Resource
                     HasMany::make('Запитання', 'nativeQuestions', Question::class),
 
                     HasMany::make('Результати проходження', 'testResults', TestResult::class)
-                           ->singularLabel('проходження'),
+                        ->singularLabel('проходження'),
                 ]
             ),
 
