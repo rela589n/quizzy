@@ -87,6 +87,9 @@ class Test extends Resource
 
             NameField::make(),
 
+            Boolean::make('Доступний для проходження', 'is_published')
+                   ->hideFromIndex(),
+
             UriAliasField::make(),
 
             TestTypeField::make(),
