@@ -14,7 +14,7 @@ return [
     */
 
     'options' => [
-        //'key' => env('FROALA_KEY'),
+        'key' => env('FROALA_KEY'),
         //'iconsTemplate' => 'font_awesome_5',
         //'tuiEnable' => true,
 
