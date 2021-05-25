@@ -34,13 +34,13 @@ class MarkTrend extends Trend
         $result = $results->find($result->id);
 
         $results = $results->keyBy('id');
-        $currentKey = -1;
+        $currentKey = 0;
         foreach ($results as $id => $_result) {
-            ++$currentKey;
-
-            if ($id === $_result->id) {
+            if ($id === $result->id) {
                 break;
             }
+
+            ++$currentKey;
         }
 
         return (new TrendResult())
