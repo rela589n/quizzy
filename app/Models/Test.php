@@ -70,6 +70,8 @@ use Illuminate\Support\Carbon;
  * @method static TestEloquentBuilder|Test whereRestrictExtraneousActivity($value)
  * @property int $restrict_text_selection
  * @method static TestEloquentBuilder|Test whereRestrictTextSelection($value)
+ * @property int $is_published
+ * @method static TestEloquentBuilder|Test whereIsPublished($value)
  */
 class Test extends Model
 {
@@ -127,6 +129,7 @@ class Test extends Model
     protected $casts = [
         'restrict_extraneous_activity' => 'bool',
         'restrict_text_selection' => 'bool',
+        'is_published' => 'bool',
     ];
 
     public function subject(): BelongsTo
