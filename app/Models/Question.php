@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -40,9 +41,12 @@ use Spatie\EloquentSortable\SortableTrait;
  * @property int $sort_order
  * @method static \App\Models\Query\CustomEloquentBuilder|Question ordered(string $direction = 'asc')
  * @method static \App\Models\Query\CustomEloquentBuilder|Question whereSortOrder($value)
+ * @property-read Collection|\App\Models\Literature[] $literatures
+ * @property-read int|null $literatures_count
  */
 class Question extends Model implements Sortable
 {
+    use SoftDeletes;
     use SortableTrait;
 
     public array $sortable = [
@@ -50,7 +54,6 @@ class Question extends Model implements Sortable
         'sort_on_has_many' => true,
     ];
 
-    use SoftDeletes;
     public $timestamps = false;
     public $fillable = ['question', 'type', 'test_id'];
 
@@ -63,6 +66,12 @@ class Question extends Model implements Sortable
     public function answerOptions(): HasMany
     {
         return $this->hasMany(AnswerOption::class);
+    }
+
+    /** @deprecated */
+    public function _literatures(): BelongsToMany
+    {
+        return $this->belongsToMany(Literature::class);
     }
 
     /**

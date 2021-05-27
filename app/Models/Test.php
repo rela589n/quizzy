@@ -172,6 +172,12 @@ class Test extends Model
         return $this->hasMany(MarkPercent::class);
     }
 
+    /** @deprecated */
+    public function _literatures(): HasMany
+    {
+        return $this->hasMany(Literature::class);
+    }
+
     public function isComposite(): bool
     {
         return self::TYPE_COMPOSED === $this->type;
