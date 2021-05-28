@@ -43,6 +43,7 @@ use Spatie\EloquentSortable\SortableTrait;
  * @method static \App\Models\Query\CustomEloquentBuilder|Question whereSortOrder($value)
  * @property-read Collection|\App\Models\Literature[] $literatures
  * @property-read int|null $literatures_count
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question whereLiteratures($value)
  */
 class Question extends Model implements Sortable
 {
@@ -56,6 +57,10 @@ class Question extends Model implements Sortable
 
     public $timestamps = false;
     public $fillable = ['question', 'type', 'test_id'];
+
+    protected $casts = [
+        'literatures' => 'array',
+    ];
 
     public function test(): BelongsTo
     {
