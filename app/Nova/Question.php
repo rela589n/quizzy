@@ -8,6 +8,7 @@ use App\Rules\ExactlyOneSelected;
 use Froala\NovaFroalaField\Froala;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -17,6 +18,8 @@ use Laravel\Nova\Http\Requests\CreateResourceRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use OptimistDigital\NovaSortable\Traits\HasSortableRows;
 use Yassi\NestedForm\NestedForm;
+
+use function trans;
 
 class Question extends Resource
 {
@@ -71,23 +74,24 @@ class Question extends Resource
     {
         return [
             ID::make(__('ID'), 'id')
-              ->sortable(),
+                ->sortable(),
 
             Text::make('Запитання')
                 ->resolveUsing(fn() => $this->title())
                 ->onlyOnIndex(),
 
             Select::make('Тип', 'type')
-                  ->options(trans('tests.questions.types'))
-                  ->displayUsingLabels(),
+                ->rules(['type' => Rule::in(array_keys(trans('tests.questions.types')))])
+                ->options(trans('tests.questions.types'))
+                ->displayUsingLabels(),
 
             Froala::make('Запитання', 'question')
-                  ->hideFromIndex()
-                  ->withFiles('public')
-                  ->rules(['required']),
+                ->hideFromIndex()
+                ->withFiles('public')
+                ->rules(['required']),
 
             BelongsTo::make('Тест', 'test', Test::class)
-                     ->exceptOnForms(),
+                ->exceptOnForms(),
 
             HasMany::make('Варіанти відповідей', 'answerOptions', AnswerOption::class),
         ];
@@ -106,7 +110,7 @@ class Question extends Resource
                 ->rules(
                     [
                         QuestionType::RADIO()
-                                    ->equalsTo($request->get('type'))
+                            ->equalsTo($request->get('type'))
                             ? new ExactlyOneSelected('is_right')
                             : new AtLeastOneSelected('is_right')
                     ]
