@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\CreateResourceRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use NovaItemsField\Items;
 use OptimistDigital\NovaSortable\Traits\HasSortableRows;
 use Yassi\NestedForm\NestedForm;
 
@@ -92,6 +93,10 @@ class Question extends Resource
 
             BelongsTo::make('Тест', 'test', Test::class)
                 ->exceptOnForms(),
+
+            Items::make('Література', 'literatures')
+                ->hideFromIndex()
+                ->rules(['literatures.*' => 'string|min:5']),
 
             HasMany::make('Варіанти відповідей', 'answerOptions', AnswerOption::class),
         ];
