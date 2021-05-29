@@ -10,5 +10,5 @@ shell_exec("$php $composer dump-autoload");
 shell_exec("$php artisan storage:link");
 shell_exec("$php artisan nova:publish");
 shell_exec("$php artisan view:clear");
-shell_exec("$php artisan migrate");
+shell_exec("$php artisan migrate --force");
 
