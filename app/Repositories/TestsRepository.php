@@ -57,7 +57,8 @@ class TestsRepository
                 ->whereIsPublished(true)
                 ->with('testComposites')
                 ->withCount('testResults')
-                ->withUserResultsCount($user),
+                ->withUserResultsCount($user)
+                ->whereUserResultsCountLessThanAllowedAttempts($user),
             function (Relation $builder) {
                 $this->applyOrder($builder);
             }
