@@ -72,6 +72,9 @@ use Illuminate\Support\Carbon;
  * @method static TestEloquentBuilder|Test whereRestrictTextSelection($value)
  * @property int $is_published
  * @method static TestEloquentBuilder|Test whereIsPublished($value)
+ * @method static TestEloquentBuilder|Test availableToPassBy(\App\Models\User $user)
+ * @method static TestEloquentBuilder|Test whereMaxAttemptsStartDate($value)
+ * @property Carbon|null $max_attempts_start_date
  */
 class Test extends Model
 {
@@ -130,6 +133,7 @@ class Test extends Model
         'restrict_extraneous_activity' => 'bool',
         'restrict_text_selection' => 'bool',
         'is_published' => 'bool',
+        'max_attempts_start_date' => 'datetime',
     ];
 
     public function subject(): BelongsTo

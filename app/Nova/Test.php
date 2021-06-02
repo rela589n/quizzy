@@ -25,6 +25,7 @@ use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -118,6 +119,15 @@ class Test extends Resource
 
             AttemptsPerUserField::make(),
 
+            NovaDependencyContainer::make(
+                [
+                    DateTime::make('Дата відліку обмеження спроб', 'max_attempts_start_date')
+                        ->rules(['required_with:attempts_per_user'])
+                        ->help('Спроби будуть обмежені починаючи цією датою (всі проходження до дати не обмежуються)')
+                ]
+            )->dependsOnNotEmpty('attempts_per_user')
+                ->hideFromIndex(),
+
             ResultsCountReadOnly::make(),
 
             new Tabs(
@@ -131,6 +141,18 @@ class Test extends Resource
             ),
 
         ];
+    }
+
+    protected static function fillFields(NovaRequest $request, $model, $fields)
+    {
+        /** @var \App\Models\Test $model */
+        $result = parent::fillFields($request, $model, $fields);
+
+        if (empty($request->get('attempts_per_user'))) {
+            $model->max_attempts_start_date = null;
+        }
+
+        return $result;
     }
 
     public static function label()
