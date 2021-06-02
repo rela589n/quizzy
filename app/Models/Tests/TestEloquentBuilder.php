@@ -64,6 +64,7 @@ final class TestEloquentBuilder extends CustomEloquentBuilder
 
     public function availableToPassBy(User $user): self
     {
-        return $this->whereIsPublished(true);
+        return $this->whereIsPublished(true)
+            ->whereUserResultsCountLessThanAllowedAttempts($user);
     }
 }
