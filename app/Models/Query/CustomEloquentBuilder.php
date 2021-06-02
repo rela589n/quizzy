@@ -7,6 +7,7 @@ namespace App\Models\Query;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
+/** @mixin CustomBuilder */
 class CustomEloquentBuilder extends EloquentBuilder
 {
 

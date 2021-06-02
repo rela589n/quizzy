@@ -57,7 +57,8 @@ class TestsRepository
                 ->whereIsPublished(true)
                 ->with('testComposites')
                 ->withCount('testResults')
-                ->withUserResultsCount($user),
+                ->withUserResultsCount($user)
+                ->whereUserResultsCountLessThanAllowedAttempts($user),
             function (Relation $builder) {
                 $this->applyOrder($builder);
             }
@@ -68,12 +69,6 @@ class TestsRepository
 
                     $test->questions_count = $gate->readTestQuestionsCount($test);
                 }
-            )
-            ->filter(
-                static fn(Test $test) => optional(
-                        $test->attempts_per_user,
-                        static fn() => $test->attempts_per_user - $test->user_results_count > 0
-                    ) ?? true
             )
             ->each(
                 function (Test $test) {
