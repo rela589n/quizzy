@@ -70,12 +70,6 @@ class TestsRepository
                     $test->questions_count = $gate->readTestQuestionsCount($test);
                 }
             )
-            ->filter(
-                static fn(Test $test) => optional(
-                        $test->attempts_per_user,
-                        static fn() => $test->attempts_per_user - $test->user_results_count > 0
-                    ) ?? true
-            )
             ->each(
                 function (Test $test) {
                     if (null === $test->attempts_per_user) {
