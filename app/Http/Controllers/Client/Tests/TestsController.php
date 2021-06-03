@@ -166,9 +166,15 @@ class TestsController extends ClientController
             [
                 'subject' => $currentTest->subject,
                 'test' => $currentTest,
+                'resultId' => $testResult->id,
                 'resultPercents' => $testResult->score_readable,
                 'resultMark' => $testResult->mark_readable
             ]
         );
+    }
+
+    public function showLiteraturePage()
+    {
+
     }
 }
