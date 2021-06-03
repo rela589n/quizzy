@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use RuntimeException;
 use Webmozart\Assert\Assert;
 
+use function view;
+
 class TestsController extends ClientController
 {
     public function showSingleTestForm(Request $request)
@@ -168,13 +170,28 @@ class TestsController extends ClientController
                 'test' => $currentTest,
                 'resultId' => $testResult->id,
                 'resultPercents' => $testResult->score_readable,
-                'resultMark' => $testResult->mark_readable
+                'resultMark' => $testResult->mark_readable,
+                'outputLiterature' => $currentTest->output_literature, // todo check if there is literature to output
             ]
         );
     }
 
     public function showLiteraturePage()
     {
+        $currentTest = $this->urlManager->getCurrentTest();
+        $testResult = $this->urlManager->getCurrentTestResult();
+        $this->authorize('view', $testResult);
 
+        return view(
+            'pages.client.pass-test-single-result-literature',
+            [
+                'subject' => $currentTest->subject,
+                'test' => $currentTest,
+                'resultId' => $testResult->id,
+                'resultPercents' => $testResult->score_readable,
+                'resultMark' => $testResult->mark_readable,
+                'outputLiterature' => $currentTest->output_literature, // todo check if there is literature to output
+            ]
+        );
     }
 }

@@ -9,11 +9,11 @@
 @endphp
 
 @section('title')
-    Результати: {{ $subject->name }} - {{ $test->name }}
+    Література: {{ $subject->name }} - {{ $test->name }}
 @endsection
 
 @section('category-header-text')
-    Результати тестування {{ $subject->name }} - {{ $test->name }}:
+    Література {{ $subject->name }} - {{ $test->name }}:
 @endsection
 
 @section('main-container-class')

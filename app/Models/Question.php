@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Questions\QuestionEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -44,6 +45,7 @@ use Spatie\EloquentSortable\SortableTrait;
  * @property-read Collection|\App\Models\Literature[] $literatures
  * @property-read int|null $literatures_count
  * @method static \App\Models\Query\CustomEloquentBuilder|Question whereLiteratures($value)
+ * @mixin QuestionEloquentBuilder
  */
 class Question extends Model implements Sortable
 {
@@ -89,5 +91,10 @@ class Question extends Model implements Sortable
     public function scopeRandom($query, $limit)
     {
         return $query->inRandomOrder()->limit($limit);
+    }
+
+    public function newEloquentBuilder($query): QuestionEloquentBuilder
+    {
+        return new QuestionEloquentBuilder($query);
     }
 }
