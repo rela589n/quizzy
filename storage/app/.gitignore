@@ -1,3 +1,5 @@
 *
 !public/
+!backups/
+!backup-temp/
 !.gitignore
