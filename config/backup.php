@@ -95,7 +95,7 @@ return [
          *
          * If you do not want any compressor at all, set it to null.
          */
-        'database_dump_compressor' => null,
+        'database_dump_compressor' => Spatie\DbDumper\Compressors\GzipCompressor::class,
 
         /*
          * The file extension used for the database dump files.
@@ -116,7 +116,7 @@ return [
              * The disk names on which the backups will be stored.
              */
             'disks' => [
-                'local',
+                'backups',
             ],
         ],
 
