@@ -37,6 +37,7 @@
         "phpoffice/phpword": "^0.17.0",
         "rela589n/nova-date-time-filter": "*",
         "saintsystems/nova-linkable-metrics": "^0.1.0",
+        "spatie/laravel-backup": "^6.16",
         "spatie/laravel-permission": "^3.8",
         "staudenmeir/eloquent-has-many-deep": "^1.11",
         "techouse/select-auto-complete": "^1.3",
