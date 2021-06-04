@@ -9,7 +9,9 @@ use App\Lib\Tests\Pass\Exceptions\QuestionsRanOutException;
 use App\Lib\Tests\Pass\Exceptions\TimeIsUpException;
 use App\Lib\Tests\Pass\PassTestService;
 use App\Lib\Tests\Pass\TestResultDto;
+use App\Models\Question;
 use App\Models\Test;
+use App\Models\TestResult;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -171,16 +173,32 @@ class TestsController extends ClientController
                 'resultId' => $testResult->id,
                 'resultPercents' => $testResult->score_readable,
                 'resultMark' => $testResult->mark_readable,
-                'outputLiterature' => $currentTest->output_literature, // todo check if there is literature to output
+                'outputLiterature' => $currentTest->output_literature && $this->resultHasLiterature($testResult),
             ]
         );
+    }
+
+    private function resultHasLiterature(TestResult $testResult): bool
+    {
+        return Question::query()
+            ->select('questions.*')
+            ->notCorrectOfResult($testResult)
+            ->whereHasLiteratures()
+            ->exists();
     }
 
     public function showLiteraturePage()
     {
         $currentTest = $this->urlManager->getCurrentTest();
         $testResult = $this->urlManager->getCurrentTestResult();
+
         $this->authorize('view', $testResult);
+
+        $notCorrectQuestions = Question::query()
+            ->select('questions.*')
+            ->notCorrectOfResult($testResult)
+            ->whereHasLiteratures()
+            ->get();
 
         return view(
             'pages.client.pass-test-single-result-literature',
@@ -190,7 +208,7 @@ class TestsController extends ClientController
                 'resultId' => $testResult->id,
                 'resultPercents' => $testResult->score_readable,
                 'resultMark' => $testResult->mark_readable,
-                'outputLiterature' => $currentTest->output_literature, // todo check if there is literature to output
+                'questions' => $notCorrectQuestions
             ]
         );
     }
