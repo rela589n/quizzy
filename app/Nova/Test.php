@@ -53,6 +53,7 @@ class Test extends Resource
     public static $search = [
         'id',
         'name',
+        'uri_alias',
     ];
 
     /**
