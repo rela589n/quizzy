@@ -29,6 +29,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 
 class Test extends Resource
 {
@@ -88,11 +89,6 @@ class Test extends Resource
 
             NameField::make(),
 
-            Boolean::make('Доступний для проходження', 'is_published')
-                ->help('Чи можуть студенти зараз проходити цей тест')
-                ->withMeta(['value' => $this->resource->is_published ?? true])
-                ->hideFromIndex(),
-
             UriAliasField::make(),
 
             TestTypeField::make(),
@@ -109,30 +105,39 @@ class Test extends Resource
                 ->hideFromIndex()
                 ->hideWhenCreating(),
 
-            PassTimeField::make(),
-
             TestDisplayStrategyField::make(),
 
             QuestionsOrderField::make(),
 
             AnswerOptionsOrderField::make(),
 
-            Boolean::make('Обмеження сторонньої активності', 'restrict_extraneous_activity')
-                ->hideFromIndex(),
+            Panel::make('Обмеження', [
+                Boolean::make('Доступний для проходження', 'is_published')
+                    ->help('Чи можуть студенти зараз проходити цей тест')
+                    ->withMeta(['value' => $this->resource->is_published ?? true])
+                    ->hideFromIndex(),
 
-            Boolean::make('Обмеження виділення тексту', 'restrict_text_selection')
-                ->hideFromIndex(),
+                PassTimeField::make(),
 
-            AttemptsPerUserField::make(),
+                AttemptsPerUserField::make(),
 
-            NovaDependencyContainer::make(
-                [
-                    DateTime::make('Дата відліку обмеження спроб', 'max_attempts_start_date')
-                        ->rules(['required_with:attempts_per_user'])
-                        ->help('Спроби будуть обмежені починаючи цією датою (всі проходження до дати не обмежуються)')
-                ]
-            )->dependsOnNotEmpty('attempts_per_user')
-                ->hideFromIndex(),
+                NovaDependencyContainer::make(
+                    [
+                        DateTime::make('Дата відліку обмеження спроб', 'max_attempts_start_date')
+                            ->rules(['required_with:attempts_per_user'])
+                            ->help('Спроби будуть обмежені починаючи цією датою (всі проходження до дати не обмежуються)')
+                    ]
+                )->dependsOnNotEmpty('attempts_per_user')
+                    ->hideFromIndex(),
+
+                Boolean::make('Обмеження сторонньої активності', 'restrict_extraneous_activity')
+                    ->help('Коли ввімкнено, студенти зобов\'язані залишатись в поточному вікні браузера')
+                    ->hideFromIndex(),
+
+                Boolean::make('Обмеження виділення тексту', 'restrict_text_selection')
+                    ->help('Коли ввімкнено, студенти не зможуть виділяти текст питань та відповідей')
+                    ->hideFromIndex(),
+            ]),
 
             ResultsCountReadOnly::make(),
 
