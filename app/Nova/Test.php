@@ -31,6 +31,8 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 
+use function get_class;
+
 class Test extends Resource
 {
     public static $group = 'Тестування';
@@ -160,6 +162,10 @@ class Test extends Resource
     {
         /** @var \App\Models\Test $model */
         $result = parent::fillFields($request, $model, $fields);
+
+        if (!$model instanceof \App\Models\Test) {
+            return $result;
+        }
 
         if (empty($request->get('attempts_per_user'))) {
             $model->max_attempts_start_date = null;
