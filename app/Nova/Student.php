@@ -39,7 +39,9 @@ class Student extends Resource
 
     public static $search = [
         'id',
+        'surname',
         'name',
+        'patronymic',
         'email',
     ];
 
