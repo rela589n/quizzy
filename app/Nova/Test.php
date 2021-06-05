@@ -105,11 +105,13 @@ class Test extends Resource
                 ->hideFromIndex()
                 ->hideWhenCreating(),
 
-            TestDisplayStrategyField::make(),
+            Panel::make('Представлення', [
+                TestDisplayStrategyField::make(),
 
-            QuestionsOrderField::make(),
+                QuestionsOrderField::make(),
 
-            AnswerOptionsOrderField::make(),
+                AnswerOptionsOrderField::make(),
+            ]),
 
             Panel::make('Обмеження', [
                 Boolean::make('Доступний для проходження', 'is_published')
