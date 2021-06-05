@@ -14,6 +14,7 @@ final class TestTypeField
     public static function make()
     {
         return Select::make('Тип теста', 'type')
+            ->help('Композитні тести, можуть включати в себе питання із декількох незалежних тестів')
             ->hideFromIndex()
             ->displayUsingLabels()
             ->options(

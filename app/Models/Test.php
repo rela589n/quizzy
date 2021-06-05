@@ -74,6 +74,11 @@ use Illuminate\Support\Carbon;
  * @method static TestEloquentBuilder|Test availableToPassBy(\App\Models\User $user)
  * @method static TestEloquentBuilder|Test whereMaxAttemptsStartDate($value)
  * @property Carbon|null $max_attempts_start_date
+ * @property int $output_literature
+ * @property-read Collection|\App\Models\Literature[] $_literatures
+ * @property-read int|null $_literatures_count
+ * @method static TestEloquentBuilder|Test whereOutputLiterature($value)
+ * @method static TestEloquentBuilder|Test whereUserResultsCountLessThanAllowedAttempts(\App\Models\User $user)
  */
 class Test extends Model
 {
@@ -170,6 +175,12 @@ class Test extends Model
     public function marksPercents(): HasMany
     {
         return $this->hasMany(MarkPercent::class);
+    }
+
+    /** @deprecated */
+    public function _literatures(): HasMany
+    {
+        return $this->hasMany(Literature::class);
     }
 
     public function isComposite(): bool

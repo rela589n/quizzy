@@ -89,6 +89,7 @@ class Test extends Resource
             NameField::make(),
 
             Boolean::make('Доступний для проходження', 'is_published')
+                ->help('Чи можуть студенти зараз проходити цей тест')
                 ->withMeta(['value' => $this->resource->is_published ?? true])
                 ->hideFromIndex(),
 
@@ -102,6 +103,11 @@ class Test extends Resource
 
             NovaDependencyContainer::make([GradingTableField::make()])
                 ->dependsOn('mark_evaluator_type', 'custom'),
+
+            Boolean::make('Виведення літератури', 'output_literature')
+                ->help('Після проходження теста, студенту буде виведено заданий викладачем перелік літератури до питань, на які студент дав некоректну відповідь')
+                ->hideFromIndex()
+                ->hideWhenCreating(),
 
             PassTimeField::make(),
 
