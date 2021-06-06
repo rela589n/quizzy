@@ -19,6 +19,14 @@ final class AddTypeFieldToTestsTable extends Migration
                     ->index();
             }
         );
+
+        \Illuminate\Support\Facades\DB::unprepared(
+            <<< SQL
+                UPDATE tests
+                    SET type = 'composed'
+                WHERE (SELECT COUNT(*) FROM test_composite WHERE test_composite.id_test = tests.id) > 1
+            SQL
+        );
     }
 
     public function down()
