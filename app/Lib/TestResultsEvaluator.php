@@ -60,8 +60,7 @@ class TestResultsEvaluator
             $this->markEvaluator,
             function () {
                 return $this->markEvaluatorsFactory
-                    ->setTest($this->testResult->test)
-                    ->resolve();
+                    ->resolve($this->testResult->test);
             }
         );
     }

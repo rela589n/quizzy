@@ -41,7 +41,7 @@ class MarksCollector
     public function markEvaluator(): MarkEvaluator
     {
         if ($this->markEvaluator === null) {
-            $this->markEvaluator = $this->markEvaluatorsFactory->setTest($this->test)->resolve();
+            $this->markEvaluator = $this->markEvaluatorsFactory->resolve($this->test);
         }
 
         return $this->markEvaluator;

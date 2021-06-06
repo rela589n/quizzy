@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property-read int $mark
  * @property-read ?float $result_percents
  * @property-read ?int $result_mark
+ * @property-read string $mark_readable_old
  * @property-read string $mark_readable
  * @property-read mixed $score
  * @property-read string $score_readable
@@ -87,7 +88,7 @@ class TestResult extends Model
     {
         return singleVar(
             $this->markEvaluator,
-            fn() => $this->markEvaluatorFactory->setTest($this->test)->resolve()
+            fn() => $this->markEvaluatorFactory->resolve($this->test)
         );
     }
 
@@ -141,9 +142,20 @@ class TestResult extends Model
         return $this->resultsEvaluator->getMark();
     }
 
-    public function getMarkReadableAttribute(): string
+    public function getMarkReadableOldAttribute(): string
     {
         $mark = $this->mark;
+
+        if (null === $mark) {
+            return '';
+        }
+
+        return $mark.$this->wordsManager->decline($mark, ' бал');
+    }
+
+    public function getMarkReadableAttribute(): string
+    {
+        $mark = $this->result_mark;
 
         if (null === $mark) {
             return '';

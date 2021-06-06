@@ -132,6 +132,5 @@ class AppServiceProvider extends ServiceProvider
     private function registerSingletons(): void
     {
         $this->app->singleton(StrictMarkEvaluator::class);
-        $this->app->singleton(CustomMarkEvaluator::class);
     }
 }
