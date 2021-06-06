@@ -6,6 +6,10 @@
     ]
 )
 
+@php
+    /** @var \App\Models\Test $test */
+@endphp
+
 @section('title')
     {{ $subject->name }} - {{ $test->name }}
 @endsection
@@ -29,6 +33,7 @@
 @section('test-questions')
     @include('blocks.client.question-single', [
         'questionIndex' => $questionIndex,
+        'restrictTextSelect' => $test->restrict_text_selection,
     ])
 @endsection
 
@@ -52,8 +57,10 @@
 @section('bottom-scripts')
     @parent
 
-    @if(0 === $questionIndex)
-        <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
+    @if($test->restrict_extraneous_activity)
+        @if(0 === $questionIndex)
+            <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
+        @endif
     @endif
 
     <script defer src="{{ asset('js/stopwatch.js') }}"></script>
@@ -63,5 +70,8 @@
         window.currentTest = JSON.parse('{!! json_encode($test->only(['id', 'uri_alias'])) !!}');
     </script>
     <script defer src="{{ asset('js/test-countdown.js') }}"></script>
-    <script defer src="{{ asset('js/close-when-switched-tab.js') }}"></script>
+
+    @if($test->restrict_extraneous_activity)
+        <script defer src="{{ asset('js/close-when-switched-tab.js') }}"></script>
+    @endif
 @endsection

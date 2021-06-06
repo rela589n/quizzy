@@ -94,7 +94,8 @@ class TestResult extends Model
 
     public function test(): BelongsTo
     {
-        return $this->belongsTo(Test::class);
+        return $this->belongsTo(Test::class)
+            ->withTrashed();
     }
 
     public function user(): BelongsTo

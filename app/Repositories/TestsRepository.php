@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Http\Requests\RequestUrlManager;
+use App\Lib\Tests\Pass\Query\QuestionsRepository;
 use App\Lib\Words\WordsManager;
 use App\Models\Test;
 use App\Models\User;
@@ -53,23 +54,21 @@ class TestsRepository
         return tap(
             $this->urlManager->getCurrentSubject()
                 ->tests()
-                ->with('testComposites.questions')
+                ->whereIsPublished(true)
+                ->with('testComposites')
                 ->withCount('testResults')
-                ->withUserResultsCount($user),
+                ->withUserResultsCount($user)
+                ->whereUserResultsCountLessThanAllowedAttempts($user),
             function (Relation $builder) {
                 $this->applyOrder($builder);
             }
         )->get()
             ->each(
                 static function (Test $test) {
-                    $test->questions_count = $test->allQuestions()->count();
+                    $gate = new QuestionsRepository();
+
+                    $test->questions_count = $gate->readTestQuestionsCount($test);
                 }
-            )
-            ->filter(
-                static fn(Test $test) => optional(
-                        $test->attempts_per_user,
-                        static fn() => $test->attempts_per_user - $test->user_results_count > 0
-                    ) ?? true
             )
             ->each(
                 function (Test $test) {

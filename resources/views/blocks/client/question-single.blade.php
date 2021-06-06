@@ -1,4 +1,4 @@
-@extends('blocks.common.question-single-view')
+@extends('blocks.common.question-single-view', ['restrictTextSelect' => $restrictTextSelect])
 
 @php
 /** @var \App\Models\Question $question */
@@ -14,6 +14,7 @@
           'optionIndex' => $loop->iteration,
           'questionId' => $question->id,
           'type' => $question->type,
+          'restrictTextSelect' => $restrictTextSelect,
         ])
     @endforeach
 @overwrite

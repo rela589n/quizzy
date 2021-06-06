@@ -27,7 +27,8 @@ class AnswerOption extends Resource
     public function fields(Request $request)
     {
         return [
-            Text::make('Текст', 'text'),
+            Text::make('Текст', 'text')
+                ->rules(['text' => 'required']),
             Boolean::make('Правильний', 'is_right'),
             BelongsTo::make('Запитання', 'question', Question::class),
         ];

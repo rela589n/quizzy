@@ -19,7 +19,8 @@ RUN apt-get update \
         libzip-dev \
         zip \
         unzip \
-        cron
+        cron \
+        mariadb-client
 
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug

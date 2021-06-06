@@ -1,5 +1,9 @@
 @extends('layouts.tests-single', ['baseLayout' => 'layouts.root.client', 'contentColumns' => 8])
 
+@php
+/** @var \App\Models\Test $test */
+@endphp
+
 @section('title')
     {{ $subject->name }} - {{ $test->name }}
 @endsection
@@ -24,6 +28,7 @@
     @forelse($allQuestions as $question)
         @include('blocks.client.question-single', [
             'questionIndex' => $loop->index,
+            'restrictTextSelect' => $test->restrict_text_selection,
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
@@ -58,6 +63,9 @@
         window.currentTest = JSON.parse('{!! json_encode($test->only(['id', 'uri_alias'])) !!}');
     </script>
     <script defer src="{{ asset('js/test-countdown.js') }}"></script>
-    <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
-    <script defer src="{{ asset('js/close-when-switched-tab.js') }}"></script>
+
+    @if ($test->restrict_extraneous_activity)
+        <script defer src="{{ asset('js/alert-forbidden-switching-tabs.js') }}"></script>
+        <script defer src="{{ asset('js/close-when-switched-tab.js') }}"></script>
+    @endif
 @endsection

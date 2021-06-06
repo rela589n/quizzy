@@ -9,33 +9,40 @@ use App\Lib\Tests\Pass\Exceptions\QuestionsRanOutException;
 use App\Lib\Tests\Pass\Exceptions\TimeIsUpException;
 use App\Lib\Tests\Pass\PassTestService;
 use App\Lib\Tests\Pass\TestResultDto;
+use App\Models\Question;
 use App\Models\Test;
+use App\Models\TestResult;
 use App\Models\User;
-use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use RuntimeException;
 use Webmozart\Assert\Assert;
+
+use function view;
 
 class TestsController extends ClientController
 {
-    public function showSingleTestForm()
+    public function showSingleTestForm(Request $request)
     {
-        $currentTest = $this->urlManager->getCurrentTest();
+        $currentTest = Test::whereSlug($request->route('test'))
+            ->availableToPassBy(Auth::guard('client')->user())
+            ->firstOrFail();
 
         if ($currentTest->shouldDisplayAllQuestions()) {
-            return $this->displayAllQuestions();
+            return $this->displayAllQuestions($currentTest);
         }
 
         if ($currentTest->shouldDisplayOneByOneQuestions()) {
-            return $this->displayCurrentQuestionOrRedirectToResult();
+            return $this->displayCurrentQuestionOrRedirectToResult($currentTest);
         }
 
-        throw new \RuntimeException("Unknown Test Display Strategy: ".$currentTest->display_strategy);
+        throw new RuntimeException("Unknown Test Display Strategy: ".$currentTest->display_strategy);
     }
 
-    private function displayAllQuestions()
+    private function displayAllQuestions(Test $test)
     {
         /** @var User $user */
         $user = Auth::guard('client')->user();
-        $test = $this->urlManager->getCurrentTest();
         $subject = $test->subject;
         $service = PassTestService::startPassage($user, $test);
 
@@ -48,11 +55,10 @@ class TestsController extends ClientController
         );
     }
 
-    private function displayCurrentQuestionOrRedirectToResult()
+    private function displayCurrentQuestionOrRedirectToResult(Test $test)
     {
         /** @var User $user */
         $user = Auth::guard('client')->user();
-        $test = $this->urlManager->getCurrentTest();
 
         try {
             return $this->displayCurrentQuestion($user, $test);
@@ -61,8 +67,8 @@ class TestsController extends ClientController
                 [self::class, 'showResultPage'],
                 [
                     'subject' => $test->subject->uri_alias,
-                    'test'    => $test->uri_alias,
-                    'result'  => $e->getTestResult()->id,
+                    'test' => $test->uri_alias,
+                    'result' => $e->getTestResult()->id,
                 ]
             );
         }
@@ -87,7 +93,10 @@ class TestsController extends ClientController
     {
         /** @var User $user */
         $user = Auth::guard('client')->user();
-        $test = $this->urlManager->getCurrentTest();
+
+        $test = Test::whereSlug($request->route('test'))
+            ->availableToPassBy($user)
+            ->firstOrFail();
 
         $service = PassTestService::continuePassage($user, $test);
 
@@ -105,7 +114,10 @@ class TestsController extends ClientController
     {
         /** @var User $user */
         $user = Auth::guard('client')->user();
-        $currentTest = $this->urlManager->getCurrentTest();
+
+        $currentTest = Test::whereSlug($request->route('test'))
+            ->availableToPassBy($user)
+            ->firstOrFail();
 
         $service = PassTestService::continueStrict($user, $currentTest);
         try {
@@ -127,17 +139,19 @@ class TestsController extends ClientController
             [self::class, 'showResultPage'],
             [
                 'subject' => $currentTest->subject->uri_alias,
-                'test'    => $currentTest->uri_alias,
-                'result'  => $testResult->id,
+                'test' => $currentTest->uri_alias,
+                'result' => $testResult->id,
             ]
         );
     }
 
-    public function cancelPassage()
+    public function cancelPassage(Request $request)
     {
         /** @var User $user */
         $user = Auth::guard('client')->user();
-        $currentTest = $this->urlManager->getCurrentTest();
+        $currentTest = Test::whereSlug($request->route('test'))
+            ->availableToPassBy($user)
+            ->firstOrFail();
 
         $service = PassTestService::continuePassage($user, $currentTest);
         $service->endSession();
@@ -154,10 +168,47 @@ class TestsController extends ClientController
         return view(
             'pages.client.pass-test-single-result',
             [
-                'subject'        => $currentTest->subject,
-                'test'           => $currentTest,
+                'subject' => $currentTest->subject,
+                'test' => $currentTest,
+                'resultId' => $testResult->id,
                 'resultPercents' => $testResult->score_readable,
-                'resultMark'     => $testResult->mark_readable_old,
+                'resultMark' => $testResult->mark_readable,
+                'outputLiterature' => $currentTest->output_literature && $this->resultHasLiterature($testResult),
+            ]
+        );
+    }
+
+    private function resultHasLiterature(TestResult $testResult): bool
+    {
+        return Question::query()
+            ->select('questions.*')
+            ->notCorrectOfResult($testResult)
+            ->whereHasLiteratures()
+            ->exists();
+    }
+
+    public function showLiteraturePage()
+    {
+        $currentTest = $this->urlManager->getCurrentTest();
+        $testResult = $this->urlManager->getCurrentTestResult();
+
+        $this->authorize('view', $testResult);
+
+        $notCorrectQuestions = Question::query()
+            ->select('questions.*')
+            ->notCorrectOfResult($testResult)
+            ->whereHasLiteratures()
+            ->get();
+
+        return view(
+            'pages.client.pass-test-single-result-literature',
+            [
+                'subject' => $currentTest->subject,
+                'test' => $currentTest,
+                'resultId' => $testResult->id,
+                'resultPercents' => $testResult->score_readable,
+                'resultMark' => $testResult->mark_readable,
+                'questions' => $notCorrectQuestions,
             ]
         );
     }

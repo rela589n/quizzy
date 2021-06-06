@@ -15,7 +15,7 @@ services:
       - ./services/php/php.ini:/usr/local/etc/php/php.ini
       - ../:/var/www
     environment:
-      COMPOSER_MEMORY_LIMIT: 2G
+      COMPOSER_MEMORY_LIMIT: 3G
       XDEBUG_CONFIG: client_host=${XDEBUG_REMOTE_HOST} client_port=${XDEBUG_STORM_PORT} remote_enable=1
       PHP_IDE_CONFIG: serverName=${XDEBUG_STORM_SERVER_NAME}
     networks:
@@ -34,7 +34,7 @@ services:
   #    depends_on:
   #      - php
   db:
-    image: mysql:5.6
+    image: mysql:5.7
     restart: unless-stopped
     container_name: ${PROJECT_NAME}_db
     command: --default-authentication-plugin=mysql_native_password

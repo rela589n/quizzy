@@ -6,7 +6,6 @@ use App\Lib\Traits\SlugScope;
 use App\Models\Tests\TestEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,6 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
+ * App\Models\Test
+ *
  * @property int $id
  * @property int|null $created_by
  * @property string $name
@@ -39,7 +40,6 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $user_results_count
  * @property-read Collection|Test[] $tests
  * @property-read int|null $tests_count
- *
  * @method static \App\Models\Query\CustomEloquentBuilder|Test newModelQuery()
  * @method static \App\Models\Query\CustomEloquentBuilder|Test newQuery()
  * @method static \App\Models\Query\CustomEloquentBuilder|Test query()
@@ -57,8 +57,28 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|Test withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test withoutTrashed()
  * @method static \Illuminate\Database\Query\Builder|Test onlyTrashed()
- *
  * @mixin Eloquent
+ * @property string $questions_order
+ * @method static TestEloquentBuilder|Test availableForAdmin(\App\Models\Administrator $administrator)
+ * @method static TestEloquentBuilder|Test whereAttemptsPerUser($value)
+ * @method static TestEloquentBuilder|Test whereQuestionsOrder($value)
+ * @method static TestEloquentBuilder|Test withUserResultsCount(\App\Models\User $user)
+ * @property string $answer_options_order
+ * @method static TestEloquentBuilder|Test whereAnswerOptionsOrder($value)
+ * @property int $restrict_extraneous_activity
+ * @method static TestEloquentBuilder|Test whereRestrictExtraneousActivity($value)
+ * @property int $restrict_text_selection
+ * @method static TestEloquentBuilder|Test whereRestrictTextSelection($value)
+ * @property int $is_published
+ * @method static TestEloquentBuilder|Test whereIsPublished($value)
+ * @method static TestEloquentBuilder|Test availableToPassBy(\App\Models\User $user)
+ * @method static TestEloquentBuilder|Test whereMaxAttemptsStartDate($value)
+ * @property Carbon|null $max_attempts_start_date
+ * @property int $output_literature
+ * @property-read Collection|\App\Models\Literature[] $_literatures
+ * @property-read int|null $_literatures_count
+ * @method static TestEloquentBuilder|Test whereOutputLiterature($value)
+ * @method static TestEloquentBuilder|Test whereUserResultsCountLessThanAllowedAttempts(\App\Models\User $user)
  */
 class Test extends Model
 {
@@ -89,6 +109,22 @@ class Test extends Model
         self::EVALUATOR_TYPE_CUSTOM,
     ];
 
+    public const QUESTION_ORDER_RANDOM = 'random';
+    public const QUESTION_ORDER_SERIATIM = 'seriatim';
+
+    public const QUESTION_ORDERS = [
+        self::QUESTION_ORDER_RANDOM,
+        self::QUESTION_ORDER_SERIATIM,
+    ];
+
+    public const ANSWER_OPTION_ORDER_RANDOM = 'random';
+    public const ANSWER_OPTION_ORDER_SERIATIM = 'seriatim';
+
+    public const ANSWER_OPTION_ORDERS = [
+        self::ANSWER_OPTION_ORDER_RANDOM,
+        self::ANSWER_OPTION_ORDER_SERIATIM,
+    ];
+
     public const EVALUATOR_LABELS = [
         'За замовчуванням',
         'Власна методика',
@@ -96,6 +132,13 @@ class Test extends Model
 
     public $timestamps = false;
     protected $fillable = ['name', 'uri_alias', 'time', 'mark_evaluator_type', 'test_subject_id'];
+
+    protected $casts = [
+        'restrict_extraneous_activity' => 'bool',
+        'restrict_text_selection' => 'bool',
+        'is_published' => 'bool',
+        'max_attempts_start_date' => 'datetime',
+    ];
 
     public function subject(): BelongsTo
     {
@@ -123,14 +166,6 @@ class Test extends Model
         return $this->hasMany(TestComposite::class, 'id_test');
     }
 
-    /**
-     * @return Collection|Question[]
-     */
-    public function allQuestions()
-    {
-        return Collection::make($this->testComposites->pluck('questions')->flatten());
-    }
-
     /** @return HasMany|TestResult */
     public function testResults(): HasMany
     {
@@ -140,6 +175,12 @@ class Test extends Model
     public function marksPercents(): HasMany
     {
         return $this->hasMany(MarkPercent::class);
+    }
+
+    /** @deprecated */
+    public function _literatures(): HasMany
+    {
+        return $this->hasMany(Literature::class);
     }
 
     public function isComposite(): bool

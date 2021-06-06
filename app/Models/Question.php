@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Questions\QuestionEloquentBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 
 /**
  * App\Models\Question
@@ -35,12 +39,30 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Query\Builder|Question withoutTrashed()
  * @property string $type
  * @method static \App\Models\Query\CustomEloquentBuilder|Question whereType($value)
+ * @property int $sort_order
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question ordered(string $direction = 'asc')
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question whereSortOrder($value)
+ * @property-read Collection|\App\Models\Literature[] $literatures
+ * @property-read int|null $literatures_count
+ * @method static \App\Models\Query\CustomEloquentBuilder|Question whereLiteratures($value)
+ * @mixin QuestionEloquentBuilder
  */
-class Question extends Model
+class Question extends Model implements Sortable
 {
     use SoftDeletes;
+    use SortableTrait;
+
+    public array $sortable = [
+        'order_column_name' => 'sort_order',
+        'sort_on_has_many' => true,
+    ];
+
     public $timestamps = false;
     public $fillable = ['question', 'type', 'test_id'];
+
+    protected $casts = [
+        'literatures' => 'array',
+    ];
 
     public function test(): BelongsTo
     {
@@ -53,6 +75,12 @@ class Question extends Model
         return $this->hasMany(AnswerOption::class);
     }
 
+    /** @deprecated */
+    public function _literatures(): BelongsToMany
+    {
+        return $this->belongsToMany(Literature::class);
+    }
+
     /**
      * Scope a query to include random <b>$limit</b> questions.
      *
@@ -63,5 +91,10 @@ class Question extends Model
     public function scopeRandom($query, $limit)
     {
         return $query->inRandomOrder()->limit($limit);
+    }
+
+    public function newEloquentBuilder($query): QuestionEloquentBuilder
+    {
+        return new QuestionEloquentBuilder($query);
     }
 }

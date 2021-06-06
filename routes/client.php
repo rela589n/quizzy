@@ -39,6 +39,7 @@ Route::get('/documentation', 'DocumentationController@getWordDocument')
 Route::prefix('/tests')
     ->name('.tests')
     ->namespace('Tests')
+    ->middleware('auth:client')
     ->group(
         static function () {
             $routePatterns = Route::getPatterns();
@@ -56,6 +57,7 @@ Route::prefix('/tests')
                                     Route::post('/cancel', 'TestsController@cancelPassage');
                                     Route::post('/store-question', 'TestsController@storeQuestionResponse');
 
+                                    Route::get('/results/{result}/literature', 'TestsController@showLiteraturePage');
                                     Route::get('/results/{result}', 'TestsController@showResultPage');
 
                                     Route::get('/', 'TestsController@showSingleTestForm');

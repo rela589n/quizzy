@@ -3,12 +3,12 @@
 namespace App\Nova;
 
 use App\Models\Questions\QuestionType;
-use App\Rules\AnswerOptionsRule;
 use App\Rules\AtLeastOneSelected;
 use App\Rules\ExactlyOneSelected;
 use Froala\NovaFroalaField\Froala;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
@@ -16,10 +16,18 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\CreateResourceRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use NovaItemsField\Items;
+use OptimistDigital\NovaSortable\Traits\HasSortableRows;
 use Yassi\NestedForm\NestedForm;
+
+use function trans;
 
 class Question extends Resource
 {
+    use HasSortableRows {
+        indexQuery as private sortableIndexQuery;
+    }
+
     public static $group = 'Tests';
 
     public static $displayInNavigation = false;
@@ -51,7 +59,10 @@ class Question extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->with('test');
+        return self::sortableIndexQuery(
+            $request,
+            $query->with('test'),
+        );
     }
 
     /**
@@ -71,6 +82,7 @@ class Question extends Resource
                 ->onlyOnIndex(),
 
             Select::make('Тип', 'type')
+                ->rules(['type' => Rule::in(array_keys(trans('tests.questions.types')))])
                 ->options(trans('tests.questions.types'))
                 ->displayUsingLabels(),
 
@@ -82,12 +94,16 @@ class Question extends Resource
             BelongsTo::make('Тест', 'test', Test::class)
                 ->exceptOnForms(),
 
+            Items::make('Література', 'literatures')
+                ->hideFromIndex()
+                ->rules(['literatures.*' => 'string|min:5']),
+
             HasMany::make('Варіанти відповідей', 'answerOptions', AnswerOption::class),
         ];
     }
 
     /**
-     * @param CreateResourceRequest $request
+     * @param  CreateResourceRequest  $request
      * @return array
      */
     public function fieldsForCreate($request)
