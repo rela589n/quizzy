@@ -37,17 +37,13 @@
             @forelse($testResults as $testResult)
                 <tr>
                     <th scope="row">
-                        @if($authUser->can('generate-student-statement'))
-                            <a class="badge badge-primary"
-                               href="{{ route('admin.results.subject.test.statements.student', [
-                                        'subject' => $subject->uri_alias,
-                                        'test' => $test->uri_alias,
-                                        'testResultId' => $testResult->id
+                        <a class="badge badge-primary"
+                           href="{{ action([\App\Http\Controllers\Client\Tests\TestsController::class, 'showResultPage'], [
+                                        'subject' => $testResult->test->subject->uri_alias,
+                                        'test' => $testResult->test->uri_alias,
+                                        'result' => $testResult->id
                                     ]) }}"
-                               title="Натисніть, щоб генерувати відомість">{{ $testResult->id }}</a>
-                        @else
-                            {{ $testResult->id }}
-                        @endif
+                           title="Натисніть, щоб перейти на сторінку результата">{{ $testResult->id }}</a>
                     </th>
                     <td>{{ $testResult->test->subject->name }}</td>
                     <td>{{ $testResult->test->name }}</td>
