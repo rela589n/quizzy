@@ -12,22 +12,29 @@
 |
 */
 
-Route::namespace('Auth')->group(
-    static function () {
-        Route::get('/', 'LoginController@showLoginForm')->name('.login');
-        Route::post('/', 'LoginController@login');
+Route::namespace('Auth')
+    ->group(
+        static function () {
+            Route::get('/', 'LoginController@showLoginForm')
+                ->name('.login');
 
-        Route::post('/logout', 'LoginController@logout')->name('.logout');
+            Route::post('/', 'LoginController@login');
 
-        Route::get('/change-password', 'ChangePasswordController@showInitialPasswordChangeForm')->name(
-            '.change-password'
-        );
-        Route::post('/change-password', 'ChangePasswordController@initialChangePassword');
-    }
-);
+            Route::post('/logout', 'LoginController@logout')
+                ->name('.logout');
 
-Route::get('/dashboard', 'DashboardController@showDashboardPage')->name('.dashboard');
-Route::get('/documentation', 'DocumentationController@getWordDocument')->name('.documentation');
+            Route::get('/change-password', 'ChangePasswordController@showInitialPasswordChangeForm')
+                ->name('.change-password');
+
+            Route::post('/change-password', 'ChangePasswordController@initialChangePassword');
+        }
+    );
+
+Route::get('/dashboard', 'DashboardController@showDashboardPage')
+    ->name('.dashboard');
+
+Route::get('/documentation', 'DocumentationController@getWordDocument')
+    ->name('.documentation');
 
 Route::prefix('/tests')
     ->name('.tests')
@@ -73,3 +80,13 @@ Route::prefix('/tests')
         }
     );
 
+Route::prefix('results')
+    ->name('.results')
+    ->namespace('Results')
+    ->group(
+        function () {
+            Route::get('/', 'ResultsController@index')
+                 ->name('.index')
+                 ->middleware('auth:client');
+        }
+    );

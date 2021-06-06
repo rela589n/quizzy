@@ -108,7 +108,7 @@ class StudentStatementsGenerator extends StatementsGenerator
                 'subjectName' => $this->result->test->subject->name,
                 'testName' => $this->result->test->name,
                 'resultInPercents' => $this->result->score_readable,
-                'resultMark' => $this->result->mark_readable
+                'resultMark' => $this->result->mark_readable_old,
             ]
         );
     }

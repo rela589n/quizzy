@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\OverridesQueryBuilder;
 use App\Models\Students\StudentEloquentBuilder;
+use App\Models\TestResults\TestResultQueryBuilder;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -68,12 +69,19 @@ class User extends BaseUser
         return $this->belongsTo(StudentGroup::class);
     }
 
-    /**
-     * @return HasMany|TestResult
-     */
+    /** @return HasMany|TestResult */
     public function testResults(): HasMany
     {
         return $this->hasMany(TestResult::class);
+    }
+
+    public function passedTests()
+    {
+        return Test::query()
+                   ->whereHas(
+                       'testResults',
+                       fn(TestResultQueryBuilder $q) => $q->ofUser($this),
+                   );
     }
 
     public function getCourseAttribute(): int

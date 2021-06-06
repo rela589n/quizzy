@@ -5,6 +5,7 @@ namespace App\Lib\Filters\Eloquent;
 
 
 use App\Models\StudentGroup;
+use App\Models\TestResults\TestResultQueryBuilder;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -12,35 +13,41 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Carbon;
 
+use function method_exists;
+
 class TestResultFilter extends ResultFilter
 {
     protected array $queryFilters = [];
     protected array $filters = [];
 
-    public function setQueryFilters(array $queryFilters): void
+    public function setQueryFilters(array $queryFilters): self
     {
         $this->queryFilters = $queryFilters;
+
+        return $this;
     }
 
-    public function setFilters(array $filters): void
+    public function setFilters(array $filters): self
     {
         $this->filters = $filters;
+
+        return $this;
     }
 
     protected function loadRelations(EloquentCollection $results): void
     {
         $results->loadMissing(
             [
-                'askedQuestions.question'             => static function (Relation $query) {
+                'askedQuestions.question' => static function (Relation $query) {
                     $query->withTrashed();
                 },
                 'askedQuestions.answers.answerOption' => static function (Relation $query) {
                     $query->withTrashed();
                 },
-                'user'                                => static function (Relation $query) {
+                'user' => static function (Relation $query) {
                     $query->withTrashed();
                 },
-                'user.studentGroup'                   => static function (Relation $query) {
+                'user.studentGroup' => static function (Relation $query) {
                     $query->withTrashed();
                 }
             ]
@@ -115,10 +122,11 @@ class TestResultFilter extends ResultFilter
         $query->whereHas(
             $relation,
             static function (EloquentBuilder $builder) use ($field, $fieldValue) {
-                /**
-                 * @var Model|EloquentBuilder $builder
-                 */
-                $builder->withTrashed();
+                /** @var Model|EloquentBuilder $builder */
+                if (method_exists($builder, 'withTrashed')) {
+                    $builder->withTrashed();
+                }
+
                 $builder->where($field, 'like', "%$fieldValue%");
             }
         );
@@ -167,6 +175,18 @@ class TestResultFilter extends ResultFilter
                 );
             }
         );
+    }
+
+    /** @param  TestResultQueryBuilder */
+    public function testName($query, $testName): void
+    {
+        $this->textFieldFilter('test', $query, 'name', $testName);
+    }
+
+    /** @param  TestResultQueryBuilder  $query */
+    public function subjectName($query, $subjectName): void
+    {
+        $this->textFieldFilter('test.subject', $query, 'name', $subjectName);
     }
 
     public function result($testResult, $score): bool

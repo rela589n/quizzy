@@ -172,7 +172,7 @@ class TestsController extends ClientController
                 'test' => $currentTest,
                 'resultId' => $testResult->id,
                 'resultPercents' => $testResult->score_readable,
-                'resultMark' => $testResult->mark_readable,
+                'resultMark' => $testResult->mark_readable_old,
                 'outputLiterature' => $currentTest->output_literature && $this->resultHasLiterature($testResult),
             ]
         );
@@ -207,8 +207,8 @@ class TestsController extends ClientController
                 'test' => $currentTest,
                 'resultId' => $testResult->id,
                 'resultPercents' => $testResult->score_readable,
-                'resultMark' => $testResult->mark_readable,
-                'questions' => $notCorrectQuestions
+                'resultMark' => $testResult->mark_readable_old,
+                'questions' => $notCorrectQuestions,
             ]
         );
     }

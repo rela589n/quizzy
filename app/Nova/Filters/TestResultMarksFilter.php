@@ -3,6 +3,7 @@
 namespace App\Nova\Filters;
 
 use App\Factories\MarkEvaluatorsFactory;
+use App\Lib\Filters\Eloquent\ResultFilters\ResultMarkRangeFilter;
 use App\Lib\TestResults\MarkEvaluator;
 use App\Models\Test;
 use App\Models\TestResults\TestResultQueryBuilder;
@@ -20,11 +21,9 @@ class TestResultMarksFilter extends NovaRangeFilter
     public function __construct(int $testId)
     {
         $this->markEvaluator = app(MarkEvaluatorsFactory::class)
-            ->setTest(Test::findOrFail($testId))
-            ->resolve();
+            ->resolve(Test::findOrFail($testId));
 
         $this->min = ($this->markEvaluator->minPossibleMark());
-
         $this->max = ($this->markEvaluator->maxPossibleMark());
 
         parent::__construct();
@@ -42,33 +41,12 @@ class TestResultMarksFilter extends NovaRangeFilter
         $fromMark = Arr::first($value);
         $toMark = Arr::last($value);
 
-        $shouldRestrictFromLeft = $this->min !== $fromMark;
-        $shouldRestrictFromRight = $this->max !== $toMark;
-
-        if (!$shouldRestrictFromLeft
-            && !$shouldRestrictFromRight) {
-            return $query;
-        }
-
-        if ($shouldRestrictFromLeft && $shouldRestrictFromRight) {
-            return $query->whereMarkPercentBetween(
-                $this->markEvaluator->leastPercentForMark($fromMark),
-                $this->markEvaluator->leastPercentForMark(1 + $toMark) - MarkEvaluator::MARK_EPS,
-            );
-        }
-
-        if ($shouldRestrictFromLeft) {
-            return $query->whereMarkPercentAtLeast(
-                $this->markEvaluator->leastPercentForMark($fromMark),
-            );
-        }
-
-        if ($shouldRestrictFromRight) {
-            return $query->whereMarkPercentAtMost(
-                $this->markEvaluator->leastPercentForMark(1 + $toMark) - MarkEvaluator::MARK_EPS,
-            );
-        }
-
-        throw new \LogicException('Should not get here');
+        return $query->applyQueryFilter(
+            new ResultMarkRangeFilter(
+                $this->markEvaluator,
+                $fromMark,
+                $toMark,
+            ),
+        );
     }
 }

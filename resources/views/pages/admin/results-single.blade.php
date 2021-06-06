@@ -74,7 +74,7 @@
                     <td>{{ $testResult->user->name }}</td>
                     <td>{{ $testResult->user->patronymic }}</td>
                     <td>{{ $testResult->score_readable }}</td>
-                    <td>{{ $testResult->mark_readable }}</td>
+                    <td>{{ $testResult->mark_readable_old }}</td>
                     <td>{{ $testResult->date_readable }}</td>
                 </tr>
             @empty
