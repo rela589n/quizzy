@@ -6,6 +6,7 @@ use App\Nova\Administrator;
 use App\Nova\Customization\LoginController;
 use App\Nova\Customization\PasswordResetController;
 use App\Nova\Department;
+use App\Nova\Exceptions\Handler;
 use App\Nova\Metrics\TestsCount;
 use App\Nova\Metrics\UsersCount;
 use App\Nova\Resource;
@@ -17,12 +18,20 @@ use App\Observers\TestObserver;
 use DigitalCreative\CollapsibleResourceManager\CollapsibleResourceManager;
 use DigitalCreative\CollapsibleResourceManager\Resources\TopLevelResource;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Nova\Exceptions\NovaExceptionHandler;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
 use Mastani\NovaPasswordReset\NovaPasswordReset;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
+    protected function registerExceptionHandler()
+    {
+        parent::registerExceptionHandler();
+
+        $this->app->bind(NovaExceptionHandler::class, Handler::class);
+    }
+
     /**
      * Bootstrap any application services.
      *
