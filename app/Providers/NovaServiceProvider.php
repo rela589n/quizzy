@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Nova\Administrator;
+use App\Nova\Configuration;
 use App\Nova\Customization\LoginController;
 use App\Nova\Customization\PasswordResetController;
 use App\Nova\Department;
@@ -128,6 +129,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
                                     Administrator::class,
                                 ],
                             ],
+                        ),
+                        TopLevelResource::make(
+                            [
+                                'label' => 'Налаштування',
+                                'resources' => [
+                                    Configuration::class,
+                                ],
+                            ]
                         ),
                     ]
                 ]
