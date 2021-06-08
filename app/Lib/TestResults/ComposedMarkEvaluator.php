@@ -30,11 +30,19 @@ final class ComposedMarkEvaluator implements MarkEvaluator
 
     public function minPossibleMark(): ?int
     {
+        if (empty($this->evaluators)) {
+            return null;
+        }
+
         return min(array_map(static fn(MarkEvaluator $evaluator) => $evaluator->minPossibleMark(), $this->evaluators));
     }
 
     public function maxPossibleMark(): ?int
     {
+        if (empty($this->evaluators)) {
+            return null;
+        }
+
         return max(array_map(static fn(MarkEvaluator $evaluator) => $evaluator->maxPossibleMark(), $this->evaluators));
     }
 
