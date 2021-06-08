@@ -30,6 +30,7 @@ class TestParserFactory
 
         switch ($extension) {
             case 'docx':
+            case 'doc':
                 return $this->app->makeWith(
                     TestDocxParser::class,
                     [
