@@ -90,7 +90,9 @@ class Student extends Resource
                 ->creationRules('required', 'string', 'min:8')
                 ->updateRules('nullable', 'string', 'min:8'),
 
-            BelongsTo::make('Група', 'studentGroup', StudentGroup::class)->nullable(),
+            BelongsTo::make('Група', 'studentGroup', StudentGroup::class)
+                ->withoutTrashed()
+                ->nullable(),
         ];
     }
 

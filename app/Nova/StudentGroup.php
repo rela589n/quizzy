@@ -108,6 +108,7 @@ class StudentGroup extends Resource
                 ->hideFromDetail(),
 
             BelongsTo::make('Відділення', 'department', Department::class)
+                ->withoutTrashed()
                 ->required(),
 
             Text::make('Староста', 'classMonitor')
