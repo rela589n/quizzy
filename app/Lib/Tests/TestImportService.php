@@ -7,9 +7,12 @@ namespace App\Lib\Tests;
 
 use App\Lib\Parsers\TestParser;
 use App\Lib\Parsers\TestParserFactory;
+use App\Lib\Tests\Exceptions\TestImportError;
 use App\Models\Question;
 use App\Models\Test;
+use Exception;
 use Illuminate\Http\UploadedFile;
+use Throwable;
 
 final class TestImportService
 {
@@ -24,7 +27,11 @@ final class TestImportService
 
     public function importFile(UploadedFile $file)
     {
-        $this->import($this->factory->getTextParser($file));
+        try {
+            $this->import($this->factory->getTextParser($file));
+        } catch (Throwable $e) {
+            throw new TestImportError($e);
+        }
     }
 
     public function import(TestParser $parser): void

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Nova\Exceptions;
 
+use App\Lib\Tests\Exceptions\TestImportError;
 use JetBrains\PhpStorm\Immutable;
+use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Exceptions\NovaExceptionHandler;
 use Throwable;
 
@@ -24,5 +26,14 @@ final class Handler extends NovaExceptionHandler
         }
 
         return parent::report($exception);
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof TestImportError) {
+            return response()->json(Action::danger('Помилка імпорту: ' . $exception->getPrevious()->getMessage()));
+        }
+
+        return parent::render($request, $exception);
     }
 }
