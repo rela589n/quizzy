@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Models\StudentGroups\StudentGroupEloquentBuilder;
+use App\Repositories\AdministratorsRepository;
 use App\Rules\Containers\Group\GroupNameRules;
 use App\Rules\Containers\Group\GroupUriSlugRules;
 use App\Rules\Containers\Group\GroupYearRules;
@@ -13,10 +14,13 @@ use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Line;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Slug;
 use Laravel\Nova\Fields\Stack;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+
+use function app;
 
 class StudentGroup extends Resource
 {
@@ -114,6 +118,25 @@ class StudentGroup extends Resource
         ];
     }
 
+    public function fieldsForUpdate(NovaRequest $request)
+    {
+        $adminRepo = app(AdministratorsRepository::class);
+
+        $classMonitors = $adminRepo->probableClassMonitors($this->resource)
+            ->keyBy('id')
+            ->map([$this, 'formatClassMonitor']);
+
+        return [
+            ...$this->fields($request),
+
+            Select::make('Староста', 'classMonitor')
+                ->resolveUsing(static fn($admin) => $admin->id ?? null)
+                ->fillUsing(fn($req, $model, $attr, $reqAttr) => $model->created_by = $req->$reqAttr)
+                ->options($classMonitors)
+                ->onlyOnForms(),
+        ];
+    }
+
     public static function label(): string
     {
         return 'Групи студентів';
@@ -157,9 +180,19 @@ class StudentGroup extends Resource
     public function resolveClassMonitor(): ?string
     {
         if (null === $this->resource->classMonitor) {
-            return  null;
+            return null;
         }
 
-        return "{$this->resource->classMonitor->full_name} ({$this->resource->classMonitor->id})";
+        return $this->formatClassMonitor($this->resource->classMonitor);
+    }
+
+    public function formatClassMonitorResource(Administrator $classMonitor)
+    {
+        return $this->formatClassMonitor($classMonitor->resource);
+    }
+
+    public function formatClassMonitor(\App\Models\Administrator $classMonitor): string
+    {
+        return "{$classMonitor->full_name} ({$classMonitor->id})";
     }
 }

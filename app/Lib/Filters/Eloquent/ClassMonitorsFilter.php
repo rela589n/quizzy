@@ -27,10 +27,17 @@ class ClassMonitorsFilter extends ResultFilter
      */
     protected function availableClassMonitors($query): void
     {
-        $query->doesntHave('studentGroup');
-
-        if (!is_null($this->group)) {
-            $query->union($this->group->classMonitor()->toBase());
+        if (isset($this->group->department_id)) {
+            $query->whereHas('departments', fn($q) => $q->where('id', $this->group->department_id));
         }
+
+        $query->where(function ($subquery) {
+            /** @var Builder $subquery */
+            $subquery->whereDoesntHave('studentGroup');
+
+            if (isset($this->group->id)) {
+                $subquery->orWhereHas('studentGroup',  fn($q) => $q->where('id', $this->group->id));
+            }
+        });
     }
 }

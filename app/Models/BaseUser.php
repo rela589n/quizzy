@@ -3,8 +3,8 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\OverridesQueryBuilder;
 use Eloquent;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -49,8 +49,8 @@ use Illuminate\Support\Carbon;
  */
 abstract class BaseUser extends Authenticatable
 {
+    use OverridesQueryBuilder;
     use SoftDeletes;
-
     use Notifiable;
 
     /**
