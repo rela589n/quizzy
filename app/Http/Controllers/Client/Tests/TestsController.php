@@ -163,6 +163,11 @@ class TestsController extends ClientController
     {
         $currentTest = $this->urlManager->getCurrentTest();
         $testResult = $this->urlManager->getCurrentTestResult();
+
+        $testResult = TestResult::query()
+            ->withResultPercents()
+            ->findOrFail($testResult->id);
+
         $this->authorize('view', $testResult);
 
         return view(
@@ -171,8 +176,8 @@ class TestsController extends ClientController
                 'subject' => $currentTest->subject,
                 'test' => $currentTest,
                 'resultId' => $testResult->id,
-                'resultPercents' => $testResult->score_readable,
-                'resultMark' => $testResult->mark_readable_old,
+                'resultPercents' => $testResult->result_percents_readable,
+                'resultMark' => $testResult->mark_readable,
                 'outputLiterature' => $currentTest->output_literature && $this->resultHasLiterature($testResult),
             ]
         );
@@ -192,6 +197,10 @@ class TestsController extends ClientController
         $currentTest = $this->urlManager->getCurrentTest();
         $testResult = $this->urlManager->getCurrentTestResult();
 
+        $testResult = TestResult::query()
+            ->withResultPercents()
+            ->findOrFail($testResult->id);
+
         $this->authorize('view', $testResult);
 
         $notCorrectQuestions = Question::query()
@@ -206,8 +215,8 @@ class TestsController extends ClientController
                 'subject' => $currentTest->subject,
                 'test' => $currentTest,
                 'resultId' => $testResult->id,
-                'resultPercents' => $testResult->score_readable,
-                'resultMark' => $testResult->mark_readable_old,
+                'resultPercents' => $testResult->result_percents_readable,
+                'resultMark' => $testResult->mark_readable,
                 'questions' => $notCorrectQuestions,
             ]
         );

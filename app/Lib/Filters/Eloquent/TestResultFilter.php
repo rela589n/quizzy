@@ -5,6 +5,7 @@ namespace App\Lib\Filters\Eloquent;
 
 
 use App\Models\StudentGroup;
+use App\Models\TestResult;
 use App\Models\TestResults\TestResultQueryBuilder;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -191,11 +192,15 @@ class TestResultFilter extends ResultFilter
 
     public function result($testResult, $score): bool
     {
-        return abs(100 * $testResult->score - $score) <= 5;
+        /** @var TestResult $testResult */
+
+        return abs( $testResult->result_percents - $score) <= 5;
     }
 
     public function mark($testResult, $mark): bool
     {
-        return $testResult->mark == $mark;
+        /** @var TestResult $testResult */
+
+        return $testResult->result_mark == $mark;
     }
 }

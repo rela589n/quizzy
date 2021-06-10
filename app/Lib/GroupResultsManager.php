@@ -60,8 +60,8 @@ class GroupResultsManager
 
         $marksSum = 0;
         foreach ($this->testResults as $result) {
-            $marksSum += $result->mark;
-            $fieldName = $this->marksCorrelation[$result->mark];
+            $marksSum += $result->result_mark; // todo result_mark
+            $fieldName = $this->marksCorrelation[$result->result_mark];
             ++$this->$fieldName;
         }
 

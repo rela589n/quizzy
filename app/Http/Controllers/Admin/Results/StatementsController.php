@@ -30,7 +30,8 @@ class StatementsController extends AdminController
      */
     public function studentStatement(Request $request, StudentStatementsGenerator $generator): BinaryFileResponse
     {
-        $result = TestResult::findOrFail($request->route('testResultId'));
+        /** @var TestResult $result */
+        $result = TestResult::query()->withResultPercents()->findOrFail($request->route('testResultId'));
 
         $generator->setResult($result);
         $statementPath = $generator->generate();
@@ -64,7 +65,7 @@ class StatementsController extends AdminController
         $filter->setFilters($request->getFilters());
 
         $generator->setTestResults(
-            $group->lastResults($test)->filtered($filter)
+            $group->lastResults($test)->withResultPercents()->filtered($filter)
         );
 
         $statementPath = $generator->generate();

@@ -51,6 +51,7 @@ class TestResultsController extends AdminController
 
         $filteredResults = $currentTest
             ->testResults()
+            ->withResultPercents()
             ->orderByDesc('id')
             ->filtered($filters, static function (Collection $results) use ($currentTest) {
                 $results->setRelation('test', $currentTest);

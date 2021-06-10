@@ -1,3 +1,7 @@
+@php
+/** @deprecated */
+@endphp
+
 @extends('layouts.categories-single', [
     'mainContainerType' => 'container-fluid',
     'baseLayout' => 'layouts.root.admin',
@@ -73,8 +77,8 @@
                     <td>{{ $testResult->user->surname }}</td>
                     <td>{{ $testResult->user->name }}</td>
                     <td>{{ $testResult->user->patronymic }}</td>
-                    <td>{{ $testResult->score_readable }}</td>
-                    <td>{{ $testResult->mark_readable_old }}</td>
+                    <td>{{ $testResult->result_percents_readable }}</td>
+                    <td>{{ $testResult->mark_readable }}</td>
                     <td>{{ $testResult->date_readable }}</td>
                 </tr>
             @empty

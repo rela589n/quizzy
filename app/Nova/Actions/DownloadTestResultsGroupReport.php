@@ -49,6 +49,7 @@ class DownloadTestResultsGroupReport extends Action
         $query = $this->request->toQuery();
 
         $models = $query->lastResultsByEachUser()
+            ->withResultPercents()
             ->with('user')
             ->get();
 
