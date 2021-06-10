@@ -12,6 +12,13 @@ $(function () {
         'onTimeUp': function () {                // onTimeUp callback
             // Countdown finished
             this.stop();
+
+            let finishAction = $form.attr('data-finish-action');
+
+            if (finishAction) {
+                $form.attr('action', finishAction);
+            }
+
             $form.submit();
         },
         'onTimeUpdate': function () {            // onTimeUpdate callback
@@ -29,14 +36,12 @@ $(function () {
 
     // when switch tab, need delete time from storage
     window.closeWhenSwitchedTabsConfigOnClose = async function () {
-        console.log('closeWhenSwitchedTabsConfigOnClose');
+        let finishAction = $form.attr('data-finish-action');
 
-        await $.post(`/tests/${currentSubject.uri_alias}/${currentTest.uri_alias}/cancel`,
-            {
-                _token: $form.find('[name=_token]').val(),
-            }
-        );
+        if (finishAction) {
+            $form.attr('action', finishAction);
+        }
 
-        $form.trigger('reset');
+        $form.submit();
     };
 });

@@ -9,7 +9,7 @@
 @endsection
 
 @section('category-main-content')
-    <form method="post" action="{{ $passTestAction ?? '' }}" class="edit-test-form mt-5">
+    <form method="post" action="{{ $passTestAction ?? '' }}" data-finish-action="{{ $finishTestAction ?? '' }}" class="edit-test-form mt-5">
         @csrf
         <ul class="list-group text-dark questions">
             @yield('test-questions')

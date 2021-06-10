@@ -2,7 +2,8 @@
     [
         'baseLayout' => 'layouts.root.client',
         'contentColumns' => 8,
-        'passTestAction' => action([\App\Http\Controllers\Client\Tests\TestsController::class, 'storeQuestionResponse'], ['subject' => $subject->uri_alias, 'test' => $test->uri_alias])
+        'passTestAction' => action([\App\Http\Controllers\Client\Tests\TestsController::class, 'storeQuestionResponse'], ['subject' => $subject->uri_alias, 'test' => $test->uri_alias]),
+        'finishTestAction' => action([\App\Http\Controllers\Client\Tests\TestsController::class, 'finishTest'], ['subject' => $subject->uri_alias, 'test' => $test->uri_alias]),
     ]
 )
 

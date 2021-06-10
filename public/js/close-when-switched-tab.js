@@ -5,8 +5,7 @@ $(function () {
     /** build config **/
     let config = {
         handleClose: function () {
-            window.closeWhenSwitchedTabsConfigOnClose()
-                .then(() => history.back());
+            window.closeWhenSwitchedTabsConfigOnClose();
         }
     };
 
