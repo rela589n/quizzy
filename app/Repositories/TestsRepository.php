@@ -56,7 +56,6 @@ class TestsRepository
                 ->tests()
                 ->whereIsPublished(true)
                 ->with('testComposites')
-                ->withCount('testResults')
                 ->withUserResultsCount($user)
                 ->whereUserResultsCountLessThanAllowedAttempts($user),
             function (Relation $builder) {
@@ -68,6 +67,7 @@ class TestsRepository
                     $gate = new QuestionsRepository();
 
                     $test->questions_count = $gate->readTestQuestionsCount($test);
+                    $test->questions_max_count = $gate->readAllPossibleTestQuestionsCount($test);
                 }
             )
             ->each(

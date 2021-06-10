@@ -9,6 +9,7 @@ use App\Models\Test;
 use App\Models\TestComposite;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Immutable;
 use RuntimeException;
 
@@ -19,9 +20,25 @@ final class QuestionsRepository
     {
         return $test->testComposites
             ->map(
-                fn(TestComposite $composite) => $composite->questions()->select('questions.id')->limit(
-                    $composite->questions_quantity
-                )->count()
+                fn(TestComposite $composite) => DB::query()
+                    ->fromSub(
+                        $composite
+                            ->questions()
+                            ->select('questions.id')
+                            ->limit($composite->questions_quantity),
+                        'sub',
+                    )->count()
+            )->sum();
+    }
+
+    public function readAllPossibleTestQuestionsCount(Test $test): int
+    {
+        return $test->testComposites
+            ->map(
+                fn(TestComposite $composite) => $composite
+                    ->questions()
+                    ->select('questions.id')
+                    ->count(),
             )->sum();
     }
 

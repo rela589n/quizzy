@@ -27,6 +27,7 @@ use Illuminate\Support\Carbon;
  * @property string $display_strategy
  * @property ?int $attempts_per_user
  * @property ?int questions_count
+ * @property ?int questions_max_count
  * @property string|null remainingAttemptsMessage
  * @property-read Collection|\App\Models\MarkPercent[] $marksPercents
  * @property-read int|null $marks_percents_count

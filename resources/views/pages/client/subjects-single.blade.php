@@ -12,7 +12,9 @@
             'header' => $test->name,
             'remainingAttemptsMessage' => $test->remainingAttemptsMessage,
             'link' => route('client.tests.subject.test', ['subject' => $subject->uri_alias, 'test' => $test->uri_alias]),
-            'badge' => $test->questions_count,
+            'badge' => $test->questions_max_count === $test->questions_count
+                    ? $test->questions_count
+                    : "$test->questions_count / $test->questions_max_count",
         ])
     @empty
         @component('layouts.blocks.empty-list-message')
