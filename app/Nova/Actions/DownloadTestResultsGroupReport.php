@@ -51,7 +51,8 @@ class DownloadTestResultsGroupReport extends Action
         $models = $query->lastResultsByEachUser()
             ->withResultPercents()
             ->with('user')
-            ->get();
+            ->get()
+            ->filter(static fn(TestResult $result) => $result->result_mark !== null);
 
         if ($models->isEmpty()) {
             return Action::danger('Не знайдено жодного результата для генерації відомості');

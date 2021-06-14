@@ -50,11 +50,12 @@ class StatementsController extends AdminController
      * @throws PhpWordException
      * @throws BindingResolutionException
      */
-    public function groupStatement(GroupStatementByFiltersRequest $request,
-                                   GroupStatementsGenerator $generator,
-                                   TestResultFilter $filter,
-                                   StudentGroupsRepository $groupsRepository): BinaryFileResponse
-    {
+    public function groupStatement(
+        GroupStatementByFiltersRequest $request,
+        GroupStatementsGenerator $generator,
+        TestResultFilter $filter,
+        StudentGroupsRepository $groupsRepository
+    ): BinaryFileResponse {
         $test = $this->urlManager->getCurrentTest(true);
         $group = $groupsRepository->whereHasResultsOf($request->input('groupId'), $test->id);
 
@@ -66,6 +67,7 @@ class StatementsController extends AdminController
 
         $generator->setTestResults(
             $group->lastResults($test)->withResultPercents()->filtered($filter)
+                ->filter(static fn(TestResult $result) => $result->result_mark !== null)
         );
 
         $statementPath = $generator->generate();
