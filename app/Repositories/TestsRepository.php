@@ -70,6 +70,7 @@ class TestsRepository
                     $test->questions_max_count = $gate->readAllPossibleTestQuestionsCount($test);
                 }
             )
+            ->filter(static fn(Test $test) => !empty($test->questions_count))
             ->each(
                 function (Test $test) {
                     if (null === $test->attempts_per_user) {
