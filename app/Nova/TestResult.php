@@ -53,7 +53,11 @@ final class TestResult extends Resource
         return $query->with(
             [
                 'test',
-                'user.studentGroup',
+                'user' => function ($userQuery) {
+                    /** @var Builder $userQuery */
+                    $userQuery->withTrashed();
+                    $userQuery->with('studentGroup', static fn($groupQuery) => $groupQuery->withTrashed());
+                },
             ]
         )->withResultPercents();
     }
