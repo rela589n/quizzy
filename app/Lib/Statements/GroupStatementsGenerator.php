@@ -12,6 +12,7 @@ use App\Lib\Statements\FilePathGenerators\ResultFileNameGenerator;
 use App\Lib\Words\WordsManager;
 use App\Models\StudentGroup;
 use App\Models\Test;
+use App\Models\TestResult;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use PhpOffice\PhpWord\Exception\Exception as PhpWordException;
@@ -20,6 +21,7 @@ class GroupStatementsGenerator extends StatementsGenerator
 {
     protected StudentGroup $group;
     protected Test $test;
+    /** @var Collection|TestResult[] */
     protected Collection $testResults;
     protected GroupResultsManager $groupResultsManager;
     protected MarksCorrelationCreator $marksCorrelationCreator;
@@ -83,7 +85,7 @@ class GroupStatementsGenerator extends StatementsGenerator
                 [
                     "number#$i"          => $i,
                     "studentFullName#$i" => $result->user->full_name,
-                    "studentMark#$i"     => $result->mark
+                    "studentMark#$i"     => $result->result_mark,
                 ]
             );
 
