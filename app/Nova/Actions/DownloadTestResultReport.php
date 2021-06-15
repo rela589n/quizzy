@@ -41,6 +41,7 @@ class DownloadTestResultReport extends Action
         /** @var TestResult $result */
         $result = $models->first();
         $this->service->setResult($result);
+        $this->service->shouldStripHtml();
         $path = $this->service->generate();
 
         $pathGenerator = $this->service->getFilePathGenerator();

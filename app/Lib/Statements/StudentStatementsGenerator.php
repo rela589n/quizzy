@@ -18,12 +18,18 @@ class StudentStatementsGenerator extends StatementsGenerator
     protected TestResult $result;
     protected TestResultsEvaluator $resultEvaluator;
     protected ?TemplateProcessor $templateProcessor = null;
+    private bool $shouldStripHtml = false;
 
     public function setResult(TestResult $result): void
     {
         $this->result = $result;
         $this->filePathGenerator->setResult($this->result);
         $this->resultEvaluator = $this->result->getResultEvaluator();
+    }
+
+    public function shouldStripHtml(bool $shouldStripHtml = true): void
+    {
+        $this->shouldStripHtml = $shouldStripHtml;
     }
 
     /**
@@ -77,7 +83,7 @@ class StudentStatementsGenerator extends StatementsGenerator
 
     protected function setQuestionInfo(int $index, Question $question, string $score, string $selectedNotRight): void
     {
-        $presenter = new QuestionPresenter($question);
+        $presenter = new QuestionPresenter($question, $this->shouldStripHtml);
 
         $this->templateProcessor->setValues(
             [

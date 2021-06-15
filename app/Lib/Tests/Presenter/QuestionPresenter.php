@@ -13,14 +13,19 @@ use function strip_tags;
 final class QuestionPresenter
 {
     private Question $question;
+    private bool $shouldDecodeEntities;
 
-    public function __construct(Question $question)
+    public function __construct(Question $question, bool $shouldDecodeEntities)
     {
         $this->question = $question;
+        $this->shouldDecodeEntities = $shouldDecodeEntities;
     }
 
     public function plainText(): string
     {
-        return strip_tags($this->question->question);
+        return with(
+            strip_tags($this->question->question),
+            $this->shouldDecodeEntities ? static fn(string $str) => html_entity_decode($str) : null
+        );
     }
 }
