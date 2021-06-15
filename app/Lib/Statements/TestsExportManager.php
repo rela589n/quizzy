@@ -4,6 +4,7 @@
 namespace App\Lib\Statements;
 
 use App\Lib\PHPWord\TemplateProcessor;
+use App\Lib\Statements\Support\SanitizeQuestionText;
 use App\Models\Question;
 use App\Models\Questions\QuestionType;
 use App\Models\Test;
@@ -13,10 +14,17 @@ class TestsExportManager extends StatementsGenerator
 {
     protected Test $test;
 
+    private bool $shouldStripHtml = false;
+
     public function setTest(Test $test): void
     {
         $this->test = $test;
         $this->filePathGenerator->setTest($test);
+    }
+
+    public function shouldStripHtml(bool $shouldStripHtml = true): void
+    {
+        $this->shouldStripHtml = $shouldStripHtml;
     }
 
     protected function doGenerate(TemplateProcessor $processor): void
@@ -37,12 +45,12 @@ class TestsExportManager extends StatementsGenerator
 
         $i = 1;
         foreach ($questions as $question) {
-            $answerOptionPresenter =  new SelectedAnswerPresenter(QuestionType::fromQuestion($question));
+            $answerOptionPresenter = new SelectedAnswerPresenter(QuestionType::fromQuestion($question));
 
             $processor->setValues(
                 [
                     "questionNumber#$i" => $i,
-                    "question#$i" => $question->question,
+                    "question#$i" => $this->sanitizeQuestionText($question),
                 ]
             );
 
@@ -73,5 +81,13 @@ class TestsExportManager extends StatementsGenerator
     protected function templateResourcePath(): string
     {
         return 'templates/Test.docx';
+    }
+
+    private function sanitizeQuestionText(Question $question): string
+    {
+        $sanitize = new SanitizeQuestionText();
+        $sanitize->shouldStripHtml($this->shouldStripHtml);
+
+        return $sanitize($question);
     }
 }
