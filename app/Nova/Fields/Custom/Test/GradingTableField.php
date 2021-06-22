@@ -35,8 +35,9 @@ final class GradingTableField
                     'name'       => 'percent',
                     'type'       => 'number',
                     'attributes' => [
-                        'step'     => 0.01,
+                        'step' => 0.01,
                         'required' => 'required',
+                        'max' => 100,
                     ],
                 ]
             )->resolveUsing(
