@@ -31,8 +31,6 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
 
-use function get_class;
-
 class Test extends Resource
 {
     public static $group = 'Тестування';
@@ -98,7 +96,7 @@ class Test extends Resource
 
             GradingStrategyField::make(),
 
-            AdditionalQuestionsRelationField::make(),
+            AdditionalQuestionsRelationField::make($this),
 
             NovaDependencyContainer::make([GradingTableField::make()])
                 ->dependsOn('mark_evaluator_type', 'custom'),
