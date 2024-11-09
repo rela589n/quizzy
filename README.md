@@ -1,4 +1,4 @@
-# Quizzy (spell Квіззі)
+# Quizzy
 
 Students assessment system.
 
