@@ -22,7 +22,7 @@ RUN apt-get update \
         cron \
         mariadb-client
 
-RUN pecl install xdebug
+RUN pecl install xdebug-3.1.6
 RUN docker-php-ext-enable xdebug
 
 RUN docker-php-ext-configure gd \
